@@ -1,0 +1,15 @@
+name: MyGuest Dispatch Smoke
+
+on:
+  repository_dispatch:
+    types: [dispatch-smoke-test]
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print dispatch payload
+        run: |
+          echo "event_name=${{ github.event_name }}"
+          echo "action=${{ github.event.action }}"
+          echo '${{ toJson(github.event.client_payload) }}'
