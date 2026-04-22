@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -11,50 +11,152 @@
             --accent: {{COLOR_ACCENT}};
             --bg: {{COLOR_BG}};
             --text: {{COLOR_TEXT}};
+            --card: #ffffff;
+            --border: rgba(0,0,0,0.06);
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); padding: 0; margin: 0; }
-        .app-container { max-width: 430px; margin: 0 auto; min-height: 100vh; padding: 24px; background: var(--bg); }
-        header { margin-bottom: 32px; padding-top: 20px; }
-        h1 { font-family: 'Cormorant Garamond', serif; font-size: 42px; color: var(--primary); line-height: 1; }
-        .card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .btn { display: block; background: var(--primary); color: white !important; text-align: center; padding: 18px; border-radius: 50px; text-decoration: none; font-weight: bold; margin-top: 12px; }
-        
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+        }
+
+        .app-container {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding: 24px;
+            background: var(--bg);
+        }
+
+        .language-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .language-chip {
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text);
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .language-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        header {
+            margin-bottom: 24px;
+            padding-top: 12px;
+        }
+
+        .eyebrow {
+            letter-spacing: 2px;
+            font-size: 12px;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 42px;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .subtext {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+
+        .paragraph {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            white-space: pre-line;
+        }
+
+        .info-row {
+            margin-bottom: 12px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .btn {
+            display: block;
+            background: var(--primary);
+            color: white !important;
+            text-align: center;
+            padding: 16px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
         @media print {
             @page { size: letter; margin: 1cm; }
             body { background: white; }
-            .no-print { display: none !important; }
-            .print-only { display: block !important; }
             .app-container { max-width: 100% !important; padding: 0; }
+            .language-bar { display: none; }
         }
-        .print-only { display: none; }
     </style>
 </head>
 <body>
     <div class="app-container">
+        <div class="language-bar" aria-label="Language selector">
+            <div class="language-chip active">{{PRIMARY_LANGUAGE}}</div>
+            <div class="language-chip">English</div>
+            <div class="language-chip">Español</div>
+            <div class="language-chip">Français</div>
+        </div>
+
         <header>
-            <p style="letter-spacing: 2px; font-size: 12px;">BIENVENIDO A</p>
+            <p class="eyebrow">WELCOME</p>
             <h1>{{VILLA_NAME}}</h1>
+            <p class="subtext">{{PROPERTY_ADDRESS}}</p>
         </header>
 
-        <div class="card">
-            <h3 style="font-size: 14px; color: var(--accent);">🌐 RED WIFI</h3>
-            <p style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">{{WIFI_SSID}}</p>
-            <h3 style="font-size: 14px; color: var(--accent);">🔑 CONTRASEÑA</h3>
-            <p style="font-size: 18px; font-weight: bold;">{{WIFI_PASSWORD}}</p>
-        </div>
-
-        <div class="no-print">
-            <a href="{{MAPS_LINK}}" class="btn">📍 CÓMO LLEGAR</a>
-            <a href="https://wa.me/{{PHONE}}" class="btn">💬 CONTACTAR ANFITRIÓN</a>
-        </div>
-
-        <div class="print-only" style="margin-top: 50px; text-align: center; border-top: 1px solid #eee; pt: 30px;">
-            <p>Escanea este QR para la versión digital interactiva</p>
-            <div style="background: #eee; width: 150px; height: 150px; margin: 20px auto; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
-                [QR CODE]
-            </div>
-        </div>
+        {{CONTENT_SECTIONS}}
     </div>
 </body>
 </html>
