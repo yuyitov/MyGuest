@@ -1,24 +1,99 @@
 name: MyGuest Generator
+
 on:
   repository_dispatch:
     types: [new-villa]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          python-version: '3.x'
-      - name: Generate Villa Page
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Trace dispatch payload
         run: |
-          python scripts/generate_villa.py '${{ github.event.client_payload.data }}'
+          echo "submission_id=${{ github.event.client_payload.metadata.submission_id }}"
+          echo "slug=${{ github.event.client_payload.metadata.slug }}"
+          echo "source=${{ github.event.client_payload.metadata.source }}"
+          echo "payload_blocks=metadata,property,outputs,ingest_inputs,content"
+
+      - name: Validate public payload shape
+        env:
+          PUBLIC_PAYLOAD_JSON: ${{ toJson(github.event.client_payload) }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import sys
+
+          payload = json.loads(os.environ["PUBLIC_PAYLOAD_JSON"])
+
+          required_blocks = {"metadata", "property", "outputs", "ingest_inputs", "content"}
+          missing = sorted(required_blocks - set(payload.keys()))
+          if missing:
+              print(f"Missing required payload blocks: {missing}")
+              sys.exit(1)
+
+          forbidden_keys = {
+              "wifi_ssid",
+              "wifi_password",
+              "door_code",
+              "host_phone",
+              "house_access_private",
+          }
+
+          def find_forbidden(obj, path="root"):
+              hits = []
+
+              if isinstance(obj, dict):
+                  for key, value in obj.items():
+                      if key in forbidden_keys:
+                          hits.append(f"{path}.{key}")
+                      hits.extend(find_forbidden(value, f"{path}.{key}"))
+              elif isinstance(obj, list):
+                  for i, item in enumerate(obj):
+                      hits.extend(find_forbidden(item, f"{path}[{i}]"))
+
+              return hits
+
+          forbidden_hits = find_forbidden(payload)
+          if forbidden_hits:
+              print("Private fields found in public payload:")
+              for hit in forbidden_hits:
+                  print(f" - {hit}")
+              sys.exit(1)
+
+          print("Public payload shape validated successfully.")
+          PY
+
+      - name: Generate Villa Page
+        env:
+          PUBLIC_PAYLOAD_JSON: ${{ toJson(github.event.client_payload) }}
+        run: |
+          python scripts/generate_villa.py "$PUBLIC_PAYLOAD_JSON"
+
       - name: Commit and Push
         run: |
           git config --global user.name "MyGuest Bot"
-          git config --global user.email "bot@myguest.com"
+          git config --global user.email "actions@github.com"
           git add .
-          git commit -m "New villa: ${{ github.event.client_payload.name }}"
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git commit -m "Generate villa page for ${{ github.event.client_payload.metadata.slug }}"
           git push
