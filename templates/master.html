@@ -12,7 +12,8 @@
             --bg: {{COLOR_BG}};
             --text: {{COLOR_TEXT}};
             --card: #ffffff;
-            --border: rgba(0,0,0,0.06);
+            --border: rgba(0,0,0,0.08);
+            --muted: rgba(0,0,0,0.55);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,7 +30,7 @@
             max-width: 430px;
             margin: 0 auto;
             min-height: 100vh;
-            padding: 24px;
+            padding: 20px 20px 28px;
             background: var(--bg);
         }
 
@@ -56,15 +57,18 @@
             border-color: var(--primary);
         }
 
-        header {
-            margin-bottom: 24px;
-            padding-top: 12px;
+        .hero {
+            background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.92));
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 24px 20px;
+            margin-bottom: 18px;
         }
 
         .eyebrow {
             letter-spacing: 2px;
             font-size: 12px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             opacity: 0.8;
         }
 
@@ -72,34 +76,37 @@
             font-family: 'Cormorant Garamond', serif;
             font-size: 42px;
             color: var(--primary);
-            line-height: 1;
+            line-height: 0.98;
             margin-bottom: 12px;
         }
 
         .subtext {
             font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.6;
+            color: var(--muted);
         }
 
         .card {
             background: var(--card);
             padding: 20px;
-            border-radius: 20px;
+            border-radius: 22px;
             margin-bottom: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
         }
 
         .section-title {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--accent);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
             margin-bottom: 14px;
+            font-weight: 700;
         }
 
         .paragraph {
             font-size: 15px;
-            line-height: 1.6;
+            line-height: 1.7;
             margin-bottom: 12px;
             white-space: pre-line;
         }
@@ -133,11 +140,23 @@
             margin-top: 12px;
         }
 
+        .footer-note {
+            margin-top: 12px;
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: center;
+            color: var(--muted);
+        }
+
         @media print {
             @page { size: letter; margin: 1cm; }
             body { background: white; }
             .app-container { max-width: 100% !important; padding: 0; }
             .language-bar { display: none; }
+            .hero, .card {
+                box-shadow: none;
+                border: 1px solid #e5e5e5;
+            }
         }
     </style>
 </head>
@@ -147,13 +166,17 @@
             {{LANGUAGE_BAR}}
         </div>
 
-        <header>
+        <header class="hero">
             <p class="eyebrow">{{EYEBROW}}</p>
             <h1>{{VILLA_NAME}}</h1>
             <p class="subtext">{{PROPERTY_ADDRESS}}</p>
         </header>
 
         {{CONTENT_SECTIONS}}
+
+        <p class="footer-note">
+            This welcome book shows public guest information only.
+        </p>
     </div>
 </body>
 </html>
