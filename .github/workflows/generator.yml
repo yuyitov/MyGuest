@@ -84,6 +84,12 @@ jobs:
         run: |
           python scripts/generate_villa.py "$PUBLIC_PAYLOAD_JSON"
 
+      - name: Build Print PDF
+        env:
+          PUBLIC_PAYLOAD_JSON: ${{ toJson(github.event.client_payload) }}
+        run: |
+          python scripts/build_print_pdf.py "$PUBLIC_PAYLOAD_JSON"
+
       - name: Commit and Push
         run: |
           git config --global user.name "MyGuest Bot"
