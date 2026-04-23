@@ -24,13 +24,6 @@ UI_STRINGS = {
         "leave_review": "Leave an Airbnb review",
         "instagram": "Instagram",
         "host_email": "Host email",
-        "warm_welcome": "A Warm Welcome",
-        "welcome_fallback": "We’re delighted to welcome you to your stay in Puerto Vallarta. Here you’ll find the essentials for a smooth arrival and a comfortable stay. We hope this guide helps you settle in and enjoy every moment of your visit.",
-        "with_love": "With love",
-        "enjoy_your_stay": "ENJOY YOUR STAY",
-        "welcome_cover": "WELCOME",
-        "your_guide": "Your Guide",
-        "to": "TO",
         "html_lang": "en",
     },
     "Español": {
@@ -49,13 +42,6 @@ UI_STRINGS = {
         "leave_review": "Dejar reseña en Airbnb",
         "instagram": "Instagram",
         "host_email": "Correo del anfitrión",
-        "warm_welcome": "Una Cálida Bienvenida",
-        "welcome_fallback": "Nos da mucho gusto darte la bienvenida a tu estancia en Puerto Vallarta. Aquí encontrarás lo esencial para una llegada fluida y una estancia cómoda. Esperamos que esta guía te ayude a instalarte y disfrutar cada momento de tu visita.",
-        "with_love": "Con cariño",
-        "enjoy_your_stay": "DISFRUTA TU ESTANCIA",
-        "welcome_cover": "BIENVENIDO",
-        "your_guide": "Tu Guía",
-        "to": "EN",
         "html_lang": "es",
     },
     "Français": {
@@ -74,13 +60,6 @@ UI_STRINGS = {
         "leave_review": "Laisser un avis Airbnb",
         "instagram": "Instagram",
         "host_email": "Email de l’hôte",
-        "warm_welcome": "Un Chaleureux Accueil",
-        "welcome_fallback": "Nous sommes ravis de vous accueillir pour votre séjour à Puerto Vallarta. Vous trouverez ici l’essentiel pour une arrivée fluide et un séjour confortable. Nous espérons que ce guide vous aidera à vous installer et à profiter pleinement de votre visite.",
-        "with_love": "Avec amour",
-        "enjoy_your_stay": "PROFITEZ DE VOTRE SÉJOUR",
-        "welcome_cover": "BIENVENUE",
-        "your_guide": "Votre Guide",
-        "to": "À",
         "html_lang": "fr",
     },
 }
@@ -118,19 +97,43 @@ def safe_bool(value):
     return None
 
 
-def paragraph_html(value):
-    if not has_value(value):
+def normalize_text_block(value):
+    if value is None:
         return ""
-    return f'<p class="paragraph">{escape(safe_text(value))}</p>'
+    if isinstance(value, list):
+        parts = [safe_text(item) for item in value if has_value(item)]
+        return "\n".join(parts).strip()
+    if isinstance(value, dict):
+        parts = []
+        for item in value.values():
+            if has_value(item):
+                parts.append(safe_text(item))
+        return "\n".join(parts).strip()
+    return safe_text(value)
+
+
+def html_multiline(value):
+    text = normalize_text_block(value)
+    if not text:
+        return ""
+    return escape(text).replace("\n", "<br>")
+
+
+def paragraph_html(value):
+    block = html_multiline(value)
+    if not block:
+        return ""
+    return f'<p class="paragraph">{block}</p>'
 
 
 def row_html(label, value):
-    if not has_value(value):
+    block = html_multiline(value)
+    if not block:
         return ""
     return f"""
         <div class="info-row">
             <div class="info-label">{escape(label)}</div>
-            <div class="info-value">{escape(safe_text(value))}</div>
+            <div class="info-value">{block}</div>
         </div>
     """
 
@@ -169,6 +172,7 @@ def build_language_bar(primary_language):
 def normalize_photo_list(value):
     if value is None:
         return []
+
     if isinstance(value, list):
         photos = []
         for item in value:
@@ -201,6 +205,7 @@ def normalize_photo_list(value):
 
     return []
 
+
 def is_public_image_url(url):
     clean = safe_text(url)
     if not clean:
@@ -208,20 +213,30 @@ def is_public_image_url(url):
     return clean.startswith("http://") or clean.startswith("https://")
 
 
-def first_public_photo(content):
+def public_photos(content):
     photos = normalize_photo_list(content.get("property_photos"))
-    valid_photos = [photo for photo in photos if is_public_image_url(photo)]
-    return valid_photos[:1]
+    return [photo for photo in photos if is_public_image_url(photo)]
+
+
+def first_public_photo(content):
+    photos = public_photos(content)
+    return photos[0] if photos else ""
+
+
+def nth_public_photo(content, index=0):
+    photos = public_photos(content)
+    if index < len(photos):
+        return photos[index]
+    return photos[0] if photos else ""
 
 
 def image_block(url, alt_text, arch=False):
     clean_url = safe_text(url)
     if not clean_url:
         return ""
-    wrapper_class = "cover-image-arch" if arch else ""
     if arch:
         return f'''
-            <div class="{wrapper_class}">
+            <div class="cover-image-arch">
                 <img src="{escape(clean_url)}" alt="{escape(alt_text)}">
             </div>
         '''
@@ -229,23 +244,33 @@ def image_block(url, alt_text, arch=False):
 
 
 def build_cover_image_block(content, villa_name):
-    photos = first_public_photo(content)
-    if photos:
-        return image_block(photos[0], villa_name, arch=True)
+    photo = first_public_photo(content)
+    if photo:
+        return image_block(photo, villa_name, arch=True)
     return image_block(FALLBACK_COVER_IMAGE, villa_name, arch=True)
 
 
 def build_welcome_image_block(content, villa_name):
-    photos = first_public_photo(content)
-    if photos:
-        return image_block(photos[0], villa_name, arch=False)
+    photo = first_public_photo(content)
+    if photo:
+        return image_block(photo, villa_name, arch=False)
     return image_block(FALLBACK_WELCOME_IMAGE, villa_name, arch=False)
 
 
-def build_welcome_message_block(content, ui):
-    welcome_message = safe_text(content.get("welcome_message"))
-    final_message = welcome_message if welcome_message else ui["welcome_fallback"]
-    return escape(final_message)
+def build_editorial_image_block(content, field_name, alt_text, photo_index):
+    photo = nth_public_photo(content, photo_index)
+    if photo:
+        return image_block(photo, alt_text, arch=False)
+
+    field_text = normalize_text_block(content.get(field_name))
+    if field_text:
+        return f'<div style="width:100%;height:220px;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;color:#8b6f47;font-family:\'Cormorant Garamond\',serif;font-size:30px;line-height:1.1;">{escape(alt_text)}</div>'
+
+    return ""
+
+
+def build_welcome_message_block(content):
+    return html_multiline(content.get("welcome_message"))
 
 
 def icon_button_svg(kind):
@@ -365,6 +390,23 @@ def build_content_sections(content, ui):
     return "\n".join(section for section in sections if section.strip())
 
 
+def build_directions_map_block(content, ui):
+    maps_url = safe_text(content.get("google_maps_link"))
+    if not maps_url:
+        return ""
+
+    return f'''
+        <a href="{escape(maps_url)}" target="_blank" rel="noopener noreferrer"
+           style="display:flex;align-items:center;justify-content:center;width:100%;height:210px;padding:24px;text-align:center;text-decoration:none;color:#6e5230;font-family:'Cormorant Garamond',serif;font-size:30px;line-height:1.1;background:#fbf7f2;">
+            {escape(ui["open_maps"])}
+        </a>
+    '''
+
+
+def replace_placeholder(html, placeholder, value):
+    return html.replace(placeholder, value if value is not None else "")
+
+
 def generate():
     try:
         payload = json.loads(sys.argv[1])
@@ -398,25 +440,58 @@ def generate():
     language_bar_html = build_language_bar(primary_language)
     cover_image_block = build_cover_image_block(content, villa_name)
     welcome_image_block = build_welcome_image_block(content, villa_name)
-    welcome_message_block = build_welcome_message_block(content, ui)
+    welcome_message_block = build_welcome_message_block(content)
     welcome_actions_block = build_welcome_actions_block(content)
     checkin_checkout_block = build_checkin_checkout_block(content, ui)
     sections_html = build_content_sections(content, ui)
 
-    html = html.replace("{{HTML_LANG}}", escape(ui["html_lang"]))
-    html = html.replace("{{VILLA_NAME}}", escape(villa_name))
-    html = html.replace("{{PROPERTY_ADDRESS}}", escape(property_address))
-    html = html.replace("{{LANGUAGE_BAR}}", language_bar_html)
-    html = html.replace("{{COVER_IMAGE_BLOCK}}", cover_image_block)
-    html = html.replace("{{WELCOME_IMAGE_BLOCK}}", welcome_image_block)
-    html = html.replace("{{WELCOME_MESSAGE_BLOCK}}", welcome_message_block)
-    html = html.replace("{{WELCOME_ACTIONS_BLOCK}}", welcome_actions_block)
-    html = html.replace("{{CHECKIN_CHECKOUT_BLOCK}}", checkin_checkout_block)
-    html = html.replace("{{CONTENT_SECTIONS}}", sections_html)
-    html = html.replace("{{COLOR_PRIMARY}}", style["primary"])
-    html = html.replace("{{COLOR_ACCENT}}", style["accent"])
-    html = html.replace("{{COLOR_BG}}", style["bg"])
-    html = html.replace("{{COLOR_TEXT}}", style["text"])
+    replacements = {
+        "{{HTML_LANG}}": escape(ui["html_lang"]),
+        "{{VILLA_NAME}}": escape(villa_name),
+        "{{PROPERTY_ADDRESS}}": escape(property_address),
+        "{{LANGUAGE_BAR}}": language_bar_html,
+        "{{COVER_IMAGE_BLOCK}}": cover_image_block,
+        "{{WELCOME_IMAGE_BLOCK}}": welcome_image_block,
+        "{{WELCOME_MESSAGE_BLOCK}}": welcome_message_block,
+        "{{WELCOME_ACTIONS_BLOCK}}": welcome_actions_block,
+        "{{CHECKIN_CHECKOUT_BLOCK}}": checkin_checkout_block,
+        "{{CONTENT_SECTIONS}}": sections_html,
+        "{{COLOR_PRIMARY}}": style["primary"],
+        "{{COLOR_ACCENT}}": style["accent"],
+        "{{COLOR_BG}}": style["bg"],
+        "{{COLOR_TEXT}}": style["text"],
+
+        "{{CHECKIN_TIME_DISPLAY}}": escape(safe_text(content.get("checkin_time"))),
+        "{{CHECKOUT_TIME_DISPLAY}}": escape(safe_text(content.get("checkout_time"))),
+        "{{HOUSE_ACCESS_PUBLIC}}": html_multiline(content.get("house_access_public")),
+        "{{PARKING_INFO}}": html_multiline(content.get("parking_info")),
+
+        "{{AMENITIES_LIST}}": html_multiline(content.get("amenities_list")),
+        "{{DIRECTIONS_MAP_BLOCK}}": build_directions_map_block(content, ui),
+        "{{GOOGLE_MAPS_LINK}}": html_multiline(content.get("google_maps_link")),
+        "{{DIRECTIONS_TEXT}}": html_multiline(content.get("directions_text")),
+        "{{TRANSPORT_OPTIONS}}": html_multiline(content.get("transport_options")),
+
+        "{{THINGS_TO_KNOW}}": html_multiline(content.get("things_to_know")),
+        "{{THINGS_TO_DO}}": html_multiline(content.get("things_to_do")),
+        "{{PLACES_TO_EAT}}": html_multiline(content.get("places_to_eat")),
+        "{{PLACES_TO_DRINK}}": html_multiline(content.get("places_to_drink")),
+
+        "{{THINGS_TO_DO_IMAGE_BLOCK}}": build_editorial_image_block(content, "things_to_do", "Things to Do", 1),
+        "{{PLACES_TO_EAT_IMAGE_BLOCK}}": build_editorial_image_block(content, "places_to_eat", "Places to Eat", 2),
+        "{{PLACES_TO_DRINK_IMAGE_BLOCK}}": build_editorial_image_block(content, "places_to_drink", "Places to Drink", 3),
+
+        "{{HOUSE_RULES}}": html_multiline(content.get("house_rules")),
+        "{{EMERGENCY_CONTACTS}}": html_multiline(content.get("emergency_contacts")),
+        "{{LOCAL_DIRECTORY}}": html_multiline(content.get("local_directory")),
+        "{{AIRBNB_REVIEW_LINK}}": escape(safe_text(content.get("airbnb_review_link"))),
+        "{{BEFORE_YOU_LEAVE}}": html_multiline(content.get("before_you_leave")),
+        "{{HOST_EMAIL}}": html_multiline(content.get("host_email")),
+        "{{INSTAGRAM_HANDLE}}": html_multiline(content.get("instagram_handle")),
+    }
+
+    for placeholder, value in replacements.items():
+        html = replace_placeholder(html, placeholder, value)
 
     output_dir = os.path.join("public", "villas", slug)
     os.makedirs(output_dir, exist_ok=True)
