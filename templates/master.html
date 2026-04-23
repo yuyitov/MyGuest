@@ -800,7 +800,185 @@
             stroke-linecap: round;
             stroke-linejoin: round;
         }
-        
+
+                .list-sheet {
+            background: var(--card);
+            border-radius: 36px;
+            padding: 26px 18px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .list-sheet-leaf {
+            text-align: center;
+            color: #d8c0a0;
+            margin-bottom: 10px;
+        }
+
+        .list-sheet-leaf svg {
+            width: 28px;
+            height: 28px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .list-sheet-title {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            line-height: 1.05;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .list-sheet-panel {
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.55);
+            border-radius: 28px;
+            padding: 18px 18px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.03);
+            margin-bottom: 16px;
+        }
+
+        .list-sheet-intro {
+            font-size: 17px;
+            line-height: 1.72;
+            color: var(--text);
+            margin: 0 4px 16px;
+            text-align: left;
+        }
+
+        .list-sheet-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .list-item-card {
+            display: grid;
+            grid-template-columns: 56px 1fr;
+            gap: 14px;
+            align-items: start;
+            background: #fffaf4;
+            border: 1px solid rgba(212, 186, 154, 0.38);
+            border-radius: 22px;
+            padding: 14px 14px;
+        }
+
+        .list-item-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            background: #ffffff;
+            border: 1px solid rgba(212, 186, 154, 0.45);
+            color: #a07a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .list-item-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .list-item-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            line-height: 1;
+            color: #6e5230;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .list-item-text {
+            font-size: 16px;
+            line-height: 1.62;
+            color: var(--text);
+        }
+
+        .editorial-sheet {
+            background: var(--card);
+            border-radius: 36px;
+            padding: 26px 18px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .editorial-sheet-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .editorial-sheet-leaf {
+            color: #d8c0a0;
+            margin-bottom: 10px;
+        }
+
+        .editorial-sheet-leaf svg {
+            width: 28px;
+            height: 28px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .editorial-sheet-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            line-height: 1.05;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .editorial-hero {
+            width: 100%;
+            min-height: 220px;
+            border-radius: 28px;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(217,206,186,0.35));
+            border: 1px solid rgba(212, 186, 154, 0.45);
+            margin-bottom: 18px;
+        }
+
+        .editorial-hero img {
+            display: block;
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .editorial-sheet-panel {
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.55);
+            border-radius: 28px;
+            padding: 20px 18px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.03);
+            margin-bottom: 16px;
+        }
+
+        .editorial-copy {
+            font-size: 17px;
+            line-height: 1.74;
+            color: var(--text);
+            text-align: left;
+        }
         .content-sections {
             margin-top: 18px;
         }
@@ -1435,6 +1613,147 @@
                         <div class="info-row-text">{{TRANSPORT_OPTIONS}}</div>
                     </div>
                 </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Back to Menu</span>
+                </a>
+            </div>
+        </section>
+
+                <section class="screen list-sheet">
+            <div class="list-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="list-sheet-title">Things to Know</h2>
+
+            <div class="list-sheet-panel">
+                <p class="list-sheet-intro">
+                    Helpful details to make your stay smoother, easier, and more comfortable from the moment you arrive.
+                </p>
+
+                <div class="list-sheet-items">
+                    <div class="list-item-card">
+                        <div class="list-item-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="9"></circle>
+                                <path d="M12 8v4"></path>
+                                <path d="M12 16h.01"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="list-item-title">Good to Know</div>
+                            <div class="list-item-text">{{THINGS_TO_KNOW}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Back to Menu</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen editorial-sheet">
+            <div class="editorial-sheet-header">
+                <div class="editorial-sheet-leaf" aria-hidden="true">
+                    <svg viewBox="0 0 32 32">
+                        <path d="M16 26V10"></path>
+                        <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                        <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                        <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                        <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                    </svg>
+                </div>
+                <h2 class="editorial-sheet-title">Things to Do</h2>
+            </div>
+
+            <div class="editorial-hero">
+                {{THINGS_TO_DO_IMAGE_BLOCK}}
+            </div>
+
+            <div class="editorial-sheet-panel">
+                <div class="editorial-copy">{{THINGS_TO_DO}}</div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Back to Menu</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen editorial-sheet">
+            <div class="editorial-sheet-header">
+                <div class="editorial-sheet-leaf" aria-hidden="true">
+                    <svg viewBox="0 0 32 32">
+                        <path d="M16 26V10"></path>
+                        <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                        <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                        <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                        <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                    </svg>
+                </div>
+                <h2 class="editorial-sheet-title">Places to Eat</h2>
+            </div>
+
+            <div class="editorial-hero">
+                {{PLACES_TO_EAT_IMAGE_BLOCK}}
+            </div>
+
+            <div class="editorial-sheet-panel">
+                <div class="editorial-copy">{{PLACES_TO_EAT}}</div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Back to Menu</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen editorial-sheet">
+            <div class="editorial-sheet-header">
+                <div class="editorial-sheet-leaf" aria-hidden="true">
+                    <svg viewBox="0 0 32 32">
+                        <path d="M16 26V10"></path>
+                        <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                        <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                        <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                        <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                    </svg>
+                </div>
+                <h2 class="editorial-sheet-title">Places to Drink</h2>
+            </div>
+
+            <div class="editorial-hero">
+                {{PLACES_TO_DRINK_IMAGE_BLOCK}}
+            </div>
+
+            <div class="editorial-sheet-panel">
+                <div class="editorial-copy">{{PLACES_TO_DRINK}}</div>
             </div>
 
             <div class="menu-back-wrap">
