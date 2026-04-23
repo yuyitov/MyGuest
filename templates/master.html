@@ -219,31 +219,34 @@
         .welcome-actions {
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 18px;
             flex-wrap: wrap;
             margin-bottom: 24px;
+            min-height: 70px;
         }
 
         .welcome-action {
-            width: 74px;
-            height: 74px;
+            width: 62px;
+            height: 62px;
             border-radius: 999px;
-            border: 2px solid rgba(139, 111, 71, 0.30);
+            border: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: #fff;
+            background: #1f1f1f;
             text-decoration: none;
-            color: var(--primary);
+            color: #ffffff;
             flex: 0 0 auto;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
         }
 
         .welcome-action svg {
-            width: 32px;
-            height: 32px;
+            width: 26px;
+            height: 26px;
             stroke: currentColor;
             fill: none;
-            stroke-width: 1.9;
+            stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
         }
@@ -412,7 +415,7 @@
                 {{WELCOME_MESSAGE_BLOCK}}
             </div>
 
-            <div class="welcome-signoff">With love</div>
+            <div class="welcome-signoff">Enjoy</div>
 
             <div class="welcome-actions">
                 {{WELCOME_ACTIONS_BLOCK}}
