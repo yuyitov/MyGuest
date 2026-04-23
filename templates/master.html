@@ -613,6 +613,194 @@
         }
         
 
+        .info-sheet {
+            background: var(--card);
+            border-radius: 36px;
+            padding: 26px 18px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .info-sheet-leaf {
+            text-align: center;
+            color: #d8c0a0;
+            margin-bottom: 10px;
+        }
+
+        .info-sheet-leaf svg {
+            width: 28px;
+            height: 28px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .info-sheet-title {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            line-height: 1.05;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .info-panel {
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.55);
+            border-radius: 28px;
+            padding: 18px 18px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.03);
+            margin-bottom: 16px;
+        }
+
+        .info-map-box {
+            width: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            min-height: 210px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(217,206,186,0.35));
+            margin-bottom: 16px;
+            border: 1px solid rgba(212, 186, 154, 0.45);
+        }
+
+        .info-map-box iframe,
+        .info-map-box img {
+            display: block;
+            width: 100%;
+            height: 210px;
+            border: 0;
+            object-fit: cover;
+        }
+
+        .info-row-item {
+            display: grid;
+            grid-template-columns: 62px 1fr;
+            gap: 14px;
+            align-items: start;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(212, 186, 154, 0.32);
+        }
+
+        .info-row-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .info-row-item:first-child {
+            padding-top: 0;
+        }
+
+        .info-row-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 999px;
+            background: #fffaf4;
+            border: 1px solid rgba(212, 186, 154, 0.45);
+            color: #a07a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .info-row-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .info-row-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            line-height: 1;
+            color: #6e5230;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .info-row-text {
+            font-size: 16px;
+            line-height: 1.62;
+            color: var(--text);
+        }
+
+        .wifi-center {
+            text-align: center;
+            padding: 6px 10px 2px;
+        }
+
+        .wifi-center-icon {
+            width: 126px;
+            height: 126px;
+            border-radius: 999px;
+            background: #f6efe8;
+            border: 1px solid rgba(212, 186, 154, 0.50);
+            color: #8b6f47;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .wifi-center-icon svg {
+            width: 64px;
+            height: 64px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .wifi-center-copy {
+            font-size: 18px;
+            line-height: 1.72;
+            color: var(--text);
+            max-width: 88%;
+            margin: 0 auto 10px;
+        }
+
+        .menu-back-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        .menu-back-btn {
+            min-width: 220px;
+            padding: 16px 26px;
+            border-radius: 999px;
+            background: #8b6f47;
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(139, 111, 71, 0.20);
+        }
+
+        .menu-back-btn svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
         .content-sections {
             margin-top: 18px;
         }
@@ -1080,7 +1268,184 @@
                 </a>
             </div>
         </section>
-        
+
+                <section class="screen info-sheet">
+            <div class="info-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="info-sheet-title">Amenities</h2>
+
+            <div class="info-panel">
+                <div class="info-row-item">
+                    <div class="info-row-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4 12h16"></path>
+                            <path d="M6 12V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"></path>
+                            <path d="M7 15v2"></path>
+                            <path d="M17 15v2"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="info-row-title">Included</div>
+                        <div class="info-row-text">{{AMENITIES_LIST}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Back to Menu</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen info-sheet">
+            <div class="info-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="info-sheet-title">Directions</h2>
+
+            <div class="info-map-box">
+                {{DIRECTIONS_MAP_BLOCK}}
+            </div>
+
+            <div class="info-panel">
+                <div class="info-row-item">
+                    <div class="info-row-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10Z"></path>
+                            <circle cx="12" cy="11" r="2.5"></circle>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="info-row-title">Map</div>
+                        <div class="info-row-text">{{GOOGLE_MAPS_LINK}}</div>
+                    </div>
+                </div>
+
+                <div class="info-row-item">
+                    <div class="info-row-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 18l6-12"></path>
+                            <path d="M10.5 6H18v7.5"></path>
+                            <path d="M15 18H6v-9"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="info-row-title">Directions</div>
+                        <div class="info-row-text">{{DIRECTIONS_TEXT}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Back to Menu</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen info-sheet">
+            <div class="info-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="info-sheet-title">WiFi</h2>
+
+            <div class="info-panel wifi-center">
+                <div class="wifi-center-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M14 30a26 26 0 0 1 36 0"></path>
+                        <path d="M22 38a15 15 0 0 1 20 0"></path>
+                        <path d="M29 46a5 5 0 0 1 6 0"></path>
+                        <circle cx="32" cy="52" r="2.5"></circle>
+                    </svg>
+                </div>
+
+                <p class="wifi-center-copy">
+                    WiFi details are protected and require guest PIN access.
+                </p>
+
+                <p class="wifi-center-copy">
+                    Please use your secure guest access to view the network name and password.
+                </p>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Back to Menu</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen info-sheet">
+            <div class="info-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="info-sheet-title">Transport</h2>
+
+            <div class="info-panel">
+                <div class="info-row-item">
+                    <div class="info-row-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="7" y="4" width="10" height="14" rx="2"></rect>
+                            <path d="M7 9h10"></path>
+                            <circle cx="10" cy="18" r="1"></circle>
+                            <circle cx="14" cy="18" r="1"></circle>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="info-row-title">Getting Around</div>
+                        <div class="info-row-text">{{TRANSPORT_OPTIONS}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Back to Menu</span>
+                </a>
+            </div>
+        </section>
         <div class="content-sections">
             {{CONTENT_SECTIONS}}
         </div>
