@@ -201,9 +201,17 @@ def normalize_photo_list(value):
 
     return []
 
+def is_public_image_url(url):
+    clean = safe_text(url)
+    if not clean:
+        return False
+    return clean.startswith("http://") or clean.startswith("https://")
+
 
 def first_public_photo(content):
-    return normalize_photo_list(content.get("property_photos"))[:1]
+    photos = normalize_photo_list(content.get("property_photos"))
+    valid_photos = [photo for photo in photos if is_public_image_url(photo)]
+    return valid_photos[:1]
 
 
 def image_block(url, alt_text, arch=False):
