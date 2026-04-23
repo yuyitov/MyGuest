@@ -372,7 +372,246 @@
             font-weight: 500;
             letter-spacing: 0;
             text-transform: none;
-        }        
+        }      
+                .arrival-info-card {
+            background: var(--card);
+            border-radius: 36px;
+            padding: 26px 18px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .arrival-info-leaf {
+            text-align: center;
+            color: #d8c0a0;
+            margin-bottom: 10px;
+        }
+
+        .arrival-info-leaf svg {
+            width: 28px;
+            height: 28px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .arrival-info-title {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            line-height: 1.05;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 22px;
+            font-weight: 600;
+        }
+
+        .arrival-times-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 26px;
+        }
+
+        .arrival-time-card-elegant {
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.65);
+            border-radius: 24px;
+            min-height: 176px;
+            padding: 18px 10px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.03);
+        }
+
+        .arrival-time-big {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 74px;
+            line-height: 0.9;
+            color: #6e5230;
+            font-weight: 500;
+            margin-bottom: 14px;
+        }
+
+        .arrival-time-divider {
+            width: 72%;
+            height: 12px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .arrival-time-divider::before,
+        .arrival-time-divider::after {
+            content: "";
+            position: absolute;
+            top: 5px;
+            width: calc(50% - 10px);
+            height: 1.5px;
+            background: #dfc7a3;
+        }
+
+        .arrival-time-divider::before {
+            left: 0;
+        }
+
+        .arrival-time-divider::after {
+            right: 0;
+        }
+
+        .arrival-time-divider span {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #dfc7a3;
+        }
+
+        .arrival-time-caption {
+            font-size: 13px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: #6e5230;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .arrival-info-copy {
+            font-size: 17px;
+            line-height: 1.72;
+            color: var(--text);
+            margin: 0 8px 24px;
+            text-align: left;
+        }
+
+        .arrival-detail-card {
+            display: grid;
+            grid-template-columns: 128px 1fr;
+            gap: 18px;
+            align-items: center;
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.55);
+            border-radius: 28px;
+            padding: 18px 18px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.03);
+            margin-bottom: 16px;
+        }
+
+        .arrival-detail-icon {
+            width: 104px;
+            height: 104px;
+            border-radius: 999px;
+            background: #ffffff;
+            border: 1px solid rgba(212, 186, 154, 0.45);
+            color: #a07a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.04);
+        }
+
+        .arrival-detail-icon svg {
+            width: 56px;
+            height: 56px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .arrival-detail-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            line-height: 1;
+            color: #6e5230;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .arrival-detail-divider {
+            width: 70px;
+            height: 10px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .arrival-detail-divider::before,
+        .arrival-detail-divider::after {
+            content: "";
+            position: absolute;
+            top: 4px;
+            height: 1.5px;
+            background: #dfc7a3;
+        }
+
+        .arrival-detail-divider::before {
+            left: 0;
+            width: 28px;
+        }
+
+        .arrival-detail-divider::after {
+            right: 0;
+            width: 28px;
+        }
+
+        .arrival-detail-divider span {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #dfc7a3;
+        }
+
+        .arrival-detail-text {
+            font-size: 17px;
+            line-height: 1.68;
+            color: var(--text);
+        }
+
+        .arrival-menu-back-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .arrival-menu-back {
+            min-width: 220px;
+            padding: 16px 26px;
+            border-radius: 999px;
+            background: #8b6f47;
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(139, 111, 71, 0.20);
+        }
+
+        .arrival-menu-back svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
 
         .content-sections {
             margin-top: 18px;
@@ -535,7 +774,7 @@
             </div>
         </section>
 
-                <section class="screen menu-card">
+         <section id="menu-sheet" class="screen menu-card">
             <div class="menu-script-title">Your Guide</div>
 
             <div class="menu-subtitle">Everything at your fingertips</div>
@@ -766,7 +1005,82 @@
                 </div>
             </div>
         </section>
+             <section class="screen arrival-info-card">
+            <div class="arrival-info-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
 
+            <h2 class="arrival-info-title">Arrival Info</h2>
+
+            <div class="arrival-times-grid">
+                <div class="arrival-time-card-elegant">
+                    <div class="arrival-time-big">{{CHECKIN_TIME_DISPLAY}}</div>
+                    <div class="arrival-time-divider"><span></span></div>
+                    <div class="arrival-time-caption">Check In</div>
+                </div>
+
+                <div class="arrival-time-card-elegant">
+                    <div class="arrival-time-big">{{CHECKOUT_TIME_DISPLAY}}</div>
+                    <div class="arrival-time-divider"><span></span></div>
+                    <div class="arrival-time-caption">Check Out</div>
+                </div>
+            </div>
+
+            <p class="arrival-info-copy">
+                If you need special accommodations for your check-in or check-out time, please don’t hesitate to reach out to us, and we’ll do our best to make arrangements that suit your schedule.
+            </p>
+
+            <div class="arrival-detail-card">
+                <div class="arrival-detail-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M25 34l-6 18"></path>
+                        <path d="M19 52l8-2 13-34a7 7 0 0 0-13-5L14 43l5 9Z"></path>
+                        <circle cx="41" cy="16" r="7"></circle>
+                        <path d="M31 26l7 7"></path>
+                    </svg>
+                </div>
+
+                <div>
+                    <div class="arrival-detail-title">House Access</div>
+                    <div class="arrival-detail-divider"><span></span></div>
+                    <div class="arrival-detail-text">{{HOUSE_ACCESS_PUBLIC}}</div>
+                </div>
+            </div>
+
+            <div class="arrival-detail-card">
+                <div class="arrival-detail-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M18 38h28"></path>
+                        <path d="M22 38l3-10h14l7 10"></path>
+                        <path d="M28 28l3-6h8l3 6"></path>
+                        <circle cx="24" cy="42" r="6"></circle>
+                        <circle cx="44" cy="42" r="6"></circle>
+                    </svg>
+                </div>
+
+                <div>
+                    <div class="arrival-detail-title">Parking</div>
+                    <div class="arrival-detail-divider"><span></span></div>
+                    <div class="arrival-detail-text">{{PARKING_INFO}}</div>
+                </div>
+            </div>
+
+            <div class="arrival-menu-back-wrap">
+                <a href="#menu-sheet" class="arrival-menu-back">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Back to Menu</span>
+                </a>
+            </div>
+        </section>
+        
         <div class="content-sections">
             {{CONTENT_SECTIONS}}
         </div>
