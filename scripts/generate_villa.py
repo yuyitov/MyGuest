@@ -68,6 +68,36 @@ UI_STRINGS = {
 FALLBACK_COVER_IMAGE = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80"
 FALLBACK_WELCOME_IMAGE = "https://images.unsplash.com/photo-1583241800698-e8ab01830a22?auto=format&fit=crop&w=1400&q=80"
 
+CONTENT_FIELD_MAP = {
+    "checkin_time": "checkin",
+    "checkout_time": "checkin",
+    "house_access_public": "checkin",
+    "parking_info": "checkin",
+
+    "about_hosts": "about_house",
+    "amenities_list": "about_house",
+    "pet_friendly": "about_house",
+    "pet_rules": "about_house",
+
+    "google_maps_link": "location_transport",
+    "directions_text": "location_transport",
+    "transport_options": "location_transport",
+
+    "house_rules": "rules_info",
+    "things_to_know": "rules_info",
+    "before_you_leave": "rules_info",
+
+    "places_to_eat": "recommendations",
+    "places_to_drink": "recommendations",
+    "things_to_do": "recommendations",
+    "local_directory": "recommendations",
+
+    "host_email": "contact_social",
+    "emergency_contacts": "contact_social",
+    "airbnb_review_link": "contact_social",
+    "instagram_handle": "contact_social",
+}
+
 
 def safe_text(value):
     if value is None:
@@ -213,18 +243,18 @@ def is_public_image_url(url):
     return clean.startswith("http://") or clean.startswith("https://")
 
 
-def public_photos(content):
-    photos = normalize_photo_list(content.get("property_photos"))
+def public_photos(content_flat):
+    photos = normalize_photo_list(content_flat.get("property_photos"))
     return [photo for photo in photos if is_public_image_url(photo)]
 
 
-def first_public_photo(content):
-    photos = public_photos(content)
+def first_public_photo(content_flat):
+    photos = public_photos(content_flat)
     return photos[0] if photos else ""
 
 
-def nth_public_photo(content, index=0):
-    photos = public_photos(content)
+def nth_public_photo(content_flat, index=0):
+    photos = public_photos(content_flat)
     if index < len(photos):
         return photos[index]
     return photos[0] if photos else ""
@@ -243,34 +273,54 @@ def image_block(url, alt_text, arch=False):
     return f'<img src="{escape(clean_url)}" alt="{escape(alt_text)}">'
 
 
-def build_cover_image_block(content, villa_name):
-    photo = first_public_photo(content)
+def flatten_content(content):
+    if not isinstance(content, dict):
+        return {}
+
+    flat = {}
+
+    for key, value in content.items():
+        if key not in CONTENT_FIELD_MAP and not isinstance(value, dict):
+            flat[key] = value
+
+    for field_name, block_name in CONTENT_FIELD_MAP.items():
+        block = content.get(block_name, {})
+        if isinstance(block, dict) and field_name in block:
+            flat[field_name] = block.get(field_name)
+        elif field_name in content:
+            flat[field_name] = content.get(field_name)
+
+    return flat
+
+
+def build_cover_image_block(content_flat, villa_name):
+    photo = first_public_photo(content_flat)
     if photo:
         return image_block(photo, villa_name, arch=True)
     return image_block(FALLBACK_COVER_IMAGE, villa_name, arch=True)
 
 
-def build_welcome_image_block(content, villa_name):
-    photo = first_public_photo(content)
+def build_welcome_image_block(content_flat, villa_name):
+    photo = first_public_photo(content_flat)
     if photo:
         return image_block(photo, villa_name, arch=False)
     return image_block(FALLBACK_WELCOME_IMAGE, villa_name, arch=False)
 
 
-def build_editorial_image_block(content, field_name, alt_text, photo_index):
-    photo = nth_public_photo(content, photo_index)
+def build_editorial_image_block(content_flat, field_name, alt_text, photo_index):
+    photo = nth_public_photo(content_flat, photo_index)
     if photo:
         return image_block(photo, alt_text, arch=False)
 
-    field_text = normalize_text_block(content.get(field_name))
+    field_text = normalize_text_block(content_flat.get(field_name))
     if field_text:
         return f'<div style="width:100%;height:220px;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;color:#8b6f47;font-family:\'Cormorant Garamond\',serif;font-size:30px;line-height:1.1;">{escape(alt_text)}</div>'
 
     return ""
 
 
-def build_welcome_message_block(content):
-    return html_multiline(content.get("welcome_message"))
+def build_welcome_message_block(content_flat):
+    return html_multiline(content_flat.get("welcome_message"))
 
 
 def icon_button_svg(kind):
@@ -291,10 +341,10 @@ def icon_button_svg(kind):
     return ""
 
 
-def build_welcome_actions_block(content):
+def build_welcome_actions_block(content_flat):
     actions = []
 
-    maps_url = safe_text(content.get("google_maps_link"))
+    maps_url = safe_text(content_flat.get("google_maps_link"))
     if maps_url:
         actions.append(f'''
             <a class="welcome-action" href="{escape(maps_url)}" target="_blank" rel="noopener noreferrer" aria-label="Google Maps">
@@ -302,7 +352,7 @@ def build_welcome_actions_block(content):
             </a>
         ''')
 
-    host_email = safe_text(content.get("host_email"))
+    host_email = safe_text(content_flat.get("host_email"))
     if host_email:
         actions.append(f'''
             <a class="welcome-action" href="mailto:{escape(host_email)}" aria-label="Email">
@@ -313,10 +363,10 @@ def build_welcome_actions_block(content):
     return "\n".join(actions)
 
 
-def build_checkin_checkout_block(content, ui):
+def build_checkin_checkout_block(content_flat, ui):
     cards = []
 
-    checkin_time = safe_text(content.get("checkin_time"))
+    checkin_time = safe_text(content_flat.get("checkin_time"))
     if checkin_time:
         cards.append(f"""
             <div class="arrival-card">
@@ -325,7 +375,7 @@ def build_checkin_checkout_block(content, ui):
             </div>
         """)
 
-    checkout_time = safe_text(content.get("checkout_time"))
+    checkout_time = safe_text(content_flat.get("checkout_time"))
     if checkout_time:
         cards.append(f"""
             <div class="arrival-card">
@@ -337,50 +387,50 @@ def build_checkin_checkout_block(content, ui):
     return "\n".join(cards)
 
 
-def build_content_sections(content, ui):
+def build_content_sections(content_flat, ui):
     sections = []
 
     arrival_body = ""
-    arrival_body += paragraph_html(content.get("house_access_public"))
-    arrival_body += paragraph_html(content.get("parking_info"))
+    arrival_body += paragraph_html(content_flat.get("house_access_public"))
+    arrival_body += paragraph_html(content_flat.get("parking_info"))
     sections.append(section_html(ui["arrival"], arrival_body))
 
     about_body = ""
-    about_body += paragraph_html(content.get("about_hosts"))
-    about_body += paragraph_html(content.get("amenities_list"))
-    pet_value = safe_bool(content.get("pet_friendly"))
+    about_body += paragraph_html(content_flat.get("about_hosts"))
+    about_body += paragraph_html(content_flat.get("amenities_list"))
+    pet_value = safe_bool(content_flat.get("pet_friendly"))
     if pet_value is True:
         about_body += row_html(ui["pet_friendly"], ui["yes"])
     elif pet_value is False:
         about_body += row_html(ui["pet_friendly"], ui["no"])
-    about_body += paragraph_html(content.get("pet_rules"))
+    about_body += paragraph_html(content_flat.get("pet_rules"))
     sections.append(section_html(ui["about_stay"], about_body))
 
     location_body = ""
-    location_body += paragraph_html(content.get("directions_text"))
-    location_body += paragraph_html(content.get("transport_options"))
-    location_body += link_button_html(ui["open_maps"], content.get("google_maps_link"))
+    location_body += paragraph_html(content_flat.get("directions_text"))
+    location_body += paragraph_html(content_flat.get("transport_options"))
+    location_body += link_button_html(ui["open_maps"], content_flat.get("google_maps_link"))
     sections.append(section_html(ui["location_transport"], location_body))
 
     rules_body = ""
-    rules_body += paragraph_html(content.get("house_rules"))
-    rules_body += paragraph_html(content.get("things_to_know"))
-    rules_body += paragraph_html(content.get("before_you_leave"))
+    rules_body += paragraph_html(content_flat.get("house_rules"))
+    rules_body += paragraph_html(content_flat.get("things_to_know"))
+    rules_body += paragraph_html(content_flat.get("before_you_leave"))
     sections.append(section_html(ui["house_info"], rules_body))
 
     recommendations_body = ""
-    recommendations_body += paragraph_html(content.get("places_to_eat"))
-    recommendations_body += paragraph_html(content.get("places_to_drink"))
-    recommendations_body += paragraph_html(content.get("things_to_do"))
-    recommendations_body += paragraph_html(content.get("local_directory"))
+    recommendations_body += paragraph_html(content_flat.get("places_to_eat"))
+    recommendations_body += paragraph_html(content_flat.get("places_to_drink"))
+    recommendations_body += paragraph_html(content_flat.get("things_to_do"))
+    recommendations_body += paragraph_html(content_flat.get("local_directory"))
     sections.append(section_html(ui["recommendations"], recommendations_body))
 
     contact_body = ""
-    contact_body += row_html(ui["host_email"], content.get("host_email"))
-    contact_body += paragraph_html(content.get("emergency_contacts"))
-    contact_body += link_button_html(ui["leave_review"], content.get("airbnb_review_link"))
+    contact_body += row_html(ui["host_email"], content_flat.get("host_email"))
+    contact_body += paragraph_html(content_flat.get("emergency_contacts"))
+    contact_body += link_button_html(ui["leave_review"], content_flat.get("airbnb_review_link"))
 
-    instagram = safe_text(content.get("instagram_handle"))
+    instagram = safe_text(content_flat.get("instagram_handle"))
     if instagram:
         instagram_url = f"https://instagram.com/{instagram[1:]}" if instagram.startswith("@") else f"https://instagram.com/{instagram}"
         contact_body += link_button_html(ui["instagram"], instagram_url)
@@ -390,8 +440,8 @@ def build_content_sections(content, ui):
     return "\n".join(section for section in sections if section.strip())
 
 
-def build_directions_map_block(content, ui):
-    maps_url = safe_text(content.get("google_maps_link"))
+def build_directions_map_block(content_flat, ui):
+    maps_url = safe_text(content_flat.get("google_maps_link"))
     if not maps_url:
         return ""
 
@@ -417,6 +467,7 @@ def generate():
     metadata = payload.get("metadata", {}) or {}
     property_data = payload.get("property", {}) or {}
     content = payload.get("content", {}) or {}
+    content_flat = flatten_content(content)
 
     styles = {
         "Coastal": {"primary": "#2C7A7B", "accent": "#F4A261", "bg": "#F0F9FF", "text": "#2D3748"},
@@ -438,12 +489,12 @@ def generate():
         html = f.read()
 
     language_bar_html = build_language_bar(primary_language)
-    cover_image_block = build_cover_image_block(content, villa_name)
-    welcome_image_block = build_welcome_image_block(content, villa_name)
-    welcome_message_block = build_welcome_message_block(content)
-    welcome_actions_block = build_welcome_actions_block(content)
-    checkin_checkout_block = build_checkin_checkout_block(content, ui)
-    sections_html = build_content_sections(content, ui)
+    cover_image_block = build_cover_image_block(content_flat, villa_name)
+    welcome_image_block = build_welcome_image_block(content_flat, villa_name)
+    welcome_message_block = build_welcome_message_block(content_flat)
+    welcome_actions_block = build_welcome_actions_block(content_flat)
+    checkin_checkout_block = build_checkin_checkout_block(content_flat, ui)
+    sections_html = build_content_sections(content_flat, ui)
 
     replacements = {
         "{{HTML_LANG}}": escape(ui["html_lang"]),
@@ -461,33 +512,33 @@ def generate():
         "{{COLOR_BG}}": style["bg"],
         "{{COLOR_TEXT}}": style["text"],
 
-        "{{CHECKIN_TIME_DISPLAY}}": escape(safe_text(content.get("checkin_time"))),
-        "{{CHECKOUT_TIME_DISPLAY}}": escape(safe_text(content.get("checkout_time"))),
-        "{{HOUSE_ACCESS_PUBLIC}}": html_multiline(content.get("house_access_public")),
-        "{{PARKING_INFO}}": html_multiline(content.get("parking_info")),
+        "{{CHECKIN_TIME_DISPLAY}}": escape(safe_text(content_flat.get("checkin_time"))),
+        "{{CHECKOUT_TIME_DISPLAY}}": escape(safe_text(content_flat.get("checkout_time"))),
+        "{{HOUSE_ACCESS_PUBLIC}}": html_multiline(content_flat.get("house_access_public")),
+        "{{PARKING_INFO}}": html_multiline(content_flat.get("parking_info")),
 
-        "{{AMENITIES_LIST}}": html_multiline(content.get("amenities_list")),
-        "{{DIRECTIONS_MAP_BLOCK}}": build_directions_map_block(content, ui),
-        "{{GOOGLE_MAPS_LINK}}": html_multiline(content.get("google_maps_link")),
-        "{{DIRECTIONS_TEXT}}": html_multiline(content.get("directions_text")),
-        "{{TRANSPORT_OPTIONS}}": html_multiline(content.get("transport_options")),
+        "{{AMENITIES_LIST}}": html_multiline(content_flat.get("amenities_list")),
+        "{{DIRECTIONS_MAP_BLOCK}}": build_directions_map_block(content_flat, ui),
+        "{{GOOGLE_MAPS_LINK}}": html_multiline(content_flat.get("google_maps_link")),
+        "{{DIRECTIONS_TEXT}}": html_multiline(content_flat.get("directions_text")),
+        "{{TRANSPORT_OPTIONS}}": html_multiline(content_flat.get("transport_options")),
 
-        "{{THINGS_TO_KNOW}}": html_multiline(content.get("things_to_know")),
-        "{{THINGS_TO_DO}}": html_multiline(content.get("things_to_do")),
-        "{{PLACES_TO_EAT}}": html_multiline(content.get("places_to_eat")),
-        "{{PLACES_TO_DRINK}}": html_multiline(content.get("places_to_drink")),
+        "{{THINGS_TO_KNOW}}": html_multiline(content_flat.get("things_to_know")),
+        "{{THINGS_TO_DO}}": html_multiline(content_flat.get("things_to_do")),
+        "{{PLACES_TO_EAT}}": html_multiline(content_flat.get("places_to_eat")),
+        "{{PLACES_TO_DRINK}}": html_multiline(content_flat.get("places_to_drink")),
 
-        "{{THINGS_TO_DO_IMAGE_BLOCK}}": build_editorial_image_block(content, "things_to_do", "Things to Do", 1),
-        "{{PLACES_TO_EAT_IMAGE_BLOCK}}": build_editorial_image_block(content, "places_to_eat", "Places to Eat", 2),
-        "{{PLACES_TO_DRINK_IMAGE_BLOCK}}": build_editorial_image_block(content, "places_to_drink", "Places to Drink", 3),
+        "{{THINGS_TO_DO_IMAGE_BLOCK}}": build_editorial_image_block(content_flat, "things_to_do", "Things to Do", 1),
+        "{{PLACES_TO_EAT_IMAGE_BLOCK}}": build_editorial_image_block(content_flat, "places_to_eat", "Places to Eat", 2),
+        "{{PLACES_TO_DRINK_IMAGE_BLOCK}}": build_editorial_image_block(content_flat, "places_to_drink", "Places to Drink", 3),
 
-        "{{HOUSE_RULES}}": html_multiline(content.get("house_rules")),
-        "{{EMERGENCY_CONTACTS}}": html_multiline(content.get("emergency_contacts")),
-        "{{LOCAL_DIRECTORY}}": html_multiline(content.get("local_directory")),
-        "{{AIRBNB_REVIEW_LINK}}": escape(safe_text(content.get("airbnb_review_link"))),
-        "{{BEFORE_YOU_LEAVE}}": html_multiline(content.get("before_you_leave")),
-        "{{HOST_EMAIL}}": html_multiline(content.get("host_email")),
-        "{{INSTAGRAM_HANDLE}}": html_multiline(content.get("instagram_handle")),
+        "{{HOUSE_RULES}}": html_multiline(content_flat.get("house_rules")),
+        "{{EMERGENCY_CONTACTS}}": html_multiline(content_flat.get("emergency_contacts")),
+        "{{LOCAL_DIRECTORY}}": html_multiline(content_flat.get("local_directory")),
+        "{{AIRBNB_REVIEW_LINK}}": escape(safe_text(content_flat.get("airbnb_review_link"))),
+        "{{BEFORE_YOU_LEAVE}}": html_multiline(content_flat.get("before_you_leave")),
+        "{{HOST_EMAIL}}": html_multiline(content_flat.get("host_email")),
+        "{{INSTAGRAM_HANDLE}}": html_multiline(content_flat.get("instagram_handle")),
     }
 
     for placeholder, value in replacements.items():
