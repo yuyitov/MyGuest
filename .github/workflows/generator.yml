@@ -95,6 +95,53 @@ jobs:
         run: |
           python scripts/build_print_pdf.py "$PUBLIC_PAYLOAD_JSON"
 
+            - name: QA public outputs for private data
+        run: |
+          python - <<'PY'
+          import os
+          import sys
+
+          forbidden_terms = [
+              "wifi_ssid",
+              "wifi_password",
+              "door_code",
+              "host_phone",
+              "house_access_private",
+              "guest_access_pin",
+              "private_record_key",
+              "priv-"
+          ]
+
+          public_root = "public"
+
+          hits = []
+
+          for root, dirs, files in os.walk(public_root):
+              for filename in files:
+                  path = os.path.join(root, filename)
+
+                  if filename.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".gif", ".ico", ".pdf")):
+                      continue
+
+                  try:
+                      with open(path, "r", encoding="utf-8", errors="ignore") as f:
+                          content = f.read()
+                  except Exception:
+                      continue
+
+                  for term in forbidden_terms:
+                      if term in content:
+                          hits.append((path, term))
+
+          if hits:
+              print("Private/sensitive terms found in public outputs:")
+              for path, term in hits:
+                  print(f"- {path}: {term}")
+              sys.exit(1)
+
+          print("QA OK: no private/sensitive terms found in public text outputs.")
+          PY
+
       - name: Commit and Push
         run: |
           git config --global user.name "MyGuest Bot"
