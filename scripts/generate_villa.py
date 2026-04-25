@@ -5,6 +5,7 @@ from html import escape
 
 
 SUPPORTED_LANGUAGES = ["English", "Español", "Français"]
+
 LANGUAGE_FILE_MAP = {
     "English": "en.html",
     "Español": "es.html",
@@ -37,9 +38,9 @@ UI_STRINGS = {
         "house_info": "Información de la casa",
         "recommendations": "Recomendaciones",
         "contact": "Contacto",
-        "checkin": "Check In",
-        "checkout": "Check Out",
-        "pet_friendly": "Pet friendly",
+        "checkin": "Llegada",
+        "checkout": "Salida",
+        "pet_friendly": "Mascotas permitidas",
         "yes": "Sí",
         "no": "No",
         "open_maps": "Abrir Google Maps",
@@ -55,8 +56,8 @@ UI_STRINGS = {
         "house_info": "Informations sur la maison",
         "recommendations": "Recommandations",
         "contact": "Contact",
-        "checkin": "Check In",
-        "checkout": "Check Out",
+        "checkin": "Arrivée",
+        "checkout": "Départ",
         "pet_friendly": "Animaux acceptés",
         "yes": "Oui",
         "no": "Non",
@@ -65,6 +66,96 @@ UI_STRINGS = {
         "instagram": "Instagram",
         "host_email": "Email de l’hôte",
         "html_lang": "fr",
+    },
+}
+
+STATIC_TEMPLATE_TRANSLATIONS = {
+    "English": {},
+    "Español": {
+        "WELCOME": "BIENVENIDO",
+        "Your Guide": "Tu Guía",
+        "TO": "A",
+        "ENJOY YOUR STAY": "DISFRUTA TU ESTANCIA",
+        "A Warm Welcome": "Una Cálida Bienvenida",
+        "Enjoy": "Disfruta",
+        "Everything at your fingertips": "Todo al alcance de tu mano",
+        "Check In/Out": "Llegada / Salida",
+        "Check In": "Llegada",
+        "Check Out": "Salida",
+        "Amenities": "Amenidades",
+        "Directions": "Cómo Llegar",
+        "WiFi": "WiFi",
+        "Transport": "Transporte",
+        "Things to Know": "Información Importante",
+        "Things to Do": "Qué Hacer",
+        "Places to Eat": "Dónde Comer",
+        "Places to Drink": "Dónde Tomar Algo",
+        "House Rules": "Reglas de la Casa",
+        "Emergency": "Emergencias",
+        "Local Directory": "Directorio Local",
+        "Review": "Reseña",
+        "Before You Leave": "Antes de Salir",
+        "Contact": "Contacto",
+        "Arrival Info": "Información de Llegada",
+        "House Access": "Acceso a la Casa",
+        "Parking": "Estacionamiento",
+        "Back to Menu": "Volver al Menú",
+        "Included": "Incluido",
+        "Map": "Mapa",
+        "Getting Around": "Cómo Moverse",
+        "Good to Know": "Bueno Saber",
+        "Email": "Correo",
+        "Instagram": "Instagram",
+        "Leave a Review": "Dejar una Reseña",
+        "WiFi details are protected and require guest PIN access.": "Los datos de WiFi están protegidos y requieren acceso con PIN de huésped.",
+        "Please use your secure guest access to view the network name and password.": "Usa tu acceso seguro de huésped para ver el nombre de la red y la contraseña.",
+        "Helpful details to make your stay smoother, easier, and more comfortable from the moment you arrive.": "Detalles útiles para que tu estancia sea más fácil, cómoda y agradable desde tu llegada.",
+        "If you enjoyed your stay, we’d truly appreciate your review. Your feedback helps future guests and means a lot to us.": "Si disfrutaste tu estancia, agradeceríamos mucho tu reseña. Tus comentarios ayudan a futuros huéspedes y significan mucho para nosotros.",
+        "If you need special accommodations for your check-in or check-out time, please don’t hesitate to reach out to us, and we’ll do our best to make arrangements that suit your schedule.": "Si necesitas apoyo especial con tu hora de llegada o salida, contáctanos y haremos lo posible por ayudarte.",
+        "This welcome book shows public guest information only.": "Este welcome book muestra únicamente información pública para huéspedes.",
+    },
+    "Français": {
+        "WELCOME": "BIENVENUE",
+        "Your Guide": "Votre Guide",
+        "TO": "À",
+        "ENJOY YOUR STAY": "PROFITEZ DE VOTRE SÉJOUR",
+        "A Warm Welcome": "Bienvenue",
+        "Enjoy": "Profitez",
+        "Everything at your fingertips": "Tout à portée de main",
+        "Check In/Out": "Arrivée / Départ",
+        "Check In": "Arrivée",
+        "Check Out": "Départ",
+        "Amenities": "Équipements",
+        "Directions": "Itinéraire",
+        "WiFi": "WiFi",
+        "Transport": "Transport",
+        "Things to Know": "Informations Utiles",
+        "Things to Do": "Activités",
+        "Places to Eat": "Où Manger",
+        "Places to Drink": "Où Boire",
+        "House Rules": "Règles de la Maison",
+        "Emergency": "Urgence",
+        "Local Directory": "Répertoire Local",
+        "Review": "Avis",
+        "Before You Leave": "Avant Votre Départ",
+        "Contact": "Contact",
+        "Arrival Info": "Informations d’Arrivée",
+        "House Access": "Accès à la Maison",
+        "Parking": "Stationnement",
+        "Back to Menu": "Retour au Menu",
+        "Included": "Inclus",
+        "Map": "Carte",
+        "Getting Around": "Se Déplacer",
+        "Good to Know": "Bon à Savoir",
+        "Email": "Email",
+        "Instagram": "Instagram",
+        "Leave a Review": "Laisser un Avis",
+        "WiFi details are protected and require guest PIN access.": "Les informations WiFi sont protégées et nécessitent un accès invité avec code PIN.",
+        "Please use your secure guest access to view the network name and password.": "Veuillez utiliser votre accès invité sécurisé pour voir le nom du réseau et le mot de passe.",
+        "Helpful details to make your stay smoother, easier, and more comfortable from the moment you arrive.": "Des informations utiles pour rendre votre séjour plus simple, agréable et confortable dès votre arrivée.",
+        "If you enjoyed your stay, we’d truly appreciate your review. Your feedback helps future guests and means a lot to us.": "Si vous avez apprécié votre séjour, nous vous serions très reconnaissants de laisser un avis. Vos commentaires aident les futurs invités et comptent beaucoup pour nous.",
+        "If you need special accommodations for your check-in or check-out time, please don’t hesitate to reach out to us, and we’ll do our best to make arrangements that suit your schedule.": "Si vous avez besoin d’un arrangement spécial pour votre arrivée ou votre départ, contactez-nous et nous ferons de notre mieux pour vous aider.",
+        "This welcome book shows public guest information only.": "Ce welcome book affiche uniquement les informations publiques destinées aux invités.",
     },
 }
 
@@ -194,6 +285,7 @@ def resolve_language(primary_language):
     clean = safe_text(primary_language)
     return clean if clean in SUPPORTED_LANGUAGES else "English"
 
+
 def build_language_bar(active_language):
     chips = []
     for lang in SUPPORTED_LANGUAGES:
@@ -201,7 +293,6 @@ def build_language_bar(active_language):
         href = LANGUAGE_FILE_MAP.get(lang, "index.html")
         chips.append(f'<a class="{css_class}" href="{escape(href)}">{escape(lang)}</a>')
     return "\n".join(chips)
-
 
 
 def normalize_photo_list(value):
@@ -458,8 +549,16 @@ def build_directions_map_block(content_flat, ui):
     '''
 
 
+def apply_static_template_translations(html, active_language):
+    translations = STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {})
+    for source_text, translated_text in translations.items():
+        html = html.replace(source_text, translated_text)
+    return html
+
+
 def replace_placeholder(html, placeholder, value):
     return html.replace(placeholder, value if value is not None else "")
+
 
 def render_html_for_language(payload, active_language, output_filename):
     metadata = payload.get("metadata", {}) or {}
@@ -484,6 +583,8 @@ def render_html_for_language(payload, active_language, output_filename):
 
     with open("templates/master.html", "r", encoding="utf-8") as f:
         html = f.read()
+
+    html = apply_static_template_translations(html, active_language)
 
     language_bar_html = build_language_bar(active_language)
     cover_image_block = build_cover_image_block(content_flat, villa_name)
@@ -584,4 +685,3 @@ def generate():
 
 if __name__ == "__main__":
     generate()
-
