@@ -95,7 +95,7 @@ jobs:
         run: |
           python scripts/build_print_pdf.py "$PUBLIC_PAYLOAD_JSON"
 
-            - name: QA public outputs for private data
+      - name: QA public outputs for private data
         run: |
           python - <<'PY'
           import os
