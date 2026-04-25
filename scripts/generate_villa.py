@@ -5,7 +5,11 @@ from html import escape
 
 
 SUPPORTED_LANGUAGES = ["English", "Español", "Français"]
-
+LANGUAGE_FILE_MAP = {
+    "English": "en.html",
+    "Español": "es.html",
+    "Français": "fr.html",
+}
 
 UI_STRINGS = {
     "English": {
@@ -190,13 +194,14 @@ def resolve_language(primary_language):
     clean = safe_text(primary_language)
     return clean if clean in SUPPORTED_LANGUAGES else "English"
 
-
-def build_language_bar(primary_language):
+def build_language_bar(active_language):
     chips = []
     for lang in SUPPORTED_LANGUAGES:
-        css_class = "language-chip active" if lang == primary_language else "language-chip"
-        chips.append(f'<div class="{css_class}">{escape(lang)}</div>')
+        css_class = "language-chip active" if lang == active_language else "language-chip"
+        href = LANGUAGE_FILE_MAP.get(lang, "index.html")
+        chips.append(f'<a class="{css_class}" href="{escape(href)}">{escape(lang)}</a>')
     return "\n".join(chips)
+
 
 
 def normalize_photo_list(value):
@@ -456,14 +461,7 @@ def build_directions_map_block(content_flat, ui):
 def replace_placeholder(html, placeholder, value):
     return html.replace(placeholder, value if value is not None else "")
 
-
-def generate():
-    try:
-        payload = json.loads(sys.argv[1])
-    except Exception:
-        print("Error al leer JSON")
-        return
-
+def render_html_for_language(payload, active_language, output_filename):
     metadata = payload.get("metadata", {}) or {}
     property_data = payload.get("property", {}) or {}
     content = payload.get("content", {}) or {}
@@ -481,14 +479,13 @@ def generate():
 
     villa_name = safe_text(property_data.get("property_name")) or "My Villa"
     property_address = safe_text(property_data.get("property_address"))
-    primary_language = resolve_language(property_data.get("primary_language"))
-    ui = UI_STRINGS[primary_language]
+    ui = UI_STRINGS[active_language]
     slug = safe_text(metadata.get("slug")) or "demo"
 
     with open("templates/master.html", "r", encoding="utf-8") as f:
         html = f.read()
 
-    language_bar_html = build_language_bar(primary_language)
+    language_bar_html = build_language_bar(active_language)
     cover_image_block = build_cover_image_block(content_flat, villa_name)
     welcome_image_block = build_welcome_image_block(content_flat, villa_name)
     welcome_message_block = build_welcome_message_block(content_flat)
@@ -547,11 +544,44 @@ def generate():
     output_dir = os.path.join("public", "villas", slug)
     os.makedirs(output_dir, exist_ok=True)
 
-    with open(os.path.join(output_dir, "index.html"), "w", encoding="utf-8") as f:
+    output_path = os.path.join(output_dir, output_filename)
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write(html)
 
-    print(f"Generated public/villas/{slug}/index.html")
+    print(f"Generated public/villas/{slug}/{output_filename}")
+
+
+def generate():
+    try:
+        payload = json.loads(sys.argv[1])
+    except Exception:
+        print("Error al leer JSON")
+        return
+
+    property_data = payload.get("property", {}) or {}
+    primary_language = resolve_language(property_data.get("primary_language"))
+
+    primary_filename = LANGUAGE_FILE_MAP.get(primary_language, "en.html")
+
+    for language, filename in LANGUAGE_FILE_MAP.items():
+        render_html_for_language(payload, language, filename)
+
+    metadata = payload.get("metadata", {}) or {}
+    slug = safe_text(metadata.get("slug")) or "demo"
+    output_dir = os.path.join("public", "villas", slug)
+
+    primary_path = os.path.join(output_dir, primary_filename)
+    index_path = os.path.join(output_dir, "index.html")
+
+    with open(primary_path, "r", encoding="utf-8") as source:
+        index_html = source.read()
+
+    with open(index_path, "w", encoding="utf-8") as target:
+        target.write(index_html)
+
+    print(f"Generated public/villas/{slug}/index.html from {primary_filename}")
 
 
 if __name__ == "__main__":
     generate()
+
