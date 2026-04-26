@@ -355,6 +355,7 @@ def build_editorial_image_block(content_flat, field_name, alt_text, photo_index)
 def build_welcome_message_block(content_flat):
     return html_multiline(content_flat.get("welcome_message"))
 
+
 def build_about_hosts_block(content_flat, active_language):
     about_hosts = html_multiline(content_flat.get("about_hosts"))
 
@@ -375,6 +376,7 @@ def build_about_hosts_block(content_flat, active_language):
             <p class="welcome-about-copy">{about_hosts}</p>
         </div>
     """
+
 
 def icon_button_svg(kind):
     if kind == "maps":
@@ -524,261 +526,8 @@ def replace_placeholder(html, placeholder, value):
 
 
 def inject_public_qa_overrides(html):
-    css = r'''
-
-        /* Bloque 12 public QA overrides */
-        html {
-            scroll-behavior: smooth;
-            -webkit-text-size-adjust: 100%;
-        }
-
-        body {
-            overflow-x: hidden;
-            color: var(--text);
-        }
-
-        .app-shell {
-            width: min(100%, 430px);
-            max-width: 430px;
-            padding: clamp(12px, 4vw, 18px) clamp(12px, 4vw, 18px) 36px;
-        }
-
-        .screen {
-            scroll-margin-top: 14px;
-        }
-
-        .cover-screen {
-            min-height: calc(100svh - 92px);
-            justify-content: space-between;
-            gap: clamp(10px, 2.4svh, 18px);
-        }
-
-        .cover-title {
-            font-size: clamp(38px, 13.5vw, 58px);
-            line-height: 1.02;
-            letter-spacing: 0.055em;
-            margin-top: 0;
-            margin-bottom: clamp(8px, 2svh, 18px);
-            overflow-wrap: anywhere;
-        }
-
-        .cover-image-wrap {
-            margin-bottom: clamp(8px, 2svh, 18px);
-        }
-
-        .cover-image-arch {
-            width: min(78vw, 284px);
-            max-height: 42svh;
-        }
-
-        .cover-script {
-            font-size: clamp(50px, 16vw, 72px);
-            margin-bottom: 4px;
-        }
-
-        .cover-to {
-            font-size: clamp(17px, 5.5vw, 24px);
-            margin-bottom: 6px;
-        }
-
-        .cover-address {
-            max-width: 100%;
-            font-size: clamp(17px, 5.8vw, 25px);
-            line-height: 1.12;
-            letter-spacing: 0.055em;
-        }
-
-        .welcome-title,
-        .info-sheet-title,
-        .arrival-info-title,
-        .list-sheet-title,
-        .editorial-sheet-title,
-        .rule-sheet-title {
-            overflow-wrap: anywhere;
-        }
-
-        .welcome-card,
-        .menu-card,
-        .arrival-info-card,
-        .info-sheet,
-        .list-sheet,
-        .editorial-sheet,
-        .rule-sheet {
-            border-radius: clamp(24px, 7vw, 36px);
-        }
-
-        .welcome-title {
-            font-size: clamp(34px, 11vw, 56px);
-            line-height: 1.04;
-            margin-bottom: 16px;
-        }
-
-        .welcome-image {
-            min-height: 0;
-            margin-bottom: 18px;
-        }
-
-        .welcome-image img {
-            width: 100%;
-            height: clamp(178px, 42svh, 260px);
-            min-height: 0;
-            object-fit: cover;
-        }
-
-        .welcome-message {
-            max-width: 100%;
-            font-size: clamp(17px, 5vw, 22px);
-            line-height: 1.55;
-        }
-
-        .menu-grid {
-            gap: 14px;
-        }
-
-        .menu-item {
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .menu-tile {
-            border-radius: 22px;
-        }
-
-        .menu-icon {
-            width: clamp(54px, 17vw, 76px);
-            height: clamp(54px, 17vw, 76px);
-        }
-
-        .menu-icon svg {
-            width: 100%;
-            height: 100%;
-            fill: currentColor;
-            stroke: none;
-        }
-
-        .menu-label {
-            color: var(--text);
-        }
-
-        @media (max-width: 360px) {
-            .language-bar {
-                gap: 8px;
-            }
-            .language-bar .language-chip,
-            .language-bar button,
-            .language-bar a {
-                padding: 11px 14px;
-                font-size: 12px;
-            }
-            .menu-grid {
-                column-gap: 10px;
-                row-gap: 14px;
-            }
-            .menu-label {
-                font-size: 12px;
-            }
-        }
-    '''
-
-    js = r'''
-    <script>
-    (function () {
-        const svg = {
-            clock: '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="25"></circle><path d="M32 17v17l12 7"></path></svg>',
-            star: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 7l7.4 15 16.6 2.4-12 11.7 2.8 16.5L32 44.8 17.2 52.6 20 36.1 8 24.4 24.6 22z"></path></svg>',
-            map: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 15l14-6 16 6 14-6v40l-14 6-16-6-14 6z"></path><path d="M24 9v40M40 15v40"></path></svg>',
-            wifi: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M14 27a28 28 0 0 1 36 0"></path><path d="M22 36a16 16 0 0 1 20 0"></path><path d="M30 45a4 4 0 0 1 4 0"></path><circle cx="32" cy="49" r="3"></circle></svg>',
-            car: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M15 37l5-15h24l5 15"></path><rect x="10" y="34" width="44" height="15" rx="4"></rect><circle cx="20" cy="50" r="5"></circle><circle cx="44" cy="50" r="5"></circle></svg>',
-            info: '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="25"></circle><path d="M32 29v17"></path><circle cx="32" cy="20" r="3"></circle></svg>',
-            sun: '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="12"></circle><path d="M32 6v10M32 48v10M6 32h10M48 32h10M13.6 13.6l7 7M43.4 43.4l7 7M50.4 13.6l-7 7M20.6 43.4l-7 7"></path></svg>',
-            fork: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 8v22M13 8v18c0 5 3 8 7 8s7-3 7-8V8M20 34v22"></path><path d="M43 8c7 8 7 20 0 27v21"></path></svg>',
-            glass: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M19 10h26l-4 22a9 9 0 0 1-18 0z"></path><path d="M32 41v13M24 56h16"></path></svg>',
-            rules: '<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="16" y="10" width="32" height="44" rx="4"></rect><path d="M23 23h18M23 33h18M23 43h12"></path></svg>',
-            cross: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M25 10h14v15h15v14H39v15H25V39H10V25h15z"></path></svg>',
-            directory: '<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="14" y="12" width="36" height="42" rx="4"></rect><path d="M24 24h16M24 34h16M24 44h10"></path></svg>',
-            review: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 14h40v30H25L14 53V44h-2z"></path><path d="M23 27h18M23 36h12"></path></svg>',
-            suitcase: '<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="22" width="40" height="28" rx="4"></rect><path d="M24 22v-6h16v6M12 32h40"></path></svg>',
-            mail: '<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="16" width="44" height="32" rx="4"></rect><path d="M12 20l20 16 20-16"></path></svg>'
-        };
-
-        const map = [
-            {keys: ['check in', 'check out', 'llegada / salida', 'arrivée / départ'], icon: svg.clock, target: ['Arrival Info', 'Información de Llegada', 'Informations d’Arrivée']},
-            {keys: ['amenities', 'amenidades', 'équipements'], icon: svg.star, target: ['Amenities', 'Amenidades', 'Équipements']},
-            {keys: ['directions', 'cómo llegar', 'itinéraire'], icon: svg.map, target: ['Directions', 'Cómo Llegar', 'Itinéraire']},
-            {keys: ['wifi'], icon: svg.wifi, target: ['WiFi']},
-            {keys: ['transport', 'transporte'], icon: svg.car, target: ['Transport', 'Transporte']},
-            {keys: ['things to know', 'información importante', 'informations utiles'], icon: svg.info, target: ['Things to Know', 'Información Importante', 'Informations Utiles']},
-            {keys: ['things to do', 'qué hacer', 'activités'], icon: svg.sun, target: ['Things to Do', 'Qué Hacer', 'Activités']},
-            {keys: ['places to eat', 'dónde comer', 'où manger'], icon: svg.fork, target: ['Places to Eat', 'Dónde Comer', 'Où Manger']},
-            {keys: ['places to drink', 'dónde tomar algo', 'où boire'], icon: svg.glass, target: ['Places to Drink', 'Dónde Tomar Algo', 'Où Boire']},
-            {keys: ['house rules', 'reglas de la casa', 'règles de la maison'], icon: svg.rules, target: ['House Rules', 'Reglas de la Casa', 'Règles de la Maison']},
-            {keys: ['emergency', 'emergencias', 'urgence'], icon: svg.cross, target: ['Emergency', 'Emergencias', 'Urgence']},
-            {keys: ['local directory', 'directorio local', 'répertoire local'], icon: svg.directory, target: ['Local Directory', 'Directorio Local', 'Répertoire Local']},
-            {keys: ['review', 'reseña', 'avis'], icon: svg.review, target: ['Review', 'Reseña', 'Avis']},
-            {keys: ['before you leave', 'antes de salir', 'avant votre départ'], icon: svg.suitcase, target: ['Before You Leave', 'Antes de Salir', 'Avant Votre Départ']},
-            {keys: ['contact', 'contacto'], icon: svg.mail, target: ['Contact', 'Contacto']}
-        ];
-
-        function norm(text) {
-            return (text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
-        }
-
-        function findTarget(labels) {
-            const screens = Array.from(document.querySelectorAll('.screen'));
-            return screens.find(screen => labels.some(label => norm(screen.textContent).includes(norm(label))));
-        }
-
-        const items = Array.from(document.querySelectorAll('.menu-item'));
-        items.forEach(item => {
-            const label = item.querySelector('.menu-label')?.textContent || item.textContent || '';
-            const entry = map.find(row => row.keys.some(key => norm(label).includes(norm(key))));
-            if (!entry) return;
-
-            const icon = item.querySelector('.menu-icon');
-            if (icon) icon.innerHTML = entry.icon;
-
-            const target = findTarget(entry.target);
-            if (target) {
-                item.setAttribute('role', 'link');
-                item.setAttribute('tabindex', '0');
-                item.addEventListener('click', () => target.scrollIntoView({behavior: 'smooth', block: 'start'}));
-                item.addEventListener('keydown', event => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        target.scrollIntoView({behavior: 'smooth', block: 'start'});
-                    }
-                });
-            }
-        });
-
-        const order = ['check', 'amenities', 'directions', 'wifi', 'transport', 'things to know', 'things to do', 'places to eat', 'places to drink', 'house rules', 'emergency', 'local directory', 'review', 'before you leave', 'contact'];
-        const grid = document.querySelector('.menu-grid');
-        if (grid) {
-            const sorted = Array.from(grid.children).sort((a, b) => {
-                const la = norm(a.textContent);
-                const lb = norm(b.textContent);
-                const ia = order.findIndex(key => la.includes(key));
-                const ib = order.findIndex(key => lb.includes(key));
-                return (ia < 0 ? 999 : ia) - (ib < 0 ? 999 : ib);
-            });
-            sorted.forEach(child => grid.appendChild(child));
-        }
-
-        Array.from(document.querySelectorAll('*')).forEach(el => {
-            if (el.children.length === 0 && /\{\{|_BLOCK|MESSAGEBLOCK|ACTION/.test(el.textContent || '')) {
-                el.textContent = '';
-                el.style.display = 'none';
-            }
-        });
-    }());
-    </script>
-    '''
-
-    if "</style>" in html:
-        html = html.replace("</style>", css + "\n    </style>", 1)
-    if "</body>" in html:
-        html = html.replace("</body>", js + "\n</body>", 1)
+    # Desactivado en Bloque 12 para que Pantalla 1 y Pantalla 2 usen
+    # únicamente el diseño aprobado en templates/master.html.
     return html
 
 
@@ -848,12 +597,9 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{HOST_EMAIL}}": html_multiline(content_flat.get("host_email")),
         "{{INSTAGRAM_HANDLE}}": html_multiline(content_flat.get("instagram_handle")),
     }
+
     for placeholder, value in replacements.items():
-    html = replace_placeholder(html, placeholder, value)
-   
-    # Pantalla 1 y 2 usan el diseño aprobado directamente desde templates/master.html.
-# Mantener desactivado para evitar que el CSS viejo pise tamaños, colores y layout aprobados.
-# html = inject_public_qa_overrides(html)
+        html = replace_placeholder(html, placeholder, value)
 
     output_dir = os.path.join("public", "villas", slug)
     os.makedirs(output_dir, exist_ok=True)
