@@ -24,6 +24,8 @@ UI_STRINGS = {
         "instagram": "Instagram",
         "host_email": "Host email",
         "primary_language": "Primary language",
+        "footer": "Public guest version only. Private access details are intentionally excluded.",
+        "html_lang": "en",
     },
     "Español": {
         "eyebrow": "BIENVENIDO",
@@ -33,9 +35,9 @@ UI_STRINGS = {
         "house_info": "Información de la casa",
         "recommendations": "Recomendaciones",
         "contact": "Contacto",
-        "checkin": "Check-in",
-        "checkout": "Check-out",
-        "pet_friendly": "Pet friendly",
+        "checkin": "Llegada",
+        "checkout": "Salida",
+        "pet_friendly": "Mascotas permitidas",
         "yes": "Sí",
         "no": "No",
         "open_maps": "Google Maps",
@@ -43,6 +45,8 @@ UI_STRINGS = {
         "instagram": "Instagram",
         "host_email": "Correo del anfitrión",
         "primary_language": "Idioma principal",
+        "footer": "Versión pública para huéspedes. Los datos de acceso privado se excluyen intencionalmente.",
+        "html_lang": "es",
     },
     "Français": {
         "eyebrow": "BIENVENUE",
@@ -52,8 +56,8 @@ UI_STRINGS = {
         "house_info": "Informations sur la maison",
         "recommendations": "Recommandations",
         "contact": "Contact",
-        "checkin": "Check-in",
-        "checkout": "Check-out",
+        "checkin": "Arrivée",
+        "checkout": "Départ",
         "pet_friendly": "Animaux acceptés",
         "yes": "Oui",
         "no": "Non",
@@ -62,30 +66,65 @@ UI_STRINGS = {
         "instagram": "Instagram",
         "host_email": "Email de l’hôte",
         "primary_language": "Langue principale",
+        "footer": "Version publique destinée aux invités. Les informations d’accès privé sont volontairement exclues.",
+        "html_lang": "fr",
     },
 }
 
 STYLE_MAP = {
-    "Coastal": {"primary": "#2C7A7B", "accent": "#F4A261", "text": "#2D3748"},
-    "Minimalist": {"primary": "#8B6F47", "accent": "#D9CEBA", "text": "#2E2218"},
+    "Coastal": {"primary": "#2C7A7B", "accent": "#F4A261", "text": "#1F3A3A"},
+    "Minimalist": {"primary": "#8B6F47", "accent": "#D9CEBA", "text": "#3A2A1C"},
     "Classic": {"primary": "#000000", "accent": "#A0A0A0", "text": "#1A1A1A"},
     "Sunset": {"primary": "#E76F51", "accent": "#E9C46A", "text": "#264653"},
 }
+
+EMPTY_TEXT_VALUES = {"", "-", "n/a", "na", "none", "null", "undefined"}
 
 
 def safe_text(value):
     if value is None:
         return ""
     if isinstance(value, list):
-        return ""
+        return normalize_text_block(value)
+    if isinstance(value, dict):
+        return normalize_text_block(value)
     text = str(value).strip()
-    if text.lower() in {"", "-", "n/a", "na", "none"}:
+    if text.lower() in EMPTY_TEXT_VALUES:
         return ""
     return text
 
 
+def normalize_text_block(value):
+    if value is None:
+        return ""
+    if isinstance(value, list):
+        parts = [safe_text(item) for item in value if safe_text(item)]
+        return "\n".join(parts).strip()
+    if isinstance(value, dict):
+        parts = []
+        for item in value.values():
+            if safe_text(item):
+                parts.append(safe_text(item))
+        return "\n".join(parts).strip()
+    text = str(value).strip()
+    return "" if text.lower() in EMPTY_TEXT_VALUES else text
+
+
 def has_value(value):
     return safe_text(value) != ""
+
+
+def safe_bool(value):
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return None
+    text = str(value).strip().lower()
+    if text in {"yes", "true", "sí", "si", "1"}:
+        return True
+    if text in {"no", "false", "0"}:
+        return False
+    return None
 
 
 def resolve_language(primary_language):
@@ -94,20 +133,22 @@ def resolve_language(primary_language):
 
 
 def row_html(label, value):
-    if not has_value(value):
+    clean = normalize_text_block(value)
+    if not clean:
         return ""
     return (
         '<div class="info-row">'
         f'<span class="info-label">{escape(label)}:</span> '
-        f'{escape(safe_text(value))}'
+        f'{escape(clean)}'
         "</div>"
     )
 
 
 def paragraph_html(value):
-    if not has_value(value):
+    clean = normalize_text_block(value)
+    if not clean:
         return ""
-    return f'<p class="paragraph">{escape(safe_text(value))}</p>'
+    return f'<p class="paragraph">{escape(clean)}</p>'
 
 
 def link_line_html(label, url):
@@ -150,7 +191,7 @@ def build_sections(content, ui):
     about_body += paragraph_html(about_house.get("about_hosts"))
     about_body += paragraph_html(about_house.get("amenities_list"))
 
-    pet_value = about_house.get("pet_friendly")
+    pet_value = safe_bool(about_house.get("pet_friendly"))
     if pet_value is True:
         about_body += row_html(ui["pet_friendly"], ui["yes"])
     elif pet_value is False:
@@ -193,7 +234,6 @@ def build_sections(content, ui):
         contact_body += row_html(ui["instagram"], instagram_value)
 
     sections.append(section_html(ui["contact"], contact_body))
-
     return "\n".join(section for section in sections if section.strip())
 
 
@@ -213,15 +253,14 @@ def render_print_html(payload):
     with open("templates/print_letter.html", "r", encoding="utf-8") as f:
         html = f.read()
 
+    html = html.replace("{{HTML_LANG}}", escape(ui["html_lang"]))
     html = html.replace("{{VILLA_NAME}}", escape(villa_name))
     html = html.replace("{{PROPERTY_ADDRESS}}", escape(property_address))
     html = html.replace("{{PRIMARY_LANGUAGE}}", escape(primary_language))
-    html = html.replace(
-        "{{PRIMARY_LANGUAGE_LABEL}}",
-        escape(ui["primary_language"])
-    )
+    html = html.replace("{{PRIMARY_LANGUAGE_LABEL}}", escape(ui["primary_language"]))
     html = html.replace("{{EYEBROW}}", escape(ui["eyebrow"]))
     html = html.replace("{{CONTENT_SECTIONS}}", build_sections(content, ui))
+    html = html.replace("{{FOOTER_TEXT}}", escape(ui["footer"]))
     html = html.replace("{{COLOR_PRIMARY}}", style["primary"])
     html = html.replace("{{COLOR_ACCENT}}", style["accent"])
     html = html.replace("{{COLOR_TEXT}}", style["text"])
