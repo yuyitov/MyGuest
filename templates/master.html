@@ -1585,6 +1585,173 @@ section.welcome-card {
         height: clamp(210px, 36svh, 270px);
     }
 }     
+
+  /* =====================================================
+   MyGuest Bloque 12 — Pantalla 3 menú aprobado
+   3 columnas, botones premium, links a pantallas futuras
+===================================================== */
+
+.menu-screen-approved {
+    min-height: calc(100svh - 92px);
+    background:
+        radial-gradient(circle at 85% 6%, rgba(216, 206, 186, 0.36), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,250,244,0.92));
+    border: 1px solid rgba(138, 112, 74, 0.14);
+    border-radius: 34px;
+    box-shadow: 0 18px 42px rgba(58, 42, 28, 0.08);
+    padding: 18px 16px 22px;
+}
+
+.menu-screen-approved .menu-kicker {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(14px, 3.6vw, 18px);
+    line-height: 1;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 2px;
+    opacity: 0.9;
+}
+
+.menu-screen-approved .menu-script-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(54px, 16vw, 76px);
+    line-height: 0.9;
+    color: var(--primary);
+    text-align: center;
+    margin: 0 0 8px;
+    font-weight: 400;
+}
+
+.menu-screen-approved .menu-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 5vw, 25px);
+    line-height: 1.12;
+    letter-spacing: 0.08em;
+    color: var(--primary);
+    text-align: center;
+    text-transform: none;
+    margin: 0 auto 18px;
+    max-width: 92%;
+}
+
+.menu-grid-approved {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 10px;
+    row-gap: 12px;
+    align-items: stretch;
+}
+
+.menu-screen-approved .menu-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    min-width: 0;
+    text-decoration: none;
+    color: var(--text);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.menu-screen-approved .menu-tile {
+    width: 100%;
+    aspect-ratio: 1.05 / 0.88;
+    border-radius: 21px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.94), rgba(252,247,240,0.92));
+    border: 1px solid rgba(138, 112, 74, 0.20);
+    box-shadow:
+        0 9px 22px rgba(58, 42, 28, 0.07),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 6px;
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.menu-screen-approved .menu-link:active .menu-tile {
+    transform: scale(0.97);
+    box-shadow:
+        0 5px 14px rgba(58, 42, 28, 0.06),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+.menu-screen-approved .menu-icon {
+    width: clamp(31px, 9vw, 42px);
+    height: clamp(31px, 9vw, 42px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+}
+
+.menu-screen-approved .menu-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.menu-screen-approved .menu-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(14px, 3.7vw, 17px);
+    line-height: 1.05;
+    color: var(--mg-body, #3A2A1C);
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0;
+    max-width: 100%;
+    min-height: 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.menu-screen-approved .menu-item-wide-left {
+    grid-column: 1 / 2;
+    transform: translateX(56%);
+}
+
+.menu-screen-approved .menu-item-wide-right {
+    grid-column: 3 / 4;
+    transform: translateX(-56%);
+}
+
+@media (max-width: 380px) {
+    .menu-screen-approved {
+        padding: 16px 12px 20px;
+    }
+
+    .menu-grid-approved {
+        column-gap: 8px;
+        row-gap: 10px;
+    }
+
+    .menu-screen-approved .menu-tile {
+        border-radius: 18px;
+        margin-bottom: 5px;
+    }
+
+    .menu-screen-approved .menu-label {
+        font-size: clamp(12px, 3.5vw, 15px);
+        min-height: 30px;
+    }
+
+    .menu-screen-approved .menu-script-title {
+        font-size: clamp(48px, 15vw, 66px);
+    }
+
+    .menu-screen-approved .menu-subtitle {
+        margin-bottom: 14px;
+    }
+}      
     </style>
 </head>
 <body>
@@ -1619,312 +1786,204 @@ section.welcome-card {
     {{ABOUT_HOSTS_BLOCK}}
 </section>
 
-         <section id="menu-sheet" class="screen menu-card">
-            <div class="menu-script-title">Your Guide</div>
+    <section id="menu-sheet" class="screen menu-card menu-screen-approved">
+    <div class="menu-kicker">Your Guide</div>
+    <h2 class="menu-script-title">Your Guide</h2>
+    <p class="menu-subtitle">Everything you need for a perfect stay</p>
 
-            <div class="menu-subtitle">Everything at your fingertips</div>
-
-            <div class="menu-grid">
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <circle cx="44" cy="20" r="6"></circle>
-                                <path d="M8 36l22-22a8 8 0 0 1 11.3 0l8.7 8.7a8 8 0 0 1 0 11.3L28 56H8V36Z"></path>
-                                <path d="M24 28l12 12"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Check In/Out</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <rect x="18" y="24" width="20" height="18" rx="3"></rect>
-                                <path d="M18 44v4"></path>
-                                <path d="M38 44v4"></path>
-                                <path d="M20 24v-6a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v6"></path>
-                                <path d="M42 18h6"></path>
-                                <path d="M45 18v22"></path>
-                                <path d="M39 40h12"></path>
-                                <path d="M40 18a5 5 0 0 1 10 0"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Amenities</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <path d="M32 55s-14-10.2-14-23a14 14 0 1 1 28 0c0 12.8-14 23-14 23Z"></path>
-                                <circle cx="32" cy="32" r="6"></circle>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Directions</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <path d="M14 31a24 24 0 0 1 36 0"></path>
-                                <path d="M20 37a16 16 0 0 1 24 0"></path>
-                                <path d="M26 43a8 8 0 0 1 12 0"></path>
-                                <circle cx="32" cy="50" r="2.5"></circle>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">WiFi</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <rect x="20" y="16" width="24" height="32" rx="3"></rect>
-                                <path d="M20 28h24"></path>
-                                <path d="M26 48l-4 5"></path>
-                                <path d="M38 48l4 5"></path>
-                                <circle cx="26" cy="40" r="1.5"></circle>
-                                <circle cx="38" cy="40" r="1.5"></circle>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Transport</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <path d="M20 48c-4-4-6-8.4-6-13 0-10 8.1-18 18-18 8.9 0 16.3 6.5 17.7 15"></path>
-                                <path d="M46 40l4 4 8-8"></path>
-                                <circle cx="32" cy="24" r="3"></circle>
-                                <path d="M32 31v10"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Things to Know</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <path d="M14 18l18-6 18 6v24l-18 10-18-10V18Z"></path>
-                                <path d="M32 12v40"></path>
-                                <circle cx="40" cy="40" r="9"></circle>
-                                <path d="M46 46l6 6"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Things to Do</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <path d="M20 14l10 14"></path>
-                                <path d="M30 28l-12 18"></path>
-                                <path d="M44 14l-6 8"></path>
-                                <path d="M38 22l10 24"></path>
-                                <path d="M17 47h6"></path>
-                                <path d="M44 47h6"></path>
-                                <path d="M30 14v14"></path>
-                                <path d="M41 14v8"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Places to Eat</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <path d="M22 14v20"></path>
-                                <path d="M16 20h12"></path>
-                                <path d="M18 34l-4 12"></path>
-                                <path d="M26 34l4 12"></path>
-                                <path d="M42 14c5 6 7 13 7 20"></path>
-                                <path d="M49 34l3 12"></path>
-                                <path d="M35 18l14 16"></path>
-                                <path d="M36 46h18"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Places to Drink</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <circle cx="32" cy="32" r="20"></circle>
-                                <path d="M20 32h24"></path>
-                                <path d="M44 20L20 44"></path>
-                                <path d="M26 26h12"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">House Rules</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <path d="M18 40l6-16h16l6 16"></path>
-                                <rect x="16" y="30" width="32" height="16" rx="4"></rect>
-                                <circle cx="24" cy="49" r="4"></circle>
-                                <circle cx="40" cy="49" r="4"></circle>
-                                <path d="M32 14v8"></path>
-                                <path d="M28 18h8"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Emergency</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <rect x="18" y="14" width="28" height="36" rx="3"></rect>
-                                <path d="M24 14v36"></path>
-                                <path d="M40 14v36"></path>
-                                <circle cx="32" cy="26" r="5"></circle>
-                                <path d="M24 42h16"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Local Directory</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <path d="M20 36V20a6 6 0 0 1 6-6h4v22"></path>
-                                <path d="M30 36V18a4 4 0 0 1 8 0v18"></path>
-                                <path d="M38 36V22a4 4 0 0 1 8 0v14"></path>
-                                <path d="M20 36l2 8a9 9 0 0 0 8.7 6H40a8 8 0 0 0 8-8v-2"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Review</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <path d="M16 16h24v32H16z"></path>
-                                <path d="M40 32h10"></path>
-                                <path d="M46 26l6 6-6 6"></path>
-                                <circle cx="28" cy="32" r="2"></circle>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Before You Leave</div>
-                </div>
-
-                <div class="menu-item" role="button" aria-disabled="true">
-                    <div class="menu-tile">
-                        <div class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64">
-                                <path d="M22 18c4 8 10 14 18 18"></path>
-                                <path d="M42 38l6 6"></path>
-                                <path d="M19 13l8 2-3 7-7 3-4-8z"></path>
-                                <path d="M47 37l4-4 8 8-4 4z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="menu-label">Contact</div>
-                </div>
-            </div>
-        </section>
-             <section class="screen arrival-info-card">
-            <div class="arrival-info-leaf" aria-hidden="true">
-                <svg viewBox="0 0 32 32">
-                    <path d="M16 26V10"></path>
-                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
-                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
-                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
-                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
-                </svg>
-            </div>
-
-            <h2 class="arrival-info-title">Arrival Info</h2>
-
-            <div class="arrival-times-grid">
-                <div class="arrival-time-card-elegant">
-                    <div class="arrival-time-big">{{CHECKIN_TIME_DISPLAY}}</div>
-                    <div class="arrival-time-divider"><span></span></div>
-                    <div class="arrival-time-caption">Check In</div>
-                </div>
-
-                <div class="arrival-time-card-elegant">
-                    <div class="arrival-time-big">{{CHECKOUT_TIME_DISPLAY}}</div>
-                    <div class="arrival-time-divider"><span></span></div>
-                    <div class="arrival-time-caption">Check Out</div>
-                </div>
-            </div>
-
-            <p class="arrival-info-copy">
-                If you need special accommodations for your check-in or check-out time, please don’t hesitate to reach out to us, and we’ll do our best to make arrangements that suit your schedule.
-            </p>
-
-            <div class="arrival-detail-card">
-                <div class="arrival-detail-icon" aria-hidden="true">
+    <div class="menu-grid menu-grid-approved">
+        <a class="menu-item menu-link" href="#arrival-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
                     <svg viewBox="0 0 64 64">
-                        <path d="M25 34l-6 18"></path>
-                        <path d="M19 52l8-2 13-34a7 7 0 0 0-13-5L14 43l5 9Z"></path>
-                        <circle cx="41" cy="16" r="7"></circle>
-                        <path d="M31 26l7 7"></path>
+                        <circle cx="32" cy="32" r="20"></circle>
+                        <path d="M32 18v15l10 6"></path>
                     </svg>
-                </div>
+                </span>
+            </span>
+            <span class="menu-label">Arrival</span>
+        </a>
 
-                <div>
-                    <div class="arrival-detail-title">House Access</div>
-                    <div class="arrival-detail-divider"><span></span></div>
-                    <div class="arrival-detail-text">{{HOUSE_ACCESS_PUBLIC}}</div>
-                </div>
-            </div>
-
-            <div class="arrival-detail-card">
-                <div class="arrival-detail-icon" aria-hidden="true">
+        <a class="menu-item menu-link" href="#location-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
                     <svg viewBox="0 0 64 64">
-                        <path d="M18 38h28"></path>
-                        <path d="M22 38l3-10h14l7 10"></path>
-                        <path d="M28 28l3-6h8l3 6"></path>
-                        <circle cx="24" cy="42" r="6"></circle>
-                        <circle cx="44" cy="42" r="6"></circle>
+                        <path d="M32 56s18-14 18-32a18 18 0 1 0-36 0c0 18 18 32 18 32Z"></path>
+                        <circle cx="32" cy="24" r="6"></circle>
                     </svg>
-                </div>
+                </span>
+            </span>
+            <span class="menu-label">Location</span>
+        </a>
 
-                <div>
-                    <div class="arrival-detail-title">Parking</div>
-                    <div class="arrival-detail-divider"><span></span></div>
-                    <div class="arrival-detail-text">{{PARKING_INFO}}</div>
-                </div>
-            </div>
-
-            <div class="arrival-menu-back-wrap">
-                <a href="#menu-sheet" class="arrival-menu-back">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M15 5l-7 7 7 7"></path>
+        <a class="menu-item menu-link" href="#wifi-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M14 28a28 28 0 0 1 36 0"></path>
+                        <path d="M22 38a16 16 0 0 1 20 0"></path>
+                        <path d="M30 48a4 4 0 0 1 4 0"></path>
+                        <circle cx="32" cy="52" r="2.5"></circle>
                     </svg>
-                    <span>Back to Menu</span>
-                </a>
-            </div>
-        </section>
+                </span>
+            </span>
+            <span class="menu-label">WiFi</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#house-guide-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M12 31 32 14l20 17"></path>
+                        <path d="M18 29v23h28V29"></path>
+                        <path d="M27 52V39h10v13"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">House Guide</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#house-rules-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M20 10h20l8 8v36H20Z"></path>
+                        <path d="M40 10v10h8"></path>
+                        <path d="M26 28h16"></path>
+                        <path d="M26 36h16"></path>
+                        <path d="M26 44h10"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">House Rules</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#things-to-know-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <circle cx="32" cy="32" r="22"></circle>
+                        <path d="M32 29v16"></path>
+                        <circle cx="32" cy="20" r="2.5"></circle>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Things to Know</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#things-to-do-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <circle cx="32" cy="30" r="10"></circle>
+                        <path d="M32 8v8"></path>
+                        <path d="M32 44v8"></path>
+                        <path d="M10 30h8"></path>
+                        <path d="M46 30h8"></path>
+                        <path d="M17 15l6 6"></path>
+                        <path d="M47 15l-6 6"></path>
+                        <path d="M18 52c7-8 21-8 28 0"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Things to Do</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#places-to-eat-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M22 10v22"></path>
+                        <path d="M15 10v18c0 5 3 8 7 8s7-3 7-8V10"></path>
+                        <path d="M22 36v18"></path>
+                        <path d="M43 10c7 8 7 20 0 27v17"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Places to Eat</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#places-to-drink-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M20 12h24l-4 22a8 8 0 0 1-16 0Z"></path>
+                        <path d="M32 42v12"></path>
+                        <path d="M24 54h16"></path>
+                        <path d="M42 17l7-5"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Places to Drink</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#local-directory-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <rect x="18" y="12" width="30" height="40" rx="4"></rect>
+                        <path d="M14 20h8"></path>
+                        <path d="M14 30h8"></path>
+                        <path d="M14 40h8"></path>
+                        <circle cx="33" cy="28" r="6"></circle>
+                        <path d="M24 44c4-7 14-7 18 0"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Local Directory</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#emergency-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <circle cx="32" cy="32" r="22"></circle>
+                        <path d="M32 20v24"></path>
+                        <path d="M20 32h24"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Emergency</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#contact-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <rect x="12" y="18" width="40" height="28" rx="4"></rect>
+                        <path d="M14 21l18 15 18-15"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Contact Me</span>
+        </a>
+
+        <a class="menu-item menu-link menu-item-wide-left" href="#before-you-leave-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <rect x="16" y="24" width="32" height="26" rx="4"></rect>
+                        <path d="M24 24v-8h16v8"></path>
+                        <path d="M16 34h32"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Before You Leave</span>
+        </a>
+
+        <a class="menu-item menu-link menu-item-wide-right" href="#review-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M14 16h36v26H29L17 52V42h-3Z"></path>
+                        <path d="M32 23l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Review</span>
+        </a>
+    </div>
+</section>     
 
                 <section class="screen info-sheet">
             <div class="info-sheet-leaf" aria-hidden="true">
