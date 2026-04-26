@@ -355,6 +355,18 @@ def build_editorial_image_block(content_flat, field_name, alt_text, photo_index)
 def build_welcome_message_block(content_flat):
     return html_multiline(content_flat.get("welcome_message"))
 
+def build_about_hosts_block(content_flat):
+    about_hosts = html_multiline(content_flat.get("about_hosts"))
+
+    if not about_hosts:
+        return ""
+
+    return f"""
+        <div class="welcome-about">
+            <div class="welcome-about-title">ABOUT US</div>
+            <p class="welcome-about-copy">{about_hosts}</p>
+        </div>
+    """
 
 def icon_button_svg(kind):
     if kind == "maps":
@@ -830,6 +842,7 @@ def render_html_for_language(payload, active_language, output_filename):
 
     for placeholder, value in replacements.items():
         html = replace_placeholder(html, placeholder, value)
+        html = replace_placeholder(html, "{{ABOUT_HOSTS_BLOCK}}", build_about_hosts_block(content_flat))
 
     html = inject_public_qa_overrides(html)
 
