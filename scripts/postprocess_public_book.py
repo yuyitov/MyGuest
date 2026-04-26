@@ -1,12 +1,12 @@
 import json
+import re
 import sys
 from pathlib import Path
 
-CSS_MARKER = "/* MyGuest Bloque 12 visual QA */"
-JS_MARKER = "// MyGuest Bloque 12 visual QA"
+CSS_MARKER = "/* MyGuest Bloque 12 approved premium menu */"
 WELCOME_IMG = "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80"
 
-CSS = f"""
+APPROVED_MENU_CSS = f"""
 {CSS_MARKER}
 :root {{
   --myguest-deep-text:#3A2A1C;
@@ -16,69 +16,308 @@ CSS = f"""
   --myguest-border:#DDCFC0;
   --myguest-screen-h:calc(100svh - 92px);
 }}
-body,.welcome-message,.menu-label,.paragraph,.info-value,.info-row,.card,.section-title,.arrival-time,.arrival-detail-text,.list-item-text,.rule-text {{ color:var(--myguest-deep-text)!important; }}
-.screen:not(.cover-screen) {{ min-height:var(--myguest-screen-h)!important;display:flex!important;align-items:center!important;justify-content:center!important; }}
-.screen:not(.cover-screen)>* {{ width:100%!important;max-height:var(--myguest-screen-h)!important;overflow-y:auto!important;scrollbar-width:none!important; }}
-.screen:not(.cover-screen)>*::-webkit-scrollbar {{ display:none!important; }}
-.welcome-card .arrival-grid,.welcome-card .welcome-divider {{ display:none!important; }}
-.welcome-card {{ padding-top:clamp(20px,5vw,28px)!important;padding-bottom:clamp(20px,5vw,28px)!important; }}
-.welcome-image {{ display:block!important;min-height:190px!important;max-height:260px!important;background:linear-gradient(180deg,#F7F0E8,#E7D8C7)!important; }}
-.welcome-image img {{ display:block!important;width:100%!important;height:clamp(190px,36svh,260px)!important;object-fit:cover!important; }}
-.menu-card {{ padding:18px 14px!important; }}
-.menu-script-title {{ font-size:clamp(48px,13vw,62px)!important;margin-bottom:10px!important; }}
-.menu-subtitle {{ font-size:clamp(16px,4.6vw,22px)!important;line-height:1.05!important;margin-bottom:16px!important; }}
-.menu-grid {{ grid-template-columns:repeat(3,minmax(0,1fr))!important;column-gap:10px!important;row-gap:10px!important; }}
-.menu-tile {{ background:var(--myguest-tile)!important;border:1px solid var(--myguest-border)!important;border-radius:20px!important;margin-bottom:7px!important;box-shadow:0 5px 14px rgba(58,42,28,.05)!important; }}
-.menu-icon {{ width:clamp(48px,14vw,62px)!important;height:clamp(48px,14vw,62px)!important;color:var(--myguest-icon)!important; }}
-.menu-icon svg,.welcome-action svg,.arrival-detail-icon svg,.info-row-icon svg,.list-item-icon svg,.wifi-center-icon svg {{ fill:none!important;stroke:currentColor!important;stroke-width:1.75!important;stroke-linecap:round!important;stroke-linejoin:round!important; }}
-.menu-label {{ font-size:clamp(10px,2.75vw,12px)!important;line-height:1.12!important;color:var(--myguest-deep-text)!important;font-weight:600!important; }}
-.myguest-menu-hidden {{ display:none!important; }}
-.welcome-action,.info-row-icon,.arrival-detail-icon,.list-item-icon,.wifi-center-icon {{ color:var(--myguest-icon)!important; }}
+body,.welcome-message,.menu-label,.paragraph,.info-value,.info-row,.card,.section-title,.arrival-time,.arrival-detail-text,.list-item-text,.rule-text {{
+  color:var(--myguest-deep-text)!important;
+}}
+.screen:not(.cover-screen) {{
+  min-height:var(--myguest-screen-h)!important;
+}}
+.welcome-card .arrival-grid,.welcome-card .welcome-divider,.welcome-card .welcome-actions,.welcome-card .welcome-signoff,.welcome-card .welcome-eyebrow {{
+  display:none!important;
+}}
+.welcome-card {{
+  padding-top:clamp(20px,5vw,28px)!important;
+  padding-bottom:clamp(20px,5vw,28px)!important;
+}}
+.welcome-image {{
+  display:block!important;
+  min-height:190px!important;
+  max-height:260px!important;
+  background:linear-gradient(180deg,#F7F0E8,#E7D8C7)!important;
+  border-radius:8px!important;
+}}
+.welcome-image img {{
+  display:block!important;
+  width:100%!important;
+  height:clamp(190px,36svh,260px)!important;
+  object-fit:cover!important;
+  border-radius:8px!important;
+}}
+.menu-screen-approved {{
+  min-height:var(--myguest-screen-h)!important;
+  background:radial-gradient(circle at 85% 6%, rgba(216,206,186,.36), transparent 34%),linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,250,244,.92))!important;
+  border:1px solid rgba(138,112,74,.14)!important;
+  border-radius:34px!important;
+  box-shadow:0 18px 42px rgba(58,42,28,.08)!important;
+  padding:18px 16px 22px!important;
+}}
+.menu-screen-approved .menu-kicker {{
+  font-family:'Cormorant Garamond',serif!important;
+  font-size:clamp(14px,3.6vw,18px)!important;
+  line-height:1!important;
+  letter-spacing:.34em!important;
+  text-transform:uppercase!important;
+  color:var(--primary)!important;
+  text-align:center!important;
+  margin-bottom:2px!important;
+  opacity:.9!important;
+}}
+.menu-screen-approved .menu-script-title {{
+  font-family:'Great Vibes',cursive!important;
+  font-size:clamp(54px,16vw,76px)!important;
+  line-height:.9!important;
+  color:var(--primary)!important;
+  text-align:center!important;
+  margin:0 0 8px!important;
+  font-weight:400!important;
+}}
+.menu-screen-approved .menu-subtitle {{
+  font-family:'Cormorant Garamond',serif!important;
+  font-size:clamp(18px,5vw,25px)!important;
+  line-height:1.12!important;
+  letter-spacing:.08em!important;
+  color:var(--primary)!important;
+  text-align:center!important;
+  text-transform:none!important;
+  margin:0 auto 18px!important;
+  max-width:92%!important;
+}}
+.menu-grid-approved {{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  column-gap:10px!important;
+  row-gap:12px!important;
+  align-items:stretch!important;
+}}
+.menu-screen-approved .menu-link {{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  min-width:0!important;
+  text-decoration:none!important;
+  color:var(--text)!important;
+  -webkit-tap-highlight-color:transparent!important;
+}}
+.menu-screen-approved .menu-tile {{
+  width:100%!important;
+  aspect-ratio:1.05/.88!important;
+  border-radius:21px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(252,247,240,.92))!important;
+  border:1px solid rgba(138,112,74,.20)!important;
+  box-shadow:0 9px 22px rgba(58,42,28,.07),inset 0 1px 0 rgba(255,255,255,.9)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin-bottom:6px!important;
+}}
+.menu-screen-approved .menu-icon {{
+  width:clamp(31px,9vw,42px)!important;
+  height:clamp(31px,9vw,42px)!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--primary)!important;
+}}
+.menu-screen-approved .menu-icon svg {{
+  width:100%!important;
+  height:100%!important;
+  stroke:currentColor!important;
+  fill:none!important;
+  stroke-width:1.75!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}}
+.menu-screen-approved .menu-label {{
+  font-family:'Cormorant Garamond',serif!important;
+  font-size:clamp(14px,3.7vw,17px)!important;
+  line-height:1.05!important;
+  color:var(--myguest-deep-text)!important;
+  font-weight:500!important;
+  text-align:center!important;
+  min-height:32px!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+}}
+.menu-screen-approved .menu-item-wide-left {{
+  grid-column:1 / 2!important;
+  transform:translateX(56%)!important;
+}}
+.menu-screen-approved .menu-item-wide-right {{
+  grid-column:3 / 4!important;
+  transform:translateX(-56%)!important;
+}}
+@media (max-width:380px) {{
+  .menu-screen-approved {{ padding:16px 12px 20px!important; }}
+  .menu-grid-approved {{ column-gap:8px!important;row-gap:10px!important; }}
+  .menu-screen-approved .menu-tile {{ border-radius:18px!important;margin-bottom:5px!important; }}
+  .menu-screen-approved .menu-label {{ font-size:clamp(12px,3.5vw,15px)!important;min-height:30px!important; }}
+  .menu-screen-approved .menu-script-title {{ font-size:clamp(48px,15vw,66px)!important; }}
+  .menu-screen-approved .menu-subtitle {{ margin-bottom:14px!important; }}
+}}
 """
 
-JS = f"""
-<script>
-{JS_MARKER}
-(function(){{
-  const imgUrl={json.dumps(WELCOME_IMG)};
-  const icons={{
-    arrival:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24"></circle><path d="M32 18v15l10 7"></path></svg>',
-    location:'<svg viewBox="0 0 64 64"><path d="M32 56s18-15.2 18-31a18 18 0 0 0-36 0c0 15.8 18 31 18 31Z"></path><circle cx="32" cy="25" r="6"></circle></svg>',
-    wifi:'<svg viewBox="0 0 64 64"><path d="M12 27a31 31 0 0 1 40 0"></path><path d="M21 37a18 18 0 0 1 22 0"></path><path d="M29 47a6 6 0 0 1 6 0"></path><circle cx="32" cy="51" r="2.5"></circle></svg>',
-    houseGuide:'<svg viewBox="0 0 64 64"><path d="M12 30 32 13l20 17"></path><path d="M18 28v25h28V28"></path><path d="M26 53V38h12v15"></path></svg>',
-    rules:'<svg viewBox="0 0 64 64"><rect x="16" y="10" width="32" height="44" rx="4"></rect><path d="M24 24h16M24 34h16M24 44h10"></path></svg>',
-    info:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24"></circle><path d="M32 29v16"></path><circle cx="32" cy="21" r="2.5"></circle></svg>',
-    sun:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="12"></circle><path d="M32 8v10M32 46v10M8 32h10M46 32h10M15 15l7 7M42 42l7 7M49 15l-7 7M22 42l-7 7"></path></svg>',
-    eat:'<svg viewBox="0 0 64 64"><path d="M20 9v22M13 9v18c0 5 3 8 7 8s7-3 7-8V9M20 35v20"></path><path d="M45 9c6 8 6 20 0 27v19"></path></svg>',
-    drink:'<svg viewBox="0 0 64 64"><path d="M18 11h28l-5 24a9 9 0 0 1-18 0Z"></path><path d="M32 44v11M24 55h16"></path></svg>',
-    directory:'<svg viewBox="0 0 64 64"><rect x="17" y="11" width="30" height="42" rx="4"></rect><path d="M25 23h14M25 33h14M25 43h9"></path><path d="M47 20h4M47 30h4M47 40h4"></path></svg>',
-    emergency:'<svg viewBox="0 0 64 64"><path d="M25 11h14v14h14v14H39v14H25V39H11V25h14Z"></path></svg>',
-    contact:'<svg viewBox="0 0 64 64"><rect x="10" y="17" width="44" height="30" rx="4"></rect><path d="M12 21l20 15 20-15"></path></svg>',
-    leave:'<svg viewBox="0 0 64 64"><rect x="16" y="20" width="32" height="30" rx="4"></rect><path d="M24 20v-7h16v7M16 31h32"></path></svg>',
-    review:'<svg viewBox="0 0 64 64"><path d="M13 15h38v28H25L14 52v-9h-1Z"></path><path d="M24 28h17M24 36h11"></path></svg>'
-  }};
-  const labels={{
-    en:{{arrival:'Arrival',location:'Location',wifi:'WiFi',houseGuide:'House Guide',rules:'House Rules',info:'Things to Know',sun:'Things to Do',eat:'Places to Eat',drink:'Places to Drink',directory:'Local Directory',emergency:'Emergency',contact:'Contact Me',leave:'Before You Leave',review:'Review'}},
-    es:{{arrival:'Llegada',location:'Ubicación',wifi:'WiFi',houseGuide:'Guía de la Casa',rules:'Reglas de la Casa',info:'Información Importante',sun:'Qué Hacer',eat:'Dónde Comer',drink:'Dónde Tomar Algo',directory:'Directorio Local',emergency:'Emergencias',contact:'Contáctame',leave:'Antes de Salir',review:'Reseña'}},
-    fr:{{arrival:'Arrivée',location:'Emplacement',wifi:'WiFi',houseGuide:'Guide de la Maison',rules:'Règles de la Maison',info:'À Savoir',sun:'Activités',eat:'Où Manger',drink:'Où Boire',directory:'Répertoire Local',emergency:'Urgence',contact:'Me Contacter',leave:'Avant le Départ',review:'Avis'}}
-  }};
-  const order=['arrival','location','wifi','houseGuide','rules','info','sun','eat','drink','directory','emergency','contact','leave','review'];
-  function lang(){{let v=(document.documentElement.lang||'en').toLowerCase();return v.startsWith('es')?'es':v.startsWith('fr')?'fr':'en';}}
-  function norm(t){{return (t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}}
-  function kind(t){{t=norm(t);if(t.includes('transport'))return 'transport';if(t.includes('check')||t.includes('llegada / salida')||t.includes('arrivee'))return 'arrival';if(t.includes('direction')||t.includes('como llegar')||t.includes('itineraire'))return 'location';if(t.includes('wifi'))return 'wifi';if(t.includes('amenit')||t.includes('amenidad')||t.includes('equipement'))return 'houseGuide';if(t.includes('rule')||t.includes('regla')||t.includes('regle'))return 'rules';if(t.includes('things to know')||t.includes('informacion importante')||t.includes('information'))return 'info';if(t.includes('things to do')||t.includes('que hacer')||t.includes('activit'))return 'sun';if(t.includes('eat')||t.includes('comer')||t.includes('manger'))return 'eat';if(t.includes('drink')||t.includes('tomar')||t.includes('boire'))return 'drink';if(t.includes('directory')||t.includes('directorio')||t.includes('repertoire'))return 'directory';if(t.includes('emergency')||t.includes('emergencia')||t.includes('urgence'))return 'emergency';if(t.includes('before')||t.includes('antes')||t.includes('avant'))return 'leave';if(t.includes('review')||t.includes('resena')||t.includes('avis'))return 'review';if(t.includes('contact'))return 'contact';return null;}}
-  function patchWelcome(){{let w=document.querySelector('.welcome-image');if(!w)return;let i=w.querySelector('img')||document.createElement('img');i.src=imgUrl;i.alt='Welcome';i.loading='eager';if(!i.parentNode)w.appendChild(i);}}
-  function patchMenu(){{let g=document.querySelector('.menu-grid');if(!g)return;let rows=Array.from(g.querySelectorAll('.menu-item'));rows.forEach(el=>{{let lab=el.querySelector('.menu-label'),k=kind(lab?lab.textContent:el.textContent);if(!k)return;if(k==='transport'){{el.classList.add('myguest-menu-hidden');return;}}el.dataset.myguestKind=k;if(lab)lab.textContent=labels[lang()][k];let ic=el.querySelector('.menu-icon');if(ic&&icons[k])ic.innerHTML=icons[k];}});rows.filter(el=>!el.classList.contains('myguest-menu-hidden')).sort((a,b)=>order.indexOf(a.dataset.myguestKind)-order.indexOf(b.dataset.myguestKind)).forEach(el=>g.appendChild(el));}}
-  patchWelcome();patchMenu();
-}})();
-</script>
-"""
+ICONS = {
+    "arrival": '<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="20"></circle><path d="M32 18v15l10 6"></path></svg>',
+    "location": '<svg viewBox="0 0 64 64"><path d="M32 56s18-14 18-32a18 18 0 1 0-36 0c0 18 18 32 18 32Z"></path><circle cx="32" cy="24" r="6"></circle></svg>',
+    "wifi": '<svg viewBox="0 0 64 64"><path d="M14 28a28 28 0 0 1 36 0"></path><path d="M22 38a16 16 0 0 1 20 0"></path><path d="M30 48a4 4 0 0 1 4 0"></path><circle cx="32" cy="52" r="2.5"></circle></svg>',
+    "house_guide": '<svg viewBox="0 0 64 64"><path d="M12 31 32 14l20 17"></path><path d="M18 29v23h28V29"></path><path d="M27 52V39h10v13"></path></svg>',
+    "house_rules": '<svg viewBox="0 0 64 64"><path d="M20 10h20l8 8v36H20Z"></path><path d="M40 10v10h8"></path><path d="M26 28h16"></path><path d="M26 36h16"></path><path d="M26 44h10"></path></svg>',
+    "things_to_know": '<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="22"></circle><path d="M32 29v16"></path><circle cx="32" cy="20" r="2.5"></circle></svg>',
+    "things_to_do": '<svg viewBox="0 0 64 64"><circle cx="32" cy="30" r="10"></circle><path d="M32 8v8"></path><path d="M32 44v8"></path><path d="M10 30h8"></path><path d="M46 30h8"></path><path d="M17 15l6 6"></path><path d="M47 15l-6 6"></path><path d="M18 52c7-8 21-8 28 0"></path></svg>',
+    "places_to_eat": '<svg viewBox="0 0 64 64"><path d="M22 10v22"></path><path d="M15 10v18c0 5 3 8 7 8s7-3 7-8V10"></path><path d="M22 36v18"></path><path d="M43 10c7 8 7 20 0 27v17"></path></svg>',
+    "places_to_drink": '<svg viewBox="0 0 64 64"><path d="M20 12h24l-4 22a8 8 0 0 1-16 0Z"></path><path d="M32 42v12"></path><path d="M24 54h16"></path><path d="M42 17l7-5"></path></svg>',
+    "local_directory": '<svg viewBox="0 0 64 64"><rect x="18" y="12" width="30" height="40" rx="4"></rect><path d="M14 20h8"></path><path d="M14 30h8"></path><path d="M14 40h8"></path><circle cx="33" cy="28" r="6"></circle><path d="M24 44c4-7 14-7 18 0"></path></svg>',
+    "emergency": '<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="22"></circle><path d="M32 20v24"></path><path d="M20 32h24"></path></svg>',
+    "contact": '<svg viewBox="0 0 64 64"><rect x="12" y="18" width="40" height="28" rx="4"></rect><path d="M14 21l18 15 18-15"></path></svg>',
+    "before_leave": '<svg viewBox="0 0 64 64"><rect x="16" y="24" width="32" height="26" rx="4"></rect><path d="M24 24v-8h16v8"></path><path d="M16 34h32"></path></svg>',
+    "review": '<svg viewBox="0 0 64 64"><path d="M14 16h36v26H29L17 52V42h-3Z"></path><path d="M32 23l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z"></path></svg>',
+}
+
+MENU_LABELS = {
+    "en": {
+        "kicker": "Your Guide",
+        "title": "Your Guide",
+        "subtitle": "Everything you need for a perfect stay",
+        "arrival": "Arrival",
+        "location": "Location",
+        "wifi": "WiFi",
+        "house_guide": "House Guide",
+        "house_rules": "House Rules",
+        "things_to_know": "Things to Know",
+        "things_to_do": "Things to Do",
+        "places_to_eat": "Places to Eat",
+        "places_to_drink": "Places to Drink",
+        "local_directory": "Local Directory",
+        "emergency": "Emergency",
+        "contact": "Contact Me",
+        "before_leave": "Before You Leave",
+        "review": "Review",
+    },
+    "es": {
+        "kicker": "Tu Guía",
+        "title": "Tu Guía",
+        "subtitle": "Todo lo que necesitas para una estancia perfecta",
+        "arrival": "Llegada",
+        "location": "Ubicación",
+        "wifi": "WiFi",
+        "house_guide": "Guía de la Casa",
+        "house_rules": "Reglas de la Casa",
+        "things_to_know": "Información Importante",
+        "things_to_do": "Qué Hacer",
+        "places_to_eat": "Dónde Comer",
+        "places_to_drink": "Dónde Tomar Algo",
+        "local_directory": "Directorio Local",
+        "emergency": "Emergencias",
+        "contact": "Contáctame",
+        "before_leave": "Antes de Salir",
+        "review": "Reseña",
+    },
+    "fr": {
+        "kicker": "Votre Guide",
+        "title": "Votre Guide",
+        "subtitle": "Tout ce dont vous avez besoin pour un séjour parfait",
+        "arrival": "Arrivée",
+        "location": "Emplacement",
+        "wifi": "WiFi",
+        "house_guide": "Guide de la Maison",
+        "house_rules": "Règles de la Maison",
+        "things_to_know": "À Savoir",
+        "things_to_do": "Activités",
+        "places_to_eat": "Où Manger",
+        "places_to_drink": "Où Boire",
+        "local_directory": "Répertoire Local",
+        "emergency": "Urgence",
+        "contact": "Me Contacter",
+        "before_leave": "Avant le Départ",
+        "review": "Avis",
+    },
+}
+
+MENU_ITEMS = [
+    ("arrival", "#arrival-screen", ""),
+    ("location", "#location-screen", ""),
+    ("wifi", "#wifi-screen", ""),
+    ("house_guide", "#house-guide-screen", ""),
+    ("house_rules", "#house-rules-screen", ""),
+    ("things_to_know", "#things-to-know-screen", ""),
+    ("things_to_do", "#things-to-do-screen", ""),
+    ("places_to_eat", "#places-to-eat-screen", ""),
+    ("places_to_drink", "#places-to-drink-screen", ""),
+    ("local_directory", "#local-directory-screen", ""),
+    ("emergency", "#emergency-screen", ""),
+    ("contact", "#contact-screen", ""),
+    ("before_leave", "#before-you-leave-screen", "menu-item-wide-left"),
+    ("review", "#review-screen", "menu-item-wide-right"),
+]
+
+
+def get_lang(html: str) -> str:
+    match = re.search(r'<html[^>]*lang="([^"]+)"', html, flags=re.IGNORECASE)
+    raw = (match.group(1).lower() if match else "en")
+    if raw.startswith("es"):
+        return "es"
+    if raw.startswith("fr"):
+        return "fr"
+    return "en"
+
+
+def menu_item_html(key: str, href: str, extra_class: str, labels: dict) -> str:
+    return f'''
+        <a class="menu-item menu-link {extra_class}" href="{href}">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">{ICONS[key]}</span>
+            </span>
+            <span class="menu-label">{labels[key]}</span>
+        </a>
+    '''
+
+
+def build_menu(html: str) -> str:
+    labels = MENU_LABELS[get_lang(html)]
+    items = "\n".join(menu_item_html(key, href, extra_class, labels) for key, href, extra_class in MENU_ITEMS)
+    return f'''
+<section id="menu-sheet" class="screen menu-card menu-screen-approved">
+    <div class="menu-kicker">{labels["kicker"]}</div>
+    <h2 class="menu-script-title">{labels["title"]}</h2>
+    <p class="menu-subtitle">{labels["subtitle"]}</p>
+    <div class="menu-grid menu-grid-approved">
+        {items}
+    </div>
+</section>
+'''
+
+
+def replace_menu(html: str) -> str:
+    pattern = r'<section\s+id="menu-sheet"\s+class="screen menu-card"[\s\S]*?</section>'
+    replacement = build_menu(html)
+    new_html, count = re.subn(pattern, replacement, html, count=1)
+    if count == 0:
+        print("Warning: menu-sheet section was not found; menu was not replaced")
+        return html
+    return new_html
+
+
+def patch_welcome_image(html: str) -> str:
+    replacement = f'<div class="welcome-image"><img src="{WELCOME_IMG}" alt="Welcome" loading="eager"></div>'
+    pattern = r'<div\s+class="welcome-image">[\s\S]*?</div>'
+    return re.sub(pattern, replacement, html, count=1)
+
+
+def inject_css(html: str) -> str:
+    if CSS_MARKER in html:
+        return html
+    if "</style>" not in html:
+        print("Warning: </style> not found; approved menu CSS was not injected")
+        return html
+    return html.replace("</style>", APPROVED_MENU_CSS + "\n</style>", 1)
 
 
 def inject(html: str) -> str:
-    if CSS_MARKER not in html:
-        html = html.replace("</style>", CSS + "\n</style>", 1)
-    if JS_MARKER not in html:
-        html = html.replace("</body>", JS + "\n</body>", 1)
+    html = replace_menu(html)
+    html = patch_welcome_image(html)
+    html = inject_css(html)
     return html
 
 
