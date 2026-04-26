@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyGuest Print — Villa QA Bloque 12</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: letter;
+            margin: 1.2cm;
+        }
+
+        :root {
+            --primary: #8B6F47;
+            --accent: #D9CEBA;
+            --bg: #ffffff;
+            --text: #3A2A1C;
+            --border: rgba(0,0,0,0.10);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            background: white;
+            margin: 0;
+            font-size: 11pt;
+            line-height: 1.55;
+        }
+
+        .page {
+            width: 100%;
+        }
+
+        .header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 14px;
+            margin-bottom: 20px;
+        }
+
+        .eyebrow {
+            font-size: 10pt;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28pt;
+            line-height: 1;
+            color: var(--primary);
+            margin: 0 0 8px 0;
+        }
+
+        .subtext {
+            font-size: 11pt;
+            color: #555;
+        }
+
+        .language-line {
+            margin-top: 10px;
+            font-size: 10pt;
+            color: #666;
+        }
+
+        .section {
+            margin-bottom: 18px;
+            page-break-inside: avoid;
+        }
+
+        .section-title {
+            font-size: 10pt;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--accent);
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+
+        .paragraph {
+            margin: 0 0 8px 0;
+            white-space: pre-line;
+        }
+
+        .info-row {
+            margin: 0 0 8px 0;
+        }
+
+        .info-label {
+            font-weight: 700;
+        }
+
+        .footer {
+            margin-top: 28px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 9.5pt;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="header">
+            <div class="eyebrow">BIENVENIDO</div>
+            <h1>Villa QA Bloque 12</h1>
+            <div class="subtext">123 Test Street, Puerto Vallarta, Jalisco, Mexico</div>
+            <div class="language-line">Idioma principal: Español</div>
+        </header>
+
+        <section class="section"><h2 class="section-title">Llegada</h2><div class="info-row"><span class="info-label">Llegada:</span> 3:00 PM</div><div class="info-row"><span class="info-label">Salida:</span> 11:00 AM</div><p class="paragraph">The main entrance is through the front gate. This is public test text only.</p><p class="paragraph">Street parking is available nearby. This is test information.</p></section>
+<section class="section"><h2 class="section-title">Sobre la estancia</h2><p class="paragraph">Bienvenido a Villa QA Bloque 12. Esta es una prueba visual del welcome book público.</p><p class="paragraph">Your hosts are happy to welcome you. This is fictional QA content.</p><p class="paragraph">Pool, air conditioning, kitchen, towels, beach access.</p><div class="info-row"><span class="info-label">Mascotas permitidas:</span> Sí</div><p class="paragraph">Pets are allowed in outdoor areas only. This is test content.</p></section>
+<section class="section"><h2 class="section-title">Ubicación y transporte</h2><p class="paragraph">Maps and search for the test address. This is fictional QA content.</p><p class="paragraph">Taxis and ride-share services are available nearby.</p><div class="info-row"><span class="info-label">Google Maps:</span> <span>https://maps.google.com</span></div></section>
+<section class="section"><h2 class="section-title">Información de la casa</h2><p class="paragraph">No smoking inside the property. No parties. Quiet hours after 10 PM.</p><p class="paragraph">This is a fictional villa created only for QA testing.</p><p class="paragraph">Please turn off lights and close all windows before leaving.</p></section>
+<section class="section"><h2 class="section-title">Recomendaciones</h2><p class="paragraph">Test Restaurant One, Test Restaurant Two.</p><p class="paragraph">Test Bar One, Test Café Two.</p><p class="paragraph">Visit the beach, walk around the neighborhood, enjoy the sunset.</p><p class="paragraph">Pharmacy: Test Pharmacy. Grocery: Test Market.</p></section>
+<section class="section"><h2 class="section-title">Contacto</h2><div class="info-row"><span class="info-label">Correo del anfitrión:</span> veronica.perezarroyo@gmail.com</div><p class="paragraph">police 911</p><div class="info-row"><span class="info-label">Instagram:</span> @♠unveilmexico</div></section>
+
+        <div class="footer">
+            Versión pública para huéspedes. Los datos de acceso privado se excluyen intencionalmente.
+        </div>
+    </div>
+</body>
+</html>
