@@ -839,11 +839,11 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{HOST_EMAIL}}": html_multiline(content_flat.get("host_email")),
         "{{INSTAGRAM_HANDLE}}": html_multiline(content_flat.get("instagram_handle")),
     }
-
     for placeholder, value in replacements.items():
         html = replace_placeholder(html, placeholder, value)
-        html = replace_placeholder(html, "{{ABOUT_HOSTS_BLOCK}}", build_about_hosts_block(content_flat))
 
+    html = replace_placeholder(html, "{{ABOUT_HOSTS_BLOCK}}", build_about_hosts_block(content_flat))
+   
     html = inject_public_qa_overrides(html)
 
     output_dir = os.path.join("public", "villas", slug)
