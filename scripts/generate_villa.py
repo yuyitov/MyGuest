@@ -355,15 +355,23 @@ def build_editorial_image_block(content_flat, field_name, alt_text, photo_index)
 def build_welcome_message_block(content_flat):
     return html_multiline(content_flat.get("welcome_message"))
 
-def build_about_hosts_block(content_flat):
+def build_about_hosts_block(content_flat, active_language):
     about_hosts = html_multiline(content_flat.get("about_hosts"))
 
     if not about_hosts:
         return ""
 
+    labels = {
+        "English": "ABOUT US",
+        "Español": "SOBRE NOSOTROS",
+        "Français": "À PROPOS DE NOUS",
+    }
+
+    title = labels.get(active_language, labels["English"])
+
     return f"""
         <div class="welcome-about">
-            <div class="welcome-about-title">ABOUT US</div>
+            <div class="welcome-about-title">{escape(title)}</div>
             <p class="welcome-about-copy">{about_hosts}</p>
         </div>
     """
@@ -808,6 +816,7 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{COVER_IMAGE_BLOCK}}": build_cover_image_block(content_flat, villa_name),
         "{{WELCOME_IMAGE_BLOCK}}": build_welcome_image_block(content_flat, villa_name),
         "{{WELCOME_MESSAGE_BLOCK}}": build_welcome_message_block(content_flat),
+        "{{ABOUT_HOSTS_BLOCK}}": build_about_hosts_block(content_flat, active_language),
         "{{WELCOME_ACTIONS_BLOCK}}": build_welcome_actions_block(content_flat),
         "{{CHECKIN_CHECKOUT_BLOCK}}": build_checkin_checkout_block(content_flat, ui),
         "{{CONTENT_SECTIONS}}": build_content_sections(content_flat, ui),
@@ -840,11 +849,11 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{INSTAGRAM_HANDLE}}": html_multiline(content_flat.get("instagram_handle")),
     }
     for placeholder, value in replacements.items():
-        html = replace_placeholder(html, placeholder, value)
-
-    html = replace_placeholder(html, "{{ABOUT_HOSTS_BLOCK}}", build_about_hosts_block(content_flat))
+    html = replace_placeholder(html, placeholder, value)
    
-    html = inject_public_qa_overrides(html)
+    # Pantalla 1 y 2 usan el diseño aprobado directamente desde templates/master.html.
+# Mantener desactivado para evitar que el CSS viejo pise tamaños, colores y layout aprobados.
+# html = inject_public_qa_overrides(html)
 
     output_dir = os.path.join("public", "villas", slug)
     os.makedirs(output_dir, exist_ok=True)
