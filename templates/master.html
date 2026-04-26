@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MyGuest — {{VILLA_NAME}}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&family=Allura&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: {{COLOR_PRIMARY}};
@@ -1315,7 +1315,276 @@
                 display: none !important;
             }
         }
-            
+
+   /* =====================================================
+   MyGuest Bloque 12 — Pantalla 1 y 2 aprobadas
+   Solo portada + welcome
+===================================================== */
+
+:root {
+    --mg-title: #8A704A;
+    --mg-body: #3A2A1C;
+    --mg-soft-line: rgba(138, 112, 74, 0.26);
+    --mg-phone-max: 430px;
+}
+
+/* Tipografía base */
+html,
+body {
+    color: var(--mg-body);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+}
+
+.app-shell {
+    width: min(100%, var(--mg-phone-max));
+    max-width: var(--mg-phone-max);
+    margin: 0 auto;
+}
+
+/* Barra de idiomas */
+.language-bar {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+    margin-bottom: 20px;
+}
+
+.language-bar .language-chip,
+.language-bar button,
+.language-bar a {
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 999px;
+    padding: 14px 22px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--mg-body);
+    background: #ffffff;
+    border: 1px solid rgba(58, 42, 28, 0.10);
+    text-decoration: none;
+}
+
+.language-bar .active {
+    background: var(--mg-title);
+    color: #ffffff;
+    border-color: var(--mg-title);
+}
+
+/* =========================
+   PANTALLA 1 — APROBADA
+========================= */
+
+.cover-screen {
+    min-height: calc(100svh - 92px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 2px 8px;
+    gap: clamp(10px, 2.2svh, 18px);
+}
+
+.cover-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 13.2vw, 62px);
+    line-height: 0.96;
+    letter-spacing: 0.095em;
+    color: var(--mg-title);
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 0 0 clamp(8px, 2svh, 18px);
+}
+
+.cover-image-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: clamp(8px, 2svh, 18px);
+}
+
+.cover-image-arch {
+    width: min(78vw, 292px);
+    aspect-ratio: 0.74 / 1;
+    max-height: 42svh;
+    border-radius: 180px 180px 0 0;
+    overflow: hidden;
+    border: 2px solid rgba(138, 112, 74, 0.24);
+}
+
+.cover-image-arch img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Cursiva Your Guide */
+.cover-script {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(54px, 17vw, 76px);
+    line-height: 0.9;
+    color: var(--mg-title);
+    text-align: center;
+    margin-bottom: 4px;
+    font-weight: 400;
+}
+
+.cover-to {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 5.5vw, 25px);
+    letter-spacing: 0.18em;
+    color: var(--mg-title);
+    text-align: center;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.cover-address {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 5.8vw, 26px);
+    line-height: 1.12;
+    letter-spacing: 0.065em;
+    color: var(--mg-title);
+    text-align: center;
+    text-transform: uppercase;
+    max-width: 100%;
+}
+
+/* =========================
+   PANTALLA 2 — APROBADA
+========================= */
+
+section.welcome-card {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    min-height: calc(100svh - 92px);
+    padding: 8px 8px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Elementos que ya no van en pantalla 2 */
+.welcome-eyebrow,
+.welcome-signoff,
+.welcome-actions,
+.welcome-divider,
+.arrival-grid {
+    display: none !important;
+}
+
+.welcome-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 11.5vw, 54px);
+    line-height: 0.95;
+    letter-spacing: 0.10em;
+    color: var(--mg-title);
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 0 auto 20px;
+    max-width: 92%;
+}
+
+/* Imagen rectangular */
+.welcome-image {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0 auto 22px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(217,206,186,0.35));
+    min-height: 0;
+}
+
+.welcome-image img {
+    display: block;
+    width: 100%;
+    height: clamp(230px, 39svh, 310px);
+    min-height: 0;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Mensaje */
+.welcome-message {
+    max-width: 100%;
+    margin: 0 auto 22px;
+    text-align: left;
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(14px, 3.7vw, 16px);
+    line-height: 1.58;
+    letter-spacing: 0.01em;
+    color: var(--mg-body) !important;
+    font-weight: 400;
+}
+
+.welcome-message:empty {
+    display: none;
+}
+
+/* About us */
+.welcome-about {
+    border-top: 1px solid var(--mg-soft-line);
+    padding-top: 18px;
+    margin-top: 2px;
+}
+
+.welcome-about-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 5vw, 24px);
+    line-height: 1;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--mg-title);
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.welcome-about-copy {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(12px, 3.3vw, 14px);
+    line-height: 1.56;
+    color: var(--mg-body) !important;
+    font-weight: 400;
+}
+
+.welcome-about:empty {
+    display: none;
+}
+
+/* Mobile pequeño */
+@media (max-width: 360px) {
+    .language-bar {
+        gap: 8px;
+    }
+
+    .language-bar .language-chip,
+    .language-bar button,
+    .language-bar a {
+        padding: 11px 14px;
+        font-size: 12px;
+    }
+
+    .cover-title {
+        font-size: clamp(36px, 12vw, 48px);
+    }
+
+    .cover-script {
+        font-size: clamp(48px, 15vw, 64px);
+    }
+
+    .welcome-title {
+        font-size: clamp(32px, 10vw, 44px);
+    }
+
+    .welcome-image img {
+        height: clamp(210px, 36svh, 270px);
+    }
+}     
     </style>
 </head>
 <body>
@@ -1337,30 +1606,18 @@
         </section>
 
         <section class="screen welcome-card">
-            <div class="welcome-eyebrow">ENJOY YOUR STAY</div>
+    <h2 class="welcome-title">A Warm Welcome</h2>
 
-            <div class="welcome-image">
-                {{WELCOME_IMAGE_BLOCK}}
-            </div>
+    <div class="welcome-image">
+        {{WELCOME_IMAGE_BLOCK}}
+    </div>
 
-            <h2 class="welcome-title">A Warm Welcome</h2>
+    <div class="welcome-message">
+        {{WELCOME_MESSAGE_BLOCK}}
+    </div>
 
-            <div class="welcome-message">
-                {{WELCOME_MESSAGE_BLOCK}}
-            </div>
-
-            <div class="welcome-signoff">Enjoy</div>
-
-            <div class="welcome-actions">
-                {{WELCOME_ACTIONS_BLOCK}}
-            </div>
-
-            <hr class="welcome-divider">
-
-            <div class="arrival-grid">
-                {{CHECKIN_CHECKOUT_BLOCK}}
-            </div>
-        </section>
+    {{ABOUT_HOSTS_BLOCK}}
+</section>
 
          <section id="menu-sheet" class="screen menu-card">
             <div class="menu-script-title">Your Guide</div>
