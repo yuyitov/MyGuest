@@ -23,7 +23,7 @@
             margin: 0;
             padding: 0;
         }
-
+        
         html, body {
             background: var(--bg);
             color: var(--text);
@@ -2104,12 +2104,12 @@ section.welcome-card {
                     </svg>
                 </div>
 
-                <p class="wifi-center-copy">
-                    WiFi details are protected and require guest PIN access.
+          <p class="wifi-center-copy">
+                    Private stay details load securely inside this welcome book.
                 </p>
 
-                <p class="wifi-center-copy">
-                    Please use your secure guest access to view the network name and password.
+          <p class="wifi-center-copy">
+                    WiFi and access details appear only when the secure guest token is valid.
                 </p>
             </div>
 
@@ -2504,9 +2504,117 @@ section.welcome-card {
             {{CONTENT_SECTIONS}}
         </div>
 
+              <section id="private-stay-details" class="screen info-sheet" data-private-url="{{GENERATED_PRIVATE_URL}}">
+            <div class="info-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="info-sheet-title">Private Stay Details</h2>
+
+            <div class="info-panel">
+                <p id="private-loading" class="wifi-center-copy">Loading private stay details…</p>
+                <p id="private-error" class="wifi-center-copy" hidden>Private details could not be loaded.</p>
+                <p id="private-empty" class="wifi-center-copy" hidden>No private details available.</p>
+                <div id="private-content"></div>
+            </div>
+        </section>
+
         <p class="footer-note">
             This welcome book shows public guest information only.
         </p>
     </div>
+
+<script>
+(function () {
+  const section = document.getElementById("private-stay-details");
+  if (!section) return;
+
+  const url = section.dataset.privateUrl;
+  const loading = document.getElementById("private-loading");
+  const error = document.getElementById("private-error");
+  const empty = document.getElementById("private-empty");
+  const content = document.getElementById("private-content");
+
+  if (!url) {
+    loading.hidden = true;
+    empty.hidden = false;
+    return;
+  }
+
+  fetch(url, { headers: { accept: "application/json" }, cache: "no-store" })
+    .then((res) => {
+      if (!res.ok) throw new Error("Request failed");
+      return res.json();
+    })
+    .then((data) => {
+  loading.hidden = true;
+
+  const fields = [
+    ["WiFi network", data.wifi_ssid],
+    ["WiFi password", data.wifi_password],
+    ["Door code", data.door_code],
+    ["Host phone", data.host_phone],
+    ["Private access notes", data.house_access_private]
+  ].filter(([, value]) => value);
+
+  // 🔴 SI NO HAY NADA → OCULTAR TODA LA SECCIÓN
+  if (!fields.length) {
+    section.style.display = "none";
+    return;
+  }
+
+  content.innerHTML = "";
+
+  fields.forEach(([label, value]) => {
+    const item = document.createElement("div");
+    item.className = "contact-card";
+    item.innerHTML = `
+      <div>
+        <div class="contact-card-title">${label}</div>
+        <div class="contact-card-text"></div>
+      </div>
+    `;
+    item.querySelector(".contact-card-text").textContent = value;
+    content.appendChild(item);
+  });
+})
+
+      const fields = [
+        ["WiFi network", data.wifi_ssid],
+        ["WiFi password", data.wifi_password],
+        ["Door code", data.door_code],
+        ["Host phone", data.host_phone],
+        ["Private access notes", data.house_access_private]
+      ].filter(([, value]) => value);
+
+      if (!fields.length) {
+        empty.hidden = false;
+        return;
+      }
+
+      content.innerHTML = "";
+      fields.forEach(([label, value]) => {
+        const item = document.createElement("div");
+        item.className = "contact-card";
+        item.innerHTML = `
+          <div>
+            <div class="contact-card-title">${label}</div>
+            <div class="contact-card-text"></div>
+          </div>
+        `;
+        item.querySelector(".contact-card-text").textContent = value;
+        content.appendChild(item);
+      });
+    })
+    .catch(() => {
+      loading.hidden = true;
+      error.hidden = false;
+    });
+})();
+</script>
 </body>
 </html>
