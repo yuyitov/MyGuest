@@ -541,42 +541,9 @@ def patch_welcome_image(html):
     return re.sub(r'<div\s+class="welcome-image">[\s\S]*?</div>', replacement, html, count=1)
 
 def reorder_screens(html):
-    order = [
-        "cover-screen",
-        "welcome-screen",
-        "menu-sheet",
-        "arrival-screen",
-        "location-screen",
-        "wifi-screen",
-        "house-guide-screen",
-        "house-rules-screen",
-        "things-to-know-screen",
-        "things-to-do-screen",
-        "places-to-eat-screen",
-        "places-to-drink-screen",
-        "local-directory-screen",
-        "emergency-screen",
-        "contact-screen",
-        "before-you-leave-screen",
-        "review-screen",
-    ]
-
-    sections = {}
-
-    # Extraer cada section por id
-    for screen_id in order:
-        pattern = rf'(<section[^>]*id="{screen_id}"[\s\S]*?</section>)'
-        match = re.search(pattern, html, flags=re.IGNORECASE)
-        if match:
-            sections[screen_id] = match.group(1)
-
-    # Eliminar TODAS las sections actuales
-    html = re.sub(r'<section[^>]*id=".*?"[\s\S]*?</section>', '', html, flags=re.IGNORECASE)
-
-    # Insertar en orden correcto (antes de </body>)
-    ordered_html = "".join(sections.get(s, "") for s in order)
-
-    return html.replace("</body>", ordered_html + "\n</body>")
+    # Ya no reordenamos forzadamente todas las pantallas porque eso mezcló
+    # las pantallas nuevas con las que ya venían bien diseñadas en master.html.
+    return html
 
 def inject_css(html):
     if CSS_MARKER in html:
@@ -589,10 +556,8 @@ def inject_css(html):
 def inject(html, payload):
     html = replace_menu(html)
     html = replace_arrival(html, payload)
-    html = replace_location(html, payload)
     html = replace_info_screens(html, payload)
     html = patch_welcome_image(html)
-    html = reorder_screens(html)
     html = inject_css(html)
     return html
 
