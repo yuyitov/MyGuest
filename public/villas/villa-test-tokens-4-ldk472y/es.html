@@ -1,0 +1,2714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MyGuest — villa test tokens 4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8B6F47;
+            --accent: #D9CEBA;
+            --bg: #F9F6F0;
+            --text: #3A2A1C;
+            --card: #ffffff;
+            --border: rgba(0,0,0,0.10);
+            --soft-border: rgba(0,0,0,0.07);
+            --muted: rgba(0,0,0,0.58);
+            --shadow: 0 12px 30px rgba(0,0,0,0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html, body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+        }
+
+        .app-shell {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding: 18px 18px 36px;
+            background: var(--bg);
+        }
+
+        .language-bar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .language-bar .language-chip,
+        .language-bar button,
+        .language-bar a {
+            appearance: none;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: #ffffff;
+            color: var(--text);
+            border-radius: 999px;
+            padding: 14px 22px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            line-height: 1;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+        }
+
+        .language-bar .active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .screen {
+            width: 100%;
+            margin-bottom: 22px;
+        }
+
+        .cover-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px 2px 8px;
+        }
+
+        .cover-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 66px;
+            line-height: 0.9;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            text-align: center;
+            margin-top: 6px;
+            margin-bottom: 28px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .cover-image-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 26px;
+        }
+
+        .cover-image-arch {
+            width: min(100%, 300px);
+            aspect-ratio: 0.74 / 1;
+            border-radius: 180px 180px 0 0;
+            overflow: hidden;
+            border: 2px solid rgba(139, 111, 71, 0.25);
+            background: linear-gradient(180deg, rgba(255,255,255,0.45), rgba(216,206,186,0.45));
+        }
+
+        .cover-image-arch img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .cover-script {
+            font-family: 'Allura', cursive;
+            font-size: 76px;
+            line-height: 0.9;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .cover-to {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            letter-spacing: 0.18em;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .cover-address {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            line-height: 1.2;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            text-align: center;
+            text-transform: uppercase;
+            max-width: 90%;
+        }
+
+        .welcome-card {
+            background: var(--card);
+            border-radius: 32px;
+            padding: 26px 20px 18px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .welcome-eyebrow {
+            text-align: center;
+            font-size: 13px;
+            letter-spacing: 0.34em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 24px;
+            font-weight: 500;
+            opacity: 0.95;
+        }
+
+        .welcome-image {
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 26px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(217,206,186,0.35));
+            min-height: 220px;
+        }
+
+        .welcome-image img {
+            display: block;
+            width: 100%;
+            height: auto;
+            min-height: 220px;
+            object-fit: cover;
+        }
+
+        .welcome-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 66px;
+            line-height: 0.95;
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 22px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .welcome-message {
+            max-width: 88%;
+            margin: 0 auto 18px;
+            text-align: center;
+            font-size: 25px;
+            line-height: 1.62;
+            color: var(--text);
+            font-weight: 400;
+        }
+
+        .welcome-signoff {
+            text-align: center;
+            font-family: 'Allura', cursive;
+            font-size: 66px;
+            line-height: 1;
+            color: var(--primary);
+            margin-bottom: 22px;
+        }
+
+        .welcome-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            min-height: 70px;
+        }
+
+        .welcome-action {
+            width: 62px;
+            height: 62px;
+            border-radius: 999px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #1f1f1f;
+            text-decoration: none;
+            color: #ffffff;
+            flex: 0 0 auto;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+
+        .welcome-action svg {
+            width: 26px;
+            height: 26px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .welcome-divider {
+            border: none;
+            border-top: 1px solid rgba(139, 111, 71, 0.22);
+            margin: 0 0 20px;
+        }
+
+        .arrival-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .arrival-card {
+            background: rgba(249,246,240,0.72);
+            border: 1px solid rgba(139, 111, 71, 0.22);
+            border-radius: 18px;
+            padding: 18px 12px 16px;
+            text-align: center;
+            min-height: 126px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .arrival-label {
+            font-size: 13px;
+            letter-spacing: 0.30em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 14px;
+        }
+
+        .arrival-time {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 44px;
+            line-height: 1;
+            color: #111;
+            font-weight: 600;
+        }
+
+                .menu-card {
+            background: var(--card);
+            border-radius: 32px;
+            padding: 22px 18px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .menu-script-title {
+            text-align: center;
+            font-family: 'Allura', cursive;
+            font-size: 78px;
+            line-height: 0.95;
+            color: var(--primary);
+            margin-bottom: 18px;
+        }
+
+        .menu-subtitle {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            line-height: 1.15;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 26px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            column-gap: 14px;
+            row-gap: 18px;
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .menu-tile {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 24px;
+            background: #f6efe8;
+            border: 1px solid rgba(139, 111, 71, 0.10);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .menu-icon {
+            width: 86px;
+            height: 86px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .menu-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .menu-label {
+            font-size: 13px;
+            line-height: 1.2;
+            color: #2a241f;
+            font-weight: 500;
+            letter-spacing: 0;
+            text-transform: none;
+        }      
+                .arrival-info-card {
+            background: var(--card);
+            border-radius: 36px;
+            padding: 26px 18px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .arrival-info-leaf {
+            text-align: center;
+            color: #d8c0a0;
+            margin-bottom: 10px;
+        }
+
+        .arrival-info-leaf svg {
+            width: 28px;
+            height: 28px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .arrival-info-title {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            line-height: 1.05;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 22px;
+            font-weight: 600;
+        }
+
+        .arrival-times-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 26px;
+        }
+
+        .arrival-time-card-elegant {
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.65);
+            border-radius: 24px;
+            min-height: 176px;
+            padding: 18px 10px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.03);
+        }
+
+        .arrival-time-big {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 74px;
+            line-height: 0.9;
+            color: #6e5230;
+            font-weight: 500;
+            margin-bottom: 14px;
+        }
+
+        .arrival-time-divider {
+            width: 72%;
+            height: 12px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .arrival-time-divider::before,
+        .arrival-time-divider::after {
+            content: "";
+            position: absolute;
+            top: 5px;
+            width: calc(50% - 10px);
+            height: 1.5px;
+            background: #dfc7a3;
+        }
+
+        .arrival-time-divider::before {
+            left: 0;
+        }
+
+        .arrival-time-divider::after {
+            right: 0;
+        }
+
+        .arrival-time-divider span {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #dfc7a3;
+        }
+
+        .arrival-time-caption {
+            font-size: 13px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: #6e5230;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .arrival-info-copy {
+            font-size: 17px;
+            line-height: 1.72;
+            color: var(--text);
+            margin: 0 8px 24px;
+            text-align: left;
+        }
+
+        .arrival-detail-card {
+            display: grid;
+            grid-template-columns: 128px 1fr;
+            gap: 18px;
+            align-items: center;
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.55);
+            border-radius: 28px;
+            padding: 18px 18px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.03);
+            margin-bottom: 16px;
+        }
+
+        .arrival-detail-icon {
+            width: 104px;
+            height: 104px;
+            border-radius: 999px;
+            background: #ffffff;
+            border: 1px solid rgba(212, 186, 154, 0.45);
+            color: #a07a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.04);
+        }
+
+        .arrival-detail-icon svg {
+            width: 56px;
+            height: 56px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .arrival-detail-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            line-height: 1;
+            color: #6e5230;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .arrival-detail-divider {
+            width: 70px;
+            height: 10px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .arrival-detail-divider::before,
+        .arrival-detail-divider::after {
+            content: "";
+            position: absolute;
+            top: 4px;
+            height: 1.5px;
+            background: #dfc7a3;
+        }
+
+        .arrival-detail-divider::before {
+            left: 0;
+            width: 28px;
+        }
+
+        .arrival-detail-divider::after {
+            right: 0;
+            width: 28px;
+        }
+
+        .arrival-detail-divider span {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #dfc7a3;
+        }
+
+        .arrival-detail-text {
+            font-size: 17px;
+            line-height: 1.68;
+            color: var(--text);
+        }
+
+        .arrival-menu-back-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .arrival-menu-back {
+            min-width: 220px;
+            padding: 16px 26px;
+            border-radius: 999px;
+            background: #8b6f47;
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(139, 111, 71, 0.20);
+        }
+
+        .arrival-menu-back svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
+
+        .info-sheet {
+            background: var(--card);
+            border-radius: 36px;
+            padding: 26px 18px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .info-sheet-leaf {
+            text-align: center;
+            color: #d8c0a0;
+            margin-bottom: 10px;
+        }
+
+        .info-sheet-leaf svg {
+            width: 28px;
+            height: 28px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .info-sheet-title {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            line-height: 1.05;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .info-panel {
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.55);
+            border-radius: 28px;
+            padding: 18px 18px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.03);
+            margin-bottom: 16px;
+        }
+
+        .info-map-box {
+            width: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            min-height: 210px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(217,206,186,0.35));
+            margin-bottom: 16px;
+            border: 1px solid rgba(212, 186, 154, 0.45);
+        }
+
+        .info-map-box iframe,
+        .info-map-box img {
+            display: block;
+            width: 100%;
+            height: 210px;
+            border: 0;
+            object-fit: cover;
+        }
+
+        .info-row-item {
+            display: grid;
+            grid-template-columns: 62px 1fr;
+            gap: 14px;
+            align-items: start;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(212, 186, 154, 0.32);
+        }
+
+        .info-row-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .info-row-item:first-child {
+            padding-top: 0;
+        }
+
+        .info-row-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 999px;
+            background: #fffaf4;
+            border: 1px solid rgba(212, 186, 154, 0.45);
+            color: #a07a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .info-row-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .info-row-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            line-height: 1;
+            color: #6e5230;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .info-row-text {
+            font-size: 16px;
+            line-height: 1.62;
+            color: var(--text);
+        }
+
+        .wifi-center {
+            text-align: center;
+            padding: 6px 10px 2px;
+        }
+
+        .wifi-center-icon {
+            width: 126px;
+            height: 126px;
+            border-radius: 999px;
+            background: #f6efe8;
+            border: 1px solid rgba(212, 186, 154, 0.50);
+            color: #8b6f47;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .wifi-center-icon svg {
+            width: 64px;
+            height: 64px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .wifi-center-copy {
+            font-size: 18px;
+            line-height: 1.72;
+            color: var(--text);
+            max-width: 88%;
+            margin: 0 auto 10px;
+        }
+
+        .menu-back-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        .menu-back-btn {
+            min-width: 220px;
+            padding: 16px 26px;
+            border-radius: 999px;
+            background: #8b6f47;
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(139, 111, 71, 0.20);
+        }
+
+        .menu-back-btn svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+                .list-sheet {
+            background: var(--card);
+            border-radius: 36px;
+            padding: 26px 18px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .list-sheet-leaf {
+            text-align: center;
+            color: #d8c0a0;
+            margin-bottom: 10px;
+        }
+
+        .list-sheet-leaf svg {
+            width: 28px;
+            height: 28px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .list-sheet-title {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            line-height: 1.05;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .list-sheet-panel {
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.55);
+            border-radius: 28px;
+            padding: 18px 18px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.03);
+            margin-bottom: 16px;
+        }
+
+        .list-sheet-intro {
+            font-size: 17px;
+            line-height: 1.72;
+            color: var(--text);
+            margin: 0 4px 16px;
+            text-align: left;
+        }
+
+        .list-sheet-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .list-item-card {
+            display: grid;
+            grid-template-columns: 56px 1fr;
+            gap: 14px;
+            align-items: start;
+            background: #fffaf4;
+            border: 1px solid rgba(212, 186, 154, 0.38);
+            border-radius: 22px;
+            padding: 14px 14px;
+        }
+
+        .list-item-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            background: #ffffff;
+            border: 1px solid rgba(212, 186, 154, 0.45);
+            color: #a07a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .list-item-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .list-item-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            line-height: 1;
+            color: #6e5230;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .list-item-text {
+            font-size: 16px;
+            line-height: 1.62;
+            color: var(--text);
+        }
+
+        .editorial-sheet {
+            background: var(--card);
+            border-radius: 36px;
+            padding: 26px 18px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .editorial-sheet-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .editorial-sheet-leaf {
+            color: #d8c0a0;
+            margin-bottom: 10px;
+        }
+
+        .editorial-sheet-leaf svg {
+            width: 28px;
+            height: 28px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .editorial-sheet-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            line-height: 1.05;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .editorial-hero {
+            width: 100%;
+            min-height: 220px;
+            border-radius: 28px;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(217,206,186,0.35));
+            border: 1px solid rgba(212, 186, 154, 0.45);
+            margin-bottom: 18px;
+        }
+
+        .editorial-hero img {
+            display: block;
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .editorial-sheet-panel {
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.55);
+            border-radius: 28px;
+            padding: 20px 18px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.03);
+            margin-bottom: 16px;
+        }
+
+        .editorial-copy {
+            font-size: 17px;
+            line-height: 1.74;
+            color: var(--text);
+            text-align: left;
+        }
+
+                .rule-sheet {
+            background: var(--card);
+            border-radius: 36px;
+            padding: 26px 18px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .rule-sheet-leaf {
+            text-align: center;
+            color: #d8c0a0;
+            margin-bottom: 10px;
+        }
+
+        .rule-sheet-leaf svg {
+            width: 28px;
+            height: 28px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .rule-sheet-title {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            line-height: 1.05;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .rule-sheet-panel {
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.55);
+            border-radius: 28px;
+            padding: 20px 18px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.03);
+            margin-bottom: 16px;
+        }
+
+        .rule-sheet-copy {
+            font-size: 17px;
+            line-height: 1.72;
+            color: var(--text);
+            text-align: left;
+        }
+
+        .contact-sheet {
+            background: var(--card);
+            border-radius: 36px;
+            padding: 26px 18px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .contact-sheet-header {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .contact-sheet-leaf {
+            color: #d8c0a0;
+            margin-bottom: 10px;
+        }
+
+        .contact-sheet-leaf svg {
+            width: 28px;
+            height: 28px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .contact-sheet-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            line-height: 1.05;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .contact-card {
+            display: grid;
+            grid-template-columns: 62px 1fr;
+            gap: 14px;
+            align-items: start;
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.55);
+            border-radius: 24px;
+            padding: 16px 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            margin-bottom: 14px;
+        }
+
+        .contact-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 999px;
+            background: #fffaf4;
+            border: 1px solid rgba(212, 186, 154, 0.45);
+            color: #a07a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-card-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .contact-card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            line-height: 1;
+            color: #6e5230;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .contact-card-text {
+            font-size: 16px;
+            line-height: 1.62;
+            color: var(--text);
+            word-break: break-word;
+        }
+
+        .review-sheet {
+            background: var(--card);
+            border-radius: 36px;
+            padding: 26px 18px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .review-sheet-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .review-sheet-leaf {
+            color: #d8c0a0;
+            margin-bottom: 10px;
+        }
+
+        .review-sheet-leaf svg {
+            width: 28px;
+            height: 28px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .review-sheet-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            line-height: 1.05;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .review-sheet-panel {
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.55);
+            border-radius: 28px;
+            padding: 22px 18px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.03);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .review-sheet-copy {
+            font-size: 17px;
+            line-height: 1.72;
+            color: var(--text);
+            margin-bottom: 18px;
+        }
+
+        .review-sheet-btn {
+            min-width: 220px;
+            padding: 16px 26px;
+            border-radius: 999px;
+            background: #8b6f47;
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(139, 111, 71, 0.20);
+        }
+
+        .review-sheet-btn svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .content-sections {
+            margin-top: 18px;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 22px 20px;
+            border-radius: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .section-title {
+            font-size: 13px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+
+        .paragraph {
+            font-size: 17px;
+            line-height: 1.8;
+            margin-bottom: 14px;
+            white-space: pre-line;
+        }
+
+        .info-row {
+            margin-bottom: 12px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-note {
+            margin-top: 14px;
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        @media (max-width: 390px) {
+            .app-shell {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .cover-title {
+                font-size: 58px;
+            }
+
+            .cover-script {
+                font-size: 66px;
+            }
+
+            .cover-address {
+                font-size: 24px;
+            }
+
+            .welcome-title {
+                font-size: 56px;
+            }
+
+            .welcome-message {
+                font-size: 22px;
+                max-width: 92%;
+            }
+
+            .arrival-time {
+                font-size: 38px;
+            }
+
+                       .menu-script-title {
+                font-size: 66px;
+            }
+
+            .menu-subtitle {
+                font-size: 24px;
+                max-width: 94%;
+            }
+
+            .menu-grid {
+                column-gap: 12px;
+                row-gap: 16px;
+            }
+
+            .menu-icon {
+                width: 76px;
+                height: 76px;
+            }
+
+            .menu-label {
+                font-size: 11px;
+                line-height: 1.18;
+            }  
+        }
+        @media print {
+            .language-bar {
+                display: none !important;
+            }
+        }
+
+   /* =====================================================
+   MyGuest Bloque 12 — Pantalla 1 y 2 aprobadas
+   Solo portada + welcome
+===================================================== */
+
+:root {
+    --mg-title: #8A704A;
+    --mg-body: #3A2A1C;
+    --mg-soft-line: rgba(138, 112, 74, 0.26);
+    --mg-phone-max: 430px;
+}
+
+/* Tipografía base */
+html,
+body {
+    color: var(--mg-body);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+}
+
+.app-shell {
+    width: min(100%, var(--mg-phone-max));
+    max-width: var(--mg-phone-max);
+    margin: 0 auto;
+}
+
+/* Barra de idiomas */
+.language-bar {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+    margin-bottom: 20px;
+}
+
+.language-bar .language-chip,
+.language-bar button,
+.language-bar a {
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 999px;
+    padding: 14px 22px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--mg-body);
+    background: #ffffff;
+    border: 1px solid rgba(58, 42, 28, 0.10);
+    text-decoration: none;
+}
+
+.language-bar .active {
+    background: var(--mg-title);
+    color: #ffffff;
+    border-color: var(--mg-title);
+}
+
+/* =========================
+   PANTALLA 1 — APROBADA
+========================= */
+
+.cover-screen {
+    min-height: calc(100svh - 92px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 2px 8px;
+    gap: clamp(10px, 2.2svh, 18px);
+}
+
+.cover-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 13.2vw, 62px);
+    line-height: 0.96;
+    letter-spacing: 0.095em;
+    color: var(--mg-title);
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 0 0 clamp(8px, 2svh, 18px);
+}
+
+.cover-image-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: clamp(8px, 2svh, 18px);
+}
+
+.cover-image-arch {
+    width: min(78vw, 292px);
+    aspect-ratio: 0.74 / 1;
+    max-height: 42svh;
+    border-radius: 180px 180px 0 0;
+    overflow: hidden;
+    border: 2px solid rgba(138, 112, 74, 0.24);
+}
+
+.cover-image-arch img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Cursiva Tu Guía */
+.cover-script {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(54px, 17vw, 76px);
+    line-height: 0.9;
+    color: var(--mg-title);
+    text-align: center;
+    margin-bottom: 4px;
+    font-weight: 400;
+}
+
+.cover-to {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 5.5vw, 25px);
+    letter-spacing: 0.18em;
+    color: var(--mg-title);
+    text-align: center;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.cover-address {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 5.8vw, 26px);
+    line-height: 1.12;
+    letter-spacing: 0.065em;
+    color: var(--mg-title);
+    text-align: center;
+    text-transform: uppercase;
+    max-width: 100%;
+}
+
+/* =========================
+   PANTALLA 2 — APROBADA
+========================= */
+
+section.welcome-card {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    min-height: calc(100svh - 92px);
+    padding: 8px 8px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Elementos que ya no van en pantalla 2 */
+.welcome-eyebrow,
+.welcome-signoff,
+.welcome-actions,
+.welcome-divider,
+.arrival-grid {
+    display: none !important;
+}
+
+.welcome-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 11.5vw, 54px);
+    line-height: 0.95;
+    letter-spacing: 0.10em;
+    color: var(--mg-title);
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 0 auto 20px;
+    max-width: 92%;
+}
+
+/* Imagen rectangular */
+.welcome-image {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0 auto 22px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(217,206,186,0.35));
+    min-height: 0;
+}
+
+.welcome-image img {
+    display: block;
+    width: 100%;
+    height: clamp(230px, 39svh, 310px);
+    min-height: 0;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Mensaje */
+.welcome-message {
+    max-width: 100%;
+    margin: 0 auto 22px;
+    text-align: left;
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(14px, 3.7vw, 16px);
+    line-height: 1.58;
+    letter-spacing: 0.01em;
+    color: var(--mg-body) !important;
+    font-weight: 400;
+}
+
+.welcome-message:empty {
+    display: none;
+}
+
+/* About us */
+.welcome-about {
+    border-top: 1px solid var(--mg-soft-line);
+    padding-top: 18px;
+    margin-top: 2px;
+}
+
+.welcome-about-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 5vw, 24px);
+    line-height: 1;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--mg-title);
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.welcome-about-copy {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(12px, 3.3vw, 14px);
+    line-height: 1.56;
+    color: var(--mg-body) !important;
+    font-weight: 400;
+}
+
+.welcome-about:empty {
+    display: none;
+}
+
+/* Mobile pequeño */
+@media (max-width: 360px) {
+    .language-bar {
+        gap: 8px;
+    }
+
+    .language-bar .language-chip,
+    .language-bar button,
+    .language-bar a {
+        padding: 11px 14px;
+        font-size: 12px;
+    }
+
+    .cover-title {
+        font-size: clamp(36px, 12vw, 48px);
+    }
+
+    .cover-script {
+        font-size: clamp(48px, 15vw, 64px);
+    }
+
+    .welcome-title {
+        font-size: clamp(32px, 10vw, 44px);
+    }
+
+    .welcome-image img {
+        height: clamp(210px, 36svh, 270px);
+    }
+}     
+
+  /* =====================================================
+   MyGuest Bloque 12 — Pantalla 3 menú aprobado
+   3 columnas, botones premium, links a pantallas futuras
+===================================================== */
+
+.menu-screen-approved {
+    min-height: calc(100svh - 92px);
+    background:
+        radial-gradient(circle at 85% 6%, rgba(216, 206, 186, 0.36), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,250,244,0.92));
+    border: 1px solid rgba(138, 112, 74, 0.14);
+    border-radius: 34px;
+    box-shadow: 0 18px 42px rgba(58, 42, 28, 0.08);
+    padding: 18px 16px 22px;
+}
+
+.menu-screen-approved .menu-kicker {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(14px, 3.6vw, 18px);
+    line-height: 1;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 2px;
+    opacity: 0.9;
+}
+
+.menu-screen-approved .menu-script-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(54px, 16vw, 76px);
+    line-height: 0.9;
+    color: var(--primary);
+    text-align: center;
+    margin: 0 0 8px;
+    font-weight: 400;
+}
+
+.menu-screen-approved .menu-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 5vw, 25px);
+    line-height: 1.12;
+    letter-spacing: 0.08em;
+    color: var(--primary);
+    text-align: center;
+    text-transform: none;
+    margin: 0 auto 18px;
+    max-width: 92%;
+}
+
+.menu-grid-approved {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 10px;
+    row-gap: 12px;
+    align-items: stretch;
+}
+
+.menu-screen-approved .menu-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    min-width: 0;
+    text-decoration: none;
+    color: var(--text);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.menu-screen-approved .menu-tile {
+    width: 100%;
+    aspect-ratio: 1.05 / 0.88;
+    border-radius: 21px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.94), rgba(252,247,240,0.92));
+    border: 1px solid rgba(138, 112, 74, 0.20);
+    box-shadow:
+        0 9px 22px rgba(58, 42, 28, 0.07),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 6px;
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.menu-screen-approved .menu-link:active .menu-tile {
+    transform: scale(0.97);
+    box-shadow:
+        0 5px 14px rgba(58, 42, 28, 0.06),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+.menu-screen-approved .menu-icon {
+    width: clamp(31px, 9vw, 42px);
+    height: clamp(31px, 9vw, 42px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+}
+
+.menu-screen-approved .menu-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.menu-screen-approved .menu-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(14px, 3.7vw, 17px);
+    line-height: 1.05;
+    color: var(--mg-body, #3A2A1C);
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0;
+    max-width: 100%;
+    min-height: 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.menu-screen-approved .menu-item-wide-left {
+    grid-column: 1 / 2;
+    transform: translateX(56%);
+}
+
+.menu-screen-approved .menu-item-wide-right {
+    grid-column: 3 / 4;
+    transform: translateX(-56%);
+}
+
+@media (max-width: 380px) {
+    .menu-screen-approved {
+        padding: 16px 12px 20px;
+    }
+
+    .menu-grid-approved {
+        column-gap: 8px;
+        row-gap: 10px;
+    }
+
+    .menu-screen-approved .menu-tile {
+        border-radius: 18px;
+        margin-bottom: 5px;
+    }
+
+    .menu-screen-approved .menu-label {
+        font-size: clamp(12px, 3.5vw, 15px);
+        min-height: 30px;
+    }
+
+    .menu-screen-approved .menu-script-title {
+        font-size: clamp(48px, 15vw, 66px);
+    }
+
+    .menu-screen-approved .menu-subtitle {
+        margin-bottom: 14px;
+    }
+}      
+    
+/* MyGuest Bloque 12 approved screens */
+:root {
+  --myguest-deep-text:#3A2A1C;
+  --myguest-muted-text:#5B4635;
+  --myguest-icon:#7A624C;
+  --myguest-tile:#F4EEE6;
+  --myguest-border:#DDCFC0;
+  --myguest-screen-h:calc(100svh - 92px);
+}
+body,.welcome-message,.menu-label,.paragraph,.info-value,.info-row,.card,.section-title,.arrival-time,.arrival-detail-text,.list-item-text,.rule-text,.arrival-approved-text { color:var(--myguest-deep-text)!important; }
+.screen:not(.cover-screen) { min-height:var(--myguest-screen-h)!important; }
+.welcome-card .arrival-grid,.welcome-card .welcome-divider,.welcome-card .welcome-actions,.welcome-card .welcome-signoff,.welcome-card .welcome-eyebrow { display:none!important; }
+.welcome-card { padding-top:clamp(20px,5vw,28px)!important;padding-bottom:clamp(20px,5vw,28px)!important; }
+.welcome-image { display:block!important;min-height:190px!important;max-height:260px!important;background:linear-gradient(180deg,#F7F0E8,#E7D8C7)!important;border-radius:8px!important; }
+.welcome-image img { display:block!important;width:100%!important;height:clamp(190px,36svh,260px)!important;object-fit:cover!important;border-radius:8px!important; }
+.menu-screen-approved { min-height:var(--myguest-screen-h)!important;background:radial-gradient(circle at 85% 6%, rgba(216,206,186,.36), transparent 34%),linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,250,244,.92))!important;border:1px solid rgba(138,112,74,.14)!important;border-radius:34px!important;box-shadow:0 18px 42px rgba(58,42,28,.08)!important;padding:8px 16px 22px!important; }
+.menu-screen-approved .menu-kicker { font-family:'Cormorant Garamond',serif!important;font-size:clamp(14px,3.6vw,18px)!important;line-height:1!important;letter-spacing:.34em!important;text-transform:uppercase!important;color:var(--primary)!important;text-align:center!important;margin-bottom:0!important;opacity:.9!important; }
+.menu-screen-approved .menu-script-title { font-family:'Great Vibes',cursive!important;font-size:clamp(54px,16vw,76px)!important;line-height:.9!important;color:var(--primary)!important;text-align:center!important;margin:-6px 0 4px!important;font-weight:400!important; }
+.menu-screen-approved .menu-subtitle { font-family:'Cormorant Garamond',serif!important;font-size:clamp(18px,5vw,25px)!important;line-height:1.12!important;letter-spacing:.08em!important;color:var(--primary)!important;text-align:center!important;text-transform:none!important;margin:0 auto 18px!important;max-width:92%!important; }
+.menu-grid-approved { display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;column-gap:10px!important;row-gap:12px!important;align-items:stretch!important; }
+.menu-screen-approved .menu-link { display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;min-width:0!important;text-decoration:none!important;color:var(--text)!important;-webkit-tap-highlight-color:transparent!important; }
+.menu-screen-approved .menu-tile { width:100%!important;aspect-ratio:1.05/.88!important;border-radius:21px!important;background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(252,247,240,.92))!important;border:1px solid rgba(138,112,74,.20)!important;box-shadow:0 9px 22px rgba(58,42,28,.07),inset 0 1px 0 rgba(255,255,255,.9)!important;display:flex!important;align-items:center!important;justify-content:center!important;margin-bottom:6px!important; }
+.menu-screen-approved .menu-icon { width:clamp(31px,9vw,42px)!important;height:clamp(31px,9vw,42px)!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;color:var(--primary)!important; }
+.menu-screen-approved .menu-icon svg,.arrival-approved-icon svg,.arrival-approved-back svg,.arrival-approved-map svg { width:100%!important;height:100%!important;stroke:currentColor!important;fill:none!important;stroke-width:1.75!important;stroke-linecap:round!important;stroke-linejoin:round!important; }
+.menu-screen-approved .menu-label { font-family:'Cormorant Garamond',serif!important;font-size:clamp(14px,3.7vw,17px)!important;line-height:1.05!important;color:var(--myguest-deep-text)!important;font-weight:500!important;text-align:center!important;min-height:32px!important;display:flex!important;align-items:flex-start!important;justify-content:center!important; }
+.menu-screen-approved .menu-item-wide-left { grid-column:1 / 2!important;transform:translateX(56%)!important; }
+.menu-screen-approved .menu-item-wide-right { grid-column:3 / 4!important;transform:translateX(-56%)!important; }
+.arrival-screen-approved { position:relative!important;min-height:var(--myguest-screen-h)!important;background:radial-gradient(circle at 88% 6%,rgba(216,206,186,.32),transparent 35%),linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,250,244,.94))!important;border:1px solid rgba(138,112,74,.14)!important;border-radius:34px!important;box-shadow:0 18px 42px rgba(58,42,28,.08)!important;padding:18px 16px 22px!important; }
+.arrival-approved-back { display:inline-flex!important;align-items:center!important;gap:7px!important;padding:11px 16px!important;border-radius:999px!important;background:rgba(244,238,230,.95)!important;border:1px solid rgba(138,112,74,.14)!important;box-shadow:0 9px 22px rgba(58,42,28,.06)!important;color:var(--myguest-deep-text)!important;text-decoration:none!important;font-family:'Montserrat',sans-serif!important;font-size:15px!important;font-weight:500!important; }
+.arrival-approved-back svg { width:20px!important;height:20px!important; }
+.arrival-approved-ornament { width:42px!important;height:42px!important;margin:4px auto 4px!important;color:var(--primary)!important;opacity:.86!important; }
+.arrival-approved-title { font-family:'Cormorant Garamond',serif!important;font-size:clamp(58px,17vw,82px)!important;line-height:.86!important;color:var(--myguest-deep-text)!important;text-align:center!important;font-weight:500!important;margin:0 0 10px!important;letter-spacing:0!important;text-transform:none!important; }
+.arrival-approved-subtitle { font-family:'Montserrat',sans-serif!important;font-size:clamp(15px,4.2vw,18px)!important;line-height:1.35!important;text-align:center!important;color:var(--myguest-deep-text)!important;margin:0 auto 22px!important;max-width:92%!important; }
+.arrival-approved-time-grid { display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;margin-bottom:14px!important; }
+.arrival-approved-time-card { background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(252,247,240,.92))!important;border:1px solid rgba(138,112,74,.18)!important;border-radius:24px!important;box-shadow:0 10px 24px rgba(58,42,28,.07)!important;min-height:164px!important;padding:18px 10px 16px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important; }
+.arrival-approved-time-card .arrival-approved-icon { width:64px!important;height:64px!important;border-radius:999px!important;background:#F4EEE6!important;color:var(--myguest-deep-text)!important;display:flex!important;align-items:center!important;justify-content:center!important;margin-bottom:14px!important;padding:16px!important; }
+.arrival-approved-label { font-family:'Montserrat',sans-serif!important;font-size:13px!important;font-weight:600!important;line-height:1!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:var(--myguest-deep-text)!important;margin-bottom:14px!important; }
+.arrival-approved-time { font-family:'Cormorant Garamond',serif!important;font-size:clamp(42px,12vw,60px)!important;line-height:.9!important;color:var(--myguest-deep-text)!important;font-weight:500!important; }
+.arrival-approved-info-card { display:grid!important;grid-template-columns:78px 1fr!important;gap:15px!important;align-items:center!important;background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(252,247,240,.92))!important;border:1px solid rgba(138,112,74,.18)!important;border-radius:24px!important;box-shadow:0 10px 24px rgba(58,42,28,.07)!important;padding:16px!important;margin-bottom:14px!important; }
+.arrival-approved-info-card .arrival-approved-icon { width:62px!important;height:62px!important;border-radius:999px!important;background:#F4EEE6!important;color:var(--myguest-deep-text)!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:15px!important; }
+.arrival-approved-heading { font-family:'Montserrat',sans-serif!important;font-size:clamp(18px,5vw,23px)!important;line-height:1.12!important;font-weight:600!important;color:var(--myguest-deep-text)!important;margin-bottom:8px!important; }
+.arrival-approved-text { font-family:'Montserrat',sans-serif!important;font-size:clamp(14px,3.9vw,16px)!important;line-height:1.5!important;font-weight:400!important;color:var(--myguest-deep-text)!important; }
+.arrival-approved-map { width:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:15px!important;min-height:68px!important;padding:18px 20px!important;border-radius:22px!important;background:rgba(255,250,244,.70)!important;border:1.5px solid var(--primary)!important;color:var(--primary)!important;text-decoration:none!important;font-family:'Montserrat',sans-serif!important;font-size:clamp(18px,5vw,24px)!important;font-weight:500!important;box-shadow:0 10px 24px rgba(58,42,28,.06)!important; }
+.arrival-approved-map svg { width:30px!important;height:30px!important; }
+@media (max-width:380px) {
+  .menu-screen-approved,.arrival-screen-approved { padding:16px 12px 20px!important; }
+  .menu-grid-approved { column-gap:8px!important;row-gap:10px!important; }
+  .menu-screen-approved .menu-tile { border-radius:18px!important;margin-bottom:5px!important; }
+  .menu-screen-approved .menu-label { font-size:clamp(12px,3.5vw,15px)!important;min-height:30px!important; }
+  .menu-screen-approved .menu-script-title { font-size:clamp(48px,15vw,66px)!important; }
+  .arrival-approved-time-grid { gap:9px!important; }
+  .arrival-approved-time-card { min-height:145px!important;border-radius:21px!important; }
+  .arrival-approved-info-card { grid-template-columns:64px 1fr!important;gap:12px!important;padding:14px!important; }
+  .arrival-approved-info-card .arrival-approved-icon { width:54px!important;height:54px!important; }
+}
+
+</style>
+</head>
+<body>
+    <div class="app-shell">
+        <div class="language-bar" aria-label="Language selector">
+            <a class="language-chip" href="en.html">English</a>
+<a class="language-chip active" href="es.html">Español</a>
+<a class="language-chip" href="fr.html">Français</a>
+        </div>
+
+        <section class="screen cover-screen">
+            <h1 class="cover-title">BIENVENIDO</h1>
+
+            <div class="cover-image-wrap">
+                
+            <div class="cover-image-arch">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="villa test tokens 4">
+            </div>
+        
+            </div>
+
+            <div class="cover-script">Tu Guía</div>
+            <div class="cover-to">A</div>
+            <div class="cover-address">drive 1233</div>
+        </section>
+
+        <section class="screen welcome-card">
+    <h2 class="welcome-title">Una Cálida Bienvenida</h2>
+
+    <div class="welcome-image"><img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80" alt="Welcome" loading="eager"></div>
+
+    <div class="welcome-message">
+        test
+    </div>
+
+    
+        <div class="welcome-about">
+            <div class="welcome-about-title">SOBRE NOSOTROS</div>
+            <p class="welcome-about-copy">test</p>
+        </div>
+    
+</section>
+
+    <section id="menu-sheet" class="screen menu-card menu-screen-approved">
+    <div class="menu-kicker">Tu Guía</div>
+    <h2 class="menu-script-title">Tu Guía</h2>
+    <p class="menu-subtitle">Todo lo que necesitas para una estancia perfecta</p>
+
+    <div class="menu-grid menu-grid-approved">
+        <a class="menu-item menu-link" href="#arrival-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <circle cx="32" cy="32" r="20"></circle>
+                        <path d="M32 18v15l10 6"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Llegada</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#location-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M32 56s18-14 18-32a18 18 0 1 0-36 0c0 18 18 32 18 32Z"></path>
+                        <circle cx="32" cy="24" r="6"></circle>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Ubicación</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#wifi-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M14 28a28 28 0 0 1 36 0"></path>
+                        <path d="M22 38a16 16 0 0 1 20 0"></path>
+                        <path d="M30 48a4 4 0 0 1 4 0"></path>
+                        <circle cx="32" cy="52" r="2.5"></circle>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">WiFi</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#house-guide-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M12 31 32 14l20 17"></path>
+                        <path d="M18 29v23h28V29"></path>
+                        <path d="M27 52V39h10v13"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Guía de la Casa</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#house-rules-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M20 10h20l8 8v36H20Z"></path>
+                        <path d="M40 10v10h8"></path>
+                        <path d="M26 28h16"></path>
+                        <path d="M26 36h16"></path>
+                        <path d="M26 44h10"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Reglas de la Casa</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#things-to-know-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <circle cx="32" cy="32" r="22"></circle>
+                        <path d="M32 29v16"></path>
+                        <circle cx="32" cy="20" r="2.5"></circle>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Información Importante</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#things-to-do-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <circle cx="32" cy="30" r="10"></circle>
+                        <path d="M32 8v8"></path>
+                        <path d="M32 44v8"></path>
+                        <path d="M10 30h8"></path>
+                        <path d="M46 30h8"></path>
+                        <path d="M17 15l6 6"></path>
+                        <path d="M47 15l-6 6"></path>
+                        <path d="M18 52c7-8 21-8 28 0"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Qué Hacer</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#places-to-eat-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M22 10v22"></path>
+                        <path d="M15 10v18c0 5 3 8 7 8s7-3 7-8V10"></path>
+                        <path d="M22 36v18"></path>
+                        <path d="M43 10c7 8 7 20 0 27v17"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Dónde Comer</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#places-to-drink-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M20 12h24l-4 22a8 8 0 0 1-16 0Z"></path>
+                        <path d="M32 42v12"></path>
+                        <path d="M24 54h16"></path>
+                        <path d="M42 17l7-5"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Dónde Tomar Algo</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#local-directory-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <rect x="18" y="12" width="30" height="40" rx="4"></rect>
+                        <path d="M14 20h8"></path>
+                        <path d="M14 30h8"></path>
+                        <path d="M14 40h8"></path>
+                        <circle cx="33" cy="28" r="6"></circle>
+                        <path d="M24 44c4-7 14-7 18 0"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Directorio Local</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#emergency-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <circle cx="32" cy="32" r="22"></circle>
+                        <path d="M32 20v24"></path>
+                        <path d="M20 32h24"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Emergencias</span>
+        </a>
+
+        <a class="menu-item menu-link" href="#contact-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <rect x="12" y="18" width="40" height="28" rx="4"></rect>
+                        <path d="M14 21l18 15 18-15"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Contáctame</span>
+        </a>
+
+        <a class="menu-item menu-link menu-item-wide-left" href="#before-you-leave-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <rect x="16" y="24" width="32" height="26" rx="4"></rect>
+                        <path d="M24 24v-8h16v8"></path>
+                        <path d="M16 34h32"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Antes de Salir</span>
+        </a>
+
+        <a class="menu-item menu-link menu-item-wide-right" href="#review-screen">
+            <span class="menu-tile">
+                <span class="menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M14 16h36v26H29L17 52V42h-3Z"></path>
+                        <path d="M32 23l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="menu-label">Reseña</span>
+        </a>
+    </div>
+</section>     
+
+                <section class="screen info-sheet">
+            <div class="info-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="info-sheet-title">Amenidades</h2>
+
+            <div class="info-panel">
+                <div class="info-row-item">
+                    <div class="info-row-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4 12h16"></path>
+                            <path d="M6 12V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"></path>
+                            <path d="M7 15v2"></path>
+                            <path d="M17 15v2"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="info-row-title">Incluido</div>
+                        <div class="info-row-text">test</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen info-sheet">
+            <div class="info-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="info-sheet-title">Cómo Llegar</h2>
+
+            <div class="info-map-box">
+                
+            </div>
+
+            <div class="info-panel">
+                <div class="info-row-item">
+                    <div class="info-row-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10Z"></path>
+                            <circle cx="12" cy="11" r="2.5"></circle>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="info-row-title">Mapa</div>
+                        <div class="info-row-text"></div>
+                    </div>
+                </div>
+
+                <div class="info-row-item">
+                    <div class="info-row-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 18l6-12"></path>
+                            <path d="M10.5 6H18v7.5"></path>
+                            <path d="M15 18H6v-9"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="info-row-title">Cómo Llegar</div>
+                        <div class="info-row-text">test</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen info-sheet">
+            <div class="info-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="info-sheet-title">WiFi</h2>
+
+            <div class="info-panel wifi-center">
+                <div class="wifi-center-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M14 30a26 26 0 0 1 36 0"></path>
+                        <path d="M22 38a15 15 0 0 1 20 0"></path>
+                        <path d="M29 46a5 5 0 0 1 6 0"></path>
+                        <circle cx="32" cy="52" r="2.5"></circle>
+                    </svg>
+                </div>
+
+          <p class="wifi-center-copy">
+                    Private stay details load securely inside this welcome book.
+                </p>
+
+          <p class="wifi-center-copy">
+                    WiFi and access details appear only when the secure guest token is valid.
+                </p>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen info-sheet">
+            <div class="info-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="info-sheet-title">Transporte</h2>
+
+            <div class="info-panel">
+                <div class="info-row-item">
+                    <div class="info-row-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="7" y="4" width="10" height="14" rx="2"></rect>
+                            <path d="M7 9h10"></path>
+                            <circle cx="10" cy="18" r="1"></circle>
+                            <circle cx="14" cy="18" r="1"></circle>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="info-row-title">Cómo Moverse</div>
+                        <div class="info-row-text">test</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+                <section class="screen list-sheet">
+            <div class="list-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="list-sheet-title">Información Importante</h2>
+
+            <div class="list-sheet-panel">
+                <p class="list-sheet-intro">
+                    Detalles útiles para que tu estancia sea más fácil, cómoda y agradable desde tu llegada.
+                </p>
+
+                <div class="list-sheet-items">
+                    <div class="list-item-card">
+                        <div class="list-item-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="9"></circle>
+                                <path d="M12 8v4"></path>
+                                <path d="M12 16h.01"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="list-item-title">Bueno Saber</div>
+                            <div class="list-item-text">test</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen editorial-sheet">
+            <div class="editorial-sheet-header">
+                <div class="editorial-sheet-leaf" aria-hidden="true">
+                    <svg viewBox="0 0 32 32">
+                        <path d="M16 26V10"></path>
+                        <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                        <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                        <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                        <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                    </svg>
+                </div>
+                <h2 class="editorial-sheet-title">Qué Hacer</h2>
+            </div>
+
+            <div class="editorial-hero">
+                <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Things to Do">
+            </div>
+
+            <div class="editorial-sheet-panel">
+                <div class="editorial-copy">test</div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen editorial-sheet">
+            <div class="editorial-sheet-header">
+                <div class="editorial-sheet-leaf" aria-hidden="true">
+                    <svg viewBox="0 0 32 32">
+                        <path d="M16 26V10"></path>
+                        <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                        <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                        <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                        <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                    </svg>
+                </div>
+                <h2 class="editorial-sheet-title">Dónde Comer</h2>
+            </div>
+
+            <div class="editorial-hero">
+                <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Places to Eat">
+            </div>
+
+            <div class="editorial-sheet-panel">
+                <div class="editorial-copy">test</div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen editorial-sheet">
+            <div class="editorial-sheet-header">
+                <div class="editorial-sheet-leaf" aria-hidden="true">
+                    <svg viewBox="0 0 32 32">
+                        <path d="M16 26V10"></path>
+                        <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                        <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                        <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                        <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                    </svg>
+                </div>
+                <h2 class="editorial-sheet-title">Dónde Tomar Algo</h2>
+            </div>
+
+            <div class="editorial-hero">
+                <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Places to Drink">
+            </div>
+
+            <div class="editorial-sheet-panel">
+                <div class="editorial-copy">test</div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+                <section class="screen rule-sheet">
+            <div class="rule-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="rule-sheet-title">Reglas de la Casa</h2>
+
+            <div class="rule-sheet-panel">
+                <div class="rule-sheet-copy">test</div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen rule-sheet">
+            <div class="rule-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="rule-sheet-title">Emergencias</h2>
+
+            <div class="rule-sheet-panel">
+                <div class="rule-sheet-copy">test</div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen rule-sheet">
+            <div class="rule-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="rule-sheet-title">Directorio Local</h2>
+
+            <div class="rule-sheet-panel">
+                <div class="rule-sheet-copy">test</div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen review-sheet">
+            <div class="review-sheet-header">
+                <div class="review-sheet-leaf" aria-hidden="true">
+                    <svg viewBox="0 0 32 32">
+                        <path d="M16 26V10"></path>
+                        <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                        <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                        <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                        <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                    </svg>
+                </div>
+                <h2 class="review-sheet-title">Reseña</h2>
+            </div>
+
+            <div class="review-sheet-panel">
+                <p class="review-sheet-copy">
+                    Si disfrutaste tu estancia, agradeceríamos mucho tu reseña. Tus comentarios ayudan a futuros huéspedes y significan mucho para nosotros.
+                </p>
+
+                <a class="review-sheet-btn" href="">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7 17L17 7"></path>
+                        <path d="M9 7h8v8"></path>
+                    </svg>
+                    <span>Leave a Reseña</span>
+                </a>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen rule-sheet">
+            <div class="rule-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                    <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                    <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="rule-sheet-title">Antes de Salir</h2>
+
+            <div class="rule-sheet-panel">
+                <div class="rule-sheet-copy">test</div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="screen contact-sheet">
+            <div class="contact-sheet-header">
+                <div class="contact-sheet-leaf" aria-hidden="true">
+                    <svg viewBox="0 0 32 32">
+                        <path d="M16 26V10"></path>
+                        <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                        <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                        <path d="M16 19c-3.5 0-6.5 2.5-7 6 4 0 7-2 7-6Z"></path>
+                        <path d="M16 22c3.5 0 6.5 2.5 7 6-4 0-7-2-7-6Z"></path>
+                    </svg>
+                </div>
+                <h2 class="contact-sheet-title">Contacto</h2>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                        <path d="M4 7l8 6 8-6"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="contact-card-title">Correo</div>
+                    <div class="contact-card-text">veru@gmail.com</div>
+                </div>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <circle cx="17.5" cy="6.5" r="1"></circle>
+                    </svg>
+                </div>
+                <div>
+                    <div class="contact-card-title">Instagram</div>
+                    <div class="contact-card-text">@instagram</div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 5l-7 7 7 7"></path>
+                    </svg>
+                    <span>Volver al Menú</span>
+                </a>
+            </div>
+        </section>
+        <div class="content-sections">
+            
+        <section class="card">
+            <h2 class="section-title">Llegada</h2>
+            <p class="paragraph">test</p><p class="paragraph">test</p>
+        </section>
+    
+
+        <section class="card">
+            <h2 class="section-title">Sobre la estancia</h2>
+            <p class="paragraph">test</p><p class="paragraph">test</p>
+        <div class="info-row">
+            <div class="info-label">Mascotas permitidas</div>
+            <div class="info-value">Sí</div>
+        </div>
+    <p class="paragraph">test</p>
+        </section>
+    
+
+        <section class="card">
+            <h2 class="section-title">Ubicación y transporte</h2>
+            <p class="paragraph">test</p><p class="paragraph">test</p>
+        </section>
+    
+
+        <section class="card">
+            <h2 class="section-title">Información de la casa</h2>
+            <p class="paragraph">test</p><p class="paragraph">test</p><p class="paragraph">test</p>
+        </section>
+    
+
+        <section class="card">
+            <h2 class="section-title">Recomendaciones</h2>
+            <p class="paragraph">test</p><p class="paragraph">test</p><p class="paragraph">test</p><p class="paragraph">test</p>
+        </section>
+    
+
+        <section class="card">
+            <h2 class="section-title">Contacto</h2>
+            
+        <div class="info-row">
+            <div class="info-label">Correo del anfitrión</div>
+            <div class="info-value">veru@gmail.com</div>
+        </div>
+    <p class="paragraph">test</p><a href="https://instagram.com/instagram" class="btn" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </section>
+    
+        </div>
+
+              <section id="private-stay-details" class="screen info-sheet" data-private-url="">
+            <div class="info-sheet-leaf" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M16 26V10"></path>
+                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
+                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
+                </svg>
+            </div>
+
+            <h2 class="info-sheet-title">Private Stay Details</h2>
+
+            <div class="info-panel">
+                <p id="private-loading" class="wifi-center-copy">Loading private stay details…</p>
+                <p id="private-error" class="wifi-center-copy" hidden>Private details could not be loaded.</p>
+                <p id="private-empty" class="wifi-center-copy" hidden>No private details available.</p>
+                <div id="private-content"></div>
+            </div>
+        </section>
+
+        <p class="footer-note">
+            Este welcome book muestra únicamente información pública para huéspedes.
+        </p>
+    </div>
+
+<script>
+(function () {
+  const section = document.getElementById("private-stay-details");
+  if (!section) return;
+
+ const params = new URLSearchParams(window.location.search);
+const token = params.get("token");
+
+const pathParts = window.location.pathname.split("/").filter(Boolean);
+const villaIndex = pathParts.indexOf("villas");
+const slug = villaIndex >= 0 ? pathParts[villaIndex + 1] : "";
+
+const workerBase = "https://myguest-worker.veronica-perezarroyo.workers.dev";
+const url = token && slug
+  ? `${workerBase}/guest/${encodeURIComponent(slug)}?token=${encodeURIComponent(token)}`
+  : "";
+
+const loading = document.getElementById("private-loading");
+const error = document.getElementById("private-error");
+const empty = document.getElementById("private-empty");
+const content = document.getElementById("private-content");
+
+if (!url) {
+  section.style.display = "none";
+  return;
+}
+
+fetch(url, { headers: { accept: "application/json" }, cache: "no-store" })
+    .then((res) => {
+      if (!res.ok) throw new Error("Request failed");
+      return res.json();
+    })
+    .then((data) => {
+      loading.hidden = true;
+
+const privateDetails = data && data.private_details ? data.private_details : {};
+
+const fields = [
+  ["WiFi network", privateDetails.wifi_ssid],
+  ["WiFi password", privateDetails.wifi_password],
+  ["Door code", privateDetails.door_code],
+  ["Host phone", privateDetails.host_phone],
+  ["Private access notes", privateDetails.house_access_private]
+].filter(([, value]) => value);
+
+      if (!fields.length) {
+        section.style.display = "none";
+        return;
+      }
+
+      content.innerHTML = "";
+
+      fields.forEach(([label, value]) => {
+        const item = document.createElement("div");
+        item.className = "contact-card";
+        item.innerHTML = `
+          <div>
+            <div class="contact-card-title">${label}</div>
+            <div class="contact-card-text"></div>
+          </div>
+        `;
+        item.querySelector(".contact-card-text").textContent = value;
+        content.appendChild(item);
+      });
+    })
+        .catch(() => {
+      loading.hidden = true;
+      error.hidden = false;
+    });
+})();
+</script>
+</body>
+</html>
