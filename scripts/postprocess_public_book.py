@@ -591,8 +591,8 @@ def inject(html, payload):
     html = replace_arrival(html, payload)
     html = replace_location(html, payload)
     html = replace_info_screens(html, payload)
-    html = reorder_screens(html)
     html = patch_welcome_image(html)
+    html = reorder_screens(html)
     html = inject_css(html)
     return html
 
