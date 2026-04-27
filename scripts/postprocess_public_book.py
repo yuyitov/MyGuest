@@ -547,12 +547,7 @@ def inject_css(html):
         return html
     return html.replace("</style>", CSS + "\n</style>", 1)
 
-def inject(html, payload):
-    html = replace_menu(html)
-    html = replace_arrival(html, payload)
-    html = replace_info_screens(html, payload)
-    html = patch_welcome_image(html)
-    html = inject_css(html)
+def replace_info_screens(html, payload):
     return html
 
 def main():
