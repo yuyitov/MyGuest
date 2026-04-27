@@ -2545,43 +2545,13 @@ section.welcome-card {
     return;
   }
 
-  fetch(url, { headers: { accept: "application/json" }, cache: "no-store" })
+    fetch(url, { headers: { accept: "application/json" }, cache: "no-store" })
     .then((res) => {
       if (!res.ok) throw new Error("Request failed");
       return res.json();
     })
     .then((data) => {
-  loading.hidden = true;
-
-  const fields = [
-    ["WiFi network", data.wifi_ssid],
-    ["WiFi password", data.wifi_password],
-    ["Door code", data.door_code],
-    ["Host phone", data.host_phone],
-    ["Private access notes", data.house_access_private]
-  ].filter(([, value]) => value);
-
-  // 🔴 SI NO HAY NADA → OCULTAR TODA LA SECCIÓN
-  if (!fields.length) {
-    section.style.display = "none";
-    return;
-  }
-
-  content.innerHTML = "";
-
-  fields.forEach(([label, value]) => {
-    const item = document.createElement("div");
-    item.className = "contact-card";
-    item.innerHTML = `
-      <div>
-        <div class="contact-card-title">${label}</div>
-        <div class="contact-card-text"></div>
-      </div>
-    `;
-    item.querySelector(".contact-card-text").textContent = value;
-    content.appendChild(item);
-  });
-})
+      loading.hidden = true;
 
       const fields = [
         ["WiFi network", data.wifi_ssid],
@@ -2592,11 +2562,12 @@ section.welcome-card {
       ].filter(([, value]) => value);
 
       if (!fields.length) {
-        empty.hidden = false;
+        section.style.display = "none";
         return;
       }
 
       content.innerHTML = "";
+
       fields.forEach(([label, value]) => {
         const item = document.createElement("div");
         item.className = "contact-card";
@@ -2614,7 +2585,5 @@ section.welcome-card {
       loading.hidden = true;
       error.hidden = false;
     });
-})();
-</script>
 </body>
 </html>
