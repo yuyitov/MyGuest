@@ -21,6 +21,15 @@ CONTENT_FIELD_MAP = {
     "pet_friendly": "rules_info",
     "pet_rules": "rules_info",
     "things_to_know": "rules_info",
+    "things_to_do": "recommendations",
+    "places_to_eat": "recommendations",
+    "places_to_drink": "recommendations",
+    "local_directory": "recommendations",
+    "emergency_contacts": "contact_social",
+    "host_email": "contact_social",
+    "airbnb_review_link": "contact_social",
+    "instagram_handle": "contact_social",
+    "before_you_leave": "rules_info",
 }
 
 CSS = f"""
@@ -139,6 +148,31 @@ INFO_LABELS = {
         "know_title":"Things to Know",
         "know_subtitle":"Helpful tips for your stay",
         "know":"Things to Know",
+        "todo_title":"Things to Do",
+"todo_subtitle":"Explore nearby favorites",
+"todo":"Things to Do",
+"eat_title":"Places to Eat",
+"eat_subtitle":"Local dining picks",
+"eat":"Places to Eat",
+"drink_title":"Places to Drink",
+"drink_subtitle":"Bars, cafés & sunset spots",
+"drink":"Places to Drink",
+"directory_title":"Local Directory",
+"directory_subtitle":"Nearby essentials",
+"directory":"Local Directory",
+"emergency_title":"Emergency",
+"emergency_subtitle":"Important local contacts",
+"emergency_contacts":"Emergency Contacts",
+"contact_title":"Contact Me",
+"contact_subtitle":"Need help during your stay?",
+"email":"Email",
+"before_title":"Before You Leave",
+"before_subtitle":"Quick checkout checklist",
+"before":"Before You Leave",
+"review_title":"Review",
+"review_subtitle":"Share your stay",
+"review_button":"Leave a Review",
+"instagram":"Instagram",
     },
     "es": {
         "menu":"Menú",
@@ -157,6 +191,31 @@ INFO_LABELS = {
         "know_title":"Información Importante",
         "know_subtitle":"Tips útiles para tu estancia",
         "know":"Información Importante",
+        "todo_title":"Qué Hacer",
+"todo_subtitle":"Explora favoritos cercanos",
+"todo":"Qué Hacer",
+"eat_title":"Dónde Comer",
+"eat_subtitle":"Recomendaciones locales",
+"eat":"Dónde Comer",
+"drink_title":"Dónde Tomar Algo",
+"drink_subtitle":"Bares, cafés y atardeceres",
+"drink":"Dónde Tomar Algo",
+"directory_title":"Directorio Local",
+"directory_subtitle":"Servicios cercanos",
+"directory":"Directorio Local",
+"emergency_title":"Emergencias",
+"emergency_subtitle":"Contactos locales importantes",
+"emergency_contacts":"Contactos de Emergencia",
+"contact_title":"Contáctame",
+"contact_subtitle":"¿Necesitas ayuda durante tu estancia?",
+"email":"Email",
+"before_title":"Antes de Salir",
+"before_subtitle":"Checklist rápido de salida",
+"before":"Antes de Salir",
+"review_title":"Reseña",
+"review_subtitle":"Comparte tu estancia",
+"review_button":"Dejar Reseña",
+"instagram":"Instagram",
     },
     "fr": {
         "menu":"Menu",
@@ -175,6 +234,31 @@ INFO_LABELS = {
         "know_title":"À Savoir",
         "know_subtitle":"Conseils utiles pour votre séjour",
         "know":"À Savoir",
+        "todo_title":"Activités",
+"todo_subtitle":"Découvrez les favoris proches",
+"todo":"Activités",
+"eat_title":"Où Manger",
+"eat_subtitle":"Sélections locales",
+"eat":"Où Manger",
+"drink_title":"Où Boire",
+"drink_subtitle":"Bars, cafés et couchers de soleil",
+"drink":"Où Boire",
+"directory_title":"Répertoire Local",
+"directory_subtitle":"Essentiels à proximité",
+"directory":"Répertoire Local",
+"emergency_title":"Urgence",
+"emergency_subtitle":"Contacts locaux importants",
+"emergency_contacts":"Contacts d’Urgence",
+"contact_title":"Me Contacter",
+"contact_subtitle":"Besoin d’aide pendant votre séjour ?",
+"email":"Email",
+"before_title":"Avant le Départ",
+"before_subtitle":"Checklist rapide de départ",
+"before":"Avant le Départ",
+"review_title":"Avis",
+"review_subtitle":"Partagez votre séjour",
+"review_button":"Laisser un Avis",
+"instagram":"Instagram",
     },
 }
 
@@ -337,6 +421,69 @@ def build_things_to_know(html, payload):
         return ""
     return f'<section id="things-to-know-screen" class="screen arrival-screen-approved"><a class="arrival-approved-back" href="#menu-sheet"><span aria-hidden="true">{ICONS["arrow"]}</span><span>{escape(labels["menu"])}</span></a><div class="arrival-approved-ornament" aria-hidden="true">{ICONS["things_to_know"]}</div><h2 class="arrival-approved-title">{escape(labels["know_title"])}</h2><p class="arrival-approved-subtitle">{escape(labels["know_subtitle"])}</p>{cards}</section>'
 
+def build_text_screen(html, payload, screen_id, icon, title_key, subtitle_key, card_key, field):
+    labels = INFO_LABELS[get_lang(html)]
+    content = get_content(payload, field)
+    cards = info_card(labels[card_key], content, icon)
+    if not cards:
+        return ""
+    return f'<section id="{screen_id}" class="screen arrival-screen-approved"><a class="arrival-approved-back" href="#menu-sheet"><span aria-hidden="true">{ICONS["arrow"]}</span><span>{escape(labels["menu"])}</span></a><div class="arrival-approved-ornament" aria-hidden="true">{ICONS[icon]}</div><h2 class="arrival-approved-title">{escape(labels[title_key])}</h2><p class="arrival-approved-subtitle">{escape(labels[subtitle_key])}</p>{cards}</section>'
+
+
+def build_things_to_do(html, payload):
+    return build_text_screen(html, payload, "things-to-do-screen", "things_to_do", "todo_title", "todo_subtitle", "todo", "things_to_do")
+
+
+def build_places_to_eat(html, payload):
+    return build_text_screen(html, payload, "places-to-eat-screen", "places_to_eat", "eat_title", "eat_subtitle", "eat", "places_to_eat")
+
+
+def build_places_to_drink(html, payload):
+    return build_text_screen(html, payload, "places-to-drink-screen", "places_to_drink", "drink_title", "drink_subtitle", "drink", "places_to_drink")
+
+
+def build_local_directory(html, payload):
+    return build_text_screen(html, payload, "local-directory-screen", "local_directory", "directory_title", "directory_subtitle", "directory", "local_directory")
+
+
+def build_emergency(html, payload):
+    return build_text_screen(html, payload, "emergency-screen", "emergency", "emergency_title", "emergency_subtitle", "emergency_contacts", "emergency_contacts")
+
+
+def build_contact(html, payload):
+    labels = INFO_LABELS[get_lang(html)]
+    email = get_content(payload, "host_email")
+    cards = info_card(labels["email"], email, "contact")
+    if not cards:
+        return ""
+    return f'<section id="contact-screen" class="screen arrival-screen-approved"><a class="arrival-approved-back" href="#menu-sheet"><span aria-hidden="true">{ICONS["arrow"]}</span><span>{escape(labels["menu"])}</span></a><div class="arrival-approved-ornament" aria-hidden="true">{ICONS["contact"]}</div><h2 class="arrival-approved-title">{escape(labels["contact_title"])}</h2><p class="arrival-approved-subtitle">{escape(labels["contact_subtitle"])}</p>{cards}</section>'
+
+
+def build_before_you_leave(html, payload):
+    return build_text_screen(html, payload, "before-you-leave-screen", "before_leave", "before_title", "before_subtitle", "before", "before_you_leave")
+
+
+def build_review(html, payload):
+    labels = INFO_LABELS[get_lang(html)]
+    review = safe_text(get_content(payload, "airbnb_review_link"))
+    instagram = safe_text(get_content(payload, "instagram_handle"))
+
+    buttons = ""
+
+    if review.startswith(("http://", "https://")):
+        buttons += f'<a class="arrival-approved-map" href="{escape(review)}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">{ICONS["review"]}</span><span>{escape(labels["review_button"])}</span></a>'
+
+    if instagram:
+        insta_url = instagram
+        if instagram.startswith("@"):
+            insta_url = "https://instagram.com/" + instagram[1:]
+        if insta_url.startswith(("http://", "https://")):
+            buttons += f'<a class="arrival-approved-map" href="{escape(insta_url)}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">{ICONS["contact"]}</span><span>{escape(labels["instagram"])}</span></a>'
+
+    if not buttons:
+        return ""
+
+    return f'<section id="review-screen" class="screen arrival-screen-approved"><a class="arrival-approved-back" href="#menu-sheet"><span aria-hidden="true">{ICONS["arrow"]}</span><span>{escape(labels["menu"])}</span></a><div class="arrival-approved-ornament" aria-hidden="true">{ICONS["review"]}</div><h2 class="arrival-approved-title">{escape(labels["review_title"])}</h2><p class="arrival-approved-subtitle">{escape(labels["review_subtitle"])}</p>{buttons}</section>'
 
 def replace_or_insert_screen(html, screen_id, new_section, insert_after_id):
     if not new_section:
@@ -358,6 +505,14 @@ def replace_info_screens(html, payload):
     html = replace_or_insert_screen(html, "house-guide-screen", build_house_guide(html, payload), "wifi-screen")
     html = replace_or_insert_screen(html, "house-rules-screen", build_house_rules(html, payload), "house-guide-screen")
     html = replace_or_insert_screen(html, "things-to-know-screen", build_things_to_know(html, payload), "house-rules-screen")
+    html = replace_or_insert_screen(html, "things-to-do-screen", build_things_to_do(html, payload), "things-to-know-screen")
+    html = replace_or_insert_screen(html, "places-to-eat-screen", build_places_to_eat(html, payload), "things-to-do-screen")
+    html = replace_or_insert_screen(html, "places-to-drink-screen", build_places_to_drink(html, payload), "places-to-eat-screen")
+    html = replace_or_insert_screen(html, "local-directory-screen", build_local_directory(html, payload), "places-to-drink-screen")
+    html = replace_or_insert_screen(html, "emergency-screen", build_emergency(html, payload), "local-directory-screen")
+    html = replace_or_insert_screen(html, "contact-screen", build_contact(html, payload), "emergency-screen")
+    html = replace_or_insert_screen(html, "before-you-leave-screen", build_before_you_leave(html, payload), "contact-screen")
+    html = replace_or_insert_screen(html, "review-screen", build_review(html, payload), "before-you-leave-screen")
     return html
 
 def replace_menu(html):
