@@ -501,18 +501,12 @@ def replace_or_insert_screen(html, screen_id, new_section, insert_after_id):
     return html + new_section
 
 def replace_info_screens(html, payload):
+    # SOLO estas 4 son nuevas / override
     html = replace_or_insert_screen(html, "wifi-screen", build_wifi(html, payload), "location-screen")
     html = replace_or_insert_screen(html, "house-guide-screen", build_house_guide(html, payload), "wifi-screen")
     html = replace_or_insert_screen(html, "house-rules-screen", build_house_rules(html, payload), "house-guide-screen")
     html = replace_or_insert_screen(html, "things-to-know-screen", build_things_to_know(html, payload), "house-rules-screen")
-    html = replace_or_insert_screen(html, "things-to-do-screen", build_things_to_do(html, payload), "things-to-know-screen")
-    html = replace_or_insert_screen(html, "places-to-eat-screen", build_places_to_eat(html, payload), "things-to-do-screen")
-    html = replace_or_insert_screen(html, "places-to-drink-screen", build_places_to_drink(html, payload), "places-to-eat-screen")
-    html = replace_or_insert_screen(html, "local-directory-screen", build_local_directory(html, payload), "places-to-drink-screen")
-    html = replace_or_insert_screen(html, "emergency-screen", build_emergency(html, payload), "local-directory-screen")
-    html = replace_or_insert_screen(html, "contact-screen", build_contact(html, payload), "emergency-screen")
-    html = replace_or_insert_screen(html, "before-you-leave-screen", build_before_you_leave(html, payload), "contact-screen")
-    html = replace_or_insert_screen(html, "review-screen", build_review(html, payload), "before-you-leave-screen")
+
     return html
 
 def replace_menu(html):
