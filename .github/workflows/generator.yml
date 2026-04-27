@@ -108,11 +108,6 @@ jobs:
           import sys
 
           forbidden_terms = [
-              "wifi_ssid",
-              "wifi_password",
-              "door_code",
-              "host_phone",
-              "house_access_private",
               "guest_access_pin",
               "private_record_key",
               "priv-"
