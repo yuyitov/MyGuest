@@ -390,14 +390,14 @@ def inject_css(html):
         return html
     return html.replace("</style>", CSS + "\n</style>", 1)
 
- def inject(html, payload):
+def inject(html, payload):
     html = replace_menu(html)
     html = replace_arrival(html, payload)
     html = replace_location(html, payload)
     html = replace_info_screens(html, payload)
     html = patch_welcome_image(html)
     html = inject_css(html)
-    return html   
+    return html
 
 def main():
     payload = json.loads(sys.argv[1])
