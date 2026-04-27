@@ -549,6 +549,12 @@ def inject_css(html):
 
 def replace_info_screens(html, payload):
     return html
+    
+def inject(html, payload):
+    html = replace_menu(html)
+    html = patch_welcome_image(html)
+    html = inject_css(html)
+    return html
 
 def main():
     payload = json.loads(sys.argv[1])
