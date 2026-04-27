@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyGuest Print — vila test token 3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: letter;
+            margin: 1.2cm;
+        }
+
+        :root {
+            --primary: #8B6F47;
+            --accent: #D9CEBA;
+            --bg: #ffffff;
+            --text: #3A2A1C;
+            --border: rgba(0,0,0,0.10);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            background: white;
+            margin: 0;
+            font-size: 11pt;
+            line-height: 1.55;
+        }
+
+        .page {
+            width: 100%;
+        }
+
+        .header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 14px;
+            margin-bottom: 20px;
+        }
+
+        .eyebrow {
+            font-size: 10pt;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28pt;
+            line-height: 1;
+            color: var(--primary);
+            margin: 0 0 8px 0;
+        }
+
+        .subtext {
+            font-size: 11pt;
+            color: #555;
+        }
+
+        .language-line {
+            margin-top: 10px;
+            font-size: 10pt;
+            color: #666;
+        }
+
+        .section {
+            margin-bottom: 18px;
+            page-break-inside: avoid;
+        }
+
+        .section-title {
+            font-size: 10pt;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--accent);
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+
+        .paragraph {
+            margin: 0 0 8px 0;
+            white-space: pre-line;
+        }
+
+        .info-row {
+            margin: 0 0 8px 0;
+        }
+
+        .info-label {
+            font-weight: 700;
+        }
+
+        .footer {
+            margin-top: 28px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 9.5pt;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="header">
+            <div class="eyebrow">WELCOME</div>
+            <h1>vila test token 3</h1>
+            <div class="subtext">calle 1223</div>
+            <div class="language-line">Primary language: English</div>
+        </header>
+
+        <section class="section"><h2 class="section-title">Arrival</h2><div class="info-row"><span class="info-label">Check-in:</span> 2</div><div class="info-row"><span class="info-label">Check-out:</span> 1</div><p class="paragraph">test</p><p class="paragraph">test</p></section>
+<section class="section"><h2 class="section-title">About the stay</h2><p class="paragraph">test</p><p class="paragraph">test</p><p class="paragraph">test</p><div class="info-row"><span class="info-label">Pet friendly:</span> Yes</div><p class="paragraph">test</p></section>
+<section class="section"><h2 class="section-title">Location &amp; transport</h2><p class="paragraph">test</p><p class="paragraph">test</p></section>
+<section class="section"><h2 class="section-title">House info</h2><p class="paragraph">test</p><p class="paragraph">test</p><p class="paragraph">test</p></section>
+<section class="section"><h2 class="section-title">Recommendations</h2><p class="paragraph">test</p><p class="paragraph">test</p><p class="paragraph">test</p><p class="paragraph">test</p></section>
+<section class="section"><h2 class="section-title">Contact</h2><div class="info-row"><span class="info-label">Host email:</span> vero@gmail.com</div><p class="paragraph">test</p><div class="info-row"><span class="info-label">Instagram:</span> @instagram</div></section>
+
+        <div class="footer">
+            Public guest version only. Private access details are intentionally excluded.
+        </div>
+    </div>
+</body>
+</html>
