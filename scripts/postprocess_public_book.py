@@ -14,6 +14,8 @@ CONTENT_FIELD_MAP = {
     "house_access_public": "checkin",
     "parking_info": "checkin",
     "google_maps_link": "location_transport",
+    "directions_text": "location_transport",
+    "transport_options": "location_transport",
 }
 
 CSS = f"""
@@ -108,6 +110,12 @@ ARRIVAL_LABELS = {
     "fr": {"menu":"Menu","title":"Arrivée","subtitle":"Tout ce dont vous avez besoin avant votre arrivée","checkin":"Arrivée","checkout":"Départ","access":"Accès Public","parking":"Stationnement","maps":"Ouvrir la Carte"},
 }
 
+LOCATION_LABELS = {
+    "en": {"menu":"Menu","title":"Location","subtitle":"Find your way","address":"Address","maps":"Open Maps","directions":"Directions","transport":"Getting Around"},
+    "es": {"menu":"Menú","title":"Ubicación","subtitle":"Encuentra cómo llegar","address":"Dirección","maps":"Abrir Mapa","directions":"Cómo Llegar","transport":"Cómo Moverse"},
+    "fr": {"menu":"Menu","title":"Emplacement","subtitle":"Trouvez votre chemin","address":"Adresse","maps":"Ouvrir la Carte","directions":"Itinéraire","transport":"Se Déplacer"},
+}
+
 MENU_ITEMS = [("arrival","#arrival-screen",""),("location","#location-screen",""),("wifi","#wifi-screen",""),("house_guide","#house-guide-screen",""),("house_rules","#house-rules-screen",""),("things_to_know","#things-to-know-screen",""),("things_to_do","#things-to-do-screen",""),("places_to_eat","#places-to-eat-screen",""),("places_to_drink","#places-to-drink-screen",""),("local_directory","#local-directory-screen",""),("emergency","#emergency-screen",""),("contact","#contact-screen",""),("before_leave","#before-you-leave-screen","menu-item-wide-left"),("review","#review-screen","menu-item-wide-right")]
 
 
@@ -183,6 +191,42 @@ def build_arrival(html, payload):
         maps_btn = f'<a class="arrival-approved-map" href="{escape(maps)}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">{ICONS["map"]}</span><span>{escape(labels["maps"])}</span></a>'
     return f'<section id="arrival-screen" class="screen arrival-screen-approved"><a class="arrival-approved-back" href="#menu-sheet"><span aria-hidden="true">{ICONS["arrow"]}</span><span>{escape(labels["menu"])}</span></a><div class="arrival-approved-ornament" aria-hidden="true">{ICONS["door"]}</div><h2 class="arrival-approved-title">{escape(labels["title"])}</h2><p class="arrival-approved-subtitle">{escape(labels["subtitle"])}</p>{grid}{details}{maps_btn}</section>'
 
+def location_info_card(title, text, icon):
+    if not safe_text(text):
+        return ""
+    return f'<div class="arrival-approved-info-card"><div class="arrival-approved-icon" aria-hidden="true">{ICONS[icon]}</div><div><div class="arrival-approved-heading">{escape(title)}</div><div class="arrival-approved-text">{html_text(text)}</div></div></div>'
+
+
+def build_location(html, payload):
+    labels = LOCATION_LABELS[get_lang(html)]
+    address = safe_text(payload.get("property", {}).get("property_address"))
+    maps = safe_text(get_content(payload, "google_maps_link"))
+    directions = get_content(payload, "directions_text")
+    transport = get_content(payload, "transport_options")
+
+    address_card = location_info_card(labels["address"], address, "location")
+    directions_card = location_info_card(labels["directions"], directions, "map")
+    transport_card = location_info_card(labels["transport"], transport, "car")
+
+    maps_btn = ""
+    if maps.startswith(("http://", "https://")):
+        maps_btn = f'<a class="arrival-approved-map" href="{escape(maps)}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">{ICONS["map"]}</span><span>{escape(labels["maps"])}</span></a>'
+
+    return f'<section id="location-screen" class="screen arrival-screen-approved"><a class="arrival-approved-back" href="#menu-sheet"><span aria-hidden="true">{ICONS["arrow"]}</span><span>{escape(labels["menu"])}</span></a><div class="arrival-approved-ornament" aria-hidden="true">{ICONS["location"]}</div><h2 class="arrival-approved-title">{escape(labels["title"])}</h2><p class="arrival-approved-subtitle">{escape(labels["subtitle"])}</p>{address_card}{maps_btn}{directions_card}{transport_card}</section>'
+
+
+def replace_location(html, payload):
+    new_section = build_location(html, payload)
+    patterns = [
+        r'<section[^>]*id="location-screen"[\s\S]*?</section>',
+        r'<section\s+class="screen info-sheet"[\s\S]*?<h2[^>]*>\s*(Location|Ubicación|Emplacement)\s*</h2>[\s\S]*?</section>',
+    ]
+    for pattern in patterns:
+        html, count = re.subn(pattern, new_section, html, count=1, flags=re.IGNORECASE)
+        if count:
+            return html
+    print("Warning: location screen not found; location screen inserted after arrival")
+    return html.replace('</section>', '</section>' + new_section, 3)
 
 def replace_menu(html):
     pattern = r'<section\s+id="menu-sheet"\s+class="screen menu-card"[\s\S]*?</section>'
@@ -219,14 +263,13 @@ def inject_css(html):
         return html
     return html.replace("</style>", CSS + "\n</style>", 1)
 
-
 def inject(html, payload):
     html = replace_menu(html)
     html = replace_arrival(html, payload)
+    html = replace_location(html, payload)
     html = patch_welcome_image(html)
     html = inject_css(html)
     return html
-
 
 def main():
     payload = json.loads(sys.argv[1])
