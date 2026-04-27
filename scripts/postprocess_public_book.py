@@ -276,7 +276,6 @@ def build_location(html, payload):
 
     return f'<section id="location-screen" class="screen arrival-screen-approved"><a class="arrival-approved-back" href="#menu-sheet"><span aria-hidden="true">{ICONS["arrow"]}</span><span>{escape(labels["menu"])}</span></a><div class="arrival-approved-ornament" aria-hidden="true">{ICONS["location"]}</div><h2 class="arrival-approved-title">{escape(labels["title"])}</h2><p class="arrival-approved-subtitle">{escape(labels["subtitle"])}</p>{address_card}{maps_btn}{directions_card}{transport_card}</section>'
 
-
 def replace_location(html, payload):
     new_section = build_location(html, payload)
     patterns = [
@@ -287,8 +286,15 @@ def replace_location(html, payload):
         html, count = re.subn(pattern, new_section, html, count=1, flags=re.IGNORECASE)
         if count:
             return html
+
     print("Warning: location screen not found; location screen inserted after arrival")
-    return html.replace('</section>', '</section>' + new_section, 3)
+    anchor = r'(<section[^>]*id="arrival-screen"[\s\S]*?</section>)'
+    html, count = re.subn(anchor, r'\1' + new_section, html, count=1, flags=re.IGNORECASE)
+
+    if count:
+        return html
+
+    return html + new_section
 
 def info_card(title, text, icon):
     if not safe_text(text):
@@ -347,7 +353,6 @@ def replace_or_insert_screen(html, screen_id, new_section, insert_after_id):
 
     return html + new_section
 
-
 def replace_info_screens(html, payload):
     html = replace_or_insert_screen(html, "wifi-screen", build_wifi(html, payload), "location-screen")
     html = replace_or_insert_screen(html, "house-guide-screen", build_house_guide(html, payload), "wifi-screen")
@@ -358,7 +363,6 @@ def replace_info_screens(html, payload):
 def replace_menu(html):
     pattern = r'<section\s+id="menu-sheet"\s+class="screen menu-card"[\s\S]*?</section>'
     return re.sub(pattern, build_menu(html), html, count=1)
-
 
 def replace_arrival(html, payload):
     new_section = build_arrival(html, payload)
