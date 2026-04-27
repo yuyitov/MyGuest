@@ -16,6 +16,11 @@ CONTENT_FIELD_MAP = {
     "google_maps_link": "location_transport",
     "directions_text": "location_transport",
     "transport_options": "location_transport",
+    "amenities_list": "about_house",
+    "house_rules": "rules_info",
+    "pet_friendly": "rules_info",
+    "pet_rules": "rules_info",
+    "things_to_know": "rules_info",
 }
 
 CSS = f"""
@@ -114,6 +119,63 @@ LOCATION_LABELS = {
     "en": {"menu":"Menu","title":"Location","subtitle":"Find your way","address":"Address","maps":"Open Maps","directions":"Directions","transport":"Getting Around"},
     "es": {"menu":"Menú","title":"Ubicación","subtitle":"Encuentra cómo llegar","address":"Dirección","maps":"Abrir Mapa","directions":"Cómo Llegar","transport":"Cómo Moverse"},
     "fr": {"menu":"Menu","title":"Emplacement","subtitle":"Trouvez votre chemin","address":"Adresse","maps":"Ouvrir la Carte","directions":"Itinéraire","transport":"Se Déplacer"},
+}
+
+INFO_LABELS = {
+    "en": {
+        "menu":"Menu",
+        "wifi_title":"WiFi",
+        "wifi_subtitle":"Secure access",
+        "wifi_heading":"Private WiFi Access",
+        "wifi_text":"WiFi details are available through the private guest access.",
+        "wifi_button":"Open Private Access",
+        "guide_title":"House Guide",
+        "guide_subtitle":"How to enjoy the home",
+        "amenities":"Amenities",
+        "rules_title":"House Rules",
+        "rules_subtitle":"Please review before your stay",
+        "rules":"House Rules",
+        "pets":"Pets",
+        "know_title":"Things to Know",
+        "know_subtitle":"Helpful tips for your stay",
+        "know":"Things to Know",
+    },
+    "es": {
+        "menu":"Menú",
+        "wifi_title":"WiFi",
+        "wifi_subtitle":"Acceso seguro",
+        "wifi_heading":"Acceso Privado al WiFi",
+        "wifi_text":"Los datos del WiFi están disponibles en el acceso privado para huéspedes.",
+        "wifi_button":"Abrir Acceso Privado",
+        "guide_title":"Guía de la Casa",
+        "guide_subtitle":"Cómo disfrutar la propiedad",
+        "amenities":"Amenidades",
+        "rules_title":"Reglas de la Casa",
+        "rules_subtitle":"Revísalas antes de tu estancia",
+        "rules":"Reglas de la Casa",
+        "pets":"Mascotas",
+        "know_title":"Información Importante",
+        "know_subtitle":"Tips útiles para tu estancia",
+        "know":"Información Importante",
+    },
+    "fr": {
+        "menu":"Menu",
+        "wifi_title":"WiFi",
+        "wifi_subtitle":"Accès sécurisé",
+        "wifi_heading":"Accès WiFi Privé",
+        "wifi_text":"Les informations WiFi sont disponibles via l’accès privé invité.",
+        "wifi_button":"Ouvrir l’Accès Privé",
+        "guide_title":"Guide de la Maison",
+        "guide_subtitle":"Comment profiter de la maison",
+        "amenities":"Équipements",
+        "rules_title":"Règles de la Maison",
+        "rules_subtitle":"Veuillez les lire avant votre séjour",
+        "rules":"Règles de la Maison",
+        "pets":"Animaux",
+        "know_title":"À Savoir",
+        "know_subtitle":"Conseils utiles pour votre séjour",
+        "know":"À Savoir",
+    },
 }
 
 MENU_ITEMS = [("arrival","#arrival-screen",""),("location","#location-screen",""),("wifi","#wifi-screen",""),("house_guide","#house-guide-screen",""),("house_rules","#house-rules-screen",""),("things_to_know","#things-to-know-screen",""),("things_to_do","#things-to-do-screen",""),("places_to_eat","#places-to-eat-screen",""),("places_to_drink","#places-to-drink-screen",""),("local_directory","#local-directory-screen",""),("emergency","#emergency-screen",""),("contact","#contact-screen",""),("before_leave","#before-you-leave-screen","menu-item-wide-left"),("review","#review-screen","menu-item-wide-right")]
@@ -228,6 +290,71 @@ def replace_location(html, payload):
     print("Warning: location screen not found; location screen inserted after arrival")
     return html.replace('</section>', '</section>' + new_section, 3)
 
+def info_card(title, text, icon):
+    if not safe_text(text):
+        return ""
+    return f'<div class="arrival-approved-info-card"><div class="arrival-approved-icon" aria-hidden="true">{ICONS[icon]}</div><div><div class="arrival-approved-heading">{escape(title)}</div><div class="arrival-approved-text">{html_text(text)}</div></div></div>'
+
+
+def build_wifi(html, payload):
+    labels = INFO_LABELS[get_lang(html)]
+    slug = safe_text(payload.get("metadata", {}).get("slug"))
+    private_url = f"/guest/{slug}" if slug else "#"
+    return f'<section id="wifi-screen" class="screen arrival-screen-approved"><a class="arrival-approved-back" href="#menu-sheet"><span aria-hidden="true">{ICONS["arrow"]}</span><span>{escape(labels["menu"])}</span></a><div class="arrival-approved-ornament" aria-hidden="true">{ICONS["wifi"]}</div><h2 class="arrival-approved-title">{escape(labels["wifi_title"])}</h2><p class="arrival-approved-subtitle">{escape(labels["wifi_subtitle"])}</p>{info_card(labels["wifi_heading"], labels["wifi_text"], "wifi")}<a class="arrival-approved-map" href="{escape(private_url)}"><span aria-hidden="true">{ICONS["wifi"]}</span><span>{escape(labels["wifi_button"])}</span></a></section>'
+
+
+def build_house_guide(html, payload):
+    labels = INFO_LABELS[get_lang(html)]
+    amenities = get_content(payload, "amenities_list")
+    cards = info_card(labels["amenities"], amenities, "house_guide")
+    if not cards:
+        return ""
+    return f'<section id="house-guide-screen" class="screen arrival-screen-approved"><a class="arrival-approved-back" href="#menu-sheet"><span aria-hidden="true">{ICONS["arrow"]}</span><span>{escape(labels["menu"])}</span></a><div class="arrival-approved-ornament" aria-hidden="true">{ICONS["house_guide"]}</div><h2 class="arrival-approved-title">{escape(labels["guide_title"])}</h2><p class="arrival-approved-subtitle">{escape(labels["guide_subtitle"])}</p>{cards}</section>'
+
+
+def build_house_rules(html, payload):
+    labels = INFO_LABELS[get_lang(html)]
+    rules = get_content(payload, "house_rules")
+    pet_rules = get_content(payload, "pet_rules")
+    cards = info_card(labels["rules"], rules, "house_rules")
+    cards += info_card(labels["pets"], pet_rules, "house_rules")
+    if not cards:
+        return ""
+    return f'<section id="house-rules-screen" class="screen arrival-screen-approved"><a class="arrival-approved-back" href="#menu-sheet"><span aria-hidden="true">{ICONS["arrow"]}</span><span>{escape(labels["menu"])}</span></a><div class="arrival-approved-ornament" aria-hidden="true">{ICONS["house_rules"]}</div><h2 class="arrival-approved-title">{escape(labels["rules_title"])}</h2><p class="arrival-approved-subtitle">{escape(labels["rules_subtitle"])}</p>{cards}</section>'
+
+
+def build_things_to_know(html, payload):
+    labels = INFO_LABELS[get_lang(html)]
+    things = get_content(payload, "things_to_know")
+    cards = info_card(labels["know"], things, "things_to_know")
+    if not cards:
+        return ""
+    return f'<section id="things-to-know-screen" class="screen arrival-screen-approved"><a class="arrival-approved-back" href="#menu-sheet"><span aria-hidden="true">{ICONS["arrow"]}</span><span>{escape(labels["menu"])}</span></a><div class="arrival-approved-ornament" aria-hidden="true">{ICONS["things_to_know"]}</div><h2 class="arrival-approved-title">{escape(labels["know_title"])}</h2><p class="arrival-approved-subtitle">{escape(labels["know_subtitle"])}</p>{cards}</section>'
+
+
+def replace_or_insert_screen(html, screen_id, new_section, insert_after_id):
+    if not new_section:
+        return html
+    pattern = rf'<section[^>]*id="{screen_id}"[\s\S]*?</section>'
+    html, count = re.subn(pattern, new_section, html, count=1, flags=re.IGNORECASE)
+    if count:
+        return html
+
+    anchor = rf'(<section[^>]*id="{insert_after_id}"[\s\S]*?</section>)'
+    html, count = re.subn(anchor, r'\1' + new_section, html, count=1, flags=re.IGNORECASE)
+    if count:
+        return html
+
+    return html + new_section
+
+
+def replace_info_screens(html, payload):
+    html = replace_or_insert_screen(html, "wifi-screen", build_wifi(html, payload), "location-screen")
+    html = replace_or_insert_screen(html, "house-guide-screen", build_house_guide(html, payload), "wifi-screen")
+    html = replace_or_insert_screen(html, "house-rules-screen", build_house_rules(html, payload), "house-guide-screen")
+    html = replace_or_insert_screen(html, "things-to-know-screen", build_things_to_know(html, payload), "house-rules-screen")
+    return html
+
 def replace_menu(html):
     pattern = r'<section\s+id="menu-sheet"\s+class="screen menu-card"[\s\S]*?</section>'
     return re.sub(pattern, build_menu(html), html, count=1)
@@ -263,13 +390,14 @@ def inject_css(html):
         return html
     return html.replace("</style>", CSS + "\n</style>", 1)
 
-def inject(html, payload):
+ def inject(html, payload):
     html = replace_menu(html)
     html = replace_arrival(html, payload)
     html = replace_location(html, payload)
+    html = replace_info_screens(html, payload)
     html = patch_welcome_image(html)
     html = inject_css(html)
-    return html
+    return html   
 
 def main():
     payload = json.loads(sys.argv[1])
