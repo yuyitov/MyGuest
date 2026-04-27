@@ -2533,19 +2533,29 @@ section.welcome-card {
   const section = document.getElementById("private-stay-details");
   if (!section) return;
 
-  const url = section.dataset.privateUrl;
-  const loading = document.getElementById("private-loading");
-  const error = document.getElementById("private-error");
-  const empty = document.getElementById("private-empty");
-  const content = document.getElementById("private-content");
+ const params = new URLSearchParams(window.location.search);
+const token = params.get("token");
 
-  if (!url) {
-    loading.hidden = true;
-    empty.hidden = false;
-    return;
-  }
+const pathParts = window.location.pathname.split("/").filter(Boolean);
+const villaIndex = pathParts.indexOf("villas");
+const slug = villaIndex >= 0 ? pathParts[villaIndex + 1] : "";
 
-    fetch(url, { headers: { accept: "application/json" }, cache: "no-store" })
+const workerBase = "https://myguest-worker.veronica-perezarroyo.workers.dev";
+const url = token && slug
+  ? `${workerBase}/guest/${encodeURIComponent(slug)}?token=${encodeURIComponent(token)}`
+  : "";
+
+const loading = document.getElementById("private-loading");
+const error = document.getElementById("private-error");
+const empty = document.getElementById("private-empty");
+const content = document.getElementById("private-content");
+
+if (!url) {
+  section.style.display = "none";
+  return;
+}
+
+fetch(url, { headers: { accept: "application/json" }, cache: "no-store" })
     .then((res) => {
       if (!res.ok) throw new Error("Request failed");
       return res.json();
@@ -2553,13 +2563,15 @@ section.welcome-card {
     .then((data) => {
       loading.hidden = true;
 
-      const fields = [
-        ["WiFi network", data.wifi_ssid],
-        ["WiFi password", data.wifi_password],
-        ["Door code", data.door_code],
-        ["Host phone", data.host_phone],
-        ["Private access notes", data.house_access_private]
-      ].filter(([, value]) => value);
+const privateDetails = data && data.private_details ? data.private_details : {};
+
+const fields = [
+  ["WiFi network", privateDetails.wifi_ssid],
+  ["WiFi password", privateDetails.wifi_password],
+  ["Door code", privateDetails.door_code],
+  ["Host phone", privateDetails.host_phone],
+  ["Private access notes", privateDetails.house_access_private]
+].filter(([, value]) => value);
 
       if (!fields.length) {
         section.style.display = "none";
