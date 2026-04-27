@@ -2581,9 +2581,11 @@ section.welcome-card {
         content.appendChild(item);
       });
     })
-    .catch(() => {
+        .catch(() => {
       loading.hidden = true;
       error.hidden = false;
     });
+})();
+</script>
 </body>
 </html>
