@@ -561,7 +561,7 @@ def render_html_for_language(payload, active_language, output_filename):
     property_address = safe_text(property_data.get("property_address"))
     ui = UI_STRINGS[active_language]
     slug = safe_text(metadata.get("slug")) or "demo"
-
+    guest_access_url = safe_text(metadata.get("guest_access_url")) or safe_text(payload.get("guest_access_url"))
     with open("templates/master.html", "r", encoding="utf-8") as f:
         html = f.read()
 
@@ -579,6 +579,7 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{WELCOME_ACTIONS_BLOCK}}": build_welcome_actions_block(content_flat),
         "{{CHECKIN_CHECKOUT_BLOCK}}": build_checkin_checkout_block(content_flat, ui),
         "{{CONTENT_SECTIONS}}": build_content_sections(content_flat, ui),
+        "{{GENERATED_PRIVATE_URL}}": escape(guest_access_url),
         "{{COLOR_PRIMARY}}": style["primary"],
         "{{COLOR_ACCENT}}": style["accent"],
         "{{COLOR_BG}}": style["bg"],
