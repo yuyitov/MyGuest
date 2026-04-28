@@ -74,7 +74,37 @@
 
         .screen {
             width: 100%;
+            min-height: calc(100svh - 92px);
             margin-bottom: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .screen > .menu-back-wrap {
+            margin-top: auto;
+        }
+
+        .info-sheet,
+        .list-sheet,
+        .editorial-sheet,
+        .rule-sheet,
+        .contact-sheet,
+        .review-sheet,
+        .menu-card,
+        .welcome-card {
+            min-height: calc(100svh - 92px);
+        }
+
+        .info-sheet,
+        .list-sheet,
+        .editorial-sheet,
+        .rule-sheet,
+        .contact-sheet,
+        .review-sheet {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .cover-screen {
@@ -1661,32 +1691,34 @@ section.welcome-card {
     aspect-ratio: 1.05 / 0.88;
     border-radius: 21px;
     background:
-        linear-gradient(180deg, rgba(255,255,255,0.94), rgba(252,247,240,0.92));
-    border: 1px solid rgba(138, 112, 74, 0.20);
+        linear-gradient(180deg, #F2E8DA 0%, #EADCC8 100%);
+    border: 1.5px solid rgba(138, 112, 74, 0.30);
     box-shadow:
-        0 9px 22px rgba(58, 42, 28, 0.07),
-        inset 0 1px 0 rgba(255,255,255,0.9);
+        0 12px 24px rgba(58, 42, 28, 0.10),
+        inset 0 1px 0 rgba(255,255,255,0.72);
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 6px;
-    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 
 .menu-screen-approved .menu-link:active .menu-tile {
     transform: scale(0.97);
+    background:
+        linear-gradient(180deg, #EADCC8 0%, #DDC9AD 100%);
     box-shadow:
-        0 5px 14px rgba(58, 42, 28, 0.06),
-        inset 0 1px 0 rgba(255,255,255,0.9);
+        0 6px 14px rgba(58, 42, 28, 0.10),
+        inset 0 1px 0 rgba(255,255,255,0.55);
 }
 
 .menu-screen-approved .menu-icon {
-    width: clamp(31px, 9vw, 42px);
-    height: clamp(31px, 9vw, 42px);
+    width: clamp(34px, 9.6vw, 46px);
+    height: clamp(34px, 9.6vw, 46px);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary);
+    color: #4A3726;
 }
 
 .menu-screen-approved .menu-icon svg {
@@ -1694,7 +1726,7 @@ section.welcome-card {
     height: 100%;
     stroke: currentColor;
     fill: none;
-    stroke-width: 1.75;
+    stroke-width: 2.35;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
@@ -1752,7 +1784,53 @@ section.welcome-card {
         margin-bottom: 14px;
     }
 }      
-    </style>
+    
+
+/* =====================================================
+   MyGuest global color rules — titles gold, form content dark brown
+===================================================== */
+h1,
+h2,
+h3,
+.cover-title,
+.cover-script,
+.cover-to,
+.cover-address,
+.welcome-title,
+.welcome-about-title,
+.menu-kicker,
+.menu-script-title,
+.menu-subtitle,
+.info-sheet-title,
+.list-sheet-title,
+.editorial-sheet-title,
+.rule-sheet-title,
+.contact-sheet-title,
+.review-sheet-title,
+.info-row-title,
+.list-item-title,
+.contact-card-title,
+.section-title {
+    color: var(--mg-title, #8A704A) !important;
+}
+
+.welcome-message,
+.welcome-about-copy,
+.info-row-text,
+.list-sheet-intro,
+.list-item-text,
+.editorial-copy,
+.rule-sheet-copy,
+.contact-card-text,
+.paragraph,
+.info-value,
+.wifi-center-copy,
+.footer-note,
+.content-sections,
+.content-sections *:not(.section-title) {
+    color: var(--mg-body, #3A2A1C) !important;
+}
+</style>
 </head>
 <body>
     <div class="app-shell">
@@ -1787,7 +1865,6 @@ section.welcome-card {
 </section>
 
     <section id="menu-sheet" class="screen menu-card menu-screen-approved">
-    <div class="menu-kicker">Your Guide</div>
     <h2 class="menu-script-title">Your Guide</h2>
     <p class="menu-subtitle">Everything you need for a perfect stay</p>
 
@@ -1985,7 +2062,7 @@ section.welcome-card {
     </div>
 </section>     
 
-                <section class="screen info-sheet">
+                <section id="house-guide-screen" class="screen info-sheet">
             <div class="info-sheet-leaf" aria-hidden="true">
                 <svg viewBox="0 0 32 32">
                     <path d="M16 26V10"></path>
@@ -2025,7 +2102,7 @@ section.welcome-card {
             </div>
         </section>
 
-        <section class="screen info-sheet">
+        <section id="arrival-screen" class="screen info-sheet">
             <div class="info-sheet-leaf" aria-hidden="true">
                 <svg viewBox="0 0 32 32">
                     <path d="M16 26V10"></path>
@@ -2082,7 +2159,7 @@ section.welcome-card {
             </div>
         </section>
 
-        <section class="screen info-sheet">
+        <section id="wifi-screen" class="screen info-sheet">
             <div class="info-sheet-leaf" aria-hidden="true">
                 <svg viewBox="0 0 32 32">
                     <path d="M16 26V10"></path>
@@ -2112,6 +2189,8 @@ section.welcome-card {
           <p class="wifi-center-copy">
                     WiFi and access details appear only when the secure guest token is valid.
                 </p>
+
+                <div id="private-wifi-content"></div>
             </div>
 
             <div class="menu-back-wrap">
@@ -2124,7 +2203,7 @@ section.welcome-card {
             </div>
         </section>
 
-        <section class="screen info-sheet">
+        <section id="location-screen" class="screen info-sheet">
             <div class="info-sheet-leaf" aria-hidden="true">
                 <svg viewBox="0 0 32 32">
                     <path d="M16 26V10"></path>
@@ -2164,7 +2243,7 @@ section.welcome-card {
             </div>
         </section>
 
-                <section class="screen list-sheet">
+                <section id="things-to-know-screen" class="screen list-sheet">
             <div class="list-sheet-leaf" aria-hidden="true">
                 <svg viewBox="0 0 32 32">
                     <path d="M16 26V10"></path>
@@ -2209,7 +2288,7 @@ section.welcome-card {
             </div>
         </section>
 
-        <section class="screen editorial-sheet">
+        <section id="things-to-do-screen" class="screen editorial-sheet">
             <div class="editorial-sheet-header">
                 <div class="editorial-sheet-leaf" aria-hidden="true">
                     <svg viewBox="0 0 32 32">
@@ -2241,7 +2320,7 @@ section.welcome-card {
             </div>
         </section>
 
-        <section class="screen editorial-sheet">
+        <section id="places-to-eat-screen" class="screen editorial-sheet">
             <div class="editorial-sheet-header">
                 <div class="editorial-sheet-leaf" aria-hidden="true">
                     <svg viewBox="0 0 32 32">
@@ -2273,7 +2352,7 @@ section.welcome-card {
             </div>
         </section>
 
-        <section class="screen editorial-sheet">
+        <section id="places-to-drink-screen" class="screen editorial-sheet">
             <div class="editorial-sheet-header">
                 <div class="editorial-sheet-leaf" aria-hidden="true">
                     <svg viewBox="0 0 32 32">
@@ -2305,7 +2384,7 @@ section.welcome-card {
             </div>
         </section>
 
-                <section class="screen rule-sheet">
+                <section id="house-rules-screen" class="screen rule-sheet">
             <div class="rule-sheet-leaf" aria-hidden="true">
                 <svg viewBox="0 0 32 32">
                     <path d="M16 26V10"></path>
@@ -2332,7 +2411,7 @@ section.welcome-card {
             </div>
         </section>
 
-        <section class="screen rule-sheet">
+        <section id="emergency-screen" class="screen rule-sheet">
             <div class="rule-sheet-leaf" aria-hidden="true">
                 <svg viewBox="0 0 32 32">
                     <path d="M16 26V10"></path>
@@ -2359,7 +2438,7 @@ section.welcome-card {
             </div>
         </section>
 
-        <section class="screen rule-sheet">
+        <section id="local-directory-screen" class="screen rule-sheet">
             <div class="rule-sheet-leaf" aria-hidden="true">
                 <svg viewBox="0 0 32 32">
                     <path d="M16 26V10"></path>
@@ -2386,7 +2465,7 @@ section.welcome-card {
             </div>
         </section>
 
-        <section class="screen review-sheet">
+        <section id="review-screen" class="screen review-sheet">
             <div class="review-sheet-header">
                 <div class="review-sheet-leaf" aria-hidden="true">
                     <svg viewBox="0 0 32 32">
@@ -2424,7 +2503,7 @@ section.welcome-card {
             </div>
         </section>
 
-        <section class="screen rule-sheet">
+        <section id="before-you-leave-screen" class="screen rule-sheet">
             <div class="rule-sheet-leaf" aria-hidden="true">
                 <svg viewBox="0 0 32 32">
                     <path d="M16 26V10"></path>
@@ -2451,7 +2530,7 @@ section.welcome-card {
             </div>
         </section>
 
-        <section class="screen contact-sheet">
+        <section id="contact-screen" class="screen contact-sheet">
             <div class="contact-sheet-header">
                 <div class="contact-sheet-leaf" aria-hidden="true">
                     <svg viewBox="0 0 32 32">
@@ -2492,9 +2571,9 @@ section.welcome-card {
                 </div>
             </div>
 
-            <div id="private-contact-content"></div>
+                        <div id="private-contact-content"></div>
 
-            <div class="menu-back-wrap">
+<div class="menu-back-wrap">
                 <a href="#menu-sheet" class="menu-back-btn">
                     <svg viewBox="0 0 24 24">
                         <path d="M15 5l-7 7 7 7"></path>
@@ -2507,25 +2586,6 @@ section.welcome-card {
             {{CONTENT_SECTIONS}}
         </div>
 
-              <section id="private-stay-details" class="screen info-sheet" data-private-url="{{GENERATED_PRIVATE_URL}}">
-            <div class="info-sheet-leaf" aria-hidden="true">
-                <svg viewBox="0 0 32 32">
-                    <path d="M16 26V10"></path>
-                    <path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path>
-                    <path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path>
-                </svg>
-            </div>
-
-            <h2 class="info-sheet-title">Private Stay Details</h2>
-
-            <div class="info-panel">
-                <p id="private-loading" class="wifi-center-copy">Loading private stay details…</p>
-                <p id="private-error" class="wifi-center-copy" hidden>Private details could not be loaded.</p>
-                <p id="private-empty" class="wifi-center-copy" hidden>No private details available.</p>
-                <div id="private-content"></div>
-            </div>
-        </section>
-
         <p class="footer-note">
             This welcome book shows public guest information only.
         </p>
@@ -2533,72 +2593,58 @@ section.welcome-card {
 
 <script>
 (function () {
-  const section = document.getElementById("private-stay-details");
-  if (!section) return;
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("token");
 
- const params = new URLSearchParams(window.location.search);
-const token = params.get("token");
+  const pathParts = window.location.pathname.split("/").filter(Boolean);
+  const villaIndex = pathParts.indexOf("villas");
+  const slug = villaIndex >= 0 ? pathParts[villaIndex + 1] : "";
 
-const pathParts = window.location.pathname.split("/").filter(Boolean);
-const villaIndex = pathParts.indexOf("villas");
-const slug = villaIndex >= 0 ? pathParts[villaIndex + 1] : "";
+  if (!token || !slug) return;
 
-const workerBase = "https://myguest-worker.veronica-perezarroyo.workers.dev";
-const url = token && slug
-  ? `${workerBase}/guest/${encodeURIComponent(slug)}?token=${encodeURIComponent(token)}`
-  : "";
+  const workerBase = "https://myguest-worker.veronica-perezarroyo.workers.dev";
+  const url = `${workerBase}/guest/${encodeURIComponent(slug)}?token=${encodeURIComponent(token)}`;
 
-const loading = document.getElementById("private-loading");
-const error = document.getElementById("private-error");
-const empty = document.getElementById("private-empty");
-const content = document.getElementById("private-content");
+  function addCard(container, label, value) {
+    if (!container || !value) return;
 
-if (!url) {
-  section.style.display = "none";
-  return;
-}
+    const item = document.createElement("div");
+    item.className = "contact-card";
+    item.innerHTML = `
+      <div>
+        <div class="contact-card-title"></div>
+        <div class="contact-card-text"></div>
+      </div>
+    `;
 
-fetch(url, { headers: { accept: "application/json" }, cache: "no-store" })
+    item.querySelector(".contact-card-title").textContent = label;
+    item.querySelector(".contact-card-text").textContent = value;
+
+    container.appendChild(item);
+  }
+
+  fetch(url, { headers: { accept: "application/json" }, cache: "no-store" })
     .then((res) => {
       if (!res.ok) throw new Error("Request failed");
       return res.json();
     })
     .then((data) => {
-      loading.hidden = true;
+      const d = data && data.private_details ? data.private_details : {};
 
-const privateDetails = data && data.private_details ? data.private_details : {};
+      const wifiContainer = document.getElementById("private-wifi-content");
+      const arrivalContainer = document.getElementById("private-arrival-content");
+      const contactContainer = document.getElementById("private-contact-content");
 
-const fields = [
-  ["WiFi network", privateDetails.wifi_ssid],
-  ["WiFi password", privateDetails.wifi_password],
-  ["Door code", privateDetails.door_code],
-  ["Host phone", privateDetails.host_phone],
-  ["Private access notes", privateDetails.house_access_private]
-].filter(([, value]) => value);
+      addCard(wifiContainer, "WiFi network", d.wifi_ssid);
+      addCard(wifiContainer, "WiFi password", d.wifi_password);
 
-      if (!fields.length) {
-        section.style.display = "none";
-        return;
-      }
+      addCard(arrivalContainer, "Door code", d.door_code);
+      addCard(arrivalContainer, "Access notes", d.house_access_private);
 
-      content.innerHTML = "";
-
-      fields.forEach(([label, value]) => {
-        const item = document.createElement("div");
-        item.className = "contact-card";
-        item.innerHTML = `
-          <div>
-            <div class="contact-card-title">${label}</div>
-            <div class="contact-card-text"></div>
-          </div>
-        `;
-        item.querySelector(".contact-card-text").textContent = value;
-        content.appendChild(item);
-      });
+      addCard(contactContainer, "Host phone", d.host_phone);
     })
-        .catch(() => {
-      loading.hidden = true;
-      error.hidden = false;
+    .catch(() => {
+      // Private details stay hidden if token is invalid or Worker is unavailable.
     });
 })();
 </script>
