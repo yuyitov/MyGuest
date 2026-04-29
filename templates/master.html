@@ -1957,6 +1957,19 @@ h3,
     color: rgba(58, 42, 28, 0.52);
 }
 
+
+.recommendation-action-pill.is-hidden {
+    display: none !important;
+}
+
+.recommendation-action-pill[href] {
+    cursor: pointer;
+}
+
+.recommendation-action-pill:not([href]) {
+    cursor: default;
+}
+
 @media (max-width: 380px) {
     .recommendation-listing-image { height: 146px; }
     .recommendation-listing-name { font-size: 22px; }
@@ -2488,12 +2501,8 @@ h3,
                                 <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3 5.18 2 2 0 0 1 5 3h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.62 2.6a2 2 0 0 1-.45 2.11L9 10.6a16 16 0 0 0 4.4 4.4l1.17-1.17a2 2 0 0 1 2.11-.45c.83.29 1.7.5 2.6.62A2 2 0 0 1 22 16.92Z"></path></svg>
                                 Call
                             </span>
-                            <span class="recommendation-action-pill">
-                                <svg viewBox="0 0 24 24"><path d="M7 17L17 7"></path><path d="M9 7h8v8"></path></svg>
-                                Website
-                            </span>
                         </div>
-                        <div class="recommendation-note">Buttons are styled for future structured links. They can be connected when restaurant fields are split into name, map, phone and website.</div>
+                        <div class="recommendation-note">Google Maps can be generated from the place name when no direct Maps link is provided. Call appears only when a phone number is available from enrichment.</div>
                     </div>
                 </article>
             </div>
@@ -2543,12 +2552,8 @@ h3,
                                 <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3 5.18 2 2 0 0 1 5 3h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.62 2.6a2 2 0 0 1-.45 2.11L9 10.6a16 16 0 0 0 4.4 4.4l1.17-1.17a2 2 0 0 1 2.11-.45c.83.29 1.7.5 2.6.62A2 2 0 0 1 22 16.92Z"></path></svg>
                                 Call
                             </span>
-                            <span class="recommendation-action-pill">
-                                <svg viewBox="0 0 24 24"><path d="M7 17L17 7"></path><path d="M9 7h8v8"></path></svg>
-                                Website
-                            </span>
                         </div>
-                        <div class="recommendation-note">Buttons are styled for future structured links. They can be connected when bar fields are split into name, map, phone and website.</div>
+                        <div class="recommendation-note">Google Maps can be generated from the place name when no direct Maps link is provided. Call appears only when a phone number is available from enrichment.</div>
                     </div>
                 </article>
             </div>
