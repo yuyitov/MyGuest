@@ -3,6 +3,7 @@ import json
 import os
 import re
 from html import escape
+from urllib.parse import quote_plus
 
 
 SUPPORTED_LANGUAGES = ["English", "Español", "Français"]
@@ -200,6 +201,40 @@ CONTENT_FIELD_MAP = {
     "places_to_eat": "recommendations",
     "places_to_drink": "recommendations",
     "things_to_do": "recommendations",
+
+    "restaurant_1_name": "recommendations",
+    "restaurant_1_maps_link": "recommendations",
+    "restaurant_2_name": "recommendations",
+    "restaurant_2_maps_link": "recommendations",
+    "restaurant_3_name": "recommendations",
+    "restaurant_3_maps_link": "recommendations",
+    "restaurant_4_name": "recommendations",
+    "restaurant_4_maps_link": "recommendations",
+    "restaurant_5_name": "recommendations",
+    "restaurant_5_maps_link": "recommendations",
+
+    "bar_1_name": "recommendations",
+    "bar_1_maps_link": "recommendations",
+    "bar_2_name": "recommendations",
+    "bar_2_maps_link": "recommendations",
+    "bar_3_name": "recommendations",
+    "bar_3_maps_link": "recommendations",
+    "bar_4_name": "recommendations",
+    "bar_4_maps_link": "recommendations",
+    "bar_5_name": "recommendations",
+    "bar_5_maps_link": "recommendations",
+
+    "activity_1_name": "recommendations",
+    "activity_1_link": "recommendations",
+    "activity_2_name": "recommendations",
+    "activity_2_link": "recommendations",
+    "activity_3_name": "recommendations",
+    "activity_3_link": "recommendations",
+    "activity_4_name": "recommendations",
+    "activity_4_link": "recommendations",
+    "activity_5_name": "recommendations",
+    "activity_5_link": "recommendations",
+
     "local_directory": "recommendations",
 
     "host_email": "contact_social",
@@ -355,8 +390,8 @@ def build_welcome_image_block(content_flat, villa_name):
     return image_block(SHARED_IMAGES["welcome"], villa_name, arch=False)
 
 
-def build_editorial_image_block(content_flat, field_name, alt_text, photo_index):
-    if not normalize_text_block(content_flat.get(field_name)):
+def build_editorial_image_block(content_flat, field_name, alt_text, photo_index, property_address=""):
+    if not has_recommendation_items(content_flat, field_name, property_address):
         return ""
     image_url = SHARED_IMAGES.get(field_name, SHARED_IMAGES["welcome"])
     return image_block(image_url, alt_text, arch=False)
@@ -448,6 +483,217 @@ def build_checkin_checkout_block(content_flat, ui):
         """)
 
     return "\n".join(cards)
+
+
+def first_non_empty(*values):
+    for value in values:
+        clean = safe_text(value)
+        if clean:
+            return clean
+    return ""
+
+
+def google_maps_search_url(name, property_address=""):
+    query_parts = [safe_text(name), safe_text(property_address)]
+    query = " ".join(part for part in query_parts if part)
+    if not query:
+        return ""
+    return f"https://www.google.com/maps/search/?api=1&query={quote_plus(query)}"
+
+
+def build_places_from_numbered_fields(content_flat, prefix, link_suffix, property_address="", max_items=5):
+    places = []
+
+    for index in range(1, max_items + 1):
+        name = safe_text(content_flat.get(f"{prefix}_{index}_name"))
+        link = safe_text(content_flat.get(f"{prefix}_{index}_{link_suffix}"))
+        phone = first_non_empty(
+            content_flat.get(f"{prefix}_{index}_phone"),
+            content_flat.get(f"{prefix}_{index}_phone_number"),
+        )
+        image = first_non_empty(
+            content_flat.get(f"{prefix}_{index}_image"),
+            content_flat.get(f"{prefix}_{index}_photo"),
+        )
+        rating = safe_text(content_flat.get(f"{prefix}_{index}_rating"))
+        category = safe_text(content_flat.get(f"{prefix}_{index}_category"))
+        address = safe_text(content_flat.get(f"{prefix}_{index}_address"))
+
+        if not name:
+            continue
+
+        if not link:
+            link = google_maps_search_url(name, property_address)
+
+        places.append({
+            "name": name,
+            "link": link,
+            "phone": phone,
+            "image": image,
+            "rating": rating,
+            "category": category,
+            "address": address,
+        })
+
+    return places
+
+
+def legacy_text_to_single_place(value, fallback_name, property_address=""):
+    text = normalize_text_block(value)
+    if not text:
+        return []
+
+    return [{
+        "name": fallback_name,
+        "link": google_maps_search_url(fallback_name, property_address),
+        "phone": "",
+        "image": "",
+        "rating": "",
+        "category": "",
+        "address": "",
+        "description": text,
+    }]
+
+
+def get_restaurant_places(content_flat, property_address=""):
+    places = build_places_from_numbered_fields(content_flat, "restaurant", "maps_link", property_address)
+    if places:
+        return places
+    return legacy_text_to_single_place(content_flat.get("places_to_eat"), "Restaurants", property_address)
+
+
+def get_bar_places(content_flat, property_address=""):
+    places = build_places_from_numbered_fields(content_flat, "bar", "maps_link", property_address)
+    if places:
+        return places
+    return legacy_text_to_single_place(content_flat.get("places_to_drink"), "Bars & Drinks", property_address)
+
+
+def get_activity_places(content_flat, property_address=""):
+    places = build_places_from_numbered_fields(content_flat, "activity", "link", property_address)
+    if places:
+        return places
+    return legacy_text_to_single_place(content_flat.get("things_to_do"), "Things to Do", property_address)
+
+
+def recommendation_action_link(kind, label, url):
+    clean_url = safe_text(url)
+    if not clean_url:
+        return ""
+
+    if kind == "phone":
+        href = clean_url if clean_url.startswith("tel:") else f"tel:{clean_url}"
+    else:
+        href = clean_url
+
+    if not href.startswith(("http://", "https://", "tel:", "mailto:")):
+        return ""
+
+    if kind == "phone":
+        svg = '<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3 5.18 2 2 0 0 1 5 3h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.62 2.6a2 2 0 0 1-.45 2.11L9 10.6a16 16 0 0 0 4.4 4.4l1.17-1.17a2 2 0 0 1 2.11-.45c.83.29 1.7.5 2.6.62A2 2 0 0 1 22 16.92Z"></path></svg>'
+    else:
+        svg = '<svg viewBox="0 0 24 24"><path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10Z"></path><circle cx="12" cy="11" r="2.5"></circle></svg>'
+
+    return f'''
+        <a class="recommendation-action-pill" href="{escape(href)}" target="_blank" rel="noopener noreferrer">
+            {svg}
+            {escape(label)}
+        </a>
+    '''
+
+
+def build_recommendation_cards(places, default_image_url, default_meta, primary_action_label="Google Maps"):
+    if not places:
+        return ""
+
+    cards = []
+    for place in places:
+        name = safe_text(place.get("name"))
+        if not name:
+            continue
+
+        image_url = safe_text(place.get("image")) or default_image_url
+        rating = safe_text(place.get("rating"))
+        rating_display = escape(rating) if rating else "★★★★★"
+        category = safe_text(place.get("category"))
+        address = safe_text(place.get("address"))
+        meta_parts = [part for part in [category, address] if part]
+        meta = " · ".join(meta_parts) if meta_parts else default_meta
+        description = safe_text(place.get("description"))
+
+        copy_parts = []
+        if description:
+            copy_parts.append(escape(description).replace("\n", "<br>"))
+        if address and not description:
+            copy_parts.append(escape(address))
+
+        copy_html = "<br>".join(copy_parts)
+        if copy_html:
+            copy_html = f'<div class="recommendation-listing-copy">{copy_html}</div>'
+
+        actions = recommendation_action_link("maps", primary_action_label, place.get("link"))
+        actions += recommendation_action_link("phone", "Call", place.get("phone"))
+
+        cards.append(f'''
+            <article class="recommendation-listing-card">
+                <div class="recommendation-listing-image">
+                    {image_block(image_url, name, arch=False)}
+                </div>
+                <div class="recommendation-listing-body">
+                    <div class="recommendation-listing-topline">
+                        <h3 class="recommendation-listing-name">{escape(name)}</h3>
+                        <span class="recommendation-rating">{rating_display}</span>
+                    </div>
+                    <div class="recommendation-meta">{escape(meta)}</div>
+                    {copy_html}
+                    <div class="recommendation-action-row" aria-label="Recommendation actions">
+                        {actions}
+                    </div>
+                </div>
+            </article>
+        ''')
+
+    return "\n".join(cards)
+
+
+def build_places_to_eat_html(content_flat, property_address=""):
+    places = get_restaurant_places(content_flat, property_address)
+    return build_recommendation_cards(
+        places,
+        SHARED_IMAGES["places_to_eat"],
+        "Restaurants · Nearby recommendations",
+        "Google Maps",
+    )
+
+
+def build_places_to_drink_html(content_flat, property_address=""):
+    places = get_bar_places(content_flat, property_address)
+    return build_recommendation_cards(
+        places,
+        SHARED_IMAGES["places_to_drink"],
+        "Bars · Cocktails · Local spots",
+        "Google Maps",
+    )
+
+
+def build_things_to_do_html(content_flat, property_address=""):
+    places = get_activity_places(content_flat, property_address)
+    return build_recommendation_cards(
+        places,
+        SHARED_IMAGES["things_to_do"],
+        "Activities · Tours · Local experiences",
+        "Open link",
+    )
+
+
+def has_recommendation_items(content_flat, field_name, property_address=""):
+    if field_name == "places_to_eat":
+        return bool(get_restaurant_places(content_flat, property_address))
+    if field_name == "places_to_drink":
+        return bool(get_bar_places(content_flat, property_address))
+    if field_name == "things_to_do":
+        return bool(get_activity_places(content_flat, property_address))
+    return has_value(content_flat.get(field_name))
 
 
 def build_content_sections(content_flat, ui):
@@ -594,12 +840,12 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{DIRECTIONS_TEXT}}": html_multiline(content_flat.get("directions_text")),
         "{{TRANSPORT_OPTIONS}}": html_multiline(content_flat.get("transport_options")),
         "{{THINGS_TO_KNOW}}": html_multiline(content_flat.get("things_to_know")),
-        "{{THINGS_TO_DO}}": html_multiline(content_flat.get("things_to_do")),
-        "{{PLACES_TO_EAT}}": html_multiline(content_flat.get("places_to_eat")),
-        "{{PLACES_TO_DRINK}}": html_multiline(content_flat.get("places_to_drink")),
-        "{{THINGS_TO_DO_IMAGE_BLOCK}}": build_editorial_image_block(content_flat, "things_to_do", "Things to Do", 1),
-        "{{PLACES_TO_EAT_IMAGE_BLOCK}}": build_editorial_image_block(content_flat, "places_to_eat", "Places to Eat", 2),
-        "{{PLACES_TO_DRINK_IMAGE_BLOCK}}": build_editorial_image_block(content_flat, "places_to_drink", "Places to Drink", 3),
+        "{{THINGS_TO_DO}}": build_things_to_do_html(content_flat, property_address),
+        "{{PLACES_TO_EAT}}": build_places_to_eat_html(content_flat, property_address),
+        "{{PLACES_TO_DRINK}}": build_places_to_drink_html(content_flat, property_address),
+        "{{THINGS_TO_DO_IMAGE_BLOCK}}": build_editorial_image_block(content_flat, "things_to_do", "Things to Do", 1, property_address),
+        "{{PLACES_TO_EAT_IMAGE_BLOCK}}": build_editorial_image_block(content_flat, "places_to_eat", "Places to Eat", 2, property_address),
+        "{{PLACES_TO_DRINK_IMAGE_BLOCK}}": build_editorial_image_block(content_flat, "places_to_drink", "Places to Drink", 3, property_address),
         "{{HOUSE_RULES}}": html_multiline(content_flat.get("house_rules")),
         "{{EMERGENCY_CONTACTS}}": html_multiline(content_flat.get("emergency_contacts")),
         "{{LOCAL_DIRECTORY}}": html_multiline(content_flat.get("local_directory")),
