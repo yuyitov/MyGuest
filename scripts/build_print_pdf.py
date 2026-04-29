@@ -2,6 +2,7 @@ import sys
 import json
 import os
 from html import escape
+from urllib.parse import quote_plus
 
 SUPPORTED_LANGUAGES = ["English", "Español", "Français"]
 
@@ -13,6 +14,9 @@ UI_STRINGS = {
         "location_transport": "Location & transport",
         "house_info": "House info",
         "recommendations": "Recommendations",
+        "restaurants": "Restaurants",
+        "bars_drinks": "Bars & Drinks",
+        "things_to_do": "Things to Do",
         "contact": "Contact",
         "checkin": "Check-in",
         "checkout": "Check-out",
@@ -20,6 +24,7 @@ UI_STRINGS = {
         "yes": "Yes",
         "no": "No",
         "open_maps": "Google Maps",
+        "open_link": "Link",
         "leave_review": "Airbnb review",
         "instagram": "Instagram",
         "host_email": "Host email",
@@ -34,6 +39,9 @@ UI_STRINGS = {
         "location_transport": "Ubicación y transporte",
         "house_info": "Información de la casa",
         "recommendations": "Recomendaciones",
+        "restaurants": "Restaurantes",
+        "bars_drinks": "Bares y bebidas",
+        "things_to_do": "Qué hacer",
         "contact": "Contacto",
         "checkin": "Llegada",
         "checkout": "Salida",
@@ -41,6 +49,7 @@ UI_STRINGS = {
         "yes": "Sí",
         "no": "No",
         "open_maps": "Google Maps",
+        "open_link": "Link",
         "leave_review": "Reseña Airbnb",
         "instagram": "Instagram",
         "host_email": "Correo del anfitrión",
@@ -55,6 +64,9 @@ UI_STRINGS = {
         "location_transport": "Emplacement et transport",
         "house_info": "Informations sur la maison",
         "recommendations": "Recommandations",
+        "restaurants": "Restaurants",
+        "bars_drinks": "Bars et boissons",
+        "things_to_do": "Activités",
         "contact": "Contact",
         "checkin": "Arrivée",
         "checkout": "Départ",
@@ -62,6 +74,7 @@ UI_STRINGS = {
         "yes": "Oui",
         "no": "Non",
         "open_maps": "Google Maps",
+        "open_link": "Lien",
         "leave_review": "Avis Airbnb",
         "instagram": "Instagram",
         "host_email": "Email de l’hôte",
@@ -174,7 +187,115 @@ def section_html(title, body_html):
     )
 
 
-def build_sections(content, ui):
+def subsection_html(title, body_html):
+    if not body_html.strip():
+        return ""
+    return (
+        '<div class="subsection">'
+        f'<h3 class="subsection-title">{escape(title)}</h3>'
+        f"{body_html}"
+        "</div>"
+    )
+
+
+def google_maps_search_url(name, property_address=""):
+    query_parts = [safe_text(name), safe_text(property_address)]
+    query = " ".join(part for part in query_parts if part)
+    if not query:
+        return ""
+    return f"https://www.google.com/maps/search/?api=1&query={quote_plus(query)}"
+
+
+def build_places_from_numbered_fields(recommendations, prefix, link_suffix, property_address="", max_items=5):
+    places = []
+
+    for index in range(1, max_items + 1):
+        name = safe_text(recommendations.get(f"{prefix}_{index}_name"))
+        link = safe_text(recommendations.get(f"{prefix}_{index}_{link_suffix}"))
+
+        if not name:
+            continue
+
+        if not link:
+            link = google_maps_search_url(name, property_address)
+
+        places.append({
+            "name": name,
+            "link": link,
+        })
+
+    return places
+
+
+def legacy_text_to_single_place(value, fallback_name, property_address=""):
+    text = normalize_text_block(value)
+    if not text:
+        return []
+    return [{
+        "name": fallback_name,
+        "link": google_maps_search_url(fallback_name, property_address),
+        "description": text,
+    }]
+
+
+def get_restaurant_places(recommendations, property_address=""):
+    places = build_places_from_numbered_fields(recommendations, "restaurant", "maps_link", property_address)
+    if places:
+        return places
+    return legacy_text_to_single_place(recommendations.get("places_to_eat"), "Restaurants", property_address)
+
+
+def get_bar_places(recommendations, property_address=""):
+    places = build_places_from_numbered_fields(recommendations, "bar", "maps_link", property_address)
+    if places:
+        return places
+    return legacy_text_to_single_place(recommendations.get("places_to_drink"), "Bars & Drinks", property_address)
+
+
+def get_activity_places(recommendations, property_address=""):
+    places = build_places_from_numbered_fields(recommendations, "activity", "link", property_address)
+    if places:
+        return places
+    return legacy_text_to_single_place(recommendations.get("things_to_do"), "Things to Do", property_address)
+
+
+def place_list_html(title, places, link_label):
+    if not places:
+        return ""
+
+    items = []
+    for place in places:
+        name = safe_text(place.get("name"))
+        if not name:
+            continue
+
+        description = safe_text(place.get("description"))
+        link = safe_text(place.get("link"))
+
+        item = f'<div class="place-item"><strong>{escape(name)}</strong>'
+        if description:
+            item += f'<p>{escape(description)}</p>'
+        if link:
+            item += f'<div class="place-link"><span class="info-label">{escape(link_label)}:</span> {escape(link)}</div>'
+        item += '</div>'
+        items.append(item)
+
+    if not items:
+        return ""
+
+    return subsection_html(title, "".join(items))
+
+
+def build_recommendations_html(recommendations, property_address, ui):
+    body = ""
+    body += place_list_html(ui["restaurants"], get_restaurant_places(recommendations, property_address), ui["open_maps"])
+    body += place_list_html(ui["bars_drinks"], get_bar_places(recommendations, property_address), ui["open_maps"])
+    body += place_list_html(ui["things_to_do"], get_activity_places(recommendations, property_address), ui["open_link"])
+    body += paragraph_html(recommendations.get("local_directory"))
+    return body
+
+
+def build_sections(content, property_address, ui):
     sections = []
 
     checkin = content.get("checkin", {}) or {}
@@ -215,11 +336,7 @@ def build_sections(content, ui):
     sections.append(section_html(ui["house_info"], rules_body))
 
     recommendations = content.get("recommendations", {}) or {}
-    recommendations_body = ""
-    recommendations_body += paragraph_html(recommendations.get("places_to_eat"))
-    recommendations_body += paragraph_html(recommendations.get("places_to_drink"))
-    recommendations_body += paragraph_html(recommendations.get("things_to_do"))
-    recommendations_body += paragraph_html(recommendations.get("local_directory"))
+    recommendations_body = build_recommendations_html(recommendations, property_address, ui)
     sections.append(section_html(ui["recommendations"], recommendations_body))
 
     contact_social = content.get("contact_social", {}) or {}
@@ -259,7 +376,7 @@ def render_print_html(payload):
     html = html.replace("{{PRIMARY_LANGUAGE}}", escape(primary_language))
     html = html.replace("{{PRIMARY_LANGUAGE_LABEL}}", escape(ui["primary_language"]))
     html = html.replace("{{EYEBROW}}", escape(ui["eyebrow"]))
-    html = html.replace("{{CONTENT_SECTIONS}}", build_sections(content, ui))
+    html = html.replace("{{CONTENT_SECTIONS}}", build_sections(content, property_address, ui))
     html = html.replace("{{FOOTER_TEXT}}", escape(ui["footer"]))
     html = html.replace("{{COLOR_PRIMARY}}", style["primary"])
     html = html.replace("{{COLOR_ACCENT}}", style["accent"])
