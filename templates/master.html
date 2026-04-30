@@ -317,16 +317,19 @@
             text-transform: uppercase;
         }
 
-        .cover-address {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(18px, 5.8vw, 26px);
-            line-height: 1.12;
-            letter-spacing: 0.065em;
-            color: var(--mg-body) !important;
-            text-align: center;
-            text-transform: uppercase;
-            max-width: 100%;
-        }
+      .cover-villa-name {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(22px, 6.8vw, 31px);
+        line-height: 1.08;
+        letter-spacing: 0.075em;
+        color: var(--mg-body) !important;
+        text-align: center;
+        text-transform: uppercase;
+        max-width: 100%;
+        margin-bottom: 6px;
+        font-weight: 600;
+    }
+        
 
         /* Pantalla 2 — Welcome */
         .welcome-card {
@@ -873,7 +876,7 @@
             <div>
                 <div class="cover-script">Your Guide</div>
                 <div class="cover-to">TO</div>
-                <div class="cover-address">{{PROPERTY_ADDRESS}}</div>
+                <div class="cover-villa-name">{{VILLA_NAME}}</div>
             </div>
         </section>
 
