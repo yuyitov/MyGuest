@@ -918,7 +918,7 @@
                             <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="20"></circle><path d="M32 18v15l10 6"></path></svg>
                         </span>
                     </span>
-                    <span class="menu-label">Check-in</span>
+                    <span class="menu-label">Check-in/out</span>
                 </a>
 
                 <a class="menu-link" href="#access-parking-screen">
@@ -1069,7 +1069,7 @@
                 <div class="leaf" aria-hidden="true">
                     <svg viewBox="0 0 32 32"><path d="M16 26V10"></path><path d="M16 14c-4 0-7-3-7-7 4 0 7 3 7 7Z"></path><path d="M16 18c4 0 7-3 7-7-4 0-7 3-7 7Z"></path></svg>
                 </div>
-                <h2 class="screen-title">Check In/Out</h2>
+               <h2 class="screen-title">Check-in & Check-out</h2> 
 
                 <div class="time-grid">
                     <div class="time-card" data-field-block>
@@ -1105,7 +1105,6 @@
                             <div class="info-row-title">Access</div>
                             <div class="info-text" data-dynamic>{{HOUSE_ACCESS_PUBLIC}}</div>
                             <div id="private-access-content"></div>
-                            <div id="private-arrival-content" class="is-hidden"></div>
                         </div>
                     </div>
 
@@ -1139,7 +1138,7 @@
                         <svg viewBox="0 0 64 64"><path d="M14 30a26 26 0 0 1 36 0"></path><path d="M22 38a15 15 0 0 1 20 0"></path><path d="M29 46a5 5 0 0 1 6 0"></path><circle cx="32" cy="52" r="2.5"></circle></svg>
                     </div>
 
-                    <p class="screen-copy">Private stay details load securely inside this welcome book.</p>
+                    <p class="screen-copy">WiFi details are protected and appear only with your secure guest access link.</p>
                     <div id="private-wifi-content"></div>
                 </div>
             </div>
@@ -1370,8 +1369,8 @@
         </section>
 
         <p class="footer-note">
-            This welcome book shows public guest information only. Private details load securely when a valid guest token is used.
-        </p>
+    Some stay details are protected and only appear with a valid guest access link.
+</p>
     </div>
 
     <script>
@@ -1481,7 +1480,6 @@
 
                     const wifiContainer = document.getElementById("private-wifi-content");
                     const accessContainer = document.getElementById("private-access-content");
-                    const oldArrivalContainer = document.getElementById("private-arrival-content");
                     const contactContainer = document.getElementById("private-contact-content");
 
                     addPrivateCard(wifiContainer, "WiFi network", d.wifi_ssid);
@@ -1489,10 +1487,7 @@
 
                     addPrivateCard(accessContainer, "Door code", d.door_code);
                     addPrivateCard(accessContainer, "Access notes", d.house_access_private);
-
-                    addPrivateCard(oldArrivalContainer, "Door code", d.door_code);
-                    addPrivateCard(oldArrivalContainer, "Access notes", d.house_access_private);
-
+                   
                     addPrivateCard(contactContainer, "Host phone", d.host_phone);
                 })
                 .catch(function () {
