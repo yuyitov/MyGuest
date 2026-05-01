@@ -479,61 +479,60 @@
             color: var(--mg-body);
             -webkit-tap-highlight-color: transparent;
         }
+    .menu-screen-approved .menu-tile {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 999px;
+    background: rgba(255, 253, 248, 0.72);
+    border: 1.3px solid rgba(138, 112, 74, 0.24);
+    box-shadow: 0 8px 18px rgba(58, 42, 28, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
 
-        .menu-screen-approved .menu-tile {
-            width: 100%;
-            aspect-ratio: 1.05 / 0.88;
-            border-radius: 21px;
-            background: linear-gradient(180deg, #F2E8DA 0%, #EADCC8 100%);
-            border: 1.5px solid rgba(138, 112, 74, 0.30);
-            box-shadow:
-                0 12px 24px rgba(58, 42, 28, 0.10),
-                inset 0 1px 0 rgba(255,255,255,0.72);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 6px;
-            transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
-        }
+.menu-screen-approved .menu-link:active .menu-tile {
+    transform: scale(0.96);
+    background: rgba(242, 232, 218, 0.92);
+    box-shadow: 0 4px 10px rgba(58, 42, 28, 0.08);
+}
 
-        .menu-screen-approved .menu-link:active .menu-tile {
-            transform: scale(0.97);
-            background: linear-gradient(180deg, #EADCC8 0%, #DDC9AD 100%);
-        }
+.menu-screen-approved .menu-icon {
+    width: clamp(38px, 10vw, 48px);
+    height: clamp(38px, 10vw, 48px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #8A704A;
+}
 
-        .menu-screen-approved .menu-icon {
-            width: clamp(46px, 12vw, 58px);
-            height: clamp(46px, 12vw, 58px);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #4A3726;
-        }
+.menu-screen-approved .menu-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
 
-        .menu-screen-approved .menu-icon svg {
-            width: 100%;
-            height: 100%;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 1.9;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .menu-screen-approved .menu-label {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(16px, 4.4vw, 20px);
-            line-height: 1.08;
-            color: var(--mg-body);
-            font-weight: 500;
-            text-align: center;
-            letter-spacing: 0;
-            max-width: 100%;
-            min-height: 34px;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-        }
+.menu-screen-approved .menu-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(15px, 4.1vw, 19px);
+    line-height: 1.05;
+    color: var(--mg-body);
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0;
+    max-width: 100%;
+    min-height: 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+       
 
         /* Cards recomendación */
         .recommendation-listing-panel {
@@ -985,7 +984,10 @@
                 <a class="menu-link" href="#getting-there-screen">
                     <span class="menu-tile">
                         <span class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64"><path d="M32 56s18-14 18-32a18 18 0 1 0-36 0c0 18 18 32 18 32Z"></path><circle cx="32" cy="24" r="6"></circle></svg>
+                            <svg viewBox="0 0 64 64">
+    <path d="M32 56s17-14.5 17-31a17 17 0 1 0-34 0c0 16.5 17 31 17 31Z"></path>
+    <circle cx="32" cy="25" r="5.5"></circle>
+</svg>
                         </span>
                     </span>
                     <span class="menu-label">Getting There</span>
@@ -994,7 +996,10 @@
                 <a class="menu-link" href="#checkin-screen">
                     <span class="menu-tile">
                         <span class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="20"></circle><path d="M32 18v15l10 6"></path></svg>
+                            <svg viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="19"></circle>
+    <path d="M32 19v14l9 5"></path>
+</svg>
                         </span>
                     </span>
                     <span class="menu-label">Check-in/out</span>
@@ -1003,7 +1008,12 @@
                 <a class="menu-link" href="#access-parking-screen">
                     <span class="menu-tile">
                         <span class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64"><path d="M12 31 32 14l20 17"></path><path d="M18 29v23h28V29"></path><path d="M27 52V39h10v13"></path><path d="M49 43h4v9h-8"></path></svg>
+                            <svg viewBox="0 0 64 64">
+    <path d="M13 32 32 16l19 16"></path>
+    <path d="M19 30v22h26V30"></path>
+    <path d="M27 52V40h10v12"></path>
+    <path d="M47 43h5v9h-8"></path>
+</svg>
                         </span>
                     </span>
                     <span class="menu-label">Access & Parking</span>
@@ -1012,7 +1022,12 @@
                 <a class="menu-link" href="#wifi-screen">
                     <span class="menu-tile">
                         <span class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64"><path d="M14 28a28 28 0 0 1 36 0"></path><path d="M22 38a16 16 0 0 1 20 0"></path><path d="M30 48a4 4 0 0 1 4 0"></path><circle cx="32" cy="52" r="2.5"></circle></svg>
+                           <svg viewBox="0 0 64 64">
+    <path d="M15 29a27 27 0 0 1 34 0"></path>
+    <path d="M23 38a15 15 0 0 1 18 0"></path>
+    <path d="M30 47a4 4 0 0 1 4 0"></path>
+    <circle cx="32" cy="52" r="2"></circle>
+</svg>
                         </span>
                     </span>
                     <span class="menu-label">WiFi</span>
@@ -1021,7 +1036,11 @@
                 <a class="menu-link" href="#the-house-screen">
                     <span class="menu-tile">
                         <span class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64"><path d="M10 34 32 16l22 18"></path><path d="M17 32v22h30V32"></path><path d="M25 54V41h14v13"></path></svg>
+                            <svg viewBox="0 0 64 64">
+    <path d="M11 33 32 16l21 17"></path>
+    <path d="M18 31v22h28V31"></path>
+    <path d="M26 53V41h12v12"></path>
+</svg>
                         </span>
                     </span>
                     <span class="menu-label">The House</span>
@@ -1030,7 +1049,13 @@
                 <a class="menu-link" href="#house-rules-screen">
                     <span class="menu-tile">
                         <span class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64"><path d="M20 10h20l8 8v36H20Z"></path><path d="M40 10v10h8"></path><path d="M26 28h16"></path><path d="M26 36h16"></path><path d="M26 44h10"></path></svg>
+                            <svg viewBox="0 0 64 64">
+    <path d="M21 10h18l8 8v36H21Z"></path>
+    <path d="M39 10v10h8"></path>
+    <path d="M27 29h14"></path>
+    <path d="M27 37h14"></path>
+    <path d="M27 45h9"></path>
+</svg>
                         </span>
                     </span>
                     <span class="menu-label">House Rules</span>
@@ -1039,7 +1064,11 @@
                 <a class="menu-link" href="#things-to-know-screen">
                     <span class="menu-tile">
                         <span class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="22"></circle><path d="M32 29v16"></path><circle cx="32" cy="20" r="2.5"></circle></svg>
+                            <svg viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="21"></circle>
+    <path d="M32 30v15"></path>
+    <circle cx="32" cy="21" r="2.4"></circle>
+</svg>
                         </span>
                     </span>
                     <span class="menu-label">Things to Know</span>
@@ -1048,7 +1077,12 @@
                 <a class="menu-link" href="#places-to-eat-screen">
                     <span class="menu-tile">
                         <span class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64"><path d="M22 10v22"></path><path d="M15 10v18c0 5 3 8 7 8s7-3 7-8V10"></path><path d="M22 36v18"></path><path d="M43 10c7 8 7 20 0 27v17"></path></svg>
+                            <svg viewBox="0 0 64 64">
+    <path d="M21 10v21"></path>
+    <path d="M14 10v17c0 5 3 8 7 8s7-3 7-8V10"></path>
+    <path d="M21 35v19"></path>
+    <path d="M43 10c7 8 7 20 0 27v17"></path>
+</svg>
                         </span>
                     </span>
                     <span class="menu-label">Restaurants</span>
@@ -1057,7 +1091,12 @@
                 <a class="menu-link" href="#places-to-drink-screen">
                     <span class="menu-tile">
                         <span class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64"><path d="M20 12h24l-4 22a8 8 0 0 1-16 0Z"></path><path d="M32 42v12"></path><path d="M24 54h16"></path><path d="M42 17l7-5"></path></svg>
+                            <svg viewBox="0 0 64 64">
+    <path d="M21 12h22l-4 21a7 7 0 0 1-14 0Z"></path>
+    <path d="M32 41v13"></path>
+    <path d="M24 54h16"></path>
+    <path d="M42 17l7-5"></path>
+</svg>
                         </span>
                     </span>
                     <span class="menu-label">Bars & Drinks</span>
@@ -1066,7 +1105,14 @@
                 <a class="menu-link" href="#things-to-do-screen">
                     <span class="menu-tile">
                         <span class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64"><circle cx="32" cy="30" r="10"></circle><path d="M32 8v8"></path><path d="M32 44v8"></path><path d="M10 30h8"></path><path d="M46 30h8"></path><path d="M18 52c7-8 21-8 28 0"></path></svg>
+                            <svg viewBox="0 0 64 64">
+    <circle cx="32" cy="30" r="10"></circle>
+    <path d="M32 8v8"></path>
+    <path d="M32 44v8"></path>
+    <path d="M10 30h8"></path>
+    <path d="M46 30h8"></path>
+    <path d="M18 52c7-8 21-8 28 0"></path>
+</svg>
                         </span>
                     </span>
                     <span class="menu-label">Things to Do</span>
@@ -1075,7 +1121,10 @@
                 <a class="menu-link" href="#contact-screen">
                     <span class="menu-tile">
                         <span class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64"><rect x="12" y="18" width="40" height="28" rx="4"></rect><path d="M14 21l18 15 18-15"></path></svg>
+                            <svg viewBox="0 0 64 64">
+    <rect x="12" y="19" width="40" height="27" rx="4"></rect>
+    <path d="M15 22l17 14 17-14"></path>
+</svg>
                         </span>
                     </span>
                     <span class="menu-label">Contact</span>
@@ -1084,7 +1133,11 @@
                 <a class="menu-link" href="#emergency-screen">
                     <span class="menu-tile">
                         <span class="menu-icon" aria-hidden="true">
-                            <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="22"></circle><path d="M32 20v24"></path><path d="M20 32h24"></path></svg>
+                            <svg viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="21"></circle>
+    <path d="M32 21v22"></path>
+    <path d="M21 32h22"></path>
+</svg>
                         </span>
                     </span>
                     <span class="menu-label">Emergency</span>
