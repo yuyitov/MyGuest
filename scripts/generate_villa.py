@@ -166,6 +166,33 @@ SHARED_IMAGES = {
     "places_to_drink": "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1400&q=80",
 }
 
+# 5 imágenes genéricas por categoría para evitar que todas las recomendaciones
+# se vean repetidas. Si en el futuro Tally manda restaurant_1_image/photo,
+# bar_1_image/photo o activity_1_image/photo, esa imagen específica tiene prioridad.
+RECOMMENDATION_IMAGE_POOLS = {
+    "places_to_eat": [
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1400&q=80",
+    ],
+    "places_to_drink": [
+        "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1572116469696-31de0f17cc34?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1527761939622-933c3c17d155?auto=format&fit=crop&w=1400&q=80",
+    ],
+    "things_to_do": [
+        "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80",
+    ],
+}
+
 CONTENT_FIELD_MAP = {
     "checkin_time": "checkin",
     "checkout_time": "checkin",
@@ -478,6 +505,14 @@ def get_activity_places(content_flat, property_address=""):
     return legacy_text_to_single_place(content_flat.get("things_to_do"), "Things to Do", property_address)
 
 
+def pick_recommendation_image(default_image_url, image_pool, index):
+    if image_pool and isinstance(image_pool, list):
+        clean_pool = [safe_text(item) for item in image_pool if safe_text(item)]
+        if clean_pool:
+            return clean_pool[index % len(clean_pool)]
+    return default_image_url
+
+
 def recommendation_action_link(kind, label, url):
     clean_url = safe_text(url)
     if not clean_url:
@@ -504,18 +539,19 @@ def recommendation_action_link(kind, label, url):
     '''
 
 
-def build_recommendation_cards(places, default_image_url, default_meta, primary_action_label, call_label):
+def build_recommendation_cards(places, default_image_url, default_meta, primary_action_label, call_label, image_pool=None):
     if not places:
         return ""
 
     cards = []
 
-    for place in places:
+    for index, place in enumerate(places):
         name = safe_text(place.get("name"))
         if not name:
             continue
 
-        image_url = safe_text(place.get("image")) or default_image_url
+        fallback_image_url = pick_recommendation_image(default_image_url, image_pool, index)
+        image_url = safe_text(place.get("image")) or fallback_image_url
         rating = safe_text(place.get("rating"))
         rating_display = escape(rating) if rating else "★★★★★"
         category = safe_text(place.get("category"))
@@ -568,6 +604,7 @@ def build_places_to_eat_html(content_flat, property_address, active_language):
         ui["restaurants_meta"],
         ui["google_maps"],
         ui["call"],
+        RECOMMENDATION_IMAGE_POOLS["places_to_eat"],
     )
 
 
@@ -580,6 +617,7 @@ def build_places_to_drink_html(content_flat, property_address, active_language):
         ui["bars_meta"],
         ui["google_maps"],
         ui["call"],
+        RECOMMENDATION_IMAGE_POOLS["places_to_drink"],
     )
 
 
@@ -592,6 +630,7 @@ def build_things_to_do_html(content_flat, property_address, active_language):
         ui["activities_meta"],
         ui["open_link"],
         ui["call"],
+        RECOMMENDATION_IMAGE_POOLS["things_to_do"],
     )
 
 
