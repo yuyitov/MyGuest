@@ -860,10 +860,10 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{INSTAGRAM_HANDLE}}": html_multiline(content_flat.get("instagram_handle")),
 
         "{{PRIVATE_LABEL_WIFI_NETWORK}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("WiFi network", "WiFi network")),
-"{{PRIVATE_LABEL_WIFI_PASSWORD}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("WiFi password", "WiFi password")),
-"{{PRIVATE_LABEL_DOOR_CODE}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Door code", "Door code")),
-"{{PRIVATE_LABEL_ACCESS_NOTES}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Access notes", "Access notes")),
-"{{PRIVATE_LABEL_HOST_PHONE}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Host phone", "Host phone")),
+        "{{PRIVATE_LABEL_WIFI_PASSWORD}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("WiFi password", "WiFi password")),
+        "{{PRIVATE_LABEL_DOOR_CODE}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Door code", "Door code")),
+        "{{PRIVATE_LABEL_ACCESS_NOTES}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Access notes", "Access notes")),
+        "{{PRIVATE_LABEL_HOST_PHONE}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Host phone", "Host phone")),
     }
 
     for placeholder, value in replacements.items():
