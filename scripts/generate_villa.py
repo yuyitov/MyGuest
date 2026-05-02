@@ -315,7 +315,6 @@ def resolve_language(primary_language):
     clean = safe_text(primary_language)
     return clean if clean in SUPPORTED_LANGUAGES else "English"
 
-
 def normalize_environment(property_environment):
     clean = safe_text(property_environment)
     if not clean:
@@ -346,7 +345,9 @@ def find_field_deep(source, field_name):
 
     return ""
 
+
 def build_language_bar(active_language):
+
     chips = []
     for lang in SUPPORTED_LANGUAGES:
         css_class = "language-chip active" if lang == active_language else "language-chip"
@@ -784,7 +785,8 @@ def render_html_for_language(payload, active_language, output_filename):
 
     villa_name = safe_text(property_data.get("property_name")) or "My Villa"
     property_address = safe_text(property_data.get("property_address"))
-        raw_property_environment = first_non_empty(
+
+    raw_property_environment = first_non_empty(
         property_data.get("property_environment"),
         content_flat.get("property_environment"),
         payload.get("property_environment"),
@@ -793,6 +795,7 @@ def render_html_for_language(payload, active_language, output_filename):
 
     property_environment = normalize_environment(raw_property_environment)
     print(f"Property environment resolved: {property_environment}")
+    
     ui = UI_STRINGS.get(active_language, UI_STRINGS["English"])
     slug = safe_text(metadata.get("slug")) or "demo"
     guest_access_url = safe_text(metadata.get("guest_access_url")) or safe_text(payload.get("guest_access_url"))
