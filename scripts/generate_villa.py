@@ -328,6 +328,23 @@ def normalize_environment(property_environment):
     title_case = clean.title()
     return title_case if title_case in COVER_IMAGES_BY_ENVIRONMENT else "Beach"
 
+def find_field_deep(source, field_name):
+    if isinstance(source, dict):
+        for key, value in source.items():
+            if key == field_name:
+                return value
+
+            found = find_field_deep(value, field_name)
+            if has_value(found):
+                return found
+
+    if isinstance(source, list):
+        for item in source:
+            found = find_field_deep(item, field_name)
+            if has_value(found):
+                return found
+
+    return ""
 
 def build_language_bar(active_language):
     chips = []
@@ -767,11 +784,15 @@ def render_html_for_language(payload, active_language, output_filename):
 
     villa_name = safe_text(property_data.get("property_name")) or "My Villa"
     property_address = safe_text(property_data.get("property_address"))
-    property_environment = normalize_environment(first_non_empty(
+        raw_property_environment = first_non_empty(
         property_data.get("property_environment"),
         content_flat.get("property_environment"),
         payload.get("property_environment"),
-    ))
+        find_field_deep(payload, "property_environment"),
+    )
+
+    property_environment = normalize_environment(raw_property_environment)
+    print(f"Property environment resolved: {property_environment}")
     ui = UI_STRINGS.get(active_language, UI_STRINGS["English"])
     slug = safe_text(metadata.get("slug")) or "demo"
     guest_access_url = safe_text(metadata.get("guest_access_url")) or safe_text(payload.get("guest_access_url"))
