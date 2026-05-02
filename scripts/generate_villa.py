@@ -166,6 +166,29 @@ SHARED_IMAGES = {
     "places_to_drink": "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1400&q=80",
 }
 
+# Portadas por entorno. Beach conserva la imagen aprobada actual del book.
+# City y Cozy son imágenes editoriales: sugieren ambiente, no una vista real del Airbnb.
+COVER_IMAGES_BY_ENVIRONMENT = {
+    "Beach": SHARED_IMAGES["cover"],
+    "City": "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=80",
+    "Cozy": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+}
+
+ENVIRONMENT_ALIASES = {
+    "beach": "Beach",
+    "playa": "Beach",
+    "coastal": "Beach",
+    "city": "City",
+    "ciudad": "City",
+    "urban": "City",
+    "urbano": "City",
+    "cozy": "Cozy",
+    "cosy": "Cozy",
+    "homey": "Cozy",
+    "countryside": "Cozy",
+    "country": "Cozy",
+}
+
 # 5 imágenes genéricas por categoría para evitar que todas las recomendaciones
 # se vean repetidas. Si en el futuro Tally manda restaurant_1_image/photo,
 # bar_1_image/photo o activity_1_image/photo, esa imagen específica tiene prioridad.
@@ -213,6 +236,7 @@ CONTENT_FIELD_MAP = {
     "places_to_drink": "recommendations",
     "things_to_do": "recommendations",
     "local_directory": "recommendations",
+    "property_environment": "recommendations",
     "host_email": "contact_social",
     "emergency_contacts": "contact_social",
     "airbnb_review_link": "contact_social",
@@ -292,6 +316,19 @@ def resolve_language(primary_language):
     return clean if clean in SUPPORTED_LANGUAGES else "English"
 
 
+def normalize_environment(property_environment):
+    clean = safe_text(property_environment)
+    if not clean:
+        return "Beach"
+
+    normalized = ENVIRONMENT_ALIASES.get(clean.lower())
+    if normalized:
+        return normalized
+
+    title_case = clean.title()
+    return title_case if title_case in COVER_IMAGES_BY_ENVIRONMENT else "Beach"
+
+
 def build_language_bar(active_language):
     chips = []
     for lang in SUPPORTED_LANGUAGES:
@@ -336,8 +373,10 @@ def flatten_content(content):
     return flat
 
 
-def build_cover_image_block(content_flat, villa_name):
-    return image_block(SHARED_IMAGES["cover"], villa_name, arch=True)
+def build_cover_image_block(content_flat, villa_name, property_environment=""):
+    environment = normalize_environment(first_non_empty(property_environment, content_flat.get("property_environment")))
+    cover_url = COVER_IMAGES_BY_ENVIRONMENT.get(environment, SHARED_IMAGES["cover"])
+    return image_block(cover_url, villa_name, arch=True)
 
 
 def build_welcome_image_block(content_flat, villa_name):
@@ -728,6 +767,11 @@ def render_html_for_language(payload, active_language, output_filename):
 
     villa_name = safe_text(property_data.get("property_name")) or "My Villa"
     property_address = safe_text(property_data.get("property_address"))
+    property_environment = normalize_environment(first_non_empty(
+        property_data.get("property_environment"),
+        content_flat.get("property_environment"),
+        payload.get("property_environment"),
+    ))
     ui = UI_STRINGS.get(active_language, UI_STRINGS["English"])
     slug = safe_text(metadata.get("slug")) or "demo"
     guest_access_url = safe_text(metadata.get("guest_access_url")) or safe_text(payload.get("guest_access_url"))
@@ -741,8 +785,9 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{HTML_LANG}}": escape(ui["html_lang"]),
         "{{VILLA_NAME}}": escape(villa_name),
         "{{PROPERTY_ADDRESS}}": escape(property_address),
+        "{{PROPERTY_ENVIRONMENT}}": escape(property_environment),
         "{{LANGUAGE_BAR}}": build_language_bar(active_language),
-        "{{COVER_IMAGE_BLOCK}}": build_cover_image_block(content_flat, villa_name),
+        "{{COVER_IMAGE_BLOCK}}": build_cover_image_block(content_flat, villa_name, property_environment),
         "{{WELCOME_IMAGE_BLOCK}}": build_welcome_image_block(content_flat, villa_name),
         "{{WELCOME_MESSAGE_BLOCK}}": build_welcome_message_block(content_flat),
         "{{ABOUT_HOSTS_BLOCK}}": build_about_hosts_block(content_flat, active_language),
