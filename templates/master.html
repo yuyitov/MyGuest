@@ -8,22 +8,32 @@
 
     <style>
         :root {
-            --primary: {{COLOR_PRIMARY}};
-            --accent: {{COLOR_ACCENT}};
-            --bg: {{COLOR_BG}};
-            --text: {{COLOR_TEXT}};
+    --primary: {{COLOR_PRIMARY}};
+    --accent: {{COLOR_ACCENT}};
+    --bg: {{COLOR_BG}};
+    --text: {{COLOR_TEXT}};
 
-            --mg-title: #8A704A;
-            --mg-body: #3A2A1C;
-            --mg-soft: #FBF7F2;
-            --mg-card: #FFFDF8;
-            --mg-line: rgba(138, 112, 74, 0.24);
-            --mg-line-soft: rgba(212, 186, 154, 0.48);
-            --mg-shadow: 0 18px 42px rgba(58, 42, 28, 0.08);
-            --mg-shadow-soft: 0 10px 24px rgba(58, 42, 28, 0.06);
-            --mg-phone-max: 430px;
-            --mg-screen-height: calc(100dvh - 92px);
-        }
+    --mg-title: var(--primary);
+    --mg-body: var(--text);
+    --mg-soft: color-mix(in srgb, var(--bg) 88%, var(--accent) 12%);
+    --mg-card: color-mix(in srgb, #ffffff 86%, var(--bg) 14%);
+    --mg-line: color-mix(in srgb, var(--primary) 26%, transparent);
+    --mg-line-soft: color-mix(in srgb, var(--accent) 48%, transparent);
+
+    --mg-button: var(--primary);
+    --mg-button-text: #ffffff;
+    --mg-icon: var(--primary);
+    --mg-pill-bg: color-mix(in srgb, var(--accent) 28%, #ffffff 72%);
+    --mg-pill-text: color-mix(in srgb, var(--primary) 72%, var(--text) 28%);
+    --mg-muted: color-mix(in srgb, var(--text) 58%, transparent);
+    --mg-card-border: color-mix(in srgb, var(--primary) 18%, transparent);
+    --mg-card-shadow-color: color-mix(in srgb, var(--text) 12%, transparent);
+
+    --mg-shadow: 0 18px 42px var(--mg-card-shadow-color);
+    --mg-shadow-soft: 0 10px 24px color-mix(in srgb, var(--text) 8%, transparent);
+    --mg-phone-max: 430px;
+    --mg-screen-height: calc(100dvh - 92px);
+}
 
         * {
             box-sizing: border-box;
@@ -807,14 +817,141 @@
             color: rgba(58,42,28,0.56);
         }
 
-        .is-hidden {
-            display: none !important;
-        }
+       .is-hidden {
+    display: none !important;
+}
 
-        @media (max-height: 740px) {
-            :root {
-                --mg-screen-height: calc(100dvh - 82px);
-            }
+/* Theme overrides — makes selected Style visibly change the book */
+.language-bar .active {
+    background: var(--mg-button);
+    border-color: var(--mg-button);
+    color: var(--mg-button-text);
+}
+
+.leaf {
+    color: var(--accent);
+}
+
+.info-row-icon,
+.wifi-center-icon {
+    background: var(--mg-card);
+    border-color: var(--mg-line-soft);
+    color: var(--mg-icon);
+}
+
+.info-row-title,
+.time-value,
+.time-label,
+.private-card-title {
+    color: var(--mg-title);
+}
+
+.menu-back-btn,
+.pill-button {
+    background: var(--mg-button);
+    color: var(--mg-button-text);
+    box-shadow: 0 10px 20px color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+.cover-image-arch {
+    border-color: var(--mg-line);
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, #ffffff 54%, var(--bg) 46%),
+        color-mix(in srgb, var(--accent) 26%, var(--bg) 74%)
+    );
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.welcome-image {
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, #ffffff 50%, var(--bg) 50%),
+        color-mix(in srgb, var(--accent) 20%, var(--bg) 80%)
+    );
+}
+
+.menu-screen-approved {
+    background:
+        radial-gradient(circle at 85% 6%, color-mix(in srgb, var(--accent) 36%, transparent), transparent 34%),
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, #ffffff 78%, var(--bg) 22%),
+            color-mix(in srgb, var(--bg) 90%, var(--accent) 10%)
+        );
+    border-color: var(--mg-card-border);
+}
+
+.menu-screen-approved .menu-tile {
+    background: color-mix(in srgb, var(--mg-card) 78%, #ffffff 22%);
+    border-color: var(--mg-line);
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+.menu-screen-approved .menu-link:active .menu-tile {
+    background: color-mix(in srgb, var(--accent) 24%, var(--mg-card) 76%);
+    box-shadow: 0 4px 10px color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.menu-screen-approved .menu-icon {
+    color: var(--mg-icon);
+}
+
+.recommendation-listing-card,
+.private-card,
+.time-card {
+    background: var(--mg-card);
+    border-color: var(--mg-card-border);
+    box-shadow: 0 12px 28px color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.recommendation-listing-image {
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--accent) 22%, var(--bg) 78%) 0%,
+        color-mix(in srgb, var(--primary) 18%, var(--bg) 82%) 100%
+    );
+    border-bottom-color: var(--mg-card-border);
+}
+
+.recommendation-rating {
+    color: var(--mg-title);
+}
+
+.recommendation-meta,
+.footer-note {
+    color: var(--mg-muted);
+}
+
+.recommendation-action-pill {
+    background: var(--mg-pill-bg);
+    color: var(--mg-pill-text);
+    border-color: color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+.info-map-box {
+    background:
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--accent) 22%, var(--bg) 78%),
+            color-mix(in srgb, #ffffff 64%, var(--bg) 36%)
+        ),
+        repeating-linear-gradient(45deg, color-mix(in srgb, var(--primary) 10%, transparent) 0 1px, transparent 1px 18px),
+        repeating-linear-gradient(-45deg, color-mix(in srgb, var(--primary) 8%, transparent) 0 1px, transparent 1px 22px);
+    border-color: var(--mg-line-soft);
+}
+
+.info-map-box a::before {
+    border-color: var(--mg-line);
+    background: color-mix(in srgb, #ffffff 72%, var(--bg) 28%);
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+.info-map-box a::after {
+    color: var(--mg-title);
+}
+
+@media (max-height: 740px) {
 
             .app-shell {
                 padding-top: 14px;
