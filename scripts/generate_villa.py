@@ -166,12 +166,10 @@ SHARED_IMAGES = {
     "places_to_drink": "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1400&q=80",
 }
 
-# Portadas por entorno. Beach conserva la imagen aprobada actual del book.
-# City y Cozy son imágenes editoriales: sugieren ambiente, no una vista real del Airbnb.
 COVER_IMAGES_BY_ENVIRONMENT = {
     "Beach": SHARED_IMAGES["cover"],
-    "City": "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=80",
-    "Cozy": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+    "City": "../../assets/covers/city.png",
+    "Cozy": "../../assets/covers/cozy.png",
 }
 
 ENVIRONMENT_ALIASES = {
