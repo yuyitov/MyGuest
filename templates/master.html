@@ -110,16 +110,17 @@
             scroll-margin-top: 12px;
         }
 
-        .sheet {
+       .sheet {
             min-height: var(--mg-screen-height);
             background: var(--mg-card);
             border: 1px solid rgba(0,0,0,0.04);
             border-radius: 36px;
-            padding: 24px 18px 22px;
+            padding: 22px 16px 20px;
             box-shadow: var(--mg-shadow);
             display: flex;
             flex-direction: column;
             justify-content: center;
+            overflow: hidden;
         }
 
         .screen-inner {
@@ -148,13 +149,14 @@
         .screen-title {
             text-align: center;
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(28px, 8vw, 36px);
-            line-height: 1.05;
-            letter-spacing: 0.16em;
+            font-size: clamp(24px, 7vw, 34px);
+            line-height: 1.02;
+            letter-spacing: 0.10em;
             text-transform: uppercase;
             color: var(--mg-title);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             font-weight: 600;
+            overflow-wrap: anywhere;
         }
 
         .screen-copy,
@@ -1018,6 +1020,11 @@
             .app-shell {
                 padding-left: 16px;
                 padding-right: 16px;
+            }
+
+            .screen-title {
+                font-size: clamp(22px, 6.4vw, 30px);
+                letter-spacing: 0.07em;
             }
 
             .language-bar {
