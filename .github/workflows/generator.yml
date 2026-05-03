@@ -83,13 +83,13 @@ jobs:
           print("Public payload shape validated successfully.")
           PY
 
-      - name: Generate Villa Page
+       - name: Generate Villa Page
         env:
           PUBLIC_PAYLOAD_JSON: ${{ toJson(github.event.client_payload) }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL_TRANSLATION: ${{ vars.OPENAI_MODEL_TRANSLATION }}
         run: |
-          python scripts/generate_villa.py
+          python scripts/generate_villa.py "$PUBLIC_PAYLOAD_JSON"
           
       - name: Postprocess Public Book Visual QA
         env:
