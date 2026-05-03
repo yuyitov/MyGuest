@@ -4,7 +4,8 @@ import os
 import re
 from html import escape
 from urllib.parse import quote_plus
-
+import urllib.request
+import urllib.error
 
 SUPPORTED_LANGUAGES = ["English", "Español", "Français"]
 
@@ -111,14 +112,22 @@ STATIC_TEMPLATE_TRANSLATIONS = {
         "Door code": "Código de puerta",
         "Access notes": "Notas de acceso",
         "Host phone": "Teléfono del anfitrión",
-    },
+        "Bars & Drinks": "Bares y Bebidas",
+        "Activities": "Actividades",
+        "Nearby recommendations": "Recomendaciones cercanas",
+        "Local spots": "Lugares locales",
+        "Local experiences": "Experiencias locales",
+        "Open link": "Abrir enlace",
+        "Call": "Llamar",
+      },
+    
     "Français": {
         "WELCOME": "BIENVENUE",
         "Your Guide": "Votre Guide",
         "TO": "À",
         "A Warm Welcome": "Bienvenue",
         "Everything you need for a perfect stay": "Tout ce dont vous avez besoin pour un séjour parfait",
-        "Getting There": "Comment Arriver",
+        "Getting There": "Comment s’y rendre",
         "Check-in & Check-out": "Arrivée et Départ",
         "Check-in/out": "Arrivée/Départ",
         "Check-in &": "Arrivée et",
@@ -129,10 +138,10 @@ STATIC_TEMPLATE_TRANSLATIONS = {
         "WiFi": "WiFi",
         "The House": "La Maison",
         "House Rules": "Règles de la Maison",
-        "Things to Know": "Infos Utiles",
+        "Things to Know": "À savoir",
         "Restaurants": "Restaurants",
         "Bars & Drinks": "Bars et Boissons",
-        "Things to Do": "Activités",
+        "Things to Do": "À faire",
         "Contact": "Contact",
         "Emergency": "Urgence",
         "Back to Menu": "Retour au Menu",
@@ -159,6 +168,13 @@ STATIC_TEMPLATE_TRANSLATIONS = {
         "Door code": "Code de porte",
         "Access notes": "Notes d’accès",
         "Host phone": "Téléphone de l’hôte",
+        "Bars & Drinks": "Bars et Boissons",
+        "Activities": "Activités",
+        "Nearby recommendations": "Recommandations à proximité",
+        "Local spots": "Adresses locales",
+        "Local experiences": "Expériences locales",
+        "Open link": "Ouvrir le lien",
+        "Call": "Appeler",
     },
 }
 
@@ -254,7 +270,39 @@ for i in range(1, 6):
         CONTENT_FIELD_MAP[f"activity_{i}_{field}"] = "recommendations"
 
 EMPTY_TEXT_VALUES = {"", "-", "n/a", "na", "none", "null", "undefined"}
+OPENAI_TRANSLATION_MODEL = os.getenv("OPENAI_TRANSLATION_MODEL", "gpt-5-nano")
 
+TRANSLATABLE_PUBLIC_FIELDS = [
+    "welcome_message",
+    "about_hosts",
+    "directions_text",
+    "transport_options",
+    "house_access_public",
+    "parking_info",
+    "amenities_list",
+    "house_rules",
+    "pet_rules",
+    "things_to_know",
+    "before_you_leave",
+    "emergency_contacts",
+    "places_to_eat",
+    "places_to_drink",
+    "things_to_do",
+    "local_directory",
+]
+
+for i in range(1, 6):
+    TRANSLATABLE_PUBLIC_FIELDS.extend([
+        f"restaurant_{i}_category",
+        f"bar_{i}_category",
+        f"activity_{i}_category",
+        f"restaurant_{i}_description",
+        f"bar_{i}_description",
+        f"activity_{i}_description",
+        f"restaurant_{i}_notes",
+        f"bar_{i}_notes",
+        f"activity_{i}_notes",
+    ])
 
 def safe_text(value):
     if value is None:
@@ -305,12 +353,178 @@ def normalize_text_block(value):
     text = str(value).strip()
     return "" if text.lower() in EMPTY_TEXT_VALUES else text
 
+def looks_like_non_translatable_value(text):
+    clean = safe_text(text)
+    if not clean:
+        return True
 
-def html_multiline(value):
-    text = normalize_text_block(value)
-    if not text:
+    lower = clean.lower()
+
+    if lower.startswith(("http://", "https://", "mailto:", "tel:")):
+        return True
+
+    if "@" in clean and "." in clean and " " not in clean:
+        return True
+
+    if re.fullmatch(r"[\+\d\s\-\(\)]{7,}", clean):
+        return True
+
+    if re.fullmatch(r"\d{1,2}:\d{2}\s*(am|pm|AM|PM)?", clean):
+        return True
+
+    return False
+
+
+def extract_openai_response_text(response_json):
+    if not isinstance(response_json, dict):
         return ""
-    return escape(text).replace("\n", "<br>")
+
+    direct_text = response_json.get("output_text")
+    if isinstance(direct_text, str) and direct_text.strip():
+        return direct_text.strip()
+
+    output = response_json.get("output", [])
+    if not isinstance(output, list):
+        return ""
+
+    chunks = []
+    for item in output:
+        if not isinstance(item, dict):
+            continue
+
+        content = item.get("content", [])
+        if not isinstance(content, list):
+            continue
+
+        for content_item in content:
+            if not isinstance(content_item, dict):
+                continue
+
+            text = content_item.get("text")
+            if isinstance(text, str) and text.strip():
+                chunks.append(text.strip())
+
+    return "\n".join(chunks).strip()
+
+
+def translate_public_content_with_openai(fields_to_translate, target_language):
+    api_key = os.getenv("OPENAI_API_KEY", "").strip()
+
+    if not api_key:
+        print("OPENAI_API_KEY not found. Public content translation skipped.")
+        return {}
+
+    if not fields_to_translate:
+        return {}
+
+    instructions = (
+        "You are translating public guest-facing content for a vacation rental welcome book. "
+        "Return ONLY valid JSON. The JSON must be an object with exactly the same keys provided by the user. "
+        "Translate each value into the target language. Preserve meaning, tone, line breaks, and formatting. "
+        "Do not add new information. Do not remove information. "
+        "Do not translate property names, restaurant names, bar names, activity names, addresses, URLs, emails, phone numbers, times, codes, WiFi names, or passwords. "
+        "If a value is already in the target language, keep it natural and only lightly polish if needed. "
+        "Do not include markdown. Do not include explanations."
+    )
+
+    user_payload = {
+        "target_language": target_language,
+        "fields": fields_to_translate,
+    }
+
+    request_body = {
+        "model": OPENAI_TRANSLATION_MODEL,
+        "instructions": instructions,
+        "input": json.dumps(user_payload, ensure_ascii=False),
+        "max_output_tokens": 4000,
+        "store": False,
+    }
+
+    request = urllib.request.Request(
+        "https://api.openai.com/v1/responses",
+        data=json.dumps(request_body).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=45) as response:
+            raw = response.read().decode("utf-8")
+            response_json = json.loads(raw)
+    except urllib.error.HTTPError as exc:
+        error_body = exc.read().decode("utf-8", errors="replace")
+        print(f"OpenAI translation HTTP error: {exc.code} {error_body}")
+        return {}
+    except Exception as exc:
+        print(f"OpenAI translation error: {exc}")
+        return {}
+
+    text = extract_openai_response_text(response_json)
+
+    if not text:
+        print("OpenAI translation returned empty text.")
+        return {}
+
+    try:
+        translated = json.loads(text)
+    except Exception as exc:
+        print(f"OpenAI translation JSON parse error: {exc}")
+        print(text[:500])
+        return {}
+
+    if not isinstance(translated, dict):
+        print("OpenAI translation result was not a JSON object.")
+        return {}
+
+    cleaned = {}
+    for key, original_value in fields_to_translate.items():
+        translated_value = translated.get(key)
+
+        if translated_value is None:
+            continue
+
+        translated_text = safe_text(translated_value)
+
+        if translated_text:
+            cleaned[key] = translated_text
+        else:
+            cleaned[key] = original_value
+
+    return cleaned
+
+
+def translate_public_content(content_flat, target_language):
+    translated_content = dict(content_flat)
+
+    fields_to_translate = {}
+
+    for field_name in TRANSLATABLE_PUBLIC_FIELDS:
+        value = content_flat.get(field_name)
+
+        if not has_value(value):
+            continue
+
+        text = normalize_text_block(value)
+
+        if looks_like_non_translatable_value(text):
+            continue
+
+        fields_to_translate[field_name] = text
+
+    if not fields_to_translate:
+        return translated_content
+
+    translated_fields = translate_public_content_with_openai(fields_to_translate, target_language)
+
+    for field_name, translated_value in translated_fields.items():
+        if field_name in fields_to_translate and has_value(translated_value):
+            translated_content[field_name] = translated_value
+
+    return translated_content
+
 
 
 def resolve_language(primary_language):
@@ -542,26 +756,29 @@ def legacy_text_to_single_place(value, fallback_name, property_address=""):
         "description": text,
     }]
 
-
-def get_restaurant_places(content_flat, property_address=""):
+def get_restaurant_places(content_flat, property_address="", active_language="English"):
     places = build_places_from_numbered_fields(content_flat, "restaurant", "maps_link", property_address)
     if places:
         return places
-    return legacy_text_to_single_place(content_flat.get("places_to_eat"), "Restaurants", property_address)
+    fallback_name = STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Restaurants", "Restaurants")
+    return legacy_text_to_single_place(content_flat.get("places_to_eat"), fallback_name, property_address)
 
 
-def get_bar_places(content_flat, property_address=""):
+def get_bar_places(content_flat, property_address="", active_language="English"):
     places = build_places_from_numbered_fields(content_flat, "bar", "maps_link", property_address)
     if places:
         return places
-    return legacy_text_to_single_place(content_flat.get("places_to_drink"), "Bars & Drinks", property_address)
+    fallback_name = STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Bars & Drinks", "Bars & Drinks")
+    return legacy_text_to_single_place(content_flat.get("places_to_drink"), fallback_name, property_address)
 
 
-def get_activity_places(content_flat, property_address=""):
+def get_activity_places(content_flat, property_address="", active_language="English"):
     places = build_places_from_numbered_fields(content_flat, "activity", "link", property_address)
     if places:
         return places
-    return legacy_text_to_single_place(content_flat.get("things_to_do"), "Things to Do", property_address)
+    fallback_name = STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Things to Do", "Things to Do")
+    return legacy_text_to_single_place(content_flat.get("things_to_do"), fallback_name, property_address)
+
 
 
 def pick_recommendation_image(default_image_url, image_pool, index):
@@ -656,7 +873,7 @@ def build_recommendation_cards(places, default_image_url, default_meta, primary_
 
 def build_places_to_eat_html(content_flat, property_address, active_language):
     ui = UI_STRINGS.get(active_language, UI_STRINGS["English"])
-    places = get_restaurant_places(content_flat, property_address)
+    places = get_restaurant_places(content_flat, property_address, active_language)
     return build_recommendation_cards(
         places,
         SHARED_IMAGES["places_to_eat"],
@@ -669,7 +886,7 @@ def build_places_to_eat_html(content_flat, property_address, active_language):
 
 def build_places_to_drink_html(content_flat, property_address, active_language):
     ui = UI_STRINGS.get(active_language, UI_STRINGS["English"])
-    places = get_bar_places(content_flat, property_address)
+    places = get_bar_places(content_flat, property_address, active_language)
     return build_recommendation_cards(
         places,
         SHARED_IMAGES["places_to_drink"],
@@ -682,7 +899,7 @@ def build_places_to_drink_html(content_flat, property_address, active_language):
 
 def build_things_to_do_html(content_flat, property_address, active_language):
     ui = UI_STRINGS.get(active_language, UI_STRINGS["English"])
-    places = get_activity_places(content_flat, property_address)
+    places = get_activity_places(content_flat, property_address, active_language)
     return build_recommendation_cards(
         places,
         SHARED_IMAGES["things_to_do"],
@@ -692,15 +909,15 @@ def build_things_to_do_html(content_flat, property_address, active_language):
         RECOMMENDATION_IMAGE_POOLS["things_to_do"],
     )
 
-
 def has_recommendation_items(content_flat, field_name, property_address=""):
     if field_name == "places_to_eat":
-        return bool(get_restaurant_places(content_flat, property_address))
+        return bool(get_restaurant_places(content_flat, property_address, "English"))
     if field_name == "places_to_drink":
-        return bool(get_bar_places(content_flat, property_address))
+        return bool(get_bar_places(content_flat, property_address, "English"))
     if field_name == "things_to_do":
-        return bool(get_activity_places(content_flat, property_address))
+        return bool(get_activity_places(content_flat, property_address, "English"))
     return has_value(content_flat.get(field_name))
+
 
 
 def build_editorial_image_block(content_flat, field_name, alt_text, photo_index, property_address=""):
@@ -774,6 +991,7 @@ def render_html_for_language(payload, active_language, output_filename):
     property_data = payload.get("property", {}) or {}
     content = payload.get("content", {}) or {}
     content_flat = flatten_content(content)
+    content_flat = translate_public_content(content_flat, active_language)
 
     styles = {
         "Coastal": {"primary": "#2C7A7B", "accent": "#F4A261", "bg": "#F0F9FF", "text": "#1F3A3A"},
