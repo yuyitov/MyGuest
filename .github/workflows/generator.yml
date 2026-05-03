@@ -86,9 +86,11 @@ jobs:
       - name: Generate Villa Page
         env:
           PUBLIC_PAYLOAD_JSON: ${{ toJson(github.event.client_payload) }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL_TRANSLATION: ${{ vars.OPENAI_MODEL_TRANSLATION }}
         run: |
-          python scripts/generate_villa.py "$PUBLIC_PAYLOAD_JSON"
-
+          python scripts/generate_villa.py
+          
       - name: Postprocess Public Book Visual QA
         env:
           PUBLIC_PAYLOAD_JSON: ${{ toJson(github.event.client_payload) }}
