@@ -55,9 +55,17 @@ jobs:
               "wifi_ssid",
               "wifi_password",
               "door_code",
+              "building_code",
+              "lockbox_code",
               "host_phone",
               "house_access_private",
-          }
+              "private_notes",
+              "private_access_notes",
+              "private_access_details",
+              "guest_access_token",
+              "guest_access_url",
+              "private_record_key",
+          }       
 
           def find_forbidden(obj, path="root"):
               hits = []
