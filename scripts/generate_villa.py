@@ -456,21 +456,28 @@ def parse_translation_json(text):
     clean = clean_json_response_text(text)
 
     try:
-        return json.loads(clean)
+        parsed = json.loads(clean)
     except Exception:
-        pass
+        start = clean.find("{")
+        end = clean.rfind("}")
 
-    start = clean.find("{")
-    end = clean.rfind("}")
+        if start >= 0 and end > start:
+            candidate = clean[start:end + 1]
+            parsed = json.loads(candidate)
+        else:
+            raise ValueError("Could not parse translation JSON.")
 
-    if start >= 0 and end > start:
-        candidate = clean[start:end + 1]
-        return json.loads(candidate)
+    if not isinstance(parsed, dict):
+        raise ValueError("Could not parse translation JSON into an object.")
 
-    raise ValueError("Could not parse translation JSON.")
+    fields = parsed.get("fields")
+    if isinstance(fields, dict):
+        return fields
+
+    return parsed
 
 
-def split_translation_batches(fields_to_translate, max_chars=2800):
+def split_translation_batches(fields_to_translate, max_chars=1400):
     batches = []
     current = {}
     current_size = 0
@@ -523,7 +530,7 @@ def call_openai_translation_batch(fields_batch, target_language):
         "model": OPENAI_TRANSLATION_MODEL,
         "instructions": instructions,
         "input": json.dumps(user_payload, ensure_ascii=False),
-        "max_output_tokens": 6000,
+        "max_output_tokens": 8000,
         "store": False,
     }
 
