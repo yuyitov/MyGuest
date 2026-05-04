@@ -51,28 +51,33 @@ jobs:
               print(f"Missing required payload blocks: {missing}")
               sys.exit(1)
 
-             forbidden_keys = {
-                "wifi_ssid",
-                "wifi_password",
-                "door_code",
-                "building_code",
-                "lockbox_code",
-                "host_phone",
-                "house_access_private",
-                "private_notes",
-                "private_access_notes",
-                "private_access_details",
-                "guest_access_token",
-                "guest_access_url",
-            }
+          forbidden_keys = {
+              "wifi_ssid",
+              "wifi_password",
+              "door_code",
+              "building_code",
+              "lockbox_code",
+              "host_phone",
+              "house_access_private",
+              "private_notes",
+              "private_access_notes",
+              "private_access_details",
+              "guest_access_token",
+              "guest_access_url",
+          }
+
+          allowed_trace_paths = {
+              "root.metadata.private_record_key",
+          }
 
           def find_forbidden(obj, path="root"):
               hits = []
 
               if isinstance(obj, dict):
                   for key, value in obj.items():
-                      if key in forbidden_keys:
-                          hits.append(f"{path}.{key}")
+                      current_path = f"{path}.{key}"
+                      if key in forbidden_keys and current_path not in allowed_trace_paths:
+                          hits.append(current_path)
                       hits.extend(find_forbidden(value, f"{path}.{key}"))
               elif isinstance(obj, list):
                   for i, item in enumerate(obj):
