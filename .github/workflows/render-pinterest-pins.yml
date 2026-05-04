@@ -1,0 +1,60 @@
+name: Render Pinterest Pins
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'public/marketing/pinterest/**'
+      - 'scripts/marketing/render_pinterest_pins.py'
+      - '.github/workflows/render-pinterest-pins.yml'
+      - 'requirements-render-pinterest.txt'
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-render-pinterest.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Start local static server
+        run: |
+          python -m http.server 8000 --directory public > /tmp/myguest-pinterest-server.log 2>&1 &
+          echo $! > /tmp/myguest-pinterest-server.pid
+          sleep 3
+
+      - name: Render pins
+        run: |
+          python scripts/marketing/render_pinterest_pins.py \
+            --base-url http://127.0.0.1:8000/marketing/pinterest/ \
+            --output-dir output/pinterest
+
+      - name: Upload rendered pins
+        uses: actions/upload-artifact@v4
+        with:
+          name: pinterest-pins
+          path: output/pinterest
+          if-no-files-found: error
+
+      - name: Stop local static server
+        if: always()
+        run: |
+          if [ -f /tmp/myguest-pinterest-server.pid ]; then
+            kill $(cat /tmp/myguest-pinterest-server.pid) || true
+          fi
