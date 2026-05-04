@@ -352,6 +352,12 @@ def normalize_text_block(value):
 
     text = str(value).strip()
     return "" if text.lower() in EMPTY_TEXT_VALUES else text
+def html_multiline(value):
+    text = normalize_text_block(value)
+    if not text:
+        return ""
+    return escape(text).replace("\n", "<br>")
+
 
 def looks_like_non_translatable_value(text):
     clean = safe_text(text)
