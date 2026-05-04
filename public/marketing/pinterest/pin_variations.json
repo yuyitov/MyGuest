@@ -1,0 +1,207 @@
+{
+  "campaign": "pinterest_mvp_launch_lote_01",
+  "base_url": "https://yuyitov.github.io/MyGuest/",
+  "notes": "MVP commercial controlled launch. Copy must not promise AI document reading, upload automation, PDF extraction, Canva extraction, photo extraction, or no-form generation.",
+  "pins": [
+    {
+      "template": "template-01-stop-questions.html",
+      "headline": "Stop answering the same guest questions.",
+      "subheadline": "Give guests check-in details, WiFi, house rules, local tips, and checkout instructions in one easy link.",
+      "badges": ["Airbnb hosts", "Mobile guide", "Early access"],
+      "supporting_line": "Created from a simple form.",
+      "cta": "Get your guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=stop_guest_questions_01",
+      "output_name": "pin-01-stop-guest-questions.png"
+    },
+    {
+      "template": "template-01-stop-questions.html",
+      "headline": "Fewer repeated messages from guests.",
+      "subheadline": "Put your most important Airbnb information in a clean mobile guest guide.",
+      "badges": ["Vacation rental", "Guest info", "Simple form"],
+      "supporting_line": "A clearer stay starts with one link.",
+      "cta": "Create my guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=fewer_repeated_messages_02",
+      "output_name": "pin-02-fewer-repeated-messages.png"
+    },
+    {
+      "template": "template-01-stop-questions.html",
+      "headline": "Give guests answers before they ask.",
+      "subheadline": "Organize WiFi, check-in, rules, recommendations, and checkout in a beautiful phone-friendly guide.",
+      "badges": ["Host tool", "Guest guide", "Launch offer"],
+      "supporting_line": "Designed for Airbnb and vacation rental hosts.",
+      "cta": "Get your guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=answers_before_they_ask_03",
+      "output_name": "pin-03-answers-before-they-ask.png"
+    },
+    {
+      "template": "template-01-stop-questions.html",
+      "headline": "Your guest info, finally organized.",
+      "subheadline": "Turn scattered check-in notes, house rules, and local tips into one easy guest link.",
+      "badges": ["Organized info", "Mobile-first", "Early MVP"],
+      "supporting_line": "Built from the details you provide in a simple form.",
+      "cta": "Start my guest guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=guest_info_organized_04",
+      "output_name": "pin-04-guest-info-organized.png"
+    },
+    {
+      "template": "template-02-pdf.html",
+      "headline": "A mobile guest guide plus a simple printable PDF.",
+      "subheadline": "Give guests a digital guide they can open from their phone, with a simple PDF version for printing.",
+      "badges": ["Mobile link", "Printable PDF", "MVP launch"],
+      "supporting_line": "Perfect for Airbnb and vacation rental welcome info.",
+      "cta": "Get your guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=mobile_plus_pdf_05",
+      "output_name": "pin-05-mobile-plus-pdf.png"
+    },
+    {
+      "template": "template-02-pdf.html",
+      "headline": "Make your Airbnb welcome info easier to share.",
+      "subheadline": "A clean guest guide link for phones, plus a simple printable PDF for your property.",
+      "badges": ["Digital guide", "Simple PDF", "Host friendly"],
+      "supporting_line": "Created for hosts who want a more polished guest experience.",
+      "cta": "Create my guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=easier_to_share_06",
+      "output_name": "pin-06-easier-to-share.png"
+    },
+    {
+      "template": "template-02-pdf.html",
+      "headline": "One guest guide for phone and print.",
+      "subheadline": "Share your essential rental details as a beautiful mobile link and a simple printable PDF.",
+      "badges": ["Phone-friendly", "Print option", "Early access"],
+      "supporting_line": "Built from a simple form with your property details.",
+      "cta": "Order your guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=phone_and_print_07",
+      "output_name": "pin-07-phone-and-print.png"
+    },
+    {
+      "template": "template-02-pdf.html",
+      "headline": "Upgrade your old guest instructions.",
+      "subheadline": "Create a cleaner mobile guide for check-in, WiFi, rules, recommendations, and checkout.",
+      "badges": ["Airbnb upgrade", "Guest experience", "Simple form"],
+      "supporting_line": "Early access launch offer for vacation rental hosts.",
+      "cta": "Get your guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=upgrade_guest_instructions_08",
+      "output_name": "pin-08-upgrade-guest-instructions.png"
+    },
+    {
+      "template": "template-03-trilingual.html",
+      "headline": "A guest guide in English, Spanish, and French.",
+      "subheadline": "Give international guests a clearer stay with organized rental information in EN, ES, and FR.",
+      "badges": ["EN / ES / FR", "Travel guests", "Mobile guide"],
+      "supporting_line": "Useful for vacation rentals that welcome global travelers.",
+      "cta": "Start my guest guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=trilingual_guest_guide_09",
+      "output_name": "pin-09-trilingual-guest-guide.png"
+    },
+    {
+      "template": "template-03-trilingual.html",
+      "headline": "Help more guests understand your stay details.",
+      "subheadline": "Create a mobile guest guide with English, Spanish, and French versions.",
+      "badges": ["Multilingual", "Guest clarity", "Early MVP"],
+      "supporting_line": "Check-in, WiFi, rules, tips, and checkout in one place.",
+      "cta": "Get your guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=guest_clarity_languages_10",
+      "output_name": "pin-10-guest-clarity-languages.png"
+    },
+    {
+      "template": "template-03-trilingual.html",
+      "headline": "Welcome international guests with more confidence.",
+      "subheadline": "Turn your vacation rental information into a mobile-friendly guide with EN/ES/FR versions.",
+      "badges": ["International guests", "EN / ES / FR", "Vacation rental"],
+      "supporting_line": "A simple way to make your property feel more prepared.",
+      "cta": "Create my guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=international_guest_confidence_11",
+      "output_name": "pin-11-international-guest-confidence.png"
+    },
+    {
+      "template": "template-03-trilingual.html",
+      "headline": "Your Airbnb guide, translated for more guests.",
+      "subheadline": "Give guests a phone-friendly guide with the essential details of their stay.",
+      "badges": ["Airbnb hosts", "3 languages", "Mobile-first"],
+      "supporting_line": "Available in English, Spanish, and French.",
+      "cta": "Get your guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=airbnb_guide_three_languages_12",
+      "output_name": "pin-12-airbnb-guide-three-languages.png"
+    },
+    {
+      "template": "template-04-minutes.html",
+      "headline": "A cleaner guest guide without building a website.",
+      "subheadline": "Fill out a simple form and get a beautiful mobile guide for your Airbnb or vacation rental.",
+      "badges": ["No website needed", "Simple form", "Launch offer"],
+      "supporting_line": "Made for hosts who want a more professional guest experience.",
+      "cta": "Get your guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=no_website_needed_13",
+      "output_name": "pin-13-no-website-needed.png"
+    },
+    {
+      "template": "template-04-minutes.html",
+      "headline": "Create a digital welcome book from a simple form.",
+      "subheadline": "Organize check-in, WiFi, house rules, local recommendations, and checkout in one guest link.",
+      "badges": ["Digital welcome book", "Airbnb tool", "Early access"],
+      "supporting_line": "A first version made for real host feedback.",
+      "cta": "Start my guest guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=digital_welcome_book_form_14",
+      "output_name": "pin-14-digital-welcome-book-form.png"
+    },
+    {
+      "template": "template-04-minutes.html",
+      "headline": "Make your rental feel more premium.",
+      "subheadline": "Give guests a polished mobile guide with the details they need for an easier stay.",
+      "badges": ["Premium feel", "Guest experience", "Mobile guide"],
+      "supporting_line": "For Airbnb and short-term rental hosts.",
+      "cta": "Create my guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=premium_rental_feel_15",
+      "output_name": "pin-15-premium-rental-feel.png"
+    },
+    {
+      "template": "template-04-minutes.html",
+      "headline": "Turn property details into a guest-ready guide.",
+      "subheadline": "Use one beautiful link for arrival info, house rules, WiFi, recommendations, and checkout.",
+      "badges": ["Property details", "Guest-ready", "Simple setup"],
+      "supporting_line": "Created from the information you provide.",
+      "cta": "Order your guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=guest_ready_guide_16",
+      "output_name": "pin-16-guest-ready-guide.png"
+    },
+    {
+      "template": "template-05-one-link.html",
+      "headline": "One link for your Airbnb guest guide.",
+      "subheadline": "Give guests the stay details they need from their phone, without sending scattered messages.",
+      "badges": ["One link", "Mobile-first", "Host tool"],
+      "supporting_line": "Check-in, WiFi, rules, tips, and checkout together.",
+      "cta": "Get your guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=one_guest_guide_link_17",
+      "output_name": "pin-17-one-guest-guide-link.png"
+    },
+    {
+      "template": "template-05-one-link.html",
+      "headline": "Everything guests need, in one place.",
+      "subheadline": "Create a mobile guest guide that helps guests find the right details faster.",
+      "badges": ["Guest link", "Organized info", "Vacation rental"],
+      "supporting_line": "A simple guide for a smoother stay.",
+      "cta": "Create my guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=everything_in_one_place_18",
+      "output_name": "pin-18-everything-in-one-place.png"
+    },
+    {
+      "template": "template-05-one-link.html",
+      "headline": "Replace long guest messages with one clean guide.",
+      "subheadline": "Share check-in, WiFi, house rules, local tips, and checkout instructions in a phone-friendly format.",
+      "badges": ["Clean guide", "Airbnb hosts", "Early access"],
+      "supporting_line": "Built for hosts who want fewer repeated questions.",
+      "cta": "Start my guest guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=replace_long_messages_19",
+      "output_name": "pin-19-replace-long-messages.png"
+    },
+    {
+      "template": "template-05-one-link.html",
+      "headline": "A better guest experience starts with one link.",
+      "subheadline": "Give your vacation rental guests a clear mobile guide before they arrive.",
+      "badges": ["Guest experience", "Mobile guide", "Launch offer"],
+      "supporting_line": "Early access MVP for Airbnb and vacation rental hosts.",
+      "cta": "Get your guide",
+      "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=better_guest_experience_20",
+      "output_name": "pin-20-better-guest-experience.png"
+    }
+  ]
+}
