@@ -1163,7 +1163,7 @@ def render_html_for_language(payload, active_language, output_filename):
     
     ui = UI_STRINGS.get(active_language, UI_STRINGS["English"])
     slug = safe_text(metadata.get("slug")) or "demo"
-    guest_access_url = safe_text(metadata.get("guest_access_url")) or safe_text(payload.get("guest_access_url"))
+    guest_access_url = ""
 
     with open("templates/master.html", "r", encoding="utf-8") as f:
         html = f.read()
