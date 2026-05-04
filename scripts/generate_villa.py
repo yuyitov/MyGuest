@@ -262,15 +262,48 @@ CONTENT_FIELD_MAP = {
 }
 
 for i in range(1, 6):
-    for field in ["name", "maps_link", "phone", "phone_number", "image", "photo", "rating", "category", "address"]:
+    for field in [
+        "name",
+        "maps_link",
+        "phone",
+        "phone_number",
+        "image",
+        "photo",
+        "rating",
+        "category",
+        "address",
+        "description",
+        "notes",
+    ]:
         CONTENT_FIELD_MAP[f"restaurant_{i}_{field}"] = "recommendations"
         CONTENT_FIELD_MAP[f"bar_{i}_{field}"] = "recommendations"
 
-    for field in ["name", "link", "phone", "phone_number", "image", "photo", "rating", "category", "address"]:
+    for field in [
+        "name",
+        "link",
+        "phone",
+        "phone_number",
+        "image",
+        "photo",
+        "rating",
+        "category",
+        "address",
+        "description",
+        "notes",
+    ]:
         CONTENT_FIELD_MAP[f"activity_{i}_{field}"] = "recommendations"
 
 EMPTY_TEXT_VALUES = {"", "-", "n/a", "na", "none", "null", "undefined"}
-OPENAI_TRANSLATION_MODEL = os.getenv("OPENAI_TRANSLATION_MODEL", "gpt-5-nano")
+OPENAI_TRANSLATION_MODEL = (
+    os.getenv("OPENAI_MODEL_TRANSLATION")
+    or os.getenv("OPENAI_TRANSLATION_MODEL")
+    or "gpt-5-nano"
+).strip()
+
+OPENAI_TRANSLATION_REQUIRED = (
+    os.getenv("OPENAI_TRANSLATION_REQUIRED", "true").strip().lower()
+    not in {"0", "false", "no"}
+)
 
 TRANSLATABLE_PUBLIC_FIELDS = [
     "welcome_message",
@@ -389,38 +422,86 @@ def extract_openai_response_text(response_json):
     if isinstance(direct_text, str) and direct_text.strip():
         return direct_text.strip()
 
-    output = response_json.get("output", [])
-    if not isinstance(output, list):
-        return ""
-
     chunks = []
-    for item in output:
-        if not isinstance(item, dict):
-            continue
 
-        content = item.get("content", [])
-        if not isinstance(content, list):
-            continue
-
-        for content_item in content:
-            if not isinstance(content_item, dict):
-                continue
-
-            text = content_item.get("text")
+    def walk(value):
+        if isinstance(value, dict):
+            text = value.get("text")
             if isinstance(text, str) and text.strip():
                 chunks.append(text.strip())
+
+            for child in value.values():
+                walk(child)
+
+        elif isinstance(value, list):
+            for item in value:
+                walk(item)
+
+    walk(response_json.get("output", []))
 
     return "\n".join(chunks).strip()
 
 
-def translate_public_content_with_openai(fields_to_translate, target_language):
+def clean_json_response_text(text):
+    clean = safe_text(text)
+
+    if clean.startswith("```"):
+        clean = re.sub(r"^```(?:json)?\s*", "", clean, flags=re.IGNORECASE)
+        clean = re.sub(r"\s*```$", "", clean).strip()
+
+    return clean
+
+
+def parse_translation_json(text):
+    clean = clean_json_response_text(text)
+
+    try:
+        return json.loads(clean)
+    except Exception:
+        pass
+
+    start = clean.find("{")
+    end = clean.rfind("}")
+
+    if start >= 0 and end > start:
+        candidate = clean[start:end + 1]
+        return json.loads(candidate)
+
+    raise ValueError("Could not parse translation JSON.")
+
+
+def split_translation_batches(fields_to_translate, max_chars=2800):
+    batches = []
+    current = {}
+    current_size = 0
+
+    for key, value in fields_to_translate.items():
+        text = safe_text(value)
+        item_size = len(key) + len(text)
+
+        if current and current_size + item_size > max_chars:
+            batches.append(current)
+            current = {}
+            current_size = 0
+
+        current[key] = text
+        current_size += item_size
+
+    if current:
+        batches.append(current)
+
+    return batches
+
+
+def call_openai_translation_batch(fields_batch, target_language):
     api_key = os.getenv("OPENAI_API_KEY", "").strip()
 
     if not api_key:
-        print("OPENAI_API_KEY not found. Public content translation skipped.")
-        return {}
+        message = "OPENAI_API_KEY not found. Public content translation cannot run."
+        if OPENAI_TRANSLATION_REQUIRED:
+            raise RuntimeError(message)
 
-    if not fields_to_translate:
+        print(message)
         return {}
 
     instructions = (
@@ -435,14 +516,14 @@ def translate_public_content_with_openai(fields_to_translate, target_language):
 
     user_payload = {
         "target_language": target_language,
-        "fields": fields_to_translate,
+        "fields": fields_batch,
     }
 
     request_body = {
         "model": OPENAI_TRANSLATION_MODEL,
         "instructions": instructions,
         "input": json.dumps(user_payload, ensure_ascii=False),
-        "max_output_tokens": 4000,
+        "max_output_tokens": 6000,
         "store": False,
     }
 
@@ -457,53 +538,102 @@ def translate_public_content_with_openai(fields_to_translate, target_language):
     )
 
     try:
-        with urllib.request.urlopen(request, timeout=45) as response:
+        with urllib.request.urlopen(request, timeout=60) as response:
             raw = response.read().decode("utf-8")
             response_json = json.loads(raw)
+
     except urllib.error.HTTPError as exc:
         error_body = exc.read().decode("utf-8", errors="replace")
-        print(f"OpenAI translation HTTP error: {exc.code} {error_body}")
+        message = f"OpenAI translation HTTP error: {exc.code} {error_body[:1000]}"
+        if OPENAI_TRANSLATION_REQUIRED:
+            raise RuntimeError(message)
+
+        print(message)
         return {}
+
     except Exception as exc:
-        print(f"OpenAI translation error: {exc}")
+        message = f"OpenAI translation error: {exc}"
+        if OPENAI_TRANSLATION_REQUIRED:
+            raise RuntimeError(message)
+
+        print(message)
         return {}
 
     text = extract_openai_response_text(response_json)
 
     if not text:
-        print("OpenAI translation returned empty text.")
+        message = "OpenAI translation returned empty text."
+        if OPENAI_TRANSLATION_REQUIRED:
+            raise RuntimeError(message)
+
+        print(message)
         return {}
 
     try:
-        translated = json.loads(text)
+        translated = parse_translation_json(text)
     except Exception as exc:
-        print(f"OpenAI translation JSON parse error: {exc}")
-        print(text[:500])
+        message = f"OpenAI translation JSON parse error: {exc}. Raw text: {text[:1000]}"
+        if OPENAI_TRANSLATION_REQUIRED:
+            raise RuntimeError(message)
+
+        print(message)
         return {}
 
     if not isinstance(translated, dict):
-        print("OpenAI translation result was not a JSON object.")
+        message = "OpenAI translation result was not a JSON object."
+        if OPENAI_TRANSLATION_REQUIRED:
+            raise RuntimeError(message)
+
+        print(message)
         return {}
 
+    missing_keys = [key for key in fields_batch.keys() if key not in translated]
+
+    if missing_keys:
+        message = f"OpenAI translation missing keys: {missing_keys}"
+        if OPENAI_TRANSLATION_REQUIRED:
+            raise RuntimeError(message)
+
+        print(message)
+
     cleaned = {}
-    for key, original_value in fields_to_translate.items():
-        translated_value = translated.get(key)
 
-        if translated_value is None:
-            continue
-
+    for key, original_value in fields_batch.items():
+        translated_value = translated.get(key, original_value)
         translated_text = safe_text(translated_value)
 
-        if translated_text:
-            cleaned[key] = translated_text
-        else:
-            cleaned[key] = original_value
+        cleaned[key] = translated_text if translated_text else original_value
 
     return cleaned
 
 
+def translate_public_content_with_openai(fields_to_translate, target_language):
+    if not fields_to_translate:
+        return {}
+
+    translated_all = {}
+
+    batches = split_translation_batches(fields_to_translate)
+
+    print(
+        f"Translating {len(fields_to_translate)} public fields into {target_language} "
+        f"using {OPENAI_TRANSLATION_MODEL} in {len(batches)} batch(es)."
+    )
+
+    for index, batch in enumerate(batches, start=1):
+        print(f"Translation batch {index}/{len(batches)}: {list(batch.keys())}")
+
+        translated_batch = call_openai_translation_batch(batch, target_language)
+        translated_all.update(translated_batch)
+
+    return translated_all
+
+
 def translate_public_content(content_flat, target_language):
     translated_content = dict(content_flat)
+
+    if target_language == "English":
+        return translated_content
 
     fields_to_translate = {}
 
@@ -521,9 +651,13 @@ def translate_public_content(content_flat, target_language):
         fields_to_translate[field_name] = text
 
     if not fields_to_translate:
+        print(f"No public fields to translate for {target_language}.")
         return translated_content
 
-    translated_fields = translate_public_content_with_openai(fields_to_translate, target_language)
+    translated_fields = translate_public_content_with_openai(
+        fields_to_translate,
+        target_language
+    )
 
     for field_name, translated_value in translated_fields.items():
         if field_name in fields_to_translate and has_value(translated_value):
@@ -727,6 +861,10 @@ def build_places_from_numbered_fields(content_flat, prefix, link_suffix, propert
         rating = safe_text(content_flat.get(f"{prefix}_{index}_rating"))
         category = safe_text(content_flat.get(f"{prefix}_{index}_category"))
         address = safe_text(content_flat.get(f"{prefix}_{index}_address"))
+        description = first_non_empty(
+            content_flat.get(f"{prefix}_{index}_description"),
+            content_flat.get(f"{prefix}_{index}_notes"),
+        )
 
         if not name:
             continue
@@ -741,6 +879,7 @@ def build_places_from_numbered_fields(content_flat, prefix, link_suffix, propert
             "rating": rating,
             "category": category,
             "address": address,
+            "description": description,
         })
 
     return places
