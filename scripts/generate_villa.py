@@ -2,6 +2,8 @@ import sys
 import json
 import os
 import re
+import socket
+import time
 from html import escape
 from urllib.parse import quote_plus
 import urllib.request
@@ -477,7 +479,7 @@ def parse_translation_json(text):
     return parsed
 
 
-def split_translation_batches(fields_to_translate, max_chars=1400):
+def split_translation_batches(fields_to_translate, max_chars=900):
     batches = []
     current = {}
     current_size = 0
@@ -544,22 +546,43 @@ def call_openai_translation_batch(fields_batch, target_language):
         method="POST",
     )
 
-    try:
-        with urllib.request.urlopen(request, timeout=60) as response:
-            raw = response.read().decode("utf-8")
-            response_json = json.loads(raw)
+    retry_delays = [5, 10, 20]
+    response_json = None
 
-    except urllib.error.HTTPError as exc:
-        error_body = exc.read().decode("utf-8", errors="replace")
-        message = f"OpenAI translation HTTP error: {exc.code} {error_body[:1000]}"
-        if OPENAI_TRANSLATION_REQUIRED:
-            raise RuntimeError(message)
+    for attempt in range(1, 4):
+        try:
+            with urllib.request.urlopen(request, timeout=180) as response:
+                raw = response.read().decode("utf-8")
+                response_json = json.loads(raw)
+            break
+        except urllib.error.HTTPError as exc:
+            error_body = exc.read().decode("utf-8", errors="replace")
+            message = f"OpenAI translation HTTP error: {exc.code} {error_body[:1000]}"
+            if OPENAI_TRANSLATION_REQUIRED:
+                raise RuntimeError(message)
 
-        print(message)
-        return {}
+            print(message)
+            return {}
+        except (TimeoutError, socket.timeout, urllib.error.URLError) as exc:
+            if attempt == 3:
+                message = f"OpenAI translation failed after 3 attempts: {exc}"
+                if OPENAI_TRANSLATION_REQUIRED:
+                    raise RuntimeError(message)
 
-    except Exception as exc:
-        message = f"OpenAI translation error: {exc}"
+                print(message)
+                return {}
+
+            time.sleep(retry_delays[attempt - 1])
+        except Exception as exc:
+            message = f"OpenAI translation error: {exc}"
+            if OPENAI_TRANSLATION_REQUIRED:
+                raise RuntimeError(message)
+
+            print(message)
+            return {}
+
+    if response_json is None:
+        message = "OpenAI translation failed after 3 attempts: Unknown error"
         if OPENAI_TRANSLATION_REQUIRED:
             raise RuntimeError(message)
 
