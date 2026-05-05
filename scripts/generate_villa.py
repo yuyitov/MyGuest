@@ -92,6 +92,9 @@ STATIC_TEMPLATE_TRANSLATIONS = {
         "Emergency": "Emergencia",
         "Back to Menu": "Volver al Menú",
         "Map": "Mapa",
+        "Address": "Dirección",
+        "Final Notes": "Notas Finales",
+        "Private Access Details": "Detalles Privados de Acceso",
         "Directions": "Indicaciones",
         "Transport": "Transporte",
         "Access": "Acceso",
@@ -148,6 +151,9 @@ STATIC_TEMPLATE_TRANSLATIONS = {
         "Emergency": "Urgence",
         "Back to Menu": "Retour au Menu",
         "Map": "Carte",
+        "Address": "Adresse",
+        "Final Notes": "Notes finales",
+        "Private Access Details": "Informations d’accès privées",
         "Directions": "Itinéraire",
         "Transport": "Transport",
         "Access": "Accès",
@@ -1103,11 +1109,13 @@ def build_editorial_image_block(content_flat, field_name, alt_text, photo_index,
     image_url = SHARED_IMAGES.get(field_name, SHARED_IMAGES["welcome"])
     return image_block(image_url, alt_text, arch=False)
 
-def build_final_notes_block(content_flat):
+def build_final_notes_block(content_flat, active_language):
     final_notes = html_multiline(content_flat.get("additional_notes"))
 
     if not final_notes:
         return ""
+
+    title = translated_label("Final Notes", active_language)
 
     return f'''
         <div class="info-row-item">
@@ -1119,13 +1127,13 @@ def build_final_notes_block(content_flat):
                 </svg>
             </div>
             <div>
-                <div class="info-row-title">Final Notes</div>
+                <div class="info-row-title">{escape(title)}</div>
                 <div class="info-text">{final_notes}</div>
             </div>
         </div>
     '''
 
-def build_directions_map_block(content_flat, ui, property_address=""):
+def build_directions_map_block(content_flat, ui, property_address="", active_language="English"):
     maps_url = safe_text(content_flat.get("google_maps_link"))
     address = safe_text(property_address)
 
@@ -1142,9 +1150,11 @@ def build_directions_map_block(content_flat, ui, property_address=""):
 
     address_html = ""
     if address:
+        address_title = translated_label("Address", active_language)
+
         address_html = f'''
             <div class="private-card">
-                <div class="private-card-title">Address</div>
+                <div class="private-card-title">{escape(address_title)}</div>
                 <div class="private-card-text">{html_multiline(address)}</div>
             </div>
         '''
@@ -1163,6 +1173,8 @@ def build_pet_friendly_text(content_flat, ui):
 
     return html_multiline(raw)
 
+def translated_label(label, active_language):
+    return STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get(label, label)
 
 def apply_static_template_translations(html, active_language):
     translations = STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {})
@@ -1268,14 +1280,14 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{PET_FRIENDLY}}": build_pet_friendly_text(content_flat, ui),
         "{{PET_RULES}}": html_multiline(content_flat.get("pet_rules")),
 
-        "{{DIRECTIONS_MAP_BLOCK}}": build_directions_map_block(content_flat, ui, property_address),
+        "{{DIRECTIONS_MAP_BLOCK}}": build_directions_map_block(content_flat, ui, property_address, active_language),
         "{{GOOGLE_MAPS_LINK}}": html_multiline(content_flat.get("google_maps_link")),
         "{{DIRECTIONS_TEXT}}": html_multiline(content_flat.get("directions_text")),
         "{{TRANSPORT_OPTIONS}}": html_multiline(content_flat.get("transport_options")),
 
         "{{THINGS_TO_KNOW}}": html_multiline(content_flat.get("things_to_know")),
         "{{BEFORE_YOU_LEAVE}}": html_multiline(content_flat.get("before_you_leave")),
-        "{{FINAL_NOTES_BLOCK}}": build_final_notes_block(content_flat),
+        "{{FINAL_NOTES_BLOCK}}": build_final_notes_block(content_flat, active_language), 
         "{{PLACES_TO_EAT}}": build_places_to_eat_html(content_flat, property_address, active_language),
         "{{PLACES_TO_DRINK}}": build_places_to_drink_html(content_flat, property_address, active_language),
         "{{THINGS_TO_DO}}": build_things_to_do_html(content_flat, property_address, active_language),
@@ -1293,7 +1305,7 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{PRIVATE_LABEL_WIFI_NETWORK}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("WiFi network", "WiFi network")),
         "{{PRIVATE_LABEL_WIFI_PASSWORD}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("WiFi password", "WiFi password")),
         "{{PRIVATE_LABEL_DOOR_CODE}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Door code", "Door code")),
-        "{{PRIVATE_LABEL_ACCESS_NOTES}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Access notes", "Access notes")),
+        "{{PRIVATE_LABEL_ACCESS_NOTES}}": escape(translated_label("Private Access Details", active_language)),
         "{{PRIVATE_LABEL_HOST_PHONE}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Host phone", "Host phone")),
     }
 
