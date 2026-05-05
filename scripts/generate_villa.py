@@ -95,6 +95,7 @@ STATIC_TEMPLATE_TRANSLATIONS = {
         "Address": "Dirección",
         "Final Notes": "Notas Finales",
         "Private Access Details": "Detalles Privados de Acceso",
+        "Representative image": "Imagen representativa",
         "Directions": "Indicaciones",
         "Transport": "Transporte",
         "Access": "Acceso",
@@ -1427,7 +1428,7 @@ def render_html_for_language(payload, active_language, output_filename):
        
         "{{PRIVATE_LABEL_ACCESS_NOTES}}": escape(translated_label("Private Access Details", active_language)),
         "{{PRIVATE_LABEL_HOST_PHONE}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Host phone", "Host phone")),
-        "Representative image": "Imagen representativa",
+       
     }
 
     for placeholder, value in replacements.items():
