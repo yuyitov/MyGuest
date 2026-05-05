@@ -1496,16 +1496,18 @@
                             <div class="info-text" data-dynamic>{{THINGS_TO_KNOW}}</div>
                         </div>
                     </div>
-
-                    <div class="info-row-item" data-field-block>
-                        <div class="info-row-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"></rect><path d="M9 9h6"></path><path d="M9 13h6"></path><path d="M9 17h3"></path></svg>
-                        </div>
-                        <div>
-                            <div class="info-row-title">Before You Leave</div>
-                            <div class="info-text" data-dynamic>{{BEFORE_YOU_LEAVE}}</div>
-                        </div>
+                <div class="info-row-item" data-field-block>
+                    <div class="info-row-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"></rect><path d="M9 9h6"></path><path d="M9 13h6"></path><path d="M9 17h3"></path></svg>
                     </div>
+                    <div>
+                        <div class="info-row-title">Before You Leave</div>
+                        <div class="info-text" data-dynamic>{{BEFORE_YOU_LEAVE}}</div>
+                    </div>
+                </div>
+
+{{FINAL_NOTES_BLOCK}}
+                    
                 </div>
             </div>
 
@@ -1751,12 +1753,11 @@
 
                     addPrivateCard(wifiContainer, "{{PRIVATE_LABEL_WIFI_NETWORK}}", d.wifi_ssid);
                     addPrivateCard(wifiContainer, "{{PRIVATE_LABEL_WIFI_PASSWORD}}", d.wifi_password);
-
-                    addPrivateCard(accessContainer, "{{PRIVATE_LABEL_DOOR_CODE}}", d.door_code);
-                    addPrivateCard(accessContainer, "{{PRIVATE_LABEL_ACCESS_NOTES}}", d.house_access_private);
-                   
-                    addPrivateCard(contactContainer, "{{PRIVATE_LABEL_HOST_PHONE}}", d.host_phone);
                     
+                    addPrivateCard(accessContainer, "{{PRIVATE_LABEL_ACCESS_NOTES}}", d.house_access_private);
+                    
+                    addPrivateCard(contactContainer, "{{PRIVATE_LABEL_HOST_PHONE}}", d.host_phone);
+                                        
                 })
                 .catch(function () {
                     // Private details stay hidden if token is invalid or Worker is unavailable.
