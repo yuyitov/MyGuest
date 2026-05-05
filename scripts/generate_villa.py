@@ -252,6 +252,7 @@ CONTENT_FIELD_MAP = {
     "house_rules": "rules_info",
     "things_to_know": "rules_info",
     "before_you_leave": "rules_info",
+    "additional_notes": "rules_info",
     "places_to_eat": "recommendations",
     "places_to_drink": "recommendations",
     "things_to_do": "recommendations",
@@ -319,6 +320,7 @@ TRANSLATABLE_PUBLIC_FIELDS = [
     "pet_rules",
     "things_to_know",
     "before_you_leave",
+    "additional_notes",
     "emergency_contacts",
     "places_to_eat",
     "places_to_drink",
@@ -1101,6 +1103,27 @@ def build_editorial_image_block(content_flat, field_name, alt_text, photo_index,
     image_url = SHARED_IMAGES.get(field_name, SHARED_IMAGES["welcome"])
     return image_block(image_url, alt_text, arch=False)
 
+def build_final_notes_block(content_flat):
+    final_notes = html_multiline(content_flat.get("additional_notes"))
+
+    if not final_notes:
+        return ""
+
+    return f'''
+        <div class="info-row-item">
+            <div class="info-row-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 5h16"></path>
+                    <path d="M4 12h16"></path>
+                    <path d="M4 19h10"></path>
+                </svg>
+            </div>
+            <div>
+                <div class="info-row-title">Final Notes</div>
+                <div class="info-text">{final_notes}</div>
+            </div>
+        </div>
+    '''
 
 def build_directions_map_block(content_flat, ui, property_address=""):
     maps_url = safe_text(content_flat.get("google_maps_link"))
@@ -1252,7 +1275,7 @@ def render_html_for_language(payload, active_language, output_filename):
 
         "{{THINGS_TO_KNOW}}": html_multiline(content_flat.get("things_to_know")),
         "{{BEFORE_YOU_LEAVE}}": html_multiline(content_flat.get("before_you_leave")),
-
+        "{{FINAL_NOTES_BLOCK}}": build_final_notes_block(content_flat),
         "{{PLACES_TO_EAT}}": build_places_to_eat_html(content_flat, property_address, active_language),
         "{{PLACES_TO_DRINK}}": build_places_to_drink_html(content_flat, property_address, active_language),
         "{{THINGS_TO_DO}}": build_things_to_do_html(content_flat, property_address, active_language),
