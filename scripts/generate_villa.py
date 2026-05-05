@@ -1102,16 +1102,31 @@ def build_editorial_image_block(content_flat, field_name, alt_text, photo_index,
     return image_block(image_url, alt_text, arch=False)
 
 
-def build_directions_map_block(content_flat, ui):
+def build_directions_map_block(content_flat, ui, property_address=""):
     maps_url = safe_text(content_flat.get("google_maps_link"))
-    if not maps_url:
+    address = safe_text(property_address)
+
+    if not maps_url and not address:
         return ""
 
-    return f'''
-        <a href="{escape(maps_url)}" target="_blank" rel="noopener noreferrer">
-            {escape(ui["open_maps"])}
-        </a>
-    '''
+    maps_html = ""
+    if maps_url:
+        maps_html = f'''
+            <a href="{escape(maps_url)}" target="_blank" rel="noopener noreferrer">
+                {escape(ui["open_maps"])}
+            </a>
+        '''
+
+    address_html = ""
+    if address:
+        address_html = f'''
+            <div class="private-card">
+                <div class="private-card-title">Address</div>
+                <div class="private-card-text">{html_multiline(address)}</div>
+            </div>
+        '''
+
+    return f"{maps_html}{address_html}"
 
 
 def build_pet_friendly_text(content_flat, ui):
@@ -1230,7 +1245,7 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{PET_FRIENDLY}}": build_pet_friendly_text(content_flat, ui),
         "{{PET_RULES}}": html_multiline(content_flat.get("pet_rules")),
 
-        "{{DIRECTIONS_MAP_BLOCK}}": build_directions_map_block(content_flat, ui),
+        "{{DIRECTIONS_MAP_BLOCK}}": build_directions_map_block(content_flat, ui, property_address),
         "{{GOOGLE_MAPS_LINK}}": html_multiline(content_flat.get("google_maps_link")),
         "{{DIRECTIONS_TEXT}}": html_multiline(content_flat.get("directions_text")),
         "{{TRANSPORT_OPTIONS}}": html_multiline(content_flat.get("transport_options")),
