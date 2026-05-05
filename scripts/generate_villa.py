@@ -152,6 +152,7 @@ STATIC_TEMPLATE_TRANSLATIONS = {
         "Back to Menu": "Retour au Menu",
         "Map": "Carte",
         "Address": "Adresse",
+        "Representative image": "Image représentative",
         "Final Notes": "Notes finales",
         "Private Access Details": "Informations d’accès privées",
         "Directions": "Itinéraire",
@@ -853,6 +854,58 @@ def build_welcome_actions_block(content_flat):
 
     return "\n".join(actions)
 
+def normalize_instagram_url(value):
+    clean = safe_text(value)
+
+    if not clean:
+        return ""
+
+    if clean.startswith(("http://", "https://")):
+        return clean
+
+    lowered = clean.lower()
+
+    if lowered.startswith("instagram.com/") or lowered.startswith("www.instagram.com/"):
+        return "https://" + clean
+
+    handle = clean.strip()
+
+    if handle.startswith("@"):
+        handle = handle[1:]
+
+    handle = handle.strip().strip("/")
+    handle = re.sub(r"[^A-Za-z0-9._]", "", handle)
+
+    if not handle:
+        return ""
+
+    return f"https://instagram.com/{handle}"
+
+
+def build_instagram_link_block(value):
+    raw = safe_text(value)
+    url = normalize_instagram_url(raw)
+
+    if not raw:
+        return ""
+
+    if raw.startswith(("http://", "https://")):
+        display_text = "Instagram"
+    elif raw.lower().startswith(("instagram.com/", "www.instagram.com/")):
+        display_text = "Instagram"
+    elif raw.startswith("@"):
+        display_text = raw
+    else:
+        display_text = "@" + re.sub(r"[^A-Za-z0-9._]", "", raw.strip().strip("/"))
+
+    if not url:
+        return html_multiline(raw)
+
+    return f'''
+        <a href="{escape(url)}" target="_blank" rel="noopener noreferrer">
+            {escape(display_text)}
+        </a>
+    '''
 
 def first_non_empty(*values):
     for value in values:
@@ -881,6 +934,50 @@ def ensure_link_or_search(url, name, property_address=""):
             return "https://" + clean_url
     return google_maps_search_url(name, property_address)
 
+def is_generic_maps_link(url):
+    clean = safe_text(url).strip().lower().rstrip("/")
+
+    if not clean:
+        return True
+
+    generic_links = {
+        "https://google.com/maps",
+        "https://www.google.com/maps",
+        "https://maps.google.com",
+        "https://maps.google.com/maps",
+        "https://maps.app.goo.gl",
+    }
+
+    if clean in generic_links:
+        return True
+
+    if "google.com/maps" in clean:
+        has_specific_marker = any(marker in clean for marker in [
+            "/place/",
+            "/search/",
+            "?q=",
+            "query=",
+            "@",
+            "cid=",
+            "ftid=",
+            "destination="
+        ])
+        return not has_specific_marker
+
+    return False
+
+
+def build_property_maps_url(raw_url, villa_name, property_address=""):
+    clean_url = safe_text(raw_url)
+
+    if clean_url:
+        if not clean_url.startswith(("http://", "https://")) and "." in clean_url and " " not in clean_url:
+            clean_url = "https://" + clean_url
+
+        if not is_generic_maps_link(clean_url):
+            return clean_url
+
+    return google_maps_search_url(villa_name, property_address)
 
 def build_places_from_numbered_fields(content_flat, prefix, link_suffix, property_address="", max_items=5):
     places = []
@@ -997,8 +1094,15 @@ def recommendation_action_link(kind, label, url):
         </a>
     '''
 
-
-def build_recommendation_cards(places, default_image_url, default_meta, primary_action_label, call_label, image_pool=None):
+def build_recommendation_cards(
+    places,
+    default_image_url,
+    default_meta,
+    primary_action_label,
+    call_label,
+    image_pool=None,
+    image_disclaimer_label=""
+):
     if not places:
         return ""
 
@@ -1009,8 +1113,11 @@ def build_recommendation_cards(places, default_image_url, default_meta, primary_
         if not name:
             continue
 
+        place_image = safe_text(place.get("image"))
         fallback_image_url = pick_recommendation_image(default_image_url, image_pool, index)
-        image_url = safe_text(place.get("image")) or fallback_image_url
+        image_url = place_image or fallback_image_url
+        show_disclaimer = bool(image_disclaimer_label and not place_image)
+
         rating = safe_text(place.get("rating"))
         rating_display = escape(rating) if rating else "★★★★★"
         category = safe_text(place.get("category"))
@@ -1032,10 +1139,17 @@ def build_recommendation_cards(places, default_image_url, default_meta, primary_
         actions = recommendation_action_link("maps", primary_action_label, place.get("link"))
         actions += recommendation_action_link("phone", call_label, place.get("phone"))
 
+        disclaimer_html = ""
+        if show_disclaimer:
+            disclaimer_html = f'''
+                <span class="image-disclaimer">{escape(image_disclaimer_label)}</span>
+            '''
+
         cards.append(f'''
             <article class="recommendation-listing-card">
                 <div class="recommendation-listing-image">
                     {image_block(image_url, name, arch=False)}
+                    {disclaimer_html}
                 </div>
                 <div class="recommendation-listing-body">
                     <div class="recommendation-listing-topline">
@@ -1053,7 +1167,6 @@ def build_recommendation_cards(places, default_image_url, default_meta, primary_
 
     return "\n".join(cards)
 
-
 def build_places_to_eat_html(content_flat, property_address, active_language):
     ui = UI_STRINGS.get(active_language, UI_STRINGS["English"])
     places = get_restaurant_places(content_flat, property_address, active_language)
@@ -1064,8 +1177,8 @@ def build_places_to_eat_html(content_flat, property_address, active_language):
         ui["google_maps"],
         ui["call"],
         RECOMMENDATION_IMAGE_POOLS["places_to_eat"],
+        translated_label("Representative image", active_language),
     )
-
 
 def build_places_to_drink_html(content_flat, property_address, active_language):
     ui = UI_STRINGS.get(active_language, UI_STRINGS["English"])
@@ -1077,7 +1190,9 @@ def build_places_to_drink_html(content_flat, property_address, active_language):
         ui["google_maps"],
         ui["call"],
         RECOMMENDATION_IMAGE_POOLS["places_to_drink"],
+        translated_label("Representative image", active_language),
     )
+
 
 
 def build_things_to_do_html(content_flat, property_address, active_language):
@@ -1118,7 +1233,7 @@ def build_final_notes_block(content_flat, active_language):
     title = translated_label("Final Notes", active_language)
 
     return f'''
-        <div class="info-row-item">
+        <div class="info-row-item" data-field-block>
             <div class="info-row-icon">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M4 5h16"></path>
@@ -1133,8 +1248,13 @@ def build_final_notes_block(content_flat, active_language):
         </div>
     '''
 
-def build_directions_map_block(content_flat, ui, property_address="", active_language="English"):
-    maps_url = safe_text(content_flat.get("google_maps_link"))
+def build_directions_map_block(content_flat, ui, villa_name="", property_address="", active_language="English"):
+    maps_url = build_property_maps_url(
+        content_flat.get("google_maps_link"),
+        villa_name,
+        property_address
+    )
+
     address = safe_text(property_address)
 
     if not maps_url and not address:
@@ -1280,7 +1400,7 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{PET_FRIENDLY}}": build_pet_friendly_text(content_flat, ui),
         "{{PET_RULES}}": html_multiline(content_flat.get("pet_rules")),
 
-        "{{DIRECTIONS_MAP_BLOCK}}": build_directions_map_block(content_flat, ui, property_address, active_language),
+        "{{DIRECTIONS_MAP_BLOCK}}": build_directions_map_block(content_flat, ui, villa_name, property_address, active_language),
         "{{GOOGLE_MAPS_LINK}}": html_multiline(content_flat.get("google_maps_link")),
         "{{DIRECTIONS_TEXT}}": html_multiline(content_flat.get("directions_text")),
         "{{TRANSPORT_OPTIONS}}": html_multiline(content_flat.get("transport_options")),
@@ -1300,13 +1420,14 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{LOCAL_DIRECTORY}}": html_multiline(content_flat.get("local_directory")),
         "{{AIRBNB_REVIEW_LINK}}": escape(safe_text(content_flat.get("airbnb_review_link"))),
         "{{HOST_EMAIL}}": html_multiline(content_flat.get("host_email")),
-        "{{INSTAGRAM_HANDLE}}": html_multiline(content_flat.get("instagram_handle")),
+        "{{INSTAGRAM_HANDLE}}": build_instagram_link_block(content_flat.get("instagram_handle")),
 
         "{{PRIVATE_LABEL_WIFI_NETWORK}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("WiFi network", "WiFi network")),
         "{{PRIVATE_LABEL_WIFI_PASSWORD}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("WiFi password", "WiFi password")),
-        "{{PRIVATE_LABEL_DOOR_CODE}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Door code", "Door code")),
+       
         "{{PRIVATE_LABEL_ACCESS_NOTES}}": escape(translated_label("Private Access Details", active_language)),
         "{{PRIVATE_LABEL_HOST_PHONE}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("Host phone", "Host phone")),
+        "Representative image": "Imagen representativa",
     }
 
     for placeholder, value in replacements.items():
