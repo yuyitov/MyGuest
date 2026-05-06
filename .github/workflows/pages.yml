@@ -42,3 +42,34 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Notify Worker (send delivery email)
+        if: success()
+        env:
+          NOTIFY_SECRET: ${{ secrets.NOTIFY_SECRET }}
+          WORKER_URL: ${{ vars.WORKER_URL }}
+        run: |
+          SLUG=$(git log -1 --pretty=%s | sed -n 's/^Generate villa page for //p')
+
+          if [ -z "${SLUG}" ]; then
+            echo "Commit is not a generator commit — skipping notify"
+            exit 0
+          fi
+
+          if [ -z "${WORKER_URL}" ]; then
+            echo "Error: WORKER_URL not configured for generator commit" >&2
+            exit 1
+          fi
+
+          if [ -z "${NOTIFY_SECRET}" ]; then
+            echo "Error: NOTIFY_SECRET not configured for generator commit" >&2
+            exit 1
+          fi
+
+          echo "Notifying Worker for slug: ${SLUG}"
+          curl --fail-with-body --silent --show-error --max-time 30 \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${NOTIFY_SECRET}" \
+            -d "{\"slug\":\"${SLUG}\"}" \
+            "${WORKER_URL}/notify"
