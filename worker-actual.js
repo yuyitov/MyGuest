@@ -118,6 +118,7 @@ async function handleTallyWebhook(request, env) {
 
   // ─── NUEVO: Single-use order_id guard ────────────────────────────────────
   const incomingOrderId = cleanValue(getAnswer(normalized.answers, 'order_id')) || '';
+  console.log('order_id guard:', { incomingOrderId, submission_id: normalized.submission_id });
   let reservedOrderRecord = null;
 
   if (incomingOrderId) {
@@ -467,6 +468,15 @@ function normalizeTallyPayload(payload) {
 
   if (payload?.data?.answers && typeof payload.data.answers === 'object' && !Array.isArray(payload.data.answers)) {
     copyAnswerObject(answers, payload.data.answers);
+  }
+
+  // Tally envía hidden fields pre-rellenados (vía URL params) en hiddenFields separado de fields
+  if (payload?.data?.hiddenFields && typeof payload.data.hiddenFields === 'object' && !Array.isArray(payload.data.hiddenFields)) {
+    copyAnswerObject(answers, payload.data.hiddenFields);
+  }
+
+  if (payload?.hiddenFields && typeof payload.hiddenFields === 'object' && !Array.isArray(payload.hiddenFields)) {
+    copyAnswerObject(answers, payload.hiddenFields);
   }
 
   const fields =
