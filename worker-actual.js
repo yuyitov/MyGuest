@@ -115,6 +115,62 @@ async function handleTallyWebhook(request, env) {
   }
 
   const now = new Date().toISOString();
+
+  // ─── NUEVO: Single-use order_id guard ────────────────────────────────────
+  const incomingOrderId = cleanValue(getAnswer(normalized.answers, 'order_id')) || '';
+  let reservedOrderRecord = null;
+
+  if (incomingOrderId) {
+    const existingOrder = await env.MYGUEST_KV.get(`order:${incomingOrderId}`, { type: 'json' }).catch(() => null);
+
+    // order_id presente pero no existe en KV → inválido/inventado
+    if (!existingOrder) {
+      await env.MYGUEST_KV.put(
+        `invalid_order:${incomingOrderId}:${normalized.submission_id}`,
+        JSON.stringify({ order_id: incomingOrderId, submission_id: normalized.submission_id, attempted_at: now }),
+        { expirationTtl: 2592000 }
+      ).catch(() => {});
+      return jsonResponse({ ok: false, status: 'invalid_order_id', order_id: incomingOrderId }, 403);
+    }
+
+    // Verificar coincidencia de email si el form lo incluye — con trazabilidad en KV
+    const formEmail = (cleanValue(getAnswer(normalized.answers, 'customer_email')) || '').toLowerCase().trim();
+    const orderEmail = (existingOrder.customer_email || existingOrder.email || '').toLowerCase().trim();
+    if (formEmail && orderEmail && formEmail !== orderEmail) {
+      await env.MYGUEST_KV.put(
+        `email_mismatch:${incomingOrderId}:${normalized.submission_id}`,
+        JSON.stringify({
+          order_id: incomingOrderId,
+          submission_id: normalized.submission_id,
+          form_email: formEmail,
+          order_email: orderEmail,
+          attempted_at: now
+        }),
+        { expirationTtl: 2592000 }
+      ).catch(() => {});
+      return jsonResponse({ ok: false, status: 'order_email_mismatch', order_id: incomingOrderId }, 403);
+    }
+
+    // Allowlist explícita — solo estos estados permiten generar book
+    const allowedStatuses = ['paid', 'form_sent', 'failed_dispatch'];
+    if (!allowedStatuses.includes(existingOrder.status)) {
+      await env.MYGUEST_KV.put(
+        `invalid_order_status:${incomingOrderId}:${normalized.submission_id}`,
+        JSON.stringify({
+          order_id: incomingOrderId,
+          submission_id: normalized.submission_id,
+          blocked_by_status: existingOrder.status,
+          attempted_at: now
+        }),
+        { expirationTtl: 2592000 }
+      ).catch(() => {});
+      return jsonResponse({ ok: false, status: 'invalid_order_status', order_id: incomingOrderId }, 409);
+    }
+
+    reservedOrderRecord = existingOrder;
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
   const indexKey = `subm-${normalized.submission_id}`;
 
   let index = await env.MYGUEST_KV.get(indexKey, { type: 'json' });
@@ -203,6 +259,22 @@ async function handleTallyWebhook(request, env) {
     now
   });
 
+  // Reservar order ANTES del dispatch para evitar doble generación (anti-race)
+  if (incomingOrderId && reservedOrderRecord) {
+    try {
+      await env.MYGUEST_KV.put(`order:${incomingOrderId}`, JSON.stringify({
+        ...reservedOrderRecord,
+        status: 'submitted',
+        submission_id: normalized.submission_id,
+        slug,
+        submitted_at: now
+      }));
+    } catch (err) {
+      console.error('order reservation failed:', safeError(err));
+      throw new Error('Failed to reserve order — aborting dispatch');
+    }
+  }
+
   try {
     await dispatchToGitHub(publicPayload, env);
 
@@ -210,11 +282,31 @@ async function handleTallyWebhook(request, env) {
     index.last_error = null;
     index.last_updated_at = now;
     await env.MYGUEST_KV.put(indexKey, JSON.stringify(index));
+
+    // Marcar order como generation_dispatched (no-fatal)
+    if (incomingOrderId) {
+      const cur = await env.MYGUEST_KV.get(`order:${incomingOrderId}`, { type: 'json' }).catch(() => null);
+      if (cur) {
+        await env.MYGUEST_KV.put(`order:${incomingOrderId}`, JSON.stringify({
+          ...cur, status: 'generation_dispatched', dispatched_at: now
+        })).catch(err => console.error('order dispatch status update failed (non-fatal):', safeError(err)));
+      }
+    }
   } catch (error) {
     index.status = 'failed_dispatch';
     index.last_error = error.message;
     index.last_updated_at = now;
     await env.MYGUEST_KV.put(indexKey, JSON.stringify(index));
+
+    // Revertir order a failed_dispatch para permitir reintento
+    if (incomingOrderId) {
+      const cur = await env.MYGUEST_KV.get(`order:${incomingOrderId}`, { type: 'json' }).catch(() => null);
+      if (cur) {
+        await env.MYGUEST_KV.put(`order:${incomingOrderId}`, JSON.stringify({
+          ...cur, status: 'failed_dispatch', last_error: error.message, last_updated_at: now
+        })).catch(() => {});
+      }
+    }
 
     throw error;
   }
@@ -241,12 +333,8 @@ async function handleTallyWebhook(request, env) {
 
   // ─── NUEVO 16.1-B: delivery record (para email al completar) ─────────────
   let customerEmail = cleanValue(getAnswer(normalized.answers, 'customer_email')) || '';
-  if (!customerEmail) {
-    const orderId = cleanValue(getAnswer(normalized.answers, 'order_id')) || '';
-    if (orderId) {
-      const orderRecord = await env.MYGUEST_KV.get(`order:${orderId}`, { type: 'json' }).catch(() => null);
-      customerEmail = orderRecord?.customer_email || orderRecord?.email || '';
-    }
+  if (!customerEmail && reservedOrderRecord) {
+    customerEmail = reservedOrderRecord.customer_email || reservedOrderRecord.email || '';
   }
   const langMap = { 'English': 'en', 'Español': 'es', 'Français': 'fr' };
   const bookLang = langMap[cleanValue(getAnswer(normalized.answers, 'primary_language'))] || 'en';
@@ -254,6 +342,7 @@ async function handleTallyWebhook(request, env) {
   const publicBase = (cleanValue(env.PUBLIC_BOOK_BASE_URL) || 'https://yuyitov.github.io/MyGuest').replace(/\/+$/, '');
   const deliveryRecord = {
     slug,
+    order_id: incomingOrderId || null,
     customer_email: customerEmail,
     public_url: buildPublicBookUrl(env, slug, bookLang),
     pdf_url: `${publicBase}/villas/${encodeURIComponent(slug)}/${pdfFilename}`,
@@ -1641,6 +1730,18 @@ async function handleNotify(request, env) {
     status: 'delivered',
     notified_at: new Date().toISOString()
   })).catch(() => {});
+
+  // Actualizar order a delivered (no-fatal)
+  if (delivery.order_id) {
+    const orderRecord = await env.MYGUEST_KV.get(`order:${delivery.order_id}`, { type: 'json' }).catch(() => null);
+    if (orderRecord) {
+      await env.MYGUEST_KV.put(`order:${delivery.order_id}`, JSON.stringify({
+        ...orderRecord,
+        status: 'delivered',
+        delivered_at: new Date().toISOString()
+      })).catch(err => console.error('order delivered status update failed (non-fatal):', safeError(err)));
+    }
+  }
 
   return jsonResponse({ ok: true, slug, emailSent: true });
 }
