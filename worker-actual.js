@@ -118,7 +118,6 @@ async function handleTallyWebhook(request, env) {
 
   // ─── NUEVO: Single-use order_id guard ────────────────────────────────────
   const incomingOrderId = cleanValue(getAnswer(normalized.answers, 'order_id')) || '';
-  console.log('order_id guard:', { incomingOrderId, submission_id: normalized.submission_id });
   let reservedOrderRecord = null;
 
   if (incomingOrderId) {
