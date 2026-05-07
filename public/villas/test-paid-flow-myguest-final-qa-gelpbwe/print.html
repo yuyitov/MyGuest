@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyGuest Print — Test Paid Flow MyGuest Final QA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: letter;
+            margin: 1.2cm;
+        }
+
+        :root {
+            --primary: #000000;
+            --accent: #A0A0A0;
+            --bg: #ffffff;
+            --text: #1A1A1A;
+            --border: rgba(0,0,0,0.10);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            background: white;
+            margin: 0;
+            font-size: 11pt;
+            line-height: 1.55;
+        }
+
+        .page {
+            width: 100%;
+        }
+
+        .header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 14px;
+            margin-bottom: 20px;
+        }
+
+        .eyebrow {
+            font-size: 10pt;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28pt;
+            line-height: 1;
+            color: var(--primary);
+            margin: 0 0 8px 0;
+        }
+
+        .subtext {
+            font-size: 11pt;
+            color: #555;
+        }
+
+        .language-line {
+            margin-top: 10px;
+            font-size: 10pt;
+            color: #666;
+        }
+
+        .section {
+            margin-bottom: 18px;
+            page-break-inside: avoid;
+        }
+
+        .section-title {
+            font-size: 10pt;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--accent);
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+
+        .paragraph {
+            margin: 0 0 8px 0;
+            white-space: pre-line;
+        }
+
+        .info-row {
+            margin: 0 0 8px 0;
+        }
+
+        .info-label {
+            font-weight: 700;
+        }
+
+        .footer {
+            margin-top: 28px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 9.5pt;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="header">
+            <div class="eyebrow">WELCOME</div>
+            <h1>Test Paid Flow MyGuest Final QA</h1>
+            <div class="subtext">123 Ocean Drive, Miami Beach, FL 33139, USA</div>
+            <div class="language-line">Primary language: English</div>
+        </header>
+
+        <section class="section"><h2 class="section-title">Arrival</h2><div class="info-row"><span class="info-label">Check-in:</span> 11:00 AM</div><div class="info-row"><span class="info-label">Check-out:</span> 1:00 PM</div><p class="paragraph">One parking space is available on-site. Additional street parking may be available nearby, depending on availability.</p></section>
+<section class="section"><h2 class="section-title">About the stay</h2><p class="paragraph">Welcome to Test Paid Flow MyGuest Final QA. We are happy to host you and hope you enjoy a relaxing and comfortable stay.</p><p class="paragraph">We are local hosts who enjoy sharing helpful recommendations so guests can feel at home during their stay.</p><p class="paragraph">High-speed WiFi, air conditioning, smart TV, fully equipped kitchen, coffee maker, towels, beach towels, hair dryer, iron, and basic toiletries.</p><div class="info-row"><span class="info-label">Pet friendly:</span> Yes</div><p class="paragraph">Pets are welcome for this test guide. Please keep pets off the furniture and clean up after them.</p></section>
+<section class="section"><h2 class="section-title">Location &amp; transport</h2><p class="paragraph">Uber and taxis are available in the area. If arriving from the airport, we recommend using a rideshare service or a private transfer.</p><div class="info-row"><span class="info-label">Google Maps:</span> <span>https://maps.google.com/?q=123+Ocean+Drive+Miami+Beach+FL+33139</span></div></section>
+<section class="section"><h2 class="section-title">House info</h2><p class="paragraph">No smoking inside the property. No parties or events. Please respect quiet hours after 10:00 PM. Only registered guests are allowed overnight.</p><p class="paragraph">This is a test booking guide. Some information is for QA only and should not be used for a real guest stay.</p><p class="paragraph">Please wash any used dishes, take out the trash, turn off lights and air conditioning, and return the key to the lockbox.</p></section>
+<section class="section"><h2 class="section-title">Recommendations</h2><div class="subsection"><h3 class="subsection-title">Restaurants</h3><div class="place-item"><strong>Ocean View Café</strong><div class="place-link"><span class="info-label">Google Maps:</span> https://maps.google.com/?q=Ocean+View+Cafe+Miami+Beach</div></div><div class="place-item"><strong>The Garden Bistro</strong><div class="place-link"><span class="info-label">Google Maps:</span> https://www.google.com/maps/search/?api=1&amp;query=The+Garden+Bistro+123+Ocean+Drive%2C+Miami+Beach%2C+FL+33139%2C+USA</div></div><div class="place-item"><strong>Sunset Grill</strong><div class="place-link"><span class="info-label">Google Maps:</span> https://www.google.com/maps/search/?api=1&amp;query=Sunset+Grill+123+Ocean+Drive%2C+Miami+Beach%2C+FL+33139%2C+USA</div></div></div><div class="subsection"><h3 class="subsection-title">Bars &amp; Drinks</h3><div class="place-item"><strong>Beachside Bar</strong><div class="place-link"><span class="info-label">Google Maps:</span> https://www.google.com/maps/search/?api=1&amp;query=Beachside+Bar+123+Ocean+Drive%2C+Miami+Beach%2C+FL+33139%2C+USA</div></div><div class="place-item"><strong>The Rooftop Lounge</strong><div class="place-link"><span class="info-label">Google Maps:</span> https://www.google.com/maps/search/?api=1&amp;query=The+Rooftop+Lounge+123+Ocean+Drive%2C+Miami+Beach%2C+FL+33139%2C+USA</div></div></div><div class="subsection"><h3 class="subsection-title">Things to Do</h3><div class="place-item"><strong>Beach Walk</strong><div class="place-link"><span class="info-label">Link:</span> https://www.google.com/maps/search/?api=1&amp;query=Beach+Walk+123+Ocean+Drive%2C+Miami+Beach%2C+FL+33139%2C+USA</div></div><div class="place-item"><strong>Local Art District</strong><div class="place-link"><span class="info-label">Link:</span> https://www.google.com/maps/search/?api=1&amp;query=Local+Art+District+123+Ocean+Drive%2C+Miami+Beach%2C+FL+33139%2C+USA</div></div><div class="place-item"><strong>Sunset View Point</strong><div class="place-link"><span class="info-label">Link:</span> https://www.google.com/maps/search/?api=1&amp;query=Sunset+View+Point+123+Ocean+Drive%2C+Miami+Beach%2C+FL+33139%2C+USA</div></div></div></section>
+<section class="section"><h2 class="section-title">Contact</h2><p class="paragraph">Call 911 for emergencies.</p><div class="info-row"><span class="info-label">Airbnb review:</span> <span>https://www.airbnb.com/</span></div><div class="info-row"><span class="info-label">Instagram:</span> @unveilmexico</div></section>
+
+        <div class="footer">
+            Public guest version only. Private access details are intentionally excluded.
+        </div>
+    </div>
+</body>
+</html>
