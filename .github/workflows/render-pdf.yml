@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   render:
@@ -64,3 +65,8 @@ jobs:
 
           git commit -m "Render print.pdf for ${{ github.event.inputs.slug }}"
           git push
+
+      - name: Trigger Pages deployment
+        run: gh workflow run pages.yml --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
