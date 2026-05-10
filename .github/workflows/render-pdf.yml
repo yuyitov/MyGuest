@@ -1,0 +1,66 @@
+name: Render Print PDF
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "Villa slug (e.g. ocean-drive-retreat)"
+        required: true
+        default: "ocean-drive-retreat"
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install WeasyPrint
+        run: |
+          python -m pip install --upgrade pip
+          pip install weasyprint
+
+      - name: Render PDF from print.html
+        run: |
+          python - <<'PY'
+          import sys
+          import os
+
+          slug = os.environ["SLUG"]
+          html_path = os.path.join("public", "villas", slug, "print.html")
+          pdf_path  = os.path.join("public", "villas", slug, "print.pdf")
+
+          if not os.path.exists(html_path):
+              print(f"ERROR: {html_path} not found.")
+              sys.exit(1)
+
+          from weasyprint import HTML
+          HTML(filename=html_path).write_pdf(pdf_path)
+          size = os.path.getsize(pdf_path)
+          print(f"Generated {pdf_path} ({size:,} bytes)")
+          PY
+        env:
+          SLUG: ${{ github.event.inputs.slug }}
+
+      - name: Commit and push PDF
+        run: |
+          git config --global user.name "MyGuest Bot"
+          git config --global user.email "actions@github.com"
+          git add public/villas/${{ github.event.inputs.slug }}/print.pdf
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git commit -m "Render print.pdf for ${{ github.event.inputs.slug }}"
+          git push
