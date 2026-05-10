@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyGuest — Le Marais Flat</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@400;500;700;900&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+@page { size: letter; margin: 0; }
+
+:root {
+  --primary: #2C2C2C;
+  --accent: #D4CFC9;
+  --text: #1A1A1A;
+  --dark: #111111;
+  --muted: #888;
+  --border: #e0d8ce;
+  --cream: #f8f5f0;
+  --page-h: 27.94cm;
+  --page-w: 21.59cm;
+  --pad: 1.6cm;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  background: white;
+  font-size: 12.5pt;
+  line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════
+   BASE PAGE
+═══════════════════════════════════════ */
+.book-page {
+  width: var(--page-w);
+  min-height: var(--page-h);
+  overflow: hidden;
+  page-break-after: always;
+  position: relative;
+}
+
+/* ═══════════════════════════════════════
+   PAGE 1 — COVER
+═══════════════════════════════════════ */
+.cover-pg {
+  display: flex;
+  flex-direction: column;
+}
+
+.cover-photo {
+  width: 100%;
+  height: 16cm;
+  object-fit: cover;
+  display: block;
+}
+
+.cover-body {
+  flex: 1;
+  padding: 1cm var(--pad) 1.4cm;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cover-eyebrow {
+  font-size: 9.5pt;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.6cm;
+}
+
+.cover-welcome {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 66pt;
+  font-weight: 900;
+  line-height: 0.86;
+  color: var(--dark);
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  margin-bottom: 0.2cm;
+}
+
+.cover-script {
+  display: block;
+  font-family: 'Great Vibes', cursive;
+  font-size: 28pt;
+  color: var(--primary);
+  line-height: 1.1;
+  margin-bottom: 0.1cm;
+}
+
+.cover-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21pt;
+  font-weight: 600;
+  color: var(--dark);
+  letter-spacing: 0.3px;
+}
+
+.cover-rule {
+  width: 36px;
+  height: 2px;
+  background: var(--primary);
+  margin: 0.35cm 0 0.3cm;
+}
+
+.cover-address {
+  font-size: 10pt;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ═══════════════════════════════════════
+   COVER VARIANTS
+═══════════════════════════════════════ */
+.cover-alt-pg { display: block; }
+
+/* Coastal: full-bleed photo + bottom gradient + text overlay */
+.cover-coastal { position: relative; width: 100%; height: var(--page-h); overflow: hidden; }
+.cover-coastal-photo { position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.cover-coastal-body {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 2.5cm var(--pad) 1.4cm;
+  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.65) 40%, rgba(0,0,0,0.35) 70%, rgba(0,0,0,0.12) 100%);
+}
+.cover-coastal .cover-eyebrow { color: rgba(255,255,255,0.9); text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
+.cover-coastal .cover-welcome { color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.65); }
+.cover-coastal .cover-script { color: var(--accent); text-shadow: 0 1px 6px rgba(0,0,0,0.65); }
+.cover-coastal .cover-name { color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,0.65); }
+.cover-coastal .cover-address { color: rgba(255,255,255,0.85); text-shadow: 0 1px 5px rgba(0,0,0,0.8); }
+.cover-coastal .cover-rule { background: var(--accent); }
+
+/* Classic: dark left panel + editorial photo right */
+.cover-classic { display: table; width: 100%; height: var(--page-h); border-collapse: collapse; }
+.cover-classic-left {
+  display: table-cell; width: 52%; height: var(--page-h);
+  background: var(--dark);
+  padding: 1.6cm var(--pad);
+  vertical-align: bottom;
+}
+.cover-classic-right { display: table-cell; width: 48%; padding: 0; vertical-align: top; }
+.cover-classic-right img { width: 100%; height: var(--page-h); object-fit: cover; display: block; }
+.cover-classic-left .cover-eyebrow { color: rgba(255,255,255,0.35); }
+.cover-classic-left .cover-welcome { color: #fff; }
+.cover-classic-left .cover-script { color: var(--accent); }
+.cover-classic-left .cover-name { color: rgba(255,255,255,0.9); }
+.cover-classic-left .cover-address { color: rgba(255,255,255,0.35); }
+.cover-classic-left .cover-rule { background: var(--accent); }
+
+/* Sunset: full-bleed photo + warm tinted overlay + centered text */
+.cover-sunset { position: relative; width: 100%; height: var(--page-h); overflow: hidden; }
+.cover-sunset-photo { position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.cover-sunset-overlay {
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+  background: linear-gradient(160deg, rgba(231,111,81,0.62) 0%, rgba(38,70,83,0.75) 100%);
+}
+.cover-sunset-body {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 2cm var(--pad) 1.6cm; text-align: center;
+}
+.cover-sunset .cover-eyebrow { color: rgba(255,255,255,0.9); text-shadow: 0 1px 6px rgba(0,0,0,0.7); }
+.cover-sunset .cover-welcome { color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+.cover-sunset .cover-script { color: var(--accent); text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
+.cover-sunset .cover-name { color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
+.cover-sunset .cover-address { color: rgba(255,255,255,0.9); text-shadow: 0 1px 5px rgba(0,0,0,0.6); }
+.cover-sunset .cover-rule { background: var(--accent); margin-left: auto; margin-right: auto; }
+
+/* ═══════════════════════════════════════
+   SHARED — SPLIT TABLE LAYOUT
+═══════════════════════════════════════ */
+.split-layout {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* ═══════════════════════════════════════
+   PAGE 2 — WELCOME
+═══════════════════════════════════════ */
+.split-left-cell {
+  width: 46%;
+  padding: 0;
+  vertical-align: top;
+}
+
+.split-right-cell {
+  width: 54%;
+  padding: var(--pad) 1.4cm var(--pad) 1cm;
+  vertical-align: top;
+}
+
+.welcome-img-wrap {
+  position: relative;
+  width: 100%;
+  height: var(--page-h);
+  overflow: hidden;
+}
+
+.welcome-photo {
+  width: 100%;
+  height: var(--page-h);
+  min-height: 20cm;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.welcome-overlay-script {
+  position: absolute;
+  bottom: 1cm;
+  left: 0.4cm;
+  font-family: 'Great Vibes', cursive;
+  font-size: 44pt;
+  color: rgba(255,255,255,0.92);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  line-height: 1;
+}
+
+.amenity-chips {
+  margin-top: 0.5cm;
+}
+
+.amenity-chip {
+  display: inline-block;
+  padding: 4px 11px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 10.5pt;
+  margin: 2px 3px 2px 0;
+  color: var(--text);
+  background: var(--cream);
+}
+
+/* ═══════════════════════════════════════
+   PAGE 3 — ARRIVAL
+═══════════════════════════════════════ */
+.arrival-layout { height: var(--page-h); }
+
+.arrival-content-cell {
+  width: 56%;
+  padding: var(--pad) 1cm var(--pad) var(--pad);
+  vertical-align: top;
+}
+
+.arrival-image-cell {
+  width: 44%;
+  padding: 0;
+  vertical-align: top;
+}
+
+.side-photo {
+  width: 100%;
+  height: var(--page-h);
+  min-height: 20cm;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.time-grid {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 10px 0;
+  margin: 0.7cm 0;
+}
+
+.time-card {
+  width: 50%;
+  background: var(--cream);
+  border-radius: 10px;
+  padding: 0.55cm 0.4cm;
+  text-align: center;
+  vertical-align: top;
+  border: 1px solid var(--border);
+}
+
+.time-spacer { width: 0; }
+
+.time-label {
+  display: block;
+  font-size: 9.5pt;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.time-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34pt;
+  color: var(--dark);
+  line-height: 1;
+}
+
+.info-block {
+  margin-bottom: 0.45cm;
+}
+
+.info-block-label {
+  font-size: 9.5pt;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.info-block-text {
+  font-size: 12.5pt;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-line;
+}
+
+.maps-btn {
+  display: inline-block;
+  margin-top: 0.3cm;
+  padding: 7px 16px;
+  border: 1.5px solid var(--primary);
+  border-radius: 3px;
+  font-size: 10pt;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* ═══════════════════════════════════════
+   PAGE 4 — HOUSE / THINGS TO KNOW
+═══════════════════════════════════════ */
+.house-layout { height: var(--page-h); }
+
+.house-left-cell {
+  width: 46%;
+  padding: var(--pad) 0.9cm var(--pad) var(--pad);
+  vertical-align: top;
+  border-right: 1px solid var(--border);
+}
+
+.house-right-cell {
+  width: 54%;
+  padding: var(--pad) var(--pad) var(--pad) 1cm;
+  vertical-align: top;
+}
+
+.house-photo {
+  width: 100%;
+  height: 7cm;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+  margin: 0.5cm 0;
+}
+
+.amenities-list {
+  margin-top: 0.3cm;
+}
+
+.amenity-row {
+  padding: 4px 0;
+  font-size: 12.5pt;
+  border-bottom: 1px solid var(--border);
+}
+
+.amenity-row::before {
+  content: "· ";
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.know-table {
+  margin-top: 0.2cm;
+}
+
+.know-row {
+  display: block;
+  padding: 0.3cm 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.know-label {
+  display: block;
+  font-size: 9.5pt;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--dark);
+  margin-bottom: 3px;
+}
+
+.know-text {
+  display: block;
+  font-size: 12pt;
+  color: #555;
+  line-height: 1.45;
+}
+
+.know-label-full {
+  display: block;
+  font-size: 12.5pt;
+  color: var(--text);
+  padding: 2px 0;
+}
+
+.know-label-full::before {
+  content: "— ";
+  color: var(--primary);
+}
+
+/* ═══════════════════════════════════════
+   PAGE 5 — HOUSE RULES
+═══════════════════════════════════════ */
+.rules-pg { padding: 0; }
+
+.rules-header-layout {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  height: 6cm;
+}
+
+.rules-heading-cell {
+  width: 55%;
+  padding: var(--pad) 1cm var(--pad) var(--pad);
+  vertical-align: middle;
+}
+
+.rules-image-cell {
+  width: 45%;
+  padding: 0;
+  vertical-align: top;
+}
+
+.rules-image-cell img {
+  width: 100%;
+  height: 6cm;
+  object-fit: cover;
+  display: block;
+}
+
+.rules-grid {
+  width: 100%;
+  border-collapse: collapse;
+  padding: 0 var(--pad);
+}
+
+.rule-card {
+  width: 33.33%;
+  padding: 0.5cm 0.4cm;
+  vertical-align: top;
+  border: 1px solid var(--border);
+  background: white;
+}
+
+.rule-empty { background: var(--cream); }
+
+.rule-num {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 20pt;
+  font-weight: 900;
+  color: var(--primary);
+  line-height: 1;
+  margin-bottom: 4px;
+  opacity: 0.7;
+}
+
+.rule-title {
+  font-size: 10.5pt;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--dark);
+  margin-bottom: 5px;
+  line-height: 1.2;
+}
+
+.rule-desc {
+  font-size: 11pt;
+  color: #666;
+  line-height: 1.5;
+}
+
+.before-section {
+  margin: 0.5cm var(--pad) 0;
+  padding-top: 0.4cm;
+  border-top: 1px solid var(--border);
+}
+
+.before-title {
+  font-size: 10pt;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 0.25cm;
+}
+
+.checklist-item {
+  font-size: 12.5pt;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.checklist-item::before {
+  content: "☐  ";
+  color: var(--primary);
+}
+
+/* ═══════════════════════════════════════
+   PAGE 6 — RECOMMENDATIONS
+═══════════════════════════════════════ */
+.recs-pg { padding: var(--pad); }
+
+.recs-page-header { margin-bottom: 0.5cm; }
+
+.recs-main-title { font-size: 28pt !important; }
+
+.recs-layout {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.recs-col {
+  width: 48%;
+  vertical-align: top;
+  padding-right: 0.4cm;
+}
+
+.recs-col:last-child {
+  padding-right: 0;
+  padding-left: 0.4cm;
+}
+
+.recs-divider {
+  width: 4%;
+  border-left: 1px solid var(--border);
+}
+
+.rec-block { margin-bottom: 0.6cm; }
+
+.rec-heading {
+  margin-bottom: 0.2cm;
+  line-height: 1;
+}
+
+.rec-script {
+  font-family: 'Great Vibes', cursive;
+  font-size: 18pt;
+  color: var(--primary);
+  display: block;
+  line-height: 1;
+}
+
+.rec-bold {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--dark);
+}
+
+.rec-list { margin-top: 0.15cm; }
+
+.rec-item {
+  padding: 0.22cm 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.rec-item:last-child { border-bottom: none; }
+
+.rec-name {
+  font-size: 12.5pt;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.rec-link {
+  font-size: 9.5pt;
+  color: var(--primary);
+  margin-left: 6px;
+  text-decoration: none;
+  border: 1px solid var(--primary);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+.rec-detail {
+  font-size: 11.5pt;
+  color: #666;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════
+   PAGE 7 — THANK YOU / CONTACT
+═══════════════════════════════════════ */
+.thanks-pg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--page-h);
+  background: var(--cream);
+}
+
+.thanks-center {
+  text-align: center;
+  padding: 1.5cm var(--pad);
+  max-width: 14cm;
+  margin: 0 auto;
+}
+
+.thanks-script {
+  display: block;
+  font-family: 'Great Vibes', cursive;
+  font-size: 60pt;
+  color: var(--primary);
+  line-height: 1;
+  margin-bottom: 0.2cm;
+}
+
+.thanks-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 15.5pt;
+  color: #666;
+  margin-bottom: 0.8cm;
+}
+
+.contact-rows {
+  margin-bottom: 0.6cm;
+  text-align: left;
+  display: inline-block;
+  min-width: 10cm;
+}
+
+.contact-row {
+  padding: 0.24cm 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5pt;
+  overflow: hidden;
+}
+
+.contact-label {
+  font-size: 9.5pt;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--primary);
+  display: inline-block;
+  width: 110px;
+  vertical-align: top;
+  padding-top: 2px;
+}
+
+.contact-val { color: var(--text); }
+
+.review-btn {
+  display: inline-block;
+  margin: 0.3cm 0 0.6cm;
+  padding: 0.32cm 0.7cm;
+  background: var(--dark);
+  color: white;
+  font-size: 10.5pt;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 3px;
+}
+
+.footer-note {
+  font-size: 9.5pt;
+  color: #aaa;
+  margin-top: 0.5cm;
+  line-height: 1.5;
+}
+
+.footer-brand {
+  font-size: 9pt;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #ccc;
+  margin-top: 6px;
+}
+
+/* ═══════════════════════════════════════
+   SHARED TYPOGRAPHY
+═══════════════════════════════════════ */
+.page-heading { margin-bottom: 0.6cm; }
+
+.page-script {
+  display: block;
+  font-family: 'Great Vibes', cursive;
+  font-size: 24pt;
+  color: var(--primary);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.page-bold {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 26pt;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--dark);
+  line-height: 0.9;
+  letter-spacing: -0.5px;
+}
+
+.page-text {
+  font-size: 12.5pt;
+  line-height: 1.65;
+  color: var(--text);
+  white-space: pre-line;
+  margin-bottom: 0.35cm;
+}
+
+.hosts-block {
+  color: #555;
+  border-top: 1px solid var(--border);
+  padding-top: 0.3cm;
+  margin-top: 0.2cm;
+}
+
+/* ═══════════════════════════════════════
+   SCREEN-ONLY
+═══════════════════════════════════════ */
+@media screen {
+  body { background: #e8e4de; padding: 20px; }
+  .book-page { box-shadow: 0 8px 32px rgba(0,0,0,0.18); margin: 0 auto 28px; }
+}
+
+@media print {
+  body { background: white; padding: 0; }
+  .book-page { margin: 0; box-shadow: none; }
+}
+</style>
+</head>
+<body>
+<div class="book-page cover-pg cover-alt-pg">
+<table class="cover-classic"><tr>
+  <td class="cover-classic-left">
+<p class="cover-eyebrow">MyGuest · Your Guest Guide</p>
+<div class="cover-welcome">WELCOME</div>
+<span class="cover-script">Your Guide to</span>
+<div class="cover-name">Le Marais Flat</div>
+<div class="cover-rule"></div>
+<div class="cover-address">12 Rue des Francs-Bourgeois, Paris 75004, France</div></td>
+  <td class="cover-classic-right"><img src="../../assets/covers/city.png" alt="" loading="eager"></td>
+</tr></table></div>
+<div class="book-page welcome-pg">
+<table class="split-layout"><tr>
+  <td class="split-left-cell">
+<div class="welcome-img-wrap">
+  <img class="welcome-photo" src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="eager">
+  <span class="welcome-overlay-script">Welcome</span>
+</div></td>
+  <td class="split-right-cell">
+<div class="page-heading">
+  <span class="page-script">About The</span>
+  <div class="page-bold">HOUSE</div>
+</div>
+<div class="page-text">Welcome to Le Marais Flat — a classic Haussmann apartment in the heart of one of Paris&#x27;s most beloved neighbourhoods. We hope this guide helps you feel at home and make the most of your stay. Please reach out any time — we are always happy to help.</div>
+<div class="page-text hosts-block">Your stay is hosted by Sophie &amp; Marc, Parisians born and raised in Le Marais. We love sharing our neighbourhood with guests from around the world. We are available by email and typically respond within a few hours.</div>
+<div class="amenity-chips"><span class="amenity-chip">High-speed WiFi</span><span class="amenity-chip">Smart TV with Netflix</span><span class="amenity-chip">Nespresso machine &amp; French press</span><span class="amenity-chip">Fully equipped kitchen</span><span class="amenity-chip">Central heating</span><span class="amenity-chip">Parquet floors &amp; period mouldings</span><span class="amenity-chip">Overlooking a quiet inner courtyard</span><span class="amenity-chip">Iron &amp; ironing board</span></div></td>
+</tr></table></div>
+<div class="book-page arrival-pg">
+<table class="split-layout arrival-layout"><tr>
+  <td class="arrival-content-cell">
+<div class="page-heading">
+  <span class="page-script">Arrival &amp;</span>
+  <div class="page-bold">CHECK IN</div>
+</div>
+<table class="time-grid"><tr>
+<td class="time-card">
+  <span class="time-label">CHECK IN</span>
+  <div class="time-value">3:00 PM</div>
+</td>
+<td class="time-spacer"></td>
+<td class="time-card">
+  <span class="time-label">CHECK OUT</span>
+  <div class="time-value">11:00 AM</div>
+</td></tr></table>
+
+<div class="info-block">
+  <div class="info-block-label">Property Access</div>
+  <div class="info-block-text">Detailed access instructions will be sent privately before check-in.</div>
+</div>
+
+<div class="info-block">
+  <div class="info-block-label">Parking</div>
+  <div class="info-block-text">Street parking in Le Marais is very limited and time-restricted. Nearest underground car park: Parking Saint-Paul, 4 Rue de l&#x27;Ave Maria (5 min walk). We strongly recommend arriving by metro, taxi, or rideshare.</div>
+</div>
+
+<div class="info-block">
+  <div class="info-block-text">Located in Le Marais, one of Paris&#x27;s most historic and vibrant districts. From Charles de Gaulle Airport: take the RER B to Châtelet-Les Halles, then 15 minutes on foot or one stop on line 1 to Saint-Paul — about 50 minutes total. From Orly Airport: take Orlyval + RER B or taxi directly (approx. 45 min).</div>
+</div>
+<a class="maps-btn" href="https://maps.google.com/?q=12+Rue+des+Francs-Bourgeois+Paris+75004+France" target="_blank">Open on Maps</a></td>
+  <td class="arrival-image-cell"><img class="side-photo" src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="eager"></td>
+</tr></table></div>
+<div class="book-page house-pg">
+<table class="split-layout house-layout"><tr>
+  <td class="house-left-cell">
+<div class="page-heading">
+  <span class="page-script">About The</span>
+  <div class="page-bold">HOUSE</div>
+</div>
+<img class="house-photo" src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="eager">
+<div class="amenities-list"><div class="amenity-row">High-speed WiFi</div><div class="amenity-row">Smart TV with Netflix</div><div class="amenity-row">Nespresso machine &amp; French press</div><div class="amenity-row">Fully equipped kitchen</div><div class="amenity-row">Central heating</div><div class="amenity-row">Parquet floors &amp; period mouldings</div><div class="amenity-row">Overlooking a quiet inner courtyard</div><div class="amenity-row">Iron &amp; ironing board</div><div class="amenity-row">Hairdryer</div><div class="amenity-row">Fresh towels &amp; luxury bed linen</div></div>
+<div class="info-block"><div class="info-block-label">Pets</div><div class="info-block-text">No</div></div></td>
+  <td class="house-right-cell">
+<div class="page-heading">
+  <span class="page-script">Things</span>
+  <div class="page-bold">TO KNOW</div>
+</div>
+<div class="know-table"><div class="know-row"><span class="know-label-full">The building door code must be entered each time — it does not stay open.</span></div><div class="know-row"><span class="know-label-full">The apartment is on the 3rd floor — there is no lift.</span></div><div class="know-row"><span class="know-label-full">Rubbish bins are in the courtyard to the right of the main entrance. Yellow bin for recycling, green for general waste.</span></div><div class="know-row"><span class="know-label-full">The neighbourhood is lively at night — earplugs are in the bedside drawer if needed.</span></div></div></td>
+</tr></table></div>
+<div class="book-page rules-pg">
+
+<table class="rules-header-layout"><tr>
+  <td class="rules-heading-cell">
+    <div class="page-heading">
+      <span class="page-script">House</span>
+      <div class="page-bold">RULES</div>
+    </div>
+  </td>
+  <td class="rules-image-cell"><img class="side-photo" src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="eager"></td>
+</tr></table>
+<table class="rules-grid"><tr><td class="rule-card">
+  <div class="rule-num">01</div>
+  <div class="rule-title">NO SMOKING ANYWHERE IN THE APARTMENT OR ON THE BALCONY.</div>
+  
+</td><td class="rule-card">
+  <div class="rule-num">02</div>
+  <div class="rule-title">MAXIMUM 2 GUESTS AT ALL TIMES.</div>
+  
+</td><td class="rule-card">
+  <div class="rule-num">03</div>
+  <div class="rule-title">PLEASE KEEP NOISE LEVELS RESPECTFUL AFTER 10 PM — THE BUILDING HAS THIN WALLS.</div>
+  
+</td></tr><tr><td class="rule-card">
+  <div class="rule-num">04</div>
+  <div class="rule-title">NO PARTIES OR EVENTS.</div>
+  
+</td><td class="rule-card">
+  <div class="rule-num">05</div>
+  <div class="rule-title">PLEASE DO NOT RING NEIGHBOURS&#x27; DOORBELLS.</div>
+  
+</td><td class="rule-card rule-empty"></td></tr></table>
+<div class="before-section"><div class="before-title">Before You Leave</div><div class="checklist"><div class="checklist-item">Strip used bedding and leave it at the foot of the bed.</div><div class="checklist-item">Leave used towels in the bathtub.</div><div class="checklist-item">Dispose of all food waste in the bins in the courtyard.</div><div class="checklist-item">Ensure windows are closed and locked.</div><div class="checklist-item">Return keys to the safe and pull the front door firmly shut.</div></div></div></div>
+<div class="book-page recs-pg">
+<div class="recs-page-header">
+  <span class="page-script">Places</span>
+  <div class="page-bold recs-main-title">TO EAT</div>
+</div>
+<table class="recs-layout"><tr>
+  <td class="recs-col">
+<div class="rec-block">
+  <div class="rec-heading">
+    <span class="rec-script">Places</span>
+    <span class="rec-bold">TO EAT</span>
+  </div>
+  <div class="rec-list"><div class="rec-item"><div class="rec-name">L&#x27;As du Fallafel<a class="rec-link" href="https://maps.google.com/?q=34+Rue+des+Rosiers+Paris+75004" target="_blank">Maps</a></div><div class="rec-detail">A Le Marais legend — the best falafel in Paris, possibly in Europe. Expect a queue. Takeaway or eat standing. Cash only. Worth it.</div></div><div class="rec-item"><div class="rec-name">Septime<a class="rec-link" href="https://maps.google.com/?q=80+Rue+de+Charonne+Paris+75011" target="_blank">Maps</a></div><div class="rec-detail">One of Paris&#x27;s most celebrated bistronomy restaurants. Seasonal, creative, and deeply French. Book 3–4 weeks in advance.</div></div><div class="rec-item"><div class="rec-name">Breizh Café<a class="rec-link" href="https://maps.google.com/?q=109+Rue+Vieille+du+Temple+Paris+75003" target="_blank">Maps</a></div><div class="rec-detail">The finest crêpes in Paris, made with Breton buckwheat and exceptional ingredients. The salted caramel crêpe is unmissable.</div></div></div>
+</div>
+<div class="rec-block">
+  <div class="rec-heading">
+    <span class="rec-script">Places</span>
+    <span class="rec-bold">TO DRINK</span>
+  </div>
+  <div class="rec-list"><div class="rec-item"><div class="rec-name">Le Mary Celeste<a class="rec-link" href="https://maps.google.com/?q=1+Rue+Commines+Paris+75003" target="_blank">Maps</a></div><div class="rec-detail">Natural wines, craft cocktails and excellent oysters in a lively Le Marais setting. No reservations — arrive early or late.</div></div><div class="rec-item"><div class="rec-name">Candelaria<a class="rec-link" href="https://maps.google.com/?q=52+Rue+de+Saintonge+Paris+75003" target="_blank">Maps</a></div><div class="rec-detail">Hidden speakeasy behind a taqueria — some of the most inventive cocktails in Paris. Ring the bell on the unmarked door at the back.</div></div></div>
+</div></td>
+  <td class="recs-divider"></td>
+  <td class="recs-col">
+<div class="rec-block">
+  <div class="rec-heading">
+    <span class="rec-script">Things</span>
+    <span class="rec-bold">TO DO</span>
+  </div>
+  <div class="rec-list"><div class="rec-item"><div class="rec-name">Le Marais Gallery Walk<a class="rec-link" href="https://maps.google.com/?q=Le+Marais+Paris+galleries" target="_blank">Maps</a></div><div class="rec-detail">The apartment is surrounded by private contemporary art galleries. Most are open Tuesday–Saturday and free to enter. Rue Vieille-du-Temple and Rue Debelleyme are the best streets to explore.</div></div><div class="rec-item"><div class="rec-name">Centre Pompidou<a class="rec-link" href="https://centrepompidou.fr" target="_blank">Maps</a></div><div class="rec-detail">Europe&#x27;s premier modern and contemporary art museum, 10 minutes on foot. The rooftop offers one of the best panoramic views of Paris.</div></div><div class="rec-item"><div class="rec-name">Place des Vosges<a class="rec-link" href="https://maps.google.com/?q=Place+des+Vosges+Paris" target="_blank">Maps</a></div><div class="rec-detail">Paris&#x27;s oldest planned square — a masterpiece of French Renaissance architecture, 5 minutes on foot. Perfect for a morning coffee under the arcades.</div></div></div>
+</div><div class="rec-block"><div class="rec-heading"><span class="rec-bold">Local Directory</span></div><div class="page-text">Nearest supermarket: Monoprix, 71 Rue Saint-Antoine (5 min walk)<br>Nearest pharmacy: Pharmacie du Marais, 88 Rue de Rivoli<br>Hôtel-Dieu Hospital (emergency): +33 1 42 34 82 34</div></div></td>
+</tr></table></div>
+<div class="book-page thanks-pg">
+<div class="thanks-center">
+  <span class="thanks-script">Thank You</span>
+  <div class="thanks-sub">for choosing <em>Le Marais Flat</em></div>
+  <div class="contact-rows"><div class="contact-row"><span class="contact-label">Email</span><span class="contact-val">hello@lemarasflat.com</span></div><div class="contact-row"><span class="contact-label">Instagram</span><span class="contact-val">@lemarisflat.paris</span></div><div class="contact-row"><span class="contact-label">Emergency</span><span class="contact-val">European emergency: 112
+Police: 17 / SAMU (ambulance): 15
+Host team: hello@lemarasflat.com</span></div></div>
+  <a class="review-btn" href="https://airbnb.com/" target="_blank">Leave a Review</a>
+  <div class="footer-note">Public guest version only. Private access details are intentionally excluded.</div>
+  <div class="footer-brand">MyGuest · myguestguide.com</div>
+</div></div>
+
+</body>
+</html>
