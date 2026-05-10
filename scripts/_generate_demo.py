@@ -26,6 +26,15 @@ PAYLOAD = {
         "primary_language": "English",
     },
     "content": {
+        "demo_mode": True,
+        "wifi_ssid": "OceanDrive_Guest",
+        "wifi_password": "SunsetBeach2024!",
+        "house_access_private": (
+            "Lockbox at main entrance — code: #4521. "
+            "Front door keypad: 7842#. "
+            "Please leave all keys in the lockbox upon departure."
+        ),
+        "host_phone": "+1 (305) 555-0142",
         "about_house": {
             "welcome_message": (
                 "Welcome to Ocean Drive Retreat — a sun-drenched haven steps from "
@@ -213,6 +222,11 @@ PRE_TRANSLATIONS = {
             "estén apagados.\n"
             "Cierra la puerta principal al salir."
         ),
+        "house_access_private": (
+            "Caja de seguridad en la entrada principal — código: #4521. "
+            "Teclado de la puerta: 7842#. "
+            "Por favor deja todas las llaves en la caja de seguridad al salir."
+        ),
         "house_access_public": (
             "Las instrucciones detalladas de llegada se compartirán de forma "
             "privada antes del check-in."
@@ -310,6 +324,11 @@ PRE_TRANSLATIONS = {
             "Vérifiez que toutes les lumières, la climatisation et les appareils "
             "sont éteints.\n"
             "Verrouillez la porte d'entrée en sortant."
+        ),
+        "house_access_private": (
+            "Boîte à clés à l'entrée principale — code : #4521. "
+            "Clavier de la porte : 7842#. "
+            "Veuillez laisser toutes les clés dans la boîte à clés au départ."
         ),
         "house_access_public": (
             "Les instructions détaillées d'arrivée seront communiquées de façon "

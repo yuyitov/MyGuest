@@ -2022,7 +2022,15 @@
         }
 
         cleanupDynamicContent();
-        loadPrivateDetails();
+        (function() {
+            var wC = document.getElementById('private-wifi-content');
+            var aC = document.getElementById('private-access-content');
+            var cC = document.getElementById('private-contact-content');
+            addPrivateCard(wC, "Red WiFi", "OceanDrive_Guest");
+            addPrivateCard(wC, "Contrase\u00f1a WiFi", "SunsetBeach2024!");
+            addPrivateCard(aC, "Detalles Privados de Acceso", "Caja de seguridad en la entrada principal \u2014 c\u00f3digo: #4521. Teclado de la puerta: 7842#. Por favor deja todas las llaves en la caja de seguridad al salir.");
+            addPrivateCard(cC, "Tel\u00e9fono del anfitri\u00f3n", "+1 (305) 555-0142");
+        })();
     })();
     </script>
 </body>

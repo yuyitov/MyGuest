@@ -1334,6 +1334,36 @@ def inject_public_qa_overrides(html):
     return html
 
 
+def inject_demo_private_data(html, content_flat, active_language):
+    if not content_flat.get("demo_mode"):
+        return html
+
+    trans = STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {})
+    label_wifi_net = trans.get("WiFi network", "WiFi network")
+    label_wifi_pw = trans.get("WiFi password", "WiFi password")
+    label_access = translated_label("Private Access Details", active_language)
+    label_phone = trans.get("Host phone", "Host phone")
+
+    wifi_ssid = safe_text(content_flat.get("wifi_ssid", ""))
+    wifi_password = safe_text(content_flat.get("wifi_password", ""))
+    house_access = safe_text(content_flat.get("house_access_private", ""))
+    host_phone = safe_text(content_flat.get("host_phone", ""))
+
+    inline_js = (
+        "(function() {\n"
+        "            var wC = document.getElementById('private-wifi-content');\n"
+        "            var aC = document.getElementById('private-access-content');\n"
+        "            var cC = document.getElementById('private-contact-content');\n"
+        f"            addPrivateCard(wC, {json.dumps(label_wifi_net)}, {json.dumps(wifi_ssid)});\n"
+        f"            addPrivateCard(wC, {json.dumps(label_wifi_pw)}, {json.dumps(wifi_password)});\n"
+        f"            addPrivateCard(aC, {json.dumps(label_access)}, {json.dumps(house_access)});\n"
+        f"            addPrivateCard(cC, {json.dumps(label_phone)}, {json.dumps(host_phone)});\n"
+        "        })();"
+    )
+
+    return html.replace("        loadPrivateDetails();", f"        {inline_js}")
+
+
 def render_html_for_language(payload, active_language, output_filename):
     metadata = payload.get("metadata", {}) or {}
     property_data = payload.get("property", {}) or {}
@@ -1438,6 +1468,7 @@ def render_html_for_language(payload, active_language, output_filename):
 
     html = strip_unreplaced_placeholders(html)
     html = inject_public_qa_overrides(html)
+    html = inject_demo_private_data(html, content_flat, active_language)
 
     output_dir = os.path.join("public", "villas", slug)
     os.makedirs(output_dir, exist_ok=True)
