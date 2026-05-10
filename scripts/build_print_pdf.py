@@ -150,7 +150,7 @@ ENV_ALIASES = {
 }
 
 IMAGES = {
-    "welcome":  "https://images.unsplash.com/photo-1583241800698-e8ab01830a22?auto=format&fit=crop&w=900&q=80",
+    "welcome":  "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80",
     "arrival":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80",
     "house":    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80",
     "rules":    "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=80",
