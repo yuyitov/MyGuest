@@ -239,20 +239,13 @@
           <div class="screen">
             <div class="phone-top"><span>9:41</span><span>MyGuest</span></div>
             <div class="phone-theme-content" id="phoneThemeContent">
-              <div class="hero-image"></div>
-              <div class="style-name" id="styleName">Coastal style</div>
-              <h3 id="mockupTitle">Casa Brisa Welcome Guide</h3>
-              <p id="mockupSubtitle" style="font-size:14px;margin:0;color:#6f675d;">Everything you need for a smooth stay.</p>
-              <div class="lang-tabs"><span>EN</span><span>ES</span><span>FR</span></div>
-              <div class="mini-card"><strong id="mockupCardOneTitle">Check-in</strong><span id="mockupCardOneText">Self check-in from 3:00 PM.</span></div>
-              <div class="mini-card"><strong id="mockupCardTwoTitle">Beach tips</strong><span id="mockupCardTwoText">Towels, parking, WiFi and local seafood spots.</span></div>
-              <div class="pdf-chip"><span>Printable PDF</span><span>↓</span></div>
+              <img id="mockupImg" src="Mockups/Coastal_Style_Beach_Cel_Mockup.png" alt="Ocean Drive Retreat guest guide — Coastal style" style="width:calc(100% + 36px);margin:-18px;display:block;" />
             </div>
           </div>
         </div>
         <div class="style-pills" aria-label="Available book styles">
           <div class="style-picker-label">Choose your style</div>
-          <div class="style-pill active" data-style-pill="0">Coastal</div><div class="style-pill" data-style-pill="1">Minimalist</div><div class="style-pill" data-style-pill="2">Classic</div><div class="style-pill" data-style-pill="3">Sunset</div>
+          <div class="style-pill active" data-style-pill="0">Coastal</div><div class="style-pill" data-style-pill="1">Minimalist</div><div class="style-pill" data-style-pill="2">Sunset</div>
         </div>
       </div>
     </section>
@@ -301,21 +294,14 @@
     document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
     const styleThemes = [
-      { name: 'Coastal style', title: 'Casa Brisa Welcome Guide', subtitle: 'Everything you need for a smooth stay.', cardOneTitle: 'Check-in', cardOneText: 'Self check-in from 3:00 PM.', cardTwoTitle: 'Beach tips', cardTwoText: 'Towels, parking, WiFi and local seafood spots.', primary: '#2f8f9d', secondary: '#f2b880', soft: '#dff3f1', image: "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80')" },
-      { name: 'Minimalist style', title: 'The Loft Guest Guide', subtitle: 'A clean guide for a calm, easy arrival.', cardOneTitle: 'Arrival', cardOneText: 'Simple entry steps and essential details.', cardTwoTitle: 'Essentials', cardTwoText: 'WiFi, checkout, house rules and nearby coffee.', primary: '#1d1b18', secondary: '#b8aa98', soft: '#efebe4', image: "url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80')" },
-      { name: 'Classic style', title: 'Villa Magnolia Handbook', subtitle: 'Elegant details for a polished guest stay.', cardOneTitle: 'Welcome', cardOneText: 'Host notes, check-in and important reminders.', cardTwoTitle: 'Local directory', cardTwoText: 'Restaurants, pharmacies, transport and emergency info.', primary: '#7a4d2f', secondary: '#c9a46a', soft: '#f3eadc', image: "url('https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80')" },
-      { name: 'Sunset style', title: 'Casa Sol Guest Guide', subtitle: 'Warm, visual and perfect for vacation mode.', cardOneTitle: 'Before you arrive', cardOneText: 'Directions, parking and check-in instructions.', cardTwoTitle: 'Guest favorites', cardTwoText: 'Sunset spots, drinks, tours and things to do.', primary: '#c95f43', secondary: '#f6a35d', soft: '#fde4ce', image: "url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80')" }
+      { primary: '#2f8f9d', secondary: '#f2b880', soft: '#dff3f1', image: 'Mockups/Coastal_Style_Beach_Cel_Mockup.png', alt: 'Ocean Drive Retreat guest guide — Coastal style' },
+      { primary: '#1d1b18', secondary: '#b8aa98', soft: '#efebe4', image: 'Mockups/Minnimalist_Beach_Cel_Mockup.png', alt: 'The SoHo Loft guest guide — Minimalist style' },
+      { primary: '#c95f43', secondary: '#f6a35d', soft: '#fde4ce', image: 'Mockups/Sunset_Style_Beach_Cel_Mockup.png', alt: 'Casa Selva Tulum guest guide — Sunset style' }
     ];
 
     const root = document.documentElement;
     const themeContent = document.getElementById('phoneThemeContent');
-    const styleName = document.getElementById('styleName');
-    const mockupTitle = document.getElementById('mockupTitle');
-    const mockupSubtitle = document.getElementById('mockupSubtitle');
-    const mockupCardOneTitle = document.getElementById('mockupCardOneTitle');
-    const mockupCardOneText = document.getElementById('mockupCardOneText');
-    const mockupCardTwoTitle = document.getElementById('mockupCardTwoTitle');
-    const mockupCardTwoText = document.getElementById('mockupCardTwoText');
+    const mockupImg = document.getElementById('mockupImg');
     const stylePills = document.querySelectorAll('[data-style-pill]');
     const motionSystem = document.querySelector('.motion-system');
     let activeTheme = 0;
@@ -330,14 +316,8 @@
         root.style.setProperty('--theme-primary', theme.primary);
         root.style.setProperty('--theme-secondary', theme.secondary);
         root.style.setProperty('--theme-soft', theme.soft);
-        root.style.setProperty('--theme-image', theme.image);
-        styleName.textContent = theme.name;
-        mockupTitle.textContent = theme.title;
-        mockupSubtitle.textContent = theme.subtitle;
-        mockupCardOneTitle.textContent = theme.cardOneTitle;
-        mockupCardOneText.textContent = theme.cardOneText;
-        mockupCardTwoTitle.textContent = theme.cardTwoTitle;
-        mockupCardTwoText.textContent = theme.cardTwoText;
+        mockupImg.src = theme.image;
+        mockupImg.alt = theme.alt;
         stylePills.forEach((pill) => pill.classList.remove('active'));
         stylePills[index].classList.add('active');
         themeContent.style.animation = 'none';
