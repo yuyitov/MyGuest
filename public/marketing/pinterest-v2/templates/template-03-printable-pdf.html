@@ -6,80 +6,45 @@
 <title>MyGuest — Printable PDF</title>
 <link rel="stylesheet" href="../styles/pinterest-v2.css">
 <style>
-.v2-pdf-float{
-  position:absolute;left:52px;top:800px;z-index:4;
-  width:370px;
+.v2-left-zone{
+  position:absolute;left:38px;top:130px;width:480px;z-index:4;
 }
-.v2-pdf-page{
-  background:#fff;
-  border:1px solid var(--c-badge-border);
-  border-radius:10px;
-  box-shadow:0 20px 48px rgba(0,0,0,.14),0 4px 12px rgba(0,0,0,.08);
-  overflow:hidden;
-  transform:rotate(-4deg);
+.v2-pdf-items{
+  display:flex;flex-direction:column;gap:18px;margin-bottom:32px;
 }
-.v2-pdf-page-head{
-  height:40px;
-  background:var(--c-primary);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 18px;
+.v2-pdf-item{
+  display:flex;align-items:center;gap:16px;
+  font-family:'Inter',sans-serif;font-size:20px;font-weight:500;
+  color:var(--c-text);
 }
-.v2-pdf-page-head span{
-  font-family:Georgia,serif;font-size:12px;
-  color:rgba(255,255,255,.9);letter-spacing:.12em;text-transform:uppercase;
-}
-.v2-pdf-page-body{padding:16px 20px;}
-.v2-pdf-title{
-  font-family:Georgia,serif;font-size:17px;
-  color:var(--c-primary);letter-spacing:.08em;margin-bottom:12px;
-  text-align:center;
-}
-.v2-pdf-row{
-  height:9px;background:var(--c-accent);border-radius:4px;margin-bottom:6px;
-}
-.v2-pdf-row.s{width:58%;}
-.v2-pdf-row.m{width:78%;}
-.v2-pdf-section{
-  margin-top:14px;padding-top:8px;
-  border-top:1px solid var(--c-accent);
-  font-family:Georgia,serif;font-size:10px;letter-spacing:.1em;
-  color:var(--c-mid);text-transform:uppercase;margin-bottom:8px;
-}
-.v2-pdf-tag{
-  position:absolute;top:-18px;right:20px;
-  background:var(--c-primary);color:#fff;
-  font-family:Georgia,serif;font-size:13px;letter-spacing:.1em;
-  text-transform:uppercase;padding:6px 16px;border-radius:6px;
-  box-shadow:0 6px 16px rgba(0,0,0,.18);
-}
+.v2-pdf-item-icon{font-size:28px;flex:0 0 auto;}
 </style>
 </head>
 <body class="style-sunset">
 <main class="pin">
 
-  <div class="v2-brand"><span class="v2-brand-star">✦</span>MyGuest</div>
+  <div class="v2-brand"><span class="v2-brand-star">+</span> MyGuest</div>
 
   <div class="v2-phone">
     <div class="v2-phone-side"></div>
     <div class="v2-phone-side-vol"></div>
     <div class="v2-screen v2-screenshot-wrap">
       <div class="v2-notch"></div>
-      <div class="v2-phone-top"><span>9:41</span><span>MyGuest</span></div>
       <div class="v2-phone-art">
         <div class="v2-phone-art-inner">
           <div class="v2-phone-myguest">MyGuest</div>
           <div class="v2-phone-tabs"><span>Guide</span><span>PDF</span><span>Tips</span></div>
           <div class="v2-phone-guide-title">Casa Selva<br>Tulum</div>
           <div class="v2-phone-hero-img"></div>
-          <div class="v2-phone-welcome">Your guide. Print it or share the link — works both ways.</div>
+          <div class="v2-phone-welcome">Share the link or print it for your property.</div>
           <div class="v2-phone-section-title">SECTIONS</div>
           <div class="v2-phone-grid">
             <div class="v2-phone-cell"><b>🌴</b>Welcome</div>
-            <div class="v2-phone-cell"><b>🔑</b>Entry</div>
-            <div class="v2-phone-cell"><b>🍹</b>Dining</div>
+            <div class="v2-phone-cell"><b>🔑</b>Check-in</div>
+            <div class="v2-phone-cell"><b>🍹</b>Local Tips</div>
             <div class="v2-phone-cell"><b>🏊</b>Pool</div>
-            <div class="v2-phone-cell"><b>🗺</b>Area</div>
-            <div class="v2-phone-cell"><b>📄</b>PDF</div>
+            <div class="v2-phone-cell"><b>📶</b>WiFi</div>
+            <div class="v2-phone-cell"><b>☎</b>Contact</div>
           </div>
         </div>
       </div>
@@ -87,47 +52,57 @@
     </div>
   </div>
 
-  <div class="v2-copy">
-    <h1 class="v2-headline">Digital guide + print-ready PDF.</h1>
-    <div class="v2-rule"></div>
-    <p class="v2-sub">Share the link or hand them a beautiful printed page — your guests get both.</p>
-  </div>
+  <div class="v2-left-zone">
+    <div class="v2-pdf-items">
+      <div class="v2-pdf-item"><span class="v2-pdf-item-icon">📱</span> Mobile link</div>
+      <div class="v2-pdf-item"><span class="v2-pdf-item-icon">📄</span> Printable PDF</div>
+      <div class="v2-pdf-item"><span class="v2-pdf-item-icon">📶</span> Works offline</div>
+      <div class="v2-pdf-item"><span class="v2-pdf-item-icon">↗</span> Easy to share</div>
+    </div>
 
-  <div class="v2-pdf-float">
-    <div style="position:relative;">
-      <div class="v2-pdf-tag">PDF</div>
-      <div class="v2-pdf-page">
-        <div class="v2-pdf-page-head">
-          <span>MyGuest</span><span>Casa Selva · Tulum</span>
-        </div>
-        <div class="v2-pdf-page-body">
-          <div class="v2-pdf-title">Welcome Guide</div>
-          <div class="v2-pdf-section">Check-in instructions</div>
-          <div class="v2-pdf-row"></div>
-          <div class="v2-pdf-row m"></div>
-          <div class="v2-pdf-row s"></div>
-          <div class="v2-pdf-section">House rules</div>
-          <div class="v2-pdf-row m"></div>
-          <div class="v2-pdf-row"></div>
-          <div class="v2-pdf-row s"></div>
-          <div class="v2-pdf-section">WiFi &amp; access</div>
-          <div class="v2-pdf-row s"></div>
-          <div class="v2-pdf-row m"></div>
-        </div>
+    <!-- Printed book mockup -->
+    <div class="v2-book" style="width:320px;position:relative;">
+      <div class="v2-book-band"></div>
+      <div class="v2-book-inner">
+        <div class="v2-book-title">CASA SELVA TULUM<br>WELCOME GUIDE</div>
+        <div class="v2-book-row"></div>
+        <div class="v2-book-row m" style="width:70%;"></div>
+        <div class="v2-book-row" style="width:55%;"></div>
+        <div class="v2-book-row m" style="width:80%;margin-top:8px;"></div>
+        <div class="v2-book-row" style="width:65%;"></div>
+        <div class="v2-cursive-note">Perfect for<br>arrivals! →</div>
       </div>
     </div>
   </div>
 
-  <div class="v2-badges">
-    <div class="v2-badge">Sunset style</div>
-    <div class="v2-badge">Tulum villa</div>
-    <div class="v2-badge">Early access</div>
+  <div class="v2-copy">
+    <h1 class="v2-headline">Give guests a mobile guide and a printable PDF.</h1>
+    <div class="v2-rule"></div>
+    <p class="v2-sub">Share the link or print it for your property.</p>
   </div>
-  <p class="v2-supporting-line">Print it or share the link — your choice.</p>
-  <a class="v2-cta" href="#"><span class="v2-cta-arrow">→</span></a>
 
-  <span class="v2-property-name" style="display:none"></span>
-  <span class="v2-style-name" style="display:none"></span>
+  <div class="v2-strip">
+    <div class="v2-strip-item">
+      <div class="v2-strip-icon">📱</div>
+      <div class="v2-strip-label">Mobile guide</div>
+    </div>
+    <div class="v2-strip-sep"></div>
+    <div class="v2-strip-item">
+      <div class="v2-strip-icon">📄</div>
+      <div class="v2-strip-label">Printable PDF</div>
+    </div>
+    <div class="v2-strip-sep"></div>
+    <div class="v2-strip-item">
+      <div class="v2-strip-icon">🌴</div>
+      <div class="v2-strip-label">Tropical style</div>
+    </div>
+  </div>
+
+  <div class="v2-badges" style="display:none;"></div>
+  <p class="v2-supporting-line" style="display:none;"></p>
+  <a class="v2-cta" href="#" style="display:none;"></a>
+  <span class="v2-property-name" style="display:none;"></span>
+  <span class="v2-style-name" style="display:none;"></span>
 </main>
 </body>
 </html>

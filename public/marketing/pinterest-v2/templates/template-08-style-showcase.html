@@ -6,72 +6,41 @@
 <title>MyGuest — Style Showcase</title>
 <link rel="stylesheet" href="../styles/pinterest-v2.css">
 <style>
-.v2-style-label-block{
-  position:absolute;left:72px;top:800px;z-index:4;
+.v2-left-zone{
+  position:absolute;left:38px;top:118px;width:480px;z-index:4;
 }
-.v2-style-big-name{
-  font-family:Georgia,serif;
-  font-size:86px;line-height:.92;
-  letter-spacing:-.05em;
-  color:var(--c-primary);
-  margin-bottom:24px;
-}
-.v2-style-descriptor{
-  font-family:Georgia,serif;
-  font-size:20px;letter-spacing:.08em;
-  color:var(--c-mid);
-  text-transform:uppercase;
-  margin-bottom:32px;
-}
-.v2-style-swatches{
-  display:flex;gap:14px;flex-wrap:wrap;
-  width:380px;
-}
-.v2-swatch{
-  height:52px;border-radius:999px;
-  padding:0 22px;
-  display:flex;align-items:center;gap:10px;
-  font-family:Georgia,serif;font-size:16px;font-weight:700;
-  box-shadow:0 10px 22px rgba(0,0,0,.1);
-  border:2px solid transparent;
-}
-.sw-coastal{background:#daeef5;color:#0a6f8f;border-color:#9ad0e0;}
-.sw-minimalist{background:#f2f2f2;color:#111;border-color:#c0c0c0;}
-.sw-sunset{background:#fff8f1;color:#c44a20;border-color:#f0b898;}
-.sw-classic{background:#f8f5e8;color:#2d4a22;border-color:#a8b878;}
-.sw-active{
-  background:var(--c-primary)!important;
-  color:#fff!important;
-  border-color:var(--c-primary)!important;
+.v2-style-header{
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--c-mid);margin-bottom:24px;
 }
 </style>
 </head>
 <body class="style-classic">
 <main class="pin">
 
-  <div class="v2-brand"><span class="v2-brand-star">✦</span>MyGuest</div>
+  <div class="v2-brand"><span class="v2-brand-star">+</span> MyGuest</div>
 
   <div class="v2-phone">
     <div class="v2-phone-side"></div>
     <div class="v2-phone-side-vol"></div>
     <div class="v2-screen v2-screenshot-wrap">
       <div class="v2-notch"></div>
-      <div class="v2-phone-top"><span>9:41</span><span>MyGuest</span></div>
       <div class="v2-phone-art">
         <div class="v2-phone-art-inner">
           <div class="v2-phone-myguest">MyGuest</div>
           <div class="v2-phone-tabs"><span>Guide</span><span>Style</span><span>PDF</span></div>
           <div class="v2-phone-guide-title">Le Marais<br>Flat</div>
           <div class="v2-phone-hero-img"></div>
-          <div class="v2-phone-welcome">Choose the visual style that fits your property perfectly.</div>
+          <div class="v2-phone-welcome">Pick the style that fits your property's personality.</div>
           <div class="v2-phone-section-title">STYLES</div>
           <div class="v2-phone-grid">
             <div class="v2-phone-cell"><b>🌊</b>Coastal</div>
             <div class="v2-phone-cell"><b>◼</b>Minimal</div>
             <div class="v2-phone-cell"><b>🌅</b>Sunset</div>
             <div class="v2-phone-cell"><b>🌿</b>Classic</div>
-            <div class="v2-phone-cell"><b>✦</b>More</div>
-            <div class="v2-phone-cell"><b>→</b>Try</div>
+            <div class="v2-phone-cell"><b>📱</b>Mobile</div>
+            <div class="v2-phone-cell"><b>📄</b>PDF</div>
           </div>
         </div>
       </div>
@@ -79,33 +48,56 @@
     </div>
   </div>
 
-  <div class="v2-copy">
-    <h1 class="v2-headline">Your style. Your brand.</h1>
-    <div class="v2-rule"></div>
-    <p class="v2-sub">Four visual identities. Pick the one that matches your property's personality.</p>
-  </div>
-
-  <div class="v2-style-label-block">
-    <div class="v2-style-big-name v2-style-name">Classic</div>
-    <div class="v2-style-descriptor">Paris · Heritage · Timeless</div>
-    <div class="v2-style-swatches">
-      <div class="v2-swatch sw-coastal">🌊 Coastal</div>
-      <div class="v2-swatch sw-minimalist">◼ Minimal</div>
-      <div class="v2-swatch sw-sunset">🌅 Sunset</div>
-      <div class="v2-swatch sw-classic sw-active">🌿 Classic</div>
+  <div class="v2-left-zone">
+    <div class="v2-style-header">4 premium styles</div>
+    <div class="v2-style-grid">
+      <div class="v2-style-thumb thumb-coastal">
+        <div class="v2-style-thumb-img"></div>
+        <div class="v2-style-thumb-label">Coastal</div>
+      </div>
+      <div class="v2-style-thumb thumb-minimalist">
+        <div class="v2-style-thumb-img"></div>
+        <div class="v2-style-thumb-label" style="color:#f0f0f0;background:#1a1a1a;">Minimalist</div>
+      </div>
+      <div class="v2-style-thumb thumb-sunset">
+        <div class="v2-style-thumb-img"></div>
+        <div class="v2-style-thumb-label">Sunset</div>
+      </div>
+      <div class="v2-style-thumb thumb-classic">
+        <div class="v2-style-thumb-img"></div>
+        <div class="v2-style-thumb-label">Classic</div>
+      </div>
     </div>
   </div>
 
-  <div class="v2-badges">
-    <div class="v2-badge">Classic style</div>
-    <div class="v2-badge">Paris flat</div>
-    <div class="v2-badge">4 styles</div>
+  <div class="v2-copy">
+    <h1 class="v2-headline">Designed for your style.</h1>
+    <div class="v2-rule"></div>
+    <p class="v2-sub">Four visual identities — pick the one that matches your property perfectly.</p>
   </div>
-  <p class="v2-supporting-line">4 premium styles — one for every property.</p>
-  <a class="v2-cta" href="#"><span class="v2-cta-arrow">→</span></a>
 
-  <span class="v2-property-name" style="display:none"></span>
-  <span class="v2-style-name" style="display:none"></span>
+  <div class="v2-strip">
+    <div class="v2-strip-item">
+      <div class="v2-strip-icon">⭐</div>
+      <div class="v2-strip-label">4 Styles</div>
+    </div>
+    <div class="v2-strip-sep"></div>
+    <div class="v2-strip-item">
+      <div class="v2-strip-icon">🏠</div>
+      <div class="v2-strip-label">Match Your Property</div>
+    </div>
+    <div class="v2-strip-sep"></div>
+    <div class="v2-strip-item">
+      <div class="v2-strip-icon">✨</div>
+      <div class="v2-strip-label">Impress Guests</div>
+    </div>
+  </div>
+
+  <div class="v2-badges" style="display:none;"></div>
+  <p class="v2-supporting-line" style="display:none;"></p>
+  <a class="v2-cta" href="#" style="display:none;"></a>
+  <span class="v2-property-name" style="display:none;"></span>
+  <span class="v2-style-name" style="display:none;"></span>
 </main>
 </body>
 </html>

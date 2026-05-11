@@ -6,20 +6,21 @@
 <title>MyGuest — Stop Repeating</title>
 <link rel="stylesheet" href="../styles/pinterest-v2.css">
 <style>
-.v2-questions{top:800px;width:430px;}
+.v2-left-zone{
+  position:absolute;left:38px;top:118px;width:490px;z-index:4;
+}
 </style>
 </head>
 <body class="style-coastal">
 <main class="pin">
 
-  <div class="v2-brand"><span class="v2-brand-star">✦</span>MyGuest</div>
+  <div class="v2-brand"><span class="v2-brand-star">+</span> MyGuest</div>
 
   <div class="v2-phone">
     <div class="v2-phone-side"></div>
     <div class="v2-phone-side-vol"></div>
     <div class="v2-screen v2-screenshot-wrap">
       <div class="v2-notch"></div>
-      <div class="v2-phone-top"><span>9:41</span><span>MyGuest</span></div>
       <div class="v2-phone-art">
         <div class="v2-phone-art-inner">
           <div class="v2-phone-myguest">MyGuest</div>
@@ -27,14 +28,14 @@
           <div class="v2-phone-guide-title">Ocean Drive<br>Retreat</div>
           <div class="v2-phone-hero-img"></div>
           <div class="v2-phone-welcome">All the answers, right in their pocket. No need to ask.</div>
-          <div class="v2-phone-section-title">FREQUENTLY ASKED</div>
+          <div class="v2-phone-section-title">QUICK ANSWERS</div>
           <div class="v2-phone-grid">
-            <div class="v2-phone-cell"><b>🔑</b>Keys</div>
             <div class="v2-phone-cell"><b>📶</b>WiFi</div>
             <div class="v2-phone-cell"><b>🅿</b>Parking</div>
-            <div class="v2-phone-cell"><b>♻</b>Trash</div>
-            <div class="v2-phone-cell"><b>🛁</b>Bath</div>
-            <div class="v2-phone-cell"><b>🔇</b>Noise</div>
+            <div class="v2-phone-cell"><b>🕐</b>Check-out</div>
+            <div class="v2-phone-cell"><b>🛁</b>Towels</div>
+            <div class="v2-phone-cell"><b>🔑</b>Check-in</div>
+            <div class="v2-phone-cell"><b>☎</b>Contact</div>
           </div>
         </div>
       </div>
@@ -42,41 +43,64 @@
     </div>
   </div>
 
+  <div class="v2-left-zone">
+    <div class="v2-qlist">
+      <div class="v2-qrow">
+        <div class="v2-qavatar">G</div>
+        <div class="v2-qtext">What's the WiFi password?</div>
+        <div class="v2-qarrow">→</div>
+      </div>
+      <div class="v2-qrow">
+        <div class="v2-qavatar">A</div>
+        <div class="v2-qtext">Where do I park?</div>
+        <div class="v2-qarrow">→</div>
+      </div>
+      <div class="v2-qrow">
+        <div class="v2-qavatar">M</div>
+        <div class="v2-qtext">What time is check-out?</div>
+        <div class="v2-qarrow">→</div>
+      </div>
+      <div class="v2-qrow">
+        <div class="v2-qavatar">S</div>
+        <div class="v2-qtext">Where are the towels?</div>
+        <div class="v2-qarrow">→</div>
+      </div>
+      <div class="v2-qrow">
+        <div class="v2-qavatar">J</div>
+        <div class="v2-qtext">How do I get in?</div>
+        <div class="v2-qarrow">→</div>
+      </div>
+    </div>
+  </div>
+
   <div class="v2-copy">
-    <h1 class="v2-headline">Stop answering the same questions.</h1>
+    <h1 class="v2-headline">Stop repeating check-in instructions.</h1>
     <div class="v2-rule"></div>
-    <p class="v2-sub">Your guide answers check-in, WiFi, parking, and more — before they even ask.</p>
+    <p class="v2-sub">Your guide answers WiFi, parking, checkout and more — before they even ask.</p>
   </div>
 
-  <div class="v2-questions">
-    <div class="v2-q">
-      <i>?</i>
-      <span>What's the WiFi password?</span>
+  <div class="v2-strip">
+    <div class="v2-strip-item">
+      <div class="v2-strip-icon">💬</div>
+      <div class="v2-strip-label">Fewer Messages</div>
     </div>
-    <div class="v2-q">
-      <i>?</i>
-      <span>Where do I park?</span>
+    <div class="v2-strip-sep"></div>
+    <div class="v2-strip-item">
+      <div class="v2-strip-icon">✈</div>
+      <div class="v2-strip-label">Smoother Stays</div>
     </div>
-    <div class="v2-q">
-      <i>?</i>
-      <span>What time is check-out?</span>
-    </div>
-    <div class="v2-q">
-      <i>?</i>
-      <span>Where are the towels?</span>
+    <div class="v2-strip-sep"></div>
+    <div class="v2-strip-item">
+      <div class="v2-strip-icon">😊</div>
+      <div class="v2-strip-label">Happier Guests</div>
     </div>
   </div>
 
-  <div class="v2-badges">
-    <div class="v2-badge">Coastal style</div>
-    <div class="v2-badge">Beach rentals</div>
-    <div class="v2-badge">Early access</div>
-  </div>
-  <p class="v2-supporting-line">Every question, already answered.</p>
-  <a class="v2-cta" href="#"><span class="v2-cta-arrow">→</span></a>
-
-  <span class="v2-property-name" style="display:none"></span>
-  <span class="v2-style-name" style="display:none"></span>
+  <div class="v2-badges" style="display:none;"></div>
+  <p class="v2-supporting-line" style="display:none;"></p>
+  <a class="v2-cta" href="#" style="display:none;"></a>
+  <span class="v2-property-name" style="display:none;"></span>
+  <span class="v2-style-name" style="display:none;"></span>
 </main>
 </body>
 </html>

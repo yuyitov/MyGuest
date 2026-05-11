@@ -6,50 +6,64 @@
 <title>MyGuest — Before & After</title>
 <link rel="stylesheet" href="../styles/pinterest-v2.css">
 <style>
-.v2-chaos{
-  position:absolute;left:72px;top:800px;width:380px;height:240px;z-index:4;
+.v2-left-zone{
+  position:absolute;left:38px;top:118px;width:490px;z-index:4;
 }
-.v2-paper{
-  position:absolute;
-  background:rgba(255,255,255,.88);
-  border:1px solid var(--c-badge-border);
-  border-radius:12px;
-  box-shadow:0 14px 32px rgba(0,0,0,.12);
-  padding:14px 16px;width:196px;
+.v2-ba-header{
+  display:flex;align-items:center;gap:18px;margin-bottom:28px;
 }
-.v2-paper-line{height:7px;background:#e0e0e0;border-radius:4px;margin-bottom:6px;}
-.v2-paper-line.s{width:60%;}
-.v2-paper-line.m{width:78%;}
-.v2-paper-tag{
-  margin-top:10px;font-family:Georgia,serif;font-size:11px;
-  letter-spacing:.1em;color:#bbb;text-transform:uppercase;
+.v2-ba-arrow{
+  display:flex;align-items:center;justify-content:center;
+  width:56px;height:56px;border-radius:999px;
+  background:var(--c-arrow-bg);color:#fff;font-size:26px;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);flex:0 0 auto;
 }
-.p1{top:0;left:0;transform:rotate(-9deg);}
-.p2{top:18px;left:100px;transform:rotate(4deg);}
-.p3{top:54px;left:190px;transform:rotate(-5deg);}
-.v2-chaos-label{
-  position:absolute;bottom:-28px;left:8px;
-  font-family:Georgia,serif;font-size:16px;font-weight:700;
-  letter-spacing:.18em;text-transform:uppercase;color:#bbb;
+.v2-notebook-wrap{
+  background:var(--c-before-bg);
+  border:1px solid var(--c-before-border);
+  border-radius:16px;
+  box-shadow:0 18px 42px rgba(0,0,0,.14);
+  overflow:hidden;
+  position:relative;
 }
-.v2-now-arrow{
-  position:absolute;left:128px;top:1070px;
-  font-size:52px;transform:rotate(-28deg);
-  color:var(--c-rule);opacity:.65;z-index:4;line-height:1;
+.v2-notebook-spine{
+  position:absolute;left:0;top:0;bottom:0;width:20px;
+  background:repeating-linear-gradient(to bottom,rgba(0,0,0,.06) 0,rgba(0,0,0,.06) 10px,transparent 10px,transparent 20px);
+  border-right:1px solid rgba(0,0,0,.07);
+}
+.v2-notebook-inner{padding:18px 18px 18px 30px;}
+.v2-notebook-text{
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:500;
+  color:var(--c-mid);line-height:1.7;
+}
+.v2-notebook-text span{display:block;}
+.v2-notebook-line{height:7px;background:rgba(0,0,0,.09);border-radius:3px;margin-bottom:6px;}
+.v2-notebook-line.s{width:55%;}
+.v2-notebook-line.m{width:72%;}
+.v2-sticky-note{
+  position:absolute;right:18px;bottom:16px;
+  background:#fff9c4;
+  border-radius:4px;
+  box-shadow:0 6px 16px rgba(0,0,0,.13);
+  padding:10px 14px;
+  font-family:'Inter',sans-serif;font-size:12px;
+  line-height:1.45;color:#555;
+  transform:rotate(3deg);
+  max-width:140px;
 }
 </style>
 </head>
 <body class="style-coastal">
 <main class="pin">
 
-  <div class="v2-brand"><span class="v2-brand-star">✦</span>MyGuest</div>
+  <div class="v2-brand"><span class="v2-brand-star">+</span> MyGuest</div>
 
+  <!-- Phone (right) -->
   <div class="v2-phone">
     <div class="v2-phone-side"></div>
     <div class="v2-phone-side-vol"></div>
     <div class="v2-screen v2-screenshot-wrap">
       <div class="v2-notch"></div>
-      <div class="v2-phone-top"><span>9:41</span><span>MyGuest</span></div>
       <div class="v2-phone-art">
         <div class="v2-phone-art-inner">
           <div class="v2-phone-myguest">MyGuest</div>
@@ -60,11 +74,11 @@
           <div class="v2-phone-section-title">QUICK ACCESS</div>
           <div class="v2-phone-grid">
             <div class="v2-phone-cell"><b>✓</b>Check-in</div>
-            <div class="v2-phone-cell"><b>📶</b>WiFi</div>
-            <div class="v2-phone-cell"><b>🏠</b>Rules</div>
-            <div class="v2-phone-cell"><b>🗺</b>Area</div>
+            <div class="v2-phone-cell"><b>📶</b>House Rules</div>
+            <div class="v2-phone-cell"><b>🍽</b>Local Tips</div>
+            <div class="v2-phone-cell"><b>📍</b>Places to Eat</div>
+            <div class="v2-phone-cell"><b>📶</b>WiFi Info</div>
             <div class="v2-phone-cell"><b>☎</b>Contact</div>
-            <div class="v2-phone-cell"><b>🔑</b>Keys</div>
           </div>
         </div>
       </div>
@@ -72,43 +86,70 @@
     </div>
   </div>
 
+  <!-- Left visual zone: BEFORE/AFTER -->
+  <div class="v2-left-zone">
+    <div class="v2-ba-header">
+      <div class="v2-after-label">AFTER</div>
+    </div>
+    <div class="v2-before-label" style="margin-bottom:14px;">BEFORE</div>
+    <div class="v2-notebook-wrap" style="position:relative;">
+      <div class="v2-notebook-spine"></div>
+      <div class="v2-notebook-inner">
+        <div class="v2-notebook-text">
+          <span>House Rules</span>
+          <span>WiFi: Beach1234</span>
+          <span>Parking in back…</span>
+          <span>Check out: 11am</span>
+          <span>Lots of PDF's and notes…</span>
+        </div>
+        <div style="margin-top:14px;">
+          <div class="v2-notebook-line"></div>
+          <div class="v2-notebook-line m"></div>
+          <div class="v2-notebook-line s"></div>
+          <div class="v2-notebook-line m"></div>
+          <div class="v2-notebook-line"></div>
+        </div>
+      </div>
+      <div class="v2-sticky-note">
+        Before check-in<br>→ send PDF<br>→ text WiFi pw<br>→ print rules
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:18px;margin-top:24px;">
+      <div class="v2-ba-arrow">→</div>
+    </div>
+  </div>
+
+  <!-- Copy (bottom-left) -->
   <div class="v2-copy">
-    <h1 class="v2-headline">One link. Everything they need.</h1>
+    <h1 class="v2-headline">From scattered info to a beautiful guest guide.</h1>
     <div class="v2-rule"></div>
-    <p class="v2-sub">Replace scattered PDFs and messages with a polished digital guide.</p>
+    <p class="v2-sub">Turn your Airbnb welcome book into a mobile guest guide.</p>
   </div>
 
-  <div class="v2-chaos">
-    <div class="v2-paper p1">
-      <div class="v2-paper-line"></div><div class="v2-paper-line m"></div>
-      <div class="v2-paper-line s"></div><div class="v2-paper-line"></div>
-      <div class="v2-paper-tag">WELCOME.PDF</div>
+  <!-- Bottom strip -->
+  <div class="v2-strip">
+    <div class="v2-strip-item">
+      <div class="v2-strip-icon">📱</div>
+      <div class="v2-strip-label">Mobile guide</div>
     </div>
-    <div class="v2-paper p2">
-      <div class="v2-paper-line m"></div><div class="v2-paper-line"></div>
-      <div class="v2-paper-line s"></div><div class="v2-paper-line m"></div>
-      <div class="v2-paper-tag">HOUSE NOTES</div>
+    <div class="v2-strip-sep"></div>
+    <div class="v2-strip-item">
+      <div class="v2-strip-icon">🖨</div>
+      <div class="v2-strip-label">Printable PDF</div>
     </div>
-    <div class="v2-paper p3">
-      <div class="v2-paper-line s"></div><div class="v2-paper-line"></div>
-      <div class="v2-paper-line m"></div><div class="v2-paper-line s"></div>
-      <div class="v2-paper-tag">RULES.TXT</div>
+    <div class="v2-strip-sep"></div>
+    <div class="v2-strip-item">
+      <div class="v2-strip-icon">↗</div>
+      <div class="v2-strip-label">Easy to share</div>
     </div>
-    <div class="v2-chaos-label">Before</div>
   </div>
 
-  <div class="v2-now-arrow">↗</div>
-
-  <div class="v2-badges">
-    <div class="v2-badge">Coastal style</div>
-    <div class="v2-badge">Beach rentals</div>
-    <div class="v2-badge">Early access</div>
-  </div>
-  <p class="v2-supporting-line">Mobile guide + printable PDF included.</p>
-  <a class="v2-cta" href="#"><span class="v2-cta-arrow">→</span></a>
-
-  <span class="v2-property-name" style="display:none"></span>
-  <span class="v2-style-name" style="display:none"></span>
+  <!-- Hidden compat elements -->
+  <div class="v2-badges" style="display:none;"></div>
+  <p class="v2-supporting-line" style="display:none;"></p>
+  <a class="v2-cta" href="#" style="display:none;"></a>
+  <span class="v2-property-name" style="display:none;"></span>
+  <span class="v2-style-name" style="display:none;"></span>
 </main>
 </body>
 </html>
