@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1000,initial-scale=1">
+<title>MyGuest Pin — Demo Visual</title>
+<link rel="stylesheet" href="../styles/pinterest-v2.css">
+<style>
+.v2-visual { top: 72px; bottom: 300px; }
+.v2-content { height: 300px; padding-top: 28px; padding-bottom: 32px; }
+
+.v2-screenshot-wrap {
+  width: 100%;
+  height: 100%;
+  background: var(--c-accent);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+}
+.v2-screenshot {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+.v2-screenshot-placeholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.v2-screenshot-placeholder-icon {
+  font-size: 80px;
+  color: var(--c-primary);
+  opacity: 0.4;
+  display: block;
+}
+.v2-screenshot-placeholder-text {
+  font-family: 'Georgia', serif;
+  font-size: 22px;
+  color: var(--c-mid);
+  margin-top: 16px;
+  font-style: italic;
+}
+
+.v2-demo-label {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-family: 'Georgia', serif;
+  font-size: 18px;
+  padding: 6px 16px;
+  border-radius: 2px;
+  letter-spacing: 0.06em;
+}
+</style>
+</head>
+<body class="style-coastal">
+<main class="pin">
+  <div class="v2-brand">
+    <span><span class="v2-brand-star">✦</span>MyGuest</span>
+  </div>
+
+  <div class="v2-visual">
+    <div class="v2-screenshot-wrap">
+      <img class="v2-screenshot" src="" alt="Guest guide demo screenshot" loading="eager">
+      <div class="v2-screenshot-placeholder">
+        <span class="v2-screenshot-placeholder-icon">⊞</span>
+        <div class="v2-screenshot-placeholder-text">Live demo screenshot</div>
+      </div>
+      <div class="v2-demo-label">Live demo ↗</div>
+    </div>
+  </div>
+
+  <div class="v2-content">
+    <div class="v2-style-chip">Coastal</div>
+    <div class="v2-headline">See how your beach rental guest guide could look.</div>
+    <div class="v2-sub">Mobile-first, printable, trilingual.</div>
+    <div class="v2-badges">
+      <div class="v2-badge">Coastal</div>
+      <div class="v2-badge">Ocean Drive Retreat</div>
+      <div class="v2-badge">Live demo</div>
+    </div>
+    <a class="v2-cta" href="#">View live demo →</a>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,58 @@
+[
+  {
+    "style": "Coastal",
+    "property": "Ocean Drive Retreat",
+    "slug": "ocean-drive-retreat",
+    "demo_url": "https://myguestguide.com/villas/ocean-drive-retreat/",
+    "pdf_url": "https://myguestguide.com/villas/ocean-drive-retreat/print.pdf",
+    "audience_angle": "beach vacation rental hosts",
+    "visual_angle": "coastal, beach, airy, premium",
+    "color_primary": "#0a6f8f",
+    "color_bg": "#e8f4f8",
+    "color_accent": "#b8dce8",
+    "color_text": "#1a3a4a",
+    "screenshot_dir": "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat"
+  },
+  {
+    "style": "Minimalist",
+    "property": "The SoHo Loft",
+    "slug": "the-soho-loft",
+    "demo_url": "https://myguestguide.com/villas/the-soho-loft/",
+    "pdf_url": "https://myguestguide.com/villas/the-soho-loft/print.pdf",
+    "audience_angle": "city apartment vacation rental hosts",
+    "visual_angle": "minimal, editorial, black and white, urban",
+    "color_primary": "#1a1a1a",
+    "color_bg": "#f5f5f5",
+    "color_accent": "#d0d0d0",
+    "color_text": "#333333",
+    "screenshot_dir": "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft"
+  },
+  {
+    "style": "Sunset",
+    "property": "Casa Selva Tulum",
+    "slug": "casa-selva-tulum",
+    "demo_url": "https://myguestguide.com/villas/casa-selva-tulum/",
+    "pdf_url": "https://myguestguide.com/villas/casa-selva-tulum/print.pdf",
+    "audience_angle": "tropical and Latin American vacation rental hosts",
+    "visual_angle": "warm, vibrant, tropical, sunset tones",
+    "color_primary": "#c44a20",
+    "color_bg": "#fff0e8",
+    "color_accent": "#f5c4a8",
+    "color_text": "#4a1a0a",
+    "screenshot_dir": "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum"
+  },
+  {
+    "style": "Classic",
+    "property": "Le Marais Flat",
+    "slug": "le-marais-flat",
+    "demo_url": "https://myguestguide.com/villas/le-marais-flat/",
+    "pdf_url": "https://myguestguide.com/villas/le-marais-flat/print.pdf",
+    "audience_angle": "European boutique flat and historic city rental hosts",
+    "visual_angle": "elegant, classic, deep green and gold, sophisticated",
+    "color_primary": "#2d4a22",
+    "color_bg": "#f5f0e0",
+    "color_accent": "#c8b880",
+    "color_text": "#2a2010",
+    "screenshot_dir": "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat"
+  }
+]

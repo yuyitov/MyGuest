@@ -1,0 +1,103 @@
+name: Render Pinterest v2 Pins
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright==1.53.0
+          python -m playwright install --with-deps chromium
+
+      - name: Validate copy (no prohibited claims or links)
+        run: python scripts/marketing/validate_pinterest_copy.py
+        # Fails the workflow if prohibited copy or links are detected.
+        # Fix before re-running.
+
+      - name: Capture screenshots from live demos
+        run: python scripts/marketing/capture_pinterest_assets.py
+        # Screenshots are saved to public/marketing/pinterest-v2/assets/screenshots/
+        # If a demo is unreachable, a warning is logged and a placeholder is used during render.
+        continue-on-error: false
+
+      - name: Start local static server
+        run: |
+          python -m http.server 8000 --directory public > /tmp/myguest-pinterest-v2-server.log 2>&1 &
+          echo $! > /tmp/myguest-pinterest-v2-server.pid
+          sleep 3
+          echo "Local server started on port 8000"
+
+      - name: Render 32 Pinterest pins
+        run: |
+          python scripts/marketing/render_pinterest_v2.py \
+            --base-url http://127.0.0.1:8000/marketing/pinterest-v2/templates/ \
+            --output-dir output/pinterest-v2/pins
+
+      - name: Generate metadata CSVs
+        run: python scripts/marketing/build_pinterest_metadata.py
+
+      - name: Validate output — check for exactly 32 PNGs
+        run: |
+          PIN_COUNT=$(ls output/pinterest-v2/pins/*.png 2>/dev/null | wc -l)
+          echo "PNG count: $PIN_COUNT"
+          if [ "$PIN_COUNT" -lt 32 ]; then
+            echo "ERROR: expected 32 PNGs, found $PIN_COUNT" >&2
+            exit 1
+          fi
+          echo "OK: $PIN_COUNT PNGs generated"
+
+      - name: Validate output — check for no empty files
+        run: |
+          EMPTY=$(find output/pinterest-v2/pins -name "*.png" -empty 2>/dev/null | wc -l)
+          if [ "$EMPTY" -gt 0 ]; then
+            echo "ERROR: found $EMPTY empty PNG files" >&2
+            find output/pinterest-v2/pins -name "*.png" -empty
+            exit 1
+          fi
+          echo "OK: no empty PNG files"
+
+      - name: Validate metadata files exist
+        run: |
+          FILES=(
+            "output/pinterest-v2/metadata/manifest.json"
+            "output/pinterest-v2/metadata/pinterest_upload_sheet.csv"
+            "output/pinterest-v2/metadata/pinterest_tracking_sheet.csv"
+          )
+          for f in "${FILES[@]}"; do
+            if [ ! -f "$f" ] || [ ! -s "$f" ]; then
+              echo "ERROR: required metadata file missing or empty: $f" >&2
+              exit 1
+            fi
+            echo "OK: $f"
+          done
+
+      - name: Stop local static server
+        if: always()
+        run: |
+          if [ -f /tmp/myguest-pinterest-v2-server.pid ]; then
+            kill "$(cat /tmp/myguest-pinterest-v2-server.pid)" 2>/dev/null || true
+          fi
+
+      - name: Upload Pinterest v2 package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pinterest-v2-package
+          path: output/pinterest-v2/
+          if-no-files-found: error
+          retention-days: 30

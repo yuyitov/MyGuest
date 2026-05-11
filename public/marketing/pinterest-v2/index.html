@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MyGuest — Pinterest v2 Templates</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Georgia, serif; background: #f0f0f0; color: #222; }
+header {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 24px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+h1 { font-size: 24px; font-weight: 400; letter-spacing: 0.1em; }
+.subtitle { font-size: 14px; opacity: 0.6; margin-top: 4px; }
+.badge { background: #c44; color: #fff; font-size: 12px; padding: 3px 10px; border-radius: 2px; letter-spacing: 0.1em; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  padding: 40px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.template-card {
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.template-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+
+.template-preview {
+  width: 100%;
+  aspect-ratio: 2/3;
+  background: #e8e8e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  border-bottom: 2px solid #e0e0e0;
+}
+.template-info { padding: 16px; }
+.template-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.template-desc { font-size: 13px; color: #666; line-height: 1.4; }
+.template-id { font-size: 11px; color: #aaa; margin-top: 8px; letter-spacing: 0.06em; font-style: italic; }
+
+.styles-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.style-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.style-dot.coastal { background: #0a6f8f; }
+.style-dot.minimalist { background: #1a1a1a; }
+.style-dot.sunset { background: #c44a20; }
+.style-dot.classic { background: #2d4a22; }
+.style-label { font-size: 11px; color: #888; line-height: 12px; }
+
+section.info {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 40px 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.info-card {
+  background: #fff;
+  border-radius: 4px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.info-card h3 { font-size: 16px; margin-bottom: 12px; color: #333; }
+.info-card ul { padding-left: 20px; font-size: 14px; color: #555; line-height: 1.8; }
+.info-card code { background: #f0f0f0; padding: 2px 6px; border-radius: 2px; font-size: 12px; font-family: monospace; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>✦ MyGuest — Pinterest v2 Templates</h1>
+    <div class="subtitle">8 templates × 4 styles = 32 pins | Format: 1000×1500px vertical</div>
+  </div>
+  <div class="badge">INTERNAL USE ONLY</div>
+</header>
+
+<div class="grid">
+  <a class="template-card" href="templates/template-01-before-after.html">
+    <div class="template-preview">⇄</div>
+    <div class="template-info">
+      <div class="template-name">Before / After</div>
+      <div class="template-desc">Scattered materials → clean mobile guest guide</div>
+      <div class="styles-row">
+        <span class="style-dot coastal" title="Coastal"></span>
+        <span class="style-dot minimalist" title="Minimalist"></span>
+        <span class="style-dot sunset" title="Sunset"></span>
+        <span class="style-dot classic" title="Classic"></span>
+        <span class="style-label">All 4 styles</span>
+      </div>
+      <div class="template-id">template-01-before-after.html · pins 001–004</div>
+    </div>
+  </a>
+
+  <a class="template-card" href="templates/template-02-demo-visual.html">
+    <div class="template-preview">⊞</div>
+    <div class="template-info">
+      <div class="template-name">Demo Visual</div>
+      <div class="template-desc">Real demo screenshot — "See how it looks"</div>
+      <div class="styles-row">
+        <span class="style-dot coastal" title="Coastal"></span>
+        <span class="style-dot minimalist" title="Minimalist"></span>
+        <span class="style-dot sunset" title="Sunset"></span>
+        <span class="style-dot classic" title="Classic"></span>
+        <span class="style-label">All 4 styles</span>
+      </div>
+      <div class="template-id">template-02-demo-visual.html · pins 005–008</div>
+    </div>
+  </a>
+
+  <a class="template-card" href="templates/template-03-printable-pdf.html">
+    <div class="template-preview">📄</div>
+    <div class="template-info">
+      <div class="template-name">Printable PDF</div>
+      <div class="template-desc">Mobile guide + printable PDF side by side</div>
+      <div class="styles-row">
+        <span class="style-dot coastal" title="Coastal"></span>
+        <span class="style-dot minimalist" title="Minimalist"></span>
+        <span class="style-dot sunset" title="Sunset"></span>
+        <span class="style-dot classic" title="Classic"></span>
+        <span class="style-label">All 4 styles</span>
+      </div>
+      <div class="template-id">template-03-printable-pdf.html · pins 009–012</div>
+    </div>
+  </a>
+
+  <a class="template-card" href="templates/template-04-trilingual.html">
+    <div class="template-preview">🌐</div>
+    <div class="template-info">
+      <div class="template-name">Trilingual</div>
+      <div class="template-desc">EN / ES / FR — three language panels</div>
+      <div class="styles-row">
+        <span class="style-dot coastal" title="Coastal"></span>
+        <span class="style-dot minimalist" title="Minimalist"></span>
+        <span class="style-dot sunset" title="Sunset"></span>
+        <span class="style-dot classic" title="Classic"></span>
+        <span class="style-label">All 4 styles</span>
+      </div>
+      <div class="template-id">template-04-trilingual.html · pins 013–016</div>
+    </div>
+  </a>
+
+  <a class="template-card" href="templates/template-05-stop-repeating.html">
+    <div class="template-preview">🛑</div>
+    <div class="template-info">
+      <div class="template-name">Stop Repeating</div>
+      <div class="template-desc">Chat bubbles → one clean link solution</div>
+      <div class="styles-row">
+        <span class="style-dot coastal" title="Coastal"></span>
+        <span class="style-dot minimalist" title="Minimalist"></span>
+        <span class="style-dot sunset" title="Sunset"></span>
+        <span class="style-dot classic" title="Classic"></span>
+        <span class="style-label">All 4 styles</span>
+      </div>
+      <div class="template-id">template-05-stop-repeating.html · pins 017–020</div>
+    </div>
+  </a>
+
+  <a class="template-card" href="templates/template-06-existing-materials.html">
+    <div class="template-preview">📁</div>
+    <div class="template-info">
+      <div class="template-name">Existing Materials</div>
+      <div class="template-desc">"Send what you have" — PDF, Word, photos, or form</div>
+      <div class="styles-row">
+        <span class="style-dot coastal" title="Coastal"></span>
+        <span class="style-dot minimalist" title="Minimalist"></span>
+        <span class="style-dot sunset" title="Sunset"></span>
+        <span class="style-dot classic" title="Classic"></span>
+        <span class="style-label">All 4 styles</span>
+      </div>
+      <div class="template-id">template-06-existing-materials.html · pins 021–024</div>
+    </div>
+  </a>
+
+  <a class="template-card" href="templates/template-07-private-details.html">
+    <div class="template-preview">🔒</div>
+    <div class="template-info">
+      <div class="template-name">Private Details</div>
+      <div class="template-desc">Public guide + private guest link split</div>
+      <div class="styles-row">
+        <span class="style-dot coastal" title="Coastal"></span>
+        <span class="style-dot minimalist" title="Minimalist"></span>
+        <span class="style-dot sunset" title="Sunset"></span>
+        <span class="style-dot classic" title="Classic"></span>
+        <span class="style-label">All 4 styles</span>
+      </div>
+      <div class="template-id">template-07-private-details.html · pins 025–028</div>
+    </div>
+  </a>
+
+  <a class="template-card" href="templates/template-08-style-showcase.html">
+    <div class="template-preview">✦</div>
+    <div class="template-info">
+      <div class="template-name">Style Showcase</div>
+      <div class="template-desc">One style per pin — large demo screenshot</div>
+      <div class="styles-row">
+        <span class="style-dot coastal" title="Coastal"></span>
+        <span class="style-dot minimalist" title="Minimalist"></span>
+        <span class="style-dot sunset" title="Sunset"></span>
+        <span class="style-dot classic" title="Classic"></span>
+        <span class="style-label">All 4 styles</span>
+      </div>
+      <div class="template-id">template-08-style-showcase.html · pins 029–032</div>
+    </div>
+  </a>
+</div>
+
+<section class="info">
+  <div class="info-card">
+    <h3>How to render pins</h3>
+    <ul>
+      <li>Install: <code>pip install playwright==1.53.0 && playwright install chromium</code></li>
+      <li>Optional: <code>python scripts/marketing/capture_pinterest_assets.py</code></li>
+      <li>Validate: <code>python scripts/marketing/validate_pinterest_copy.py</code></li>
+      <li>Render: <code>python scripts/marketing/render_pinterest_v2.py --base-url http://127.0.0.1:8000/marketing/pinterest-v2/templates/</code></li>
+      <li>Metadata: <code>python scripts/marketing/build_pinterest_metadata.py</code></li>
+      <li>Output: <code>output/pinterest-v2/pins/</code> (32 PNGs)</li>
+    </ul>
+  </div>
+  <div class="info-card">
+    <h3>Data files</h3>
+    <ul>
+      <li><code>data/marketing/pinterest_demo_inventory.json</code> — 4 demos</li>
+      <li><code>data/marketing/pinterest_campaign_v2.json</code> — 32 pins</li>
+      <li><code>data/marketing/pinterest_keywords.json</code> — SEO keywords</li>
+      <li><code>output/pinterest-v2/metadata/pinterest_upload_sheet.csv</code></li>
+      <li><code>output/pinterest-v2/metadata/pinterest_tracking_sheet.csv</code></li>
+    </ul>
+  </div>
+</section>
+
+<footer style="text-align:center;padding:24px;font-size:13px;color:#aaa;">
+  MyGuest Pinterest v2 — Internal use only — myguestguide.com
+</footer>
+</body>
+</html>

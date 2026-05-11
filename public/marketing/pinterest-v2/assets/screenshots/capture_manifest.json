@@ -1,0 +1,114 @@
+[
+  {
+    "slug": "ocean-drive-retreat",
+    "style": "Coastal",
+    "capture": "hero",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\ocean-drive-retreat\\hero.png",
+    "ok": true
+  },
+  {
+    "slug": "ocean-drive-retreat",
+    "style": "Coastal",
+    "capture": "guide-section",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\ocean-drive-retreat\\guide-section.png",
+    "ok": true
+  },
+  {
+    "slug": "ocean-drive-retreat",
+    "style": "Coastal",
+    "capture": "full-demo",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\ocean-drive-retreat\\full-demo.png",
+    "ok": true
+  },
+  {
+    "slug": "ocean-drive-retreat",
+    "style": "Coastal",
+    "capture": "print-preview",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\ocean-drive-retreat\\print-preview.png",
+    "ok": true
+  },
+  {
+    "slug": "the-soho-loft",
+    "style": "Minimalist",
+    "capture": "hero",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\the-soho-loft\\hero.png",
+    "ok": true
+  },
+  {
+    "slug": "the-soho-loft",
+    "style": "Minimalist",
+    "capture": "guide-section",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\the-soho-loft\\guide-section.png",
+    "ok": true
+  },
+  {
+    "slug": "the-soho-loft",
+    "style": "Minimalist",
+    "capture": "full-demo",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\the-soho-loft\\full-demo.png",
+    "ok": true
+  },
+  {
+    "slug": "the-soho-loft",
+    "style": "Minimalist",
+    "capture": "print-preview",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\the-soho-loft\\print-preview.png",
+    "ok": true
+  },
+  {
+    "slug": "casa-selva-tulum",
+    "style": "Sunset",
+    "capture": "hero",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\casa-selva-tulum\\hero.png",
+    "ok": true
+  },
+  {
+    "slug": "casa-selva-tulum",
+    "style": "Sunset",
+    "capture": "guide-section",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\casa-selva-tulum\\guide-section.png",
+    "ok": true
+  },
+  {
+    "slug": "casa-selva-tulum",
+    "style": "Sunset",
+    "capture": "full-demo",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\casa-selva-tulum\\full-demo.png",
+    "ok": true
+  },
+  {
+    "slug": "casa-selva-tulum",
+    "style": "Sunset",
+    "capture": "print-preview",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\casa-selva-tulum\\print-preview.png",
+    "ok": true
+  },
+  {
+    "slug": "le-marais-flat",
+    "style": "Classic",
+    "capture": "hero",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\le-marais-flat\\hero.png",
+    "ok": true
+  },
+  {
+    "slug": "le-marais-flat",
+    "style": "Classic",
+    "capture": "guide-section",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\le-marais-flat\\guide-section.png",
+    "ok": true
+  },
+  {
+    "slug": "le-marais-flat",
+    "style": "Classic",
+    "capture": "full-demo",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\le-marais-flat\\full-demo.png",
+    "ok": true
+  },
+  {
+    "slug": "le-marais-flat",
+    "style": "Classic",
+    "capture": "print-preview",
+    "path": "public\\marketing\\pinterest-v2\\assets\\screenshots\\le-marais-flat\\print-preview.png",
+    "ok": true
+  }
+]

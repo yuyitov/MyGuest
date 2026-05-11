@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1000,initial-scale=1">
+<title>MyGuest Pin — Printable PDF</title>
+<link rel="stylesheet" href="../styles/pinterest-v2.css">
+<style>
+.v2-visual { top: 72px; bottom: 380px; }
+.v2-content { height: 380px; padding-top: 28px; padding-bottom: 32px; }
+
+.v2-dual-display {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  gap: 0;
+}
+
+.v2-mobile-side {
+  flex: 1;
+  background: var(--c-surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 30px;
+  border-right: 2px solid var(--c-border);
+}
+.v2-pdf-side {
+  flex: 1;
+  background: var(--c-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 30px;
+}
+
+.v2-media-label {
+  font-family: 'Georgia', serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-primary);
+  margin-bottom: 20px;
+}
+
+.v2-phone-mini {
+  width: 150px;
+  height: 280px;
+  background: #fff;
+  border-radius: 20px;
+  border: 5px solid var(--c-primary);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+}
+.v2-phone-mini-notch {
+  width: 48px;
+  height: 10px;
+  background: var(--c-primary);
+  border-radius: 0 0 6px 6px;
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+}
+.v2-phone-mini-screen {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--c-bg);
+}
+.v2-phone-mini-header {
+  height: 38px;
+  background: var(--c-primary);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+}
+.v2-phone-mini-header span {
+  color: #fff;
+  font-size: 9px;
+  font-family: 'Georgia', serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.v2-phone-mini-body { padding: 10px; }
+.v2-phone-mini-row {
+  height: 18px;
+  background: var(--c-accent);
+  border-radius: 2px;
+  margin-bottom: 3px;
+  font-size: 7px;
+  font-family: 'Georgia', serif;
+  color: var(--c-text);
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+}
+
+.v2-pdf-mock {
+  width: 170px;
+  height: 220px;
+  background: #fff;
+  border: 2px solid var(--c-border);
+  box-shadow: 4px 4px 0 var(--c-accent), 8px 8px 0 var(--c-border);
+  position: relative;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.v2-pdf-mock-header {
+  height: 32px;
+  background: var(--c-primary);
+  margin: -16px -16px 0 -16px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+.v2-pdf-mock-header span {
+  color: #fff;
+  font-size: 9px;
+  font-family: 'Georgia', serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.v2-pdf-mock-line {
+  height: 8px;
+  background: var(--c-accent);
+  border-radius: 2px;
+}
+.v2-pdf-mock-line:nth-child(2) { margin-top: 8px; }
+.v2-pdf-mock-line.short { width: 70%; }
+.v2-pdf-mock-line.medium { width: 85%; }
+
+.v2-media-desc {
+  font-family: 'Georgia', serif;
+  font-size: 18px;
+  color: var(--c-mid);
+  text-align: center;
+  margin-top: 14px;
+  font-style: italic;
+  line-height: 1.4;
+}
+</style>
+</head>
+<body class="style-coastal">
+<main class="pin">
+  <div class="v2-brand">
+    <span><span class="v2-brand-star">✦</span>MyGuest</span>
+  </div>
+
+  <div class="v2-visual">
+    <div class="v2-dual-display">
+      <div class="v2-mobile-side">
+        <div class="v2-media-label">Mobile guide</div>
+        <div class="v2-phone-mini">
+          <div class="v2-phone-mini-notch"></div>
+          <div class="v2-phone-mini-screen">
+            <div class="v2-phone-mini-header"><span>MyGuest</span></div>
+            <div class="v2-phone-mini-body">
+              <div class="v2-phone-mini-row">⌖ Check-in</div>
+              <div class="v2-phone-mini-row">⌁ WiFi</div>
+              <div class="v2-phone-mini-row">▤ Rules</div>
+              <div class="v2-phone-mini-row">♨ Restaurants</div>
+              <div class="v2-phone-mini-row">◷ Check-out</div>
+              <div class="v2-phone-mini-row">✉ Contact</div>
+            </div>
+          </div>
+        </div>
+        <div class="v2-media-desc">Open on any phone</div>
+      </div>
+
+      <div class="v2-pdf-side">
+        <div class="v2-media-label">Printable PDF</div>
+        <div class="v2-pdf-mock">
+          <div class="v2-pdf-mock-header"><span>MyGuest Guide</span></div>
+          <div class="v2-pdf-mock-line medium"></div>
+          <div class="v2-pdf-mock-line short"></div>
+          <div class="v2-pdf-mock-line medium"></div>
+          <div class="v2-pdf-mock-line short"></div>
+          <div class="v2-pdf-mock-line medium"></div>
+          <div class="v2-pdf-mock-line short"></div>
+          <div class="v2-pdf-mock-line medium"></div>
+          <div class="v2-pdf-mock-line short"></div>
+          <div class="v2-pdf-mock-line medium"></div>
+        </div>
+        <div class="v2-media-desc">Print for arrivals</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="v2-content">
+    <div class="v2-headline">Mobile guest guide + printable PDF included.</div>
+    <div class="v2-sub">One guide your guests can open on their phone or print as a welcome book.</div>
+    <div class="v2-rule"></div>
+    <div class="v2-badges">
+      <div class="v2-badge">Mobile link</div>
+      <div class="v2-badge">Printable PDF</div>
+      <div class="v2-badge">Beach rental</div>
+    </div>
+    <div class="v2-supporting-line">Perfect for guests who prefer paper.</div>
+    <a class="v2-cta" href="#">See the guide →</a>
+  </div>
+</main>
+</body>
+</html>
