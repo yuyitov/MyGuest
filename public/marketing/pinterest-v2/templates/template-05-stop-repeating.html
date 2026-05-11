@@ -3,150 +3,80 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1000,initial-scale=1">
-<title>MyGuest Pin — Stop Repeating</title>
+<title>MyGuest — Stop Repeating</title>
 <link rel="stylesheet" href="../styles/pinterest-v2.css">
 <style>
-.v2-visual { top: 72px; bottom: 360px; }
-.v2-content { height: 360px; padding-top: 28px; padding-bottom: 32px; }
-
-.v2-stop-layout {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 40px;
-  padding: 40px 60px;
-  background: var(--c-surface);
-}
-
-.v2-chat-area {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  width: 100%;
-  max-width: 700px;
-  position: relative;
-}
-
-.v2-chat-bubble {
-  background: #e8e8e8;
-  border-radius: 20px 20px 20px 4px;
-  padding: 16px 24px;
-  font-family: 'Georgia', serif;
-  font-size: 22px;
-  color: #666;
-  max-width: 80%;
-  position: relative;
-  line-height: 1.3;
-}
-.v2-chat-bubble.guest {
-  background: #e8e8e8;
-  align-self: flex-start;
-}
-.v2-chat-bubble.host-answer {
-  background: var(--c-accent);
-  border-radius: 20px 20px 4px 20px;
-  align-self: flex-end;
-  color: var(--c-text);
-}
-
-.v2-repeat-label {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background: #e05555;
-  color: #fff;
-  font-family: 'Georgia', serif;
-  font-size: 18px;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 20px;
-  letter-spacing: 0.04em;
-}
-
-.v2-solution-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  width: 100%;
-  max-width: 700px;
-}
-.v2-solution-arrow {
-  font-size: 40px;
-  color: var(--c-primary);
-}
-.v2-solution-box {
-  background: var(--c-primary);
-  color: #fff;
-  border-radius: 12px;
-  padding: 20px 30px;
-  font-family: 'Georgia', serif;
-  font-size: 22px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.v2-solution-icon { font-size: 32px; }
-.v2-solution-text { line-height: 1.3; }
-.v2-solution-sub {
-  font-size: 17px;
-  opacity: 0.8;
-  font-style: italic;
-}
+.v2-questions{top:800px;width:430px;}
 </style>
 </head>
 <body class="style-coastal">
 <main class="pin">
-  <div class="v2-brand">
-    <span><span class="v2-brand-star">✦</span>MyGuest</span>
-  </div>
 
-  <div class="v2-visual">
-    <div class="v2-stop-layout">
-      <div class="v2-chat-area">
-        <div class="v2-chat-bubble guest">
-          "What's the WiFi password?"
-          <div class="v2-repeat-label">Again</div>
-        </div>
-        <div class="v2-chat-bubble guest" style="opacity:0.7;">
-          "What time is check-out?"
-        </div>
-        <div class="v2-chat-bubble guest" style="opacity:0.5;">
-          "Can I park on the street?"
-        </div>
-      </div>
+  <div class="v2-brand"><span class="v2-brand-star">✦</span>MyGuest</div>
 
-      <div class="v2-solution-row">
-        <div style="font-family:'Georgia',serif;font-size:20px;color:var(--c-mid);text-align:center;">
-          Replace all of that with<br>one link.
-        </div>
-        <div class="v2-solution-arrow">→</div>
-        <div class="v2-solution-box">
-          <div class="v2-solution-icon">⊞</div>
-          <div class="v2-solution-text">
-            Your guest guide
-            <div class="v2-solution-sub">myguestguide.com/…</div>
+  <div class="v2-phone">
+    <div class="v2-phone-side"></div>
+    <div class="v2-phone-side-vol"></div>
+    <div class="v2-screen v2-screenshot-wrap">
+      <div class="v2-notch"></div>
+      <div class="v2-phone-top"><span>9:41</span><span>MyGuest</span></div>
+      <div class="v2-phone-art">
+        <div class="v2-phone-art-inner">
+          <div class="v2-phone-myguest">MyGuest</div>
+          <div class="v2-phone-tabs"><span>Guide</span><span>FAQ</span><span>Map</span></div>
+          <div class="v2-phone-guide-title">Ocean Drive<br>Retreat</div>
+          <div class="v2-phone-hero-img"></div>
+          <div class="v2-phone-welcome">All the answers, right in their pocket. No need to ask.</div>
+          <div class="v2-phone-section-title">FREQUENTLY ASKED</div>
+          <div class="v2-phone-grid">
+            <div class="v2-phone-cell"><b>🔑</b>Keys</div>
+            <div class="v2-phone-cell"><b>📶</b>WiFi</div>
+            <div class="v2-phone-cell"><b>🅿</b>Parking</div>
+            <div class="v2-phone-cell"><b>♻</b>Trash</div>
+            <div class="v2-phone-cell"><b>🛁</b>Bath</div>
+            <div class="v2-phone-cell"><b>🔇</b>Noise</div>
           </div>
         </div>
       </div>
+      <img class="v2-phone-screenshot v2-screenshot" src="" alt="MyGuest demo">
     </div>
   </div>
 
-  <div class="v2-content">
-    <div class="v2-headline">Stop repeating check-in instructions.</div>
-    <div class="v2-sub">Send guests a mobile guide before they arrive — WiFi, rules, check-in, and local tips in one link.</div>
+  <div class="v2-copy">
+    <h1 class="v2-headline">Stop answering the same questions.</h1>
     <div class="v2-rule"></div>
-    <div class="v2-badges">
-      <div class="v2-badge">Beach rental</div>
-      <div class="v2-badge">Guest guide</div>
-      <div class="v2-badge">One link</div>
-    </div>
-    <div class="v2-supporting-line">Fewer messages, smoother stays.</div>
-    <a class="v2-cta" href="#">See how it works →</a>
+    <p class="v2-sub">Your guide answers check-in, WiFi, parking, and more — before they even ask.</p>
   </div>
+
+  <div class="v2-questions">
+    <div class="v2-q">
+      <i>?</i>
+      <span>What's the WiFi password?</span>
+    </div>
+    <div class="v2-q">
+      <i>?</i>
+      <span>Where do I park?</span>
+    </div>
+    <div class="v2-q">
+      <i>?</i>
+      <span>What time is check-out?</span>
+    </div>
+    <div class="v2-q">
+      <i>?</i>
+      <span>Where are the towels?</span>
+    </div>
+  </div>
+
+  <div class="v2-badges">
+    <div class="v2-badge">Coastal style</div>
+    <div class="v2-badge">Beach rentals</div>
+    <div class="v2-badge">Early access</div>
+  </div>
+  <p class="v2-supporting-line">Every question, already answered.</p>
+  <a class="v2-cta" href="#"><span class="v2-cta-arrow">→</span></a>
+
+  <span class="v2-property-name" style="display:none"></span>
+  <span class="v2-style-name" style="display:none"></span>
 </main>
 </body>
 </html>

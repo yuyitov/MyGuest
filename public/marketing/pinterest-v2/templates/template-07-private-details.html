@@ -3,210 +3,127 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1000,initial-scale=1">
-<title>MyGuest Pin — Private Details</title>
+<title>MyGuest — Private Details</title>
 <link rel="stylesheet" href="../styles/pinterest-v2.css">
 <style>
-.v2-visual { top: 72px; bottom: 370px; }
-.v2-content { height: 370px; padding-top: 26px; padding-bottom: 30px; }
-
-.v2-privacy-layout {
-  display: flex;
-  width: 100%;
-  height: 100%;
+.v2-privacy-zone{
+  position:absolute;left:60px;top:800px;z-index:4;
+  width:400px;
+  display:flex;flex-direction:column;gap:20px;
 }
-
-.v2-public-side {
-  flex: 1;
-  background: var(--c-surface);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 30px;
-  gap: 20px;
-  border-right: 2px solid var(--c-border);
+.v2-private-row{
+  display:flex;align-items:center;gap:16px;
 }
-.v2-private-side {
-  flex: 1;
-  background: var(--c-primary);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 30px;
-  gap: 20px;
+.v2-privacy-tag{
+  display:flex;align-items:center;gap:10px;
+  height:56px;padding:0 20px;
+  background:rgba(255,255,255,.84);
+  border:1px solid var(--c-badge-border);
+  border-radius:999px;
+  font-family:Georgia,serif;font-size:18px;color:var(--c-text);
+  box-shadow:0 12px 26px rgba(0,0,0,.09);
+  backdrop-filter:blur(4px);
+  flex:1;
 }
-
-.v2-privacy-type {
-  font-family: 'Georgia', serif;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+.v2-privacy-tag i{font-style:normal;font-size:22px;flex:0 0 auto;}
+.v2-lock-badge{
+  width:56px;height:56px;border-radius:999px;
+  background:var(--c-primary);color:#fff;
+  display:grid;place-items:center;font-size:24px;flex:0 0 auto;
+  box-shadow:0 10px 22px rgba(0,0,0,.18);
 }
-.v2-public-side .v2-privacy-type { color: var(--c-mid); }
-.v2-private-side .v2-privacy-type { color: rgba(255,255,255,0.7); }
-
-.v2-lock-icon {
-  font-size: 80px;
-  line-height: 1;
+.v2-visible-row{
+  display:flex;align-items:center;gap:16px;
 }
-.v2-public-side .v2-lock-icon { color: var(--c-mid); }
-.v2-private-side .v2-lock-icon { color: rgba(255,255,255,0.9); }
-
-.v2-guide-preview {
-  width: 200px;
-  border: 2px solid var(--c-border);
-  border-radius: 4px;
-  overflow: hidden;
-  background: #fff;
+.v2-visible-tag{
+  display:flex;align-items:center;gap:10px;
+  height:56px;padding:0 20px;
+  background:var(--c-accent);
+  border:1px solid var(--c-badge-border);
+  border-radius:999px;
+  font-family:Georgia,serif;font-size:18px;color:var(--c-primary);
+  box-shadow:0 12px 26px rgba(0,0,0,.08);
+  flex:1;
 }
-.v2-guide-preview-header {
-  height: 32px;
-  background: var(--c-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.v2-guide-preview-header span {
-  font-family: 'Georgia', serif;
-  font-size: 11px;
-  color: #fff;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.v2-guide-preview-body { padding: 10px 12px; }
-.v2-guide-preview-row {
-  height: 16px;
-  background: var(--c-accent);
-  border-radius: 2px;
-  margin-bottom: 4px;
-  font-size: 8px;
-  font-family: 'Georgia', serif;
-  color: var(--c-text);
-  display: flex;
-  align-items: center;
-  padding: 0 6px;
-}
-
-.v2-private-preview {
-  width: 200px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-radius: 4px;
-  overflow: hidden;
-  background: rgba(255,255,255,0.1);
-}
-.v2-private-preview-header {
-  height: 32px;
-  background: rgba(255,255,255,0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.v2-private-preview-header span {
-  font-family: 'Georgia', serif;
-  font-size: 11px;
-  color: rgba(255,255,255,0.8);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.v2-private-preview-body { padding: 10px 12px; }
-.v2-private-row {
-  height: 16px;
-  background: rgba(255,255,255,0.15);
-  border-radius: 2px;
-  margin-bottom: 4px;
-}
-.v2-private-row.blurred {
-  filter: blur(2px);
-  background: rgba(255,255,255,0.08);
-}
-
-.v2-privacy-desc {
-  font-family: 'Georgia', serif;
-  font-size: 19px;
-  text-align: center;
-  line-height: 1.4;
-}
-.v2-public-side .v2-privacy-desc { color: var(--c-mid); }
-.v2-private-side .v2-privacy-desc { color: rgba(255,255,255,0.8); }
-
-.v2-privacy-tag {
-  font-family: 'Georgia', serif;
-  font-size: 17px;
-  padding: 6px 16px;
-  border-radius: 20px;
-  letter-spacing: 0.06em;
-}
-.v2-public-side .v2-privacy-tag {
-  background: var(--c-accent);
-  color: var(--c-text);
-}
-.v2-private-side .v2-privacy-tag {
-  background: rgba(255,255,255,0.2);
-  color: #fff;
+.v2-visible-tag i{font-style:normal;font-size:22px;}
+.v2-check-badge{
+  width:56px;height:56px;border-radius:999px;
+  background:rgba(255,255,255,.88);
+  border:1px solid var(--c-badge-border);
+  color:var(--c-primary);
+  display:grid;place-items:center;font-size:24px;flex:0 0 auto;
+  box-shadow:0 10px 22px rgba(0,0,0,.1);
 }
 </style>
 </head>
-<body class="style-coastal">
+<body class="style-sunset">
 <main class="pin">
-  <div class="v2-brand">
-    <span><span class="v2-brand-star">✦</span>MyGuest</span>
-  </div>
 
-  <div class="v2-visual">
-    <div class="v2-privacy-layout">
+  <div class="v2-brand"><span class="v2-brand-star">✦</span>MyGuest</div>
 
-      <div class="v2-public-side">
-        <div class="v2-privacy-type">Public Guide</div>
-        <div class="v2-lock-icon">🔓</div>
-        <div class="v2-guide-preview">
-          <div class="v2-guide-preview-header"><span>MyGuest</span></div>
-          <div class="v2-guide-preview-body">
-            <div class="v2-guide-preview-row">Welcome</div>
-            <div class="v2-guide-preview-row">House Rules</div>
-            <div class="v2-guide-preview-row">Local Tips</div>
-            <div class="v2-guide-preview-row">Restaurants</div>
+  <div class="v2-phone">
+    <div class="v2-phone-side"></div>
+    <div class="v2-phone-side-vol"></div>
+    <div class="v2-screen v2-screenshot-wrap">
+      <div class="v2-notch"></div>
+      <div class="v2-phone-top"><span>9:41</span><span>MyGuest</span></div>
+      <div class="v2-phone-art">
+        <div class="v2-phone-art-inner">
+          <div class="v2-phone-myguest">MyGuest</div>
+          <div class="v2-phone-tabs"><span>Guide</span><span>Private</span><span>PDF</span></div>
+          <div class="v2-phone-guide-title">Casa Selva<br>Tulum</div>
+          <div class="v2-phone-hero-img"></div>
+          <div class="v2-phone-welcome">Choose what guests see — and keep the rest private.</div>
+          <div class="v2-phone-section-title">ACCESS CONTROL</div>
+          <div class="v2-phone-grid">
+            <div class="v2-phone-cell"><b>👁</b>Public</div>
+            <div class="v2-phone-cell"><b>🔒</b>Private</div>
+            <div class="v2-phone-cell"><b>🔑</b>Keys</div>
+            <div class="v2-phone-cell"><b>📶</b>WiFi</div>
+            <div class="v2-phone-cell"><b>📍</b>Address</div>
+            <div class="v2-phone-cell"><b>☎</b>Contact</div>
           </div>
         </div>
-        <div class="v2-privacy-desc">Visible to all guests.<br>General property info.</div>
-        <div class="v2-privacy-tag">Anyone can view</div>
       </div>
-
-      <div class="v2-private-side">
-        <div class="v2-privacy-type">Private Link</div>
-        <div class="v2-lock-icon">🔒</div>
-        <div class="v2-private-preview">
-          <div class="v2-private-preview-header">
-            <span>Private Access</span>
-          </div>
-          <div class="v2-private-preview-body">
-            <div class="v2-private-row blurred"></div>
-            <div class="v2-private-row blurred"></div>
-            <div class="v2-private-row blurred"></div>
-            <div class="v2-private-row blurred"></div>
-          </div>
-        </div>
-        <div class="v2-privacy-desc">Sensitive stay details.<br>Shared only with confirmed guests.</div>
-        <div class="v2-privacy-tag">Confirmed guests only</div>
-      </div>
-
+      <img class="v2-phone-screenshot v2-screenshot" src="" alt="MyGuest demo">
     </div>
   </div>
 
-  <div class="v2-content">
-    <div class="v2-headline">Public guest guide + private guest link for sensitive details.</div>
-    <div class="v2-sub">General info is public. Sensitive stay details go in a separate private link for confirmed guests only.</div>
+  <div class="v2-copy">
+    <h1 class="v2-headline">Private data. Your control.</h1>
     <div class="v2-rule"></div>
-    <div class="v2-badges">
-      <div class="v2-badge">Private guest link</div>
-      <div class="v2-badge">Beach rental</div>
-      <div class="v2-badge">Secure</div>
-    </div>
-    <div class="v2-supporting-line">Two links: one public, one private.</div>
-    <a class="v2-cta" href="#">See the demo →</a>
+    <p class="v2-sub">Choose exactly what your guests see — and what stays between you and your host team.</p>
   </div>
+
+  <div class="v2-privacy-zone">
+    <div class="v2-private-row">
+      <div class="v2-lock-badge">🔒</div>
+      <div class="v2-privacy-tag"><i>🔒</i> Host team only</div>
+    </div>
+    <div class="v2-private-row">
+      <div class="v2-lock-badge">🔒</div>
+      <div class="v2-privacy-tag"><i>📍</i> Exact address</div>
+    </div>
+    <div class="v2-visible-row">
+      <div class="v2-check-badge">✓</div>
+      <div class="v2-visible-tag"><i>📶</i> WiFi visible to guests</div>
+    </div>
+    <div class="v2-visible-row">
+      <div class="v2-check-badge">✓</div>
+      <div class="v2-visible-tag"><i>🔑</i> Check-in instructions</div>
+    </div>
+  </div>
+
+  <div class="v2-badges">
+    <div class="v2-badge">Sunset style</div>
+    <div class="v2-badge">Tulum villa</div>
+    <div class="v2-badge">Early access</div>
+  </div>
+  <p class="v2-supporting-line">You decide what guests see — and what they don't.</p>
+  <a class="v2-cta" href="#"><span class="v2-cta-arrow">→</span></a>
+
+  <span class="v2-property-name" style="display:none"></span>
+  <span class="v2-style-name" style="display:none"></span>
 </main>
 </body>
 </html>

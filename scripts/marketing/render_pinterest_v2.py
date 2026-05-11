@@ -43,15 +43,14 @@ def safe_output_name(output_name: str, fallback: str) -> str:
 
 
 def find_screenshot(pin: dict) -> str | None:
-    """Return local path to best available screenshot for this pin, or None."""
+    """Return HTTP-relative URL for screenshot (served by local server)."""
     slug = pin.get("slug", "")
     if not slug:
         return None
     screenshot_dir = SCREENSHOTS_BASE / slug
     for candidate in ("full-demo.png", "hero.png", "guide-section.png", "print-preview.png"):
-        candidate_path = screenshot_dir / candidate
-        if candidate_path.exists():
-            return str(candidate_path.resolve())
+        if (screenshot_dir / candidate).exists():
+            return f"/assets/screenshots/{slug}/{candidate}"
     return None
 
 
@@ -97,7 +96,7 @@ def apply_pin_data(page, pin: dict, screenshot_path: str | None) -> None:
             const img = document.querySelector('.v2-screenshot');
             if (img) {
                 if (screenshotPath) {
-                    img.src = 'file://' + screenshotPath;
+                    img.src = screenshotPath;
                     img.style.display = 'block';
                 } else {
                     img.style.display = 'none';

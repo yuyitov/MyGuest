@@ -3,201 +3,119 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1000,initial-scale=1">
-<title>MyGuest Pin — Trilingual</title>
+<title>MyGuest — Trilingual</title>
 <link rel="stylesheet" href="../styles/pinterest-v2.css">
 <style>
-.v2-visual { top: 72px; bottom: 340px; }
-.v2-content { height: 340px; padding-top: 26px; padding-bottom: 30px; }
-
-.v2-tri-layout {
-  display: flex;
-  width: 100%;
-  height: 100%;
+.v2-lang-cluster{
+  position:absolute;left:60px;top:800px;z-index:4;
+  display:flex;flex-direction:column;gap:18px;
 }
-
-.v2-lang-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid var(--c-border);
-  overflow: hidden;
+.v2-lang-pill{
+  display:flex;align-items:center;gap:16px;
+  background:rgba(255,255,255,.82);
+  border:1px solid var(--c-badge-border);
+  border-radius:999px;
+  padding:14px 24px;
+  box-shadow:0 14px 30px rgba(0,0,0,.1);
+  backdrop-filter:blur(4px);
+  font-family:Georgia,serif;
+  width:360px;
 }
-.v2-lang-panel:last-child { border-right: none; }
-
-.v2-lang-header {
-  background: var(--c-primary);
-  color: #fff;
-  padding: 24px 20px 18px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
+.v2-lang-pill:nth-child(2){transform:translateX(20px);}
+.v2-lang-pill:nth-child(3){transform:translateX(40px);}
+.v2-lang-flag{font-size:34px;flex:0 0 auto;line-height:1;}
+.v2-lang-info{display:flex;flex-direction:column;gap:2px;}
+.v2-lang-code{
+  font-size:22px;font-weight:700;letter-spacing:.06em;
+  color:var(--c-text);line-height:1;
 }
-.v2-lang-code {
-  font-family: 'Georgia', serif;
-  font-size: 36px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  line-height: 1;
+.v2-lang-name{
+  font-size:14px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--c-mid);opacity:.75;
 }
-.v2-lang-name {
-  font-family: 'Georgia', serif;
-  font-size: 16px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  opacity: 0.8;
-}
-
-.v2-lang-panel:nth-child(2) .v2-lang-header {
-  background: var(--c-mid);
-}
-.v2-lang-panel:nth-child(3) .v2-lang-header {
-  background: var(--c-accent);
-  color: var(--c-text);
-}
-.v2-lang-panel:nth-child(3) .v2-lang-code,
-.v2-lang-panel:nth-child(3) .v2-lang-name { color: var(--c-text); }
-
-.v2-lang-body {
-  flex: 1;
-  background: var(--c-surface);
-  padding: 20px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.v2-lang-section {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.v2-lang-section-title {
-  font-family: 'Georgia', serif;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--c-primary);
-}
-.v2-lang-text {
-  font-family: 'Georgia', serif;
-  font-size: 13px;
-  color: var(--c-text);
-  line-height: 1.4;
-}
-.v2-lang-row {
-  height: 18px;
-  background: var(--c-accent);
-  border-radius: 2px;
-  margin: 2px 0;
-  font-size: 9px;
-  font-family: 'Georgia', serif;
-  color: var(--c-text);
-  display: flex;
-  align-items: center;
-  padding: 0 6px;
+.v2-lang-sample{
+  margin-left:auto;font-size:14px;font-style:italic;
+  color:var(--c-mid);opacity:.7;
+  white-space:nowrap;
 }
 </style>
 </head>
-<body class="style-coastal">
+<body class="style-classic">
 <main class="pin">
-  <div class="v2-brand">
-    <span><span class="v2-brand-star">✦</span>MyGuest</span>
-  </div>
 
-  <div class="v2-visual">
-    <div class="v2-tri-layout">
+  <div class="v2-brand"><span class="v2-brand-star">✦</span>MyGuest</div>
 
-      <div class="v2-lang-panel">
-        <div class="v2-lang-header">
-          <div class="v2-lang-code">EN</div>
-          <div class="v2-lang-name">English</div>
-        </div>
-        <div class="v2-lang-body">
-          <div class="v2-lang-section">
-            <div class="v2-lang-section-title">Check-in</div>
-            <div class="v2-lang-row">Arrival instructions</div>
-          </div>
-          <div class="v2-lang-section">
-            <div class="v2-lang-section-title">WiFi</div>
-            <div class="v2-lang-row">Network &amp; password</div>
-          </div>
-          <div class="v2-lang-section">
-            <div class="v2-lang-section-title">House Rules</div>
-            <div class="v2-lang-row">Quiet hours &amp; rules</div>
-          </div>
-          <div class="v2-lang-section">
-            <div class="v2-lang-section-title">Local Tips</div>
-            <div class="v2-lang-row">Restaurants &amp; places</div>
+  <div class="v2-phone">
+    <div class="v2-phone-side"></div>
+    <div class="v2-phone-side-vol"></div>
+    <div class="v2-screen v2-screenshot-wrap">
+      <div class="v2-notch"></div>
+      <div class="v2-phone-top"><span>9:41</span><span>MyGuest</span></div>
+      <div class="v2-phone-art">
+        <div class="v2-phone-art-inner">
+          <div class="v2-phone-myguest">MyGuest</div>
+          <div class="v2-phone-tabs"><span>EN</span><span>ES</span><span>FR</span></div>
+          <div class="v2-phone-guide-title">Le Marais<br>Flat</div>
+          <div class="v2-phone-hero-img"></div>
+          <div class="v2-phone-welcome">Welcome · Bienvenido · Bienvenue</div>
+          <div class="v2-phone-section-title">CHECK-IN</div>
+          <div class="v2-phone-grid">
+            <div class="v2-phone-cell"><b>🇬🇧</b>English</div>
+            <div class="v2-phone-cell"><b>🇪🇸</b>Español</div>
+            <div class="v2-phone-cell"><b>🇫🇷</b>Français</div>
+            <div class="v2-phone-cell"><b>🔑</b>Keys</div>
+            <div class="v2-phone-cell"><b>📶</b>WiFi</div>
+            <div class="v2-phone-cell"><b>🍷</b>Tips</div>
           </div>
         </div>
       </div>
-
-      <div class="v2-lang-panel">
-        <div class="v2-lang-header">
-          <div class="v2-lang-code">ES</div>
-          <div class="v2-lang-name">Español</div>
-        </div>
-        <div class="v2-lang-body">
-          <div class="v2-lang-section">
-            <div class="v2-lang-section-title">Check-in</div>
-            <div class="v2-lang-row">Instrucciones de llegada</div>
-          </div>
-          <div class="v2-lang-section">
-            <div class="v2-lang-section-title">WiFi</div>
-            <div class="v2-lang-row">Red y contraseña</div>
-          </div>
-          <div class="v2-lang-section">
-            <div class="v2-lang-section-title">Reglas</div>
-            <div class="v2-lang-row">Horario de silencio</div>
-          </div>
-          <div class="v2-lang-section">
-            <div class="v2-lang-section-title">Recomendaciones</div>
-            <div class="v2-lang-row">Restaurantes y lugares</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="v2-lang-panel">
-        <div class="v2-lang-header">
-          <div class="v2-lang-code">FR</div>
-          <div class="v2-lang-name">Français</div>
-        </div>
-        <div class="v2-lang-body">
-          <div class="v2-lang-section">
-            <div class="v2-lang-section-title">Check-in</div>
-            <div class="v2-lang-row">Instructions d'arrivée</div>
-          </div>
-          <div class="v2-lang-section">
-            <div class="v2-lang-section-title">WiFi</div>
-            <div class="v2-lang-row">Réseau &amp; mot de passe</div>
-          </div>
-          <div class="v2-lang-section">
-            <div class="v2-lang-section-title">Règles</div>
-            <div class="v2-lang-row">Heures de silence</div>
-          </div>
-          <div class="v2-lang-section">
-            <div class="v2-lang-section-title">Conseils locaux</div>
-            <div class="v2-lang-row">Restaurants et lieux</div>
-          </div>
-        </div>
-      </div>
-
+      <img class="v2-phone-screenshot v2-screenshot" src="" alt="MyGuest demo">
     </div>
   </div>
 
-  <div class="v2-content">
-    <div class="v2-headline">One guest guide, three languages.</div>
-    <div class="v2-sub">English, Spanish, and French for your vacation rental. International guests feel more at home.</div>
+  <div class="v2-copy">
+    <h1 class="v2-headline">Three languages. One guide.</h1>
     <div class="v2-rule"></div>
-    <div class="v2-badges">
-      <div class="v2-badge">EN / ES / FR</div>
-      <div class="v2-badge">Beach rental</div>
-      <div class="v2-badge">International guests</div>
-    </div>
-    <div class="v2-supporting-line">One guide covers all three languages.</div>
-    <a class="v2-cta" href="#">See how it works →</a>
+    <p class="v2-sub">Your international guests read their welcome guide in English, Spanish, or French.</p>
   </div>
+
+  <div class="v2-lang-cluster">
+    <div class="v2-lang-pill">
+      <div class="v2-lang-flag">🇬🇧</div>
+      <div class="v2-lang-info">
+        <div class="v2-lang-code">EN</div>
+        <div class="v2-lang-name">English</div>
+      </div>
+      <div class="v2-lang-sample">"Welcome in"</div>
+    </div>
+    <div class="v2-lang-pill">
+      <div class="v2-lang-flag">🇪🇸</div>
+      <div class="v2-lang-info">
+        <div class="v2-lang-code">ES</div>
+        <div class="v2-lang-name">Español</div>
+      </div>
+      <div class="v2-lang-sample">"Bienvenido"</div>
+    </div>
+    <div class="v2-lang-pill">
+      <div class="v2-lang-flag">🇫🇷</div>
+      <div class="v2-lang-info">
+        <div class="v2-lang-code">FR</div>
+        <div class="v2-lang-name">Français</div>
+      </div>
+      <div class="v2-lang-sample">"Bienvenue"</div>
+    </div>
+  </div>
+
+  <div class="v2-badges">
+    <div class="v2-badge">Classic style</div>
+    <div class="v2-badge">Paris flat</div>
+    <div class="v2-badge">EN · ES · FR</div>
+  </div>
+  <p class="v2-supporting-line">Built for international guests everywhere.</p>
+  <a class="v2-cta" href="#"><span class="v2-cta-arrow">→</span></a>
+
+  <span class="v2-property-name" style="display:none"></span>
+  <span class="v2-style-name" style="display:none"></span>
 </main>
 </body>
 </html>

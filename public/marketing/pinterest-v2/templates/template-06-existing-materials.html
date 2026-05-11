@@ -3,169 +3,117 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1000,initial-scale=1">
-<title>MyGuest Pin — Existing Materials</title>
+<title>MyGuest — Existing Materials</title>
 <link rel="stylesheet" href="../styles/pinterest-v2.css">
 <style>
-.v2-visual { top: 72px; bottom: 400px; }
-.v2-content { height: 400px; padding-top: 28px; padding-bottom: 32px; }
-
-.v2-materials-layout {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 40px;
-  padding: 40px;
-  background: var(--c-bg);
+.v2-materials{
+  position:absolute;left:60px;top:800px;z-index:4;
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;width:380px;
 }
-
-.v2-materials-title {
-  font-family: 'Georgia', serif;
-  font-size: 26px;
-  color: var(--c-mid);
-  text-align: center;
-  font-style: italic;
+.v2-mat-card{
+  background:rgba(255,255,255,.88);
+  border:1px solid var(--c-badge-border);
+  border-radius:18px;
+  padding:20px 16px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  box-shadow:0 14px 30px rgba(0,0,0,.1),3px 3px 0 var(--c-accent);
 }
-
-.v2-materials-grid {
-  display: flex;
-  gap: 28px;
-  align-items: flex-start;
-  justify-content: center;
-  flex-wrap: wrap;
+.v2-mat-icon{
+  width:64px;height:64px;border-radius:16px;
+  background:var(--c-accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;
 }
-
-.v2-material-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  width: 140px;
+.v2-mat-name{
+  font-family:Georgia,serif;font-size:14px;
+  color:var(--c-mid);text-align:center;letter-spacing:.06em;line-height:1.2;
 }
-.v2-material-icon-box {
-  width: 90px;
-  height: 90px;
-  background: var(--c-surface);
-  border: 2px solid var(--c-border);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  color: var(--c-primary);
-  box-shadow: 2px 2px 0 var(--c-accent);
+.v2-transform-row{
+  position:absolute;left:60px;top:1070px;z-index:4;
+  display:flex;align-items:center;gap:16px;
+  font-family:Georgia,serif;font-size:18px;color:var(--c-mid);
 }
-.v2-material-name {
-  font-family: 'Georgia', serif;
-  font-size: 18px;
-  color: var(--c-mid);
-  text-align: center;
-  letter-spacing: 0.04em;
-  line-height: 1.3;
-}
-
-.v2-or-form {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  width: 100%;
-  max-width: 600px;
-}
-.v2-or-line {
-  flex: 1;
-  height: 1px;
-  background: var(--c-border);
-}
-.v2-or-text {
-  font-family: 'Georgia', serif;
-  font-size: 22px;
-  color: var(--c-mid);
-  font-style: italic;
-  white-space: nowrap;
-}
-
-.v2-form-option {
-  background: var(--c-primary);
-  color: #fff;
-  font-family: 'Georgia', serif;
-  font-size: 22px;
-  padding: 16px 36px;
-  border-radius: 4px;
-  text-align: center;
-  line-height: 1.3;
-}
-.v2-form-option-sub {
-  font-size: 17px;
-  opacity: 0.8;
-  font-style: italic;
-  margin-top: 4px;
-}
-
-.v2-arrow-flow {
-  font-size: 36px;
-  color: var(--c-primary);
-  text-align: center;
+.v2-transform-arrow-pill{
+  width:52px;height:52px;border-radius:999px;
+  background:var(--c-primary);color:#fff;
+  display:grid;place-items:center;font-size:24px;
+  box-shadow:0 10px 24px rgba(0,0,0,.16);flex:0 0 auto;
 }
 </style>
 </head>
-<body class="style-coastal">
+<body class="style-minimalist">
 <main class="pin">
-  <div class="v2-brand">
-    <span><span class="v2-brand-star">✦</span>MyGuest</span>
-  </div>
 
-  <div class="v2-visual">
-    <div class="v2-materials-layout">
-      <div class="v2-materials-title">Send what you have — or fill out our simple form</div>
+  <div class="v2-brand"><span class="v2-brand-star">✦</span>MyGuest</div>
 
-      <div class="v2-materials-grid">
-        <div class="v2-material-card">
-          <div class="v2-material-icon-box">📄</div>
-          <div class="v2-material-name">PDF</div>
-        </div>
-        <div class="v2-material-card">
-          <div class="v2-material-icon-box">📝</div>
-          <div class="v2-material-name">Word file</div>
-        </div>
-        <div class="v2-material-card">
-          <div class="v2-material-icon-box">📸</div>
-          <div class="v2-material-name">Photos &amp;<br>screenshots</div>
-        </div>
-        <div class="v2-material-card">
-          <div class="v2-material-icon-box">🎨</div>
-          <div class="v2-material-name">Canva<br>export</div>
+  <div class="v2-phone">
+    <div class="v2-phone-side"></div>
+    <div class="v2-phone-side-vol"></div>
+    <div class="v2-screen v2-screenshot-wrap">
+      <div class="v2-notch"></div>
+      <div class="v2-phone-top"><span>9:41</span><span>MyGuest</span></div>
+      <div class="v2-phone-art">
+        <div class="v2-phone-art-inner">
+          <div class="v2-phone-myguest">MyGuest</div>
+          <div class="v2-phone-tabs"><span>Guide</span><span>Map</span><span>PDF</span></div>
+          <div class="v2-phone-guide-title">The Soho<br>Loft</div>
+          <div class="v2-phone-hero-img"></div>
+          <div class="v2-phone-welcome">Your existing content, organized into a beautiful guide.</div>
+          <div class="v2-phone-section-title">IMPORTED</div>
+          <div class="v2-phone-grid">
+            <div class="v2-phone-cell"><b>📄</b>PDF</div>
+            <div class="v2-phone-cell"><b>📝</b>Notes</div>
+            <div class="v2-phone-cell"><b>🖼</b>Photos</div>
+            <div class="v2-phone-cell"><b>🔑</b>Keys</div>
+            <div class="v2-phone-cell"><b>📋</b>Rules</div>
+            <div class="v2-phone-cell"><b>✉</b>Contact</div>
+          </div>
         </div>
       </div>
-
-      <div class="v2-or-form">
-        <div class="v2-or-line"></div>
-        <div class="v2-or-text">or</div>
-        <div class="v2-or-line"></div>
-      </div>
-
-      <div class="v2-form-option">
-        Fill out our simple form
-        <div class="v2-form-option-sub">We handle the rest</div>
-      </div>
-
-      <div class="v2-arrow-flow">↓</div>
+      <img class="v2-phone-screenshot v2-screenshot" src="" alt="MyGuest demo">
     </div>
   </div>
 
-  <div class="v2-content">
-    <div class="v2-headline">Already have a welcome book? Send what you have.</div>
-    <div class="v2-sub">You don't have to start from scratch. PDF, Word, photos, Canva export — or just fill out our simple form.</div>
+  <div class="v2-copy">
+    <h1 class="v2-headline">Your content. Already perfect.</h1>
     <div class="v2-rule"></div>
-    <div class="v2-badges">
-      <div class="v2-badge">Use what you have</div>
-      <div class="v2-badge">Early access</div>
-      <div class="v2-badge">Manual setup</div>
-    </div>
-    <div class="v2-supporting-line">Early access includes manual setup from your existing materials.</div>
-    <a class="v2-cta" href="#">Get started →</a>
+    <p class="v2-sub">Use what you already have — PDFs, notes, photos — and build your guide from there.</p>
   </div>
+
+  <div class="v2-materials">
+    <div class="v2-mat-card">
+      <div class="v2-mat-icon">📄</div>
+      <div class="v2-mat-name">PDF welcome letter</div>
+    </div>
+    <div class="v2-mat-card">
+      <div class="v2-mat-icon">📝</div>
+      <div class="v2-mat-name">House notes &amp; rules</div>
+    </div>
+    <div class="v2-mat-card">
+      <div class="v2-mat-icon">🖼</div>
+      <div class="v2-mat-name">Property photos</div>
+    </div>
+    <div class="v2-mat-card">
+      <div class="v2-mat-icon">📍</div>
+      <div class="v2-mat-name">Local tips &amp; maps</div>
+    </div>
+  </div>
+
+  <div class="v2-transform-row">
+    <div class="v2-transform-arrow-pill">→</div>
+    <span>Becomes a premium guest guide</span>
+  </div>
+
+  <div class="v2-badges">
+    <div class="v2-badge">Minimalist</div>
+    <div class="v2-badge">City stays</div>
+    <div class="v2-badge">Early access</div>
+  </div>
+  <p class="v2-supporting-line">Start with what you have. Upgrade anytime.</p>
+  <a class="v2-cta" href="#"><span class="v2-cta-arrow">→</span></a>
+
+  <span class="v2-property-name" style="display:none"></span>
+  <span class="v2-style-name" style="display:none"></span>
 </main>
 </body>
 </html>
