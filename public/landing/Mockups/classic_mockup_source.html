@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 768px;
+      height: 1365px;
+      overflow: hidden;
+      background: #eeead8;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .screen {
+      width: 768px;
+      height: 1365px;
+      background: #eeead8;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Hero cover photo ── */
+    .cover {
+      position: relative;
+      width: 100%;
+      height: 540px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+    }
+    .cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,
+        rgba(26,38,16,0) 40%,
+        rgba(26,38,16,0.55) 100%
+      );
+    }
+    .cover-label {
+      position: absolute;
+      bottom: 28px;
+      left: 40px;
+      right: 40px;
+      z-index: 2;
+    }
+    .cover-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(240,236,216,0.82);
+      margin-bottom: 8px;
+    }
+    .cover-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 68px;
+      font-weight: 600;
+      line-height: 1.0;
+      color: #f0ecd8;
+      letter-spacing: -0.01em;
+    }
+
+    /* ── Style badge ── */
+    .badge-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 28px 40px 0;
+    }
+    .style-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(26,38,16,0.10);
+      border: 1.5px solid rgba(122,154,72,0.40);
+      border-radius: 999px;
+      padding: 8px 20px;
+      font-size: 17px;
+      font-weight: 700;
+      color: #1a2610;
+      letter-spacing: 0.04em;
+    }
+    .style-badge::before {
+      content: '◆';
+      font-size: 11px;
+      color: #7a9a48;
+    }
+    .lang-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(122,154,72,0.14);
+      border: 1.5px solid rgba(122,154,72,0.30);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #3e5428;
+    }
+
+    /* ── Language tabs ── */
+    .lang-tabs {
+      display: flex;
+      gap: 10px;
+      padding: 20px 40px 0;
+    }
+    .lang-tab {
+      flex: 1;
+      text-align: center;
+      background: #fff;
+      border: 1.5px solid rgba(26,38,16,0.18);
+      border-radius: 999px;
+      padding: 14px 0;
+      font-size: 17px;
+      font-weight: 700;
+      color: #1a2610;
+    }
+    .lang-tab.active {
+      background: #1a2610;
+      color: #f0ecd8;
+      border-color: #1a2610;
+    }
+
+    /* ── Rule ── */
+    .rule {
+      height: 1.5px;
+      background: rgba(122,154,72,0.35);
+      margin: 28px 40px 0;
+    }
+
+    /* ── Section cards ── */
+    .sections {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 24px 40px 0;
+    }
+    .section-card {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      background: rgba(255,255,255,0.62);
+      border: 1.5px solid rgba(26,38,16,0.12);
+      border-radius: 22px;
+      padding: 22px 26px;
+    }
+    .section-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: rgba(122,154,72,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .section-text strong {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: #1a2610;
+      line-height: 1.1;
+    }
+    .section-text span {
+      font-size: 14px;
+      font-weight: 500;
+      color: #3e5428;
+      margin-top: 3px;
+      display: block;
+    }
+    .section-arrow {
+      margin-left: auto;
+      font-size: 20px;
+      color: rgba(26,38,16,0.32);
+      flex-shrink: 0;
+    }
+
+    /* ── Bottom strip ── */
+    .strip {
+      margin-top: auto;
+      background: #1a2610;
+      padding: 30px 40px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .strip-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: #f0ecd8;
+      letter-spacing: 0.02em;
+    }
+    .strip-brand span {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(240,236,216,0.55);
+      display: block;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .strip-pdf {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .strip-pdf-icon {
+      background: rgba(240,236,216,0.12);
+      border: 1.5px solid rgba(240,236,216,0.22);
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #f0ecd8;
+      letter-spacing: 0.04em;
+    }
+    .strip-pdf-label {
+      font-size: 12px;
+      color: rgba(240,236,216,0.48);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+
+    <div class="cover">
+      <img src="../../../../city.png" alt="Le Marais Flat — Paris" />
+      <div class="cover-label">
+        <div class="cover-eyebrow">Guest Guide</div>
+        <div class="cover-title">Le Marais<br>Flat</div>
+      </div>
+    </div>
+
+    <div class="badge-row">
+      <div class="style-badge">Classic</div>
+      <div class="lang-badge">EN · ES · FR</div>
+    </div>
+
+    <div class="lang-tabs">
+      <div class="lang-tab active">English</div>
+      <div class="lang-tab">Español</div>
+      <div class="lang-tab">Français</div>
+    </div>
+
+    <div class="rule"></div>
+
+    <div class="sections">
+      <div class="section-card">
+        <div class="section-icon">🗝</div>
+        <div class="section-text">
+          <strong>Arrival & Check-in</strong>
+          <span>Entry codes · Parking · Transport</span>
+        </div>
+        <div class="section-arrow">›</div>
+      </div>
+      <div class="section-card">
+        <div class="section-icon">📋</div>
+        <div class="section-text">
+          <strong>House Rules</strong>
+          <span>Quiet hours · Wifi · Checkout</span>
+        </div>
+        <div class="section-arrow">›</div>
+      </div>
+      <div class="section-card">
+        <div class="section-icon">🗺</div>
+        <div class="section-text">
+          <strong>Local Tips</strong>
+          <span>Cafés · Museums · Markets</span>
+        </div>
+        <div class="section-arrow">›</div>
+      </div>
+    </div>
+
+    <div class="strip">
+      <div class="strip-brand">
+        MyGuest
+        <span>Le Marais Flat · Paris</span>
+      </div>
+      <div class="strip-pdf">
+        <div class="strip-pdf-icon">PDF ↓</div>
+        <div class="strip-pdf-label">Print version</div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
