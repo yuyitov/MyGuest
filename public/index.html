@@ -119,17 +119,19 @@
     h2 { font-size: clamp(34px, 4vw, 54px); line-height: 1; letter-spacing: -0.06em; margin: 0 0 14px; }
     .section-head p, .section > p { color: var(--muted); font-size: 19px; margin: 0; }
 
-    .demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .demo-card { position: relative; min-height: 360px; border-radius: 30px; overflow: hidden; padding: 22px; display: flex; flex-direction: column; justify-content: flex-end; color: #fff; box-shadow: 0 18px 45px rgba(92,61,32,.16); transition: transform 360ms var(--ease-out), box-shadow 360ms var(--ease-out), filter 360ms ease; }
-    .demo-card:hover { transform: translateY(-10px) scale(1.015); box-shadow: 0 30px 72px rgba(92,61,32,.24); filter: saturate(1.08); }
-    .demo-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.72)); z-index: 1; }
+    .demo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .demo-card { position: relative; min-height: 420px; border-radius: 30px; overflow: hidden; padding: 26px; display: flex; flex-direction: column; justify-content: flex-end; color: #fff; box-shadow: 0 18px 45px rgba(92,61,32,.16); transition: transform 360ms var(--ease-out), box-shadow 360ms var(--ease-out), filter 360ms ease; text-decoration: none; }
+    .demo-card:hover { transform: translateY(-8px) scale(1.012); box-shadow: 0 30px 72px rgba(92,61,32,.26); filter: saturate(1.1); }
+    .demo-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.0) 20%, rgba(0,0,0,.75) 100%); z-index: 1; }
     .demo-card > * { position: relative; z-index: 2; }
-    .demo-beach { background: url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=900&q=80') center/cover; }
-    .demo-city { background: url('https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=900&q=80') center/cover; }
-    .demo-luxury { background: url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80') center/cover; }
-    .demo-card h3 { font-size: 25px; margin: 0 0 8px; letter-spacing: -0.04em; }
-    .demo-card p { color: rgba(255,255,255,.82); font-size: 16px; margin: 0 0 16px; }
-    .demo-link { display: inline-flex; width: fit-content; background: rgba(255,255,255,.92); color: var(--ink); text-decoration: none; border-radius: 999px; padding: 10px 14px; font-weight: 800; font-size: 14px; transition: transform 220ms var(--ease-out), background 220ms ease; }
+    .demo-coastal { background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80') center/cover; }
+    .demo-minimalist { background: url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80') center/cover; }
+    .demo-sunset { background: url('https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=1200&q=80') center/cover; }
+    .demo-classic { background: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=80') center/cover; }
+    .demo-style-badge { display: inline-flex; width: fit-content; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35); backdrop-filter: blur(8px); color: #fff; border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.03em; }
+    .demo-card h3 { font-size: 28px; margin: 0 0 8px; letter-spacing: -0.04em; }
+    .demo-card p { color: rgba(255,255,255,.80); font-size: 15px; margin: 0 0 18px; line-height: 1.5; }
+    .demo-link { display: inline-flex; align-items: center; gap: 6px; width: fit-content; background: rgba(255,255,255,.92); color: var(--ink); text-decoration: none; border-radius: 999px; padding: 10px 16px; font-weight: 800; font-size: 14px; transition: transform 220ms var(--ease-out), background 220ms ease; }
     .demo-link:hover { transform: translateX(4px); background: white; }
 
     .process-showcase { position: relative; background: linear-gradient(135deg, rgba(255,255,255,.78), rgba(255,248,239,.44)), radial-gradient(circle at 12% 16%, rgba(240,109,94,.18), transparent 28%), radial-gradient(circle at 82% 76%, rgba(125,155,118,.18), transparent 30%); border: 1px solid var(--line); border-radius: 42px; padding: 24px; box-shadow: 0 26px 70px rgba(92,61,32,.12); overflow: hidden; }
@@ -251,11 +253,32 @@
     </section>
 
     <section class="section reveal" id="demos">
-      <div class="section-head"><h2>Show guests something better than a PDF.</h2><p>Use polished sample welcome books to see the final experience your guests would receive.</p></div>
+      <div class="section-head"><h2>4 real guest guides, live now.</h2><p>Explore the actual guides your guests would receive — mobile-first, trilingual, and ready to share.</p></div>
       <div class="demo-grid">
-        <article class="demo-card demo-beach"><h3>Ocean Drive Retreat</h3><p>Trilingual guide with arrival info, house rules, local tips and print PDF.</p><a class="demo-link" href="villas/ocean-drive-retreat/">View demo →</a></article>
-        <article class="demo-card demo-city"><h3>City Apartment Demo</h3><p>A simple rental guide transformed into a clean mobile guest experience.</p><span class="demo-link">Demo coming soon</span></article>
-        <article class="demo-card demo-luxury"><h3>Luxury Stay Demo</h3><p>Premium welcome book for international guests and high-end stays.</p><span class="demo-link">Demo coming soon</span></article>
+        <a class="demo-card demo-coastal" href="villas/ocean-drive-retreat/">
+          <span class="demo-style-badge">Coastal style · Miami Beach</span>
+          <h3>Ocean Drive Retreat</h3>
+          <p>Beach villa guide with arrival info, house rules, local tips and printable PDF.</p>
+          <span class="demo-link">View guide →</span>
+        </a>
+        <a class="demo-card demo-minimalist" href="villas/the-soho-loft/">
+          <span class="demo-style-badge">Minimalist style · New York</span>
+          <h3>The SoHo Loft</h3>
+          <p>Clean city apartment guide with check-in details, house rules and neighborhood tips.</p>
+          <span class="demo-link">View guide →</span>
+        </a>
+        <a class="demo-card demo-sunset" href="villas/casa-selva-tulum/">
+          <span class="demo-style-badge">Sunset style · Tulum</span>
+          <h3>Casa Selva Tulum</h3>
+          <p>Tropical jungle retreat guide with local experiences, restaurants and eco-stay tips.</p>
+          <span class="demo-link">View guide →</span>
+        </a>
+        <a class="demo-card demo-classic" href="villas/le-marais-flat/">
+          <span class="demo-style-badge">Classic style · Paris</span>
+          <h3>Le Marais Flat</h3>
+          <p>Elegant Parisian apartment guide with curated local directory and guest essentials.</p>
+          <span class="demo-link">View guide →</span>
+        </a>
       </div>
     </section>
 
