@@ -453,6 +453,29 @@
             font-weight: 400;
         }
 
+        /* Next Page Button */
+        .next-page-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            align-self: center;
+            margin-top: auto;
+            padding: 13px 30px;
+            background: var(--mg-button);
+            color: var(--mg-button-text) !important;
+            border-radius: 999px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(13px, 3.5vw, 15px);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            text-transform: uppercase;
+            box-shadow: 0 8px 24px color-mix(in srgb, var(--primary) 28%, transparent);
+            transition: transform 200ms ease, box-shadow 200ms ease;
+        }
+        .next-page-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px color-mix(in srgb, var(--primary) 36%, transparent); }
+        .next-page-btn:active { transform: scale(0.97); }
+
         /* Pantalla 3 — Menu final 12 */
         .menu-screen-approved {
             min-height: var(--mg-screen-height);
@@ -1135,6 +1158,7 @@
                 <div class="cover-to">TO</div>
                 <div class="cover-villa-name">{{VILLA_NAME}}</div>
             </div>
+            <a class="next-page-btn" href="#welcome-screen">Continue →</a>
         </section>
 
         <!-- 2. Welcome -->
@@ -1152,6 +1176,7 @@
             <div data-field-block>
                 {{ABOUT_HOSTS_BLOCK}}
             </div>
+            <a class="next-page-btn" href="#menu-sheet">Continue →</a>
         </section>
 
         <!-- 3. Menu final 12 -->
