@@ -135,23 +135,15 @@
 
     .process-showcase { position: relative; background: linear-gradient(135deg, rgba(255,255,255,.78), rgba(247,243,238,.44)), radial-gradient(circle at 12% 16%, rgba(89,195,195,.14), transparent 28%), radial-gradient(circle at 82% 76%, rgba(242,144,127,.14), transparent 30%); border: 1px solid var(--line); border-radius: 42px; padding: 24px; box-shadow: 0 26px 70px rgba(26,116,110,.1); overflow: hidden; }
     .process-showcase::before { content: ""; position: absolute; inset: 22px 12% auto auto; width: 220px; height: 220px; background: linear-gradient(135deg, rgba(89,195,195,.24), rgba(242,144,127,.18)); border-radius: 999px; filter: blur(14px); opacity: .7; pointer-events: none; }
-    .steps { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; align-items: stretch; }
-    .step-card { position: relative; background: rgba(255,255,255,.78); border: 1px solid var(--line); border-radius: 32px; padding: 16px; min-height: 470px; box-shadow: 0 16px 38px rgba(26,116,110,.08); transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out), background 300ms ease; overflow: hidden; }
-    .step-card:hover { transform: translateY(-8px); background: rgba(255,255,255,.92); box-shadow: 0 24px 52px rgba(26,116,110,.14); }
-    .step-visual { position: relative; height: 240px; border-radius: 24px; overflow: hidden; margin-bottom: 18px; background: var(--sand); }
-    .step-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.28)); pointer-events: none; }
-    .step-photo { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 600ms var(--ease-out); }
-    .step-card:hover .step-photo { transform: scale(1.06); }
-    .step-number { position: absolute; left: 16px; top: 16px; z-index: 2; width: 54px; height: 54px; border-radius: 18px; background: linear-gradient(135deg, var(--sage), var(--terracotta)); color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; box-shadow: 0 14px 30px rgba(26,116,110,.28); }
-    .step-label { position: absolute; right: 14px; bottom: 14px; z-index: 2; background: rgba(255,255,255,.88); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.52); border-radius: 999px; padding: 8px 11px; font-size: 12px; font-weight: 850; color: var(--ink); }
-    .step-content { padding: 0 8px 10px; }
-    .step-card h3 { font-size: 30px; line-height: 1; margin: 0 0 10px; letter-spacing: -0.055em; }
-    .step-card p { color: var(--muted); margin: 0; font-size: 17px; }
-
-    .process-arrow { position: absolute; top: 42%; width: 72px; height: 72px; border-radius: 999px; background: var(--ink); color: white; z-index: 3; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; box-shadow: 0 18px 42px rgba(29,27,24,.22); pointer-events: none; }
-    .process-arrow.one { left: calc(33.33% - 36px); } .process-arrow.two { left: calc(66.66% - 36px); }
-    .process-note { position: relative; z-index: 1; display: flex; justify-content: center; margin-top: 50px; }
-    .process-note span { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.72); border: 1px solid var(--line); border-radius: 999px; padding: 10px 14px; color: var(--muted); font-size: 14px; font-weight: 750; }
+    .steps { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: stretch; }
+    .step-card { position: relative; background: rgba(255,255,255,.85); border: 1px solid var(--line); border-radius: 28px; padding: 26px 22px 24px; box-shadow: 0 10px 28px rgba(26,116,110,.08); transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out); overflow: hidden; display: flex; flex-direction: column; gap: 14px; }
+    .step-card:hover { transform: translateY(-6px); box-shadow: 0 22px 48px rgba(26,116,110,.14); background: white; }
+    .step-bg-num { position: absolute; right: 14px; top: 6px; font-size: 88px; font-weight: 950; line-height: 1; color: rgba(26,116,110,.07); letter-spacing: -0.05em; pointer-events: none; }
+    .step-icon { width: 58px; height: 58px; border-radius: 18px; background: linear-gradient(135deg, var(--sage), var(--terracotta)); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+    .step-card h3 { font-size: 20px; line-height: 1.15; margin: 0; letter-spacing: -0.04em; color: var(--ink); }
+    .step-card p { color: var(--muted); margin: 0; font-size: 15px; line-height: 1.5; flex: 1; }
+    .process-note { position: relative; z-index: 1; display: flex; justify-content: center; margin-top: 28px; }
+    .process-note span { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.72); border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; color: var(--muted); font-size: 14px; font-weight: 750; }
 
     .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 26px; }
     .feature { background: rgba(255,255,255,.72); border: 1px solid var(--line); border-radius: 20px; padding: 18px; font-size: 17px; font-weight: 750; box-shadow: 0 10px 28px rgba(26,116,110,.06); transition: transform 260ms var(--ease-out), box-shadow 260ms var(--ease-out), background 260ms ease; }
@@ -175,8 +167,8 @@
       .hero, .pricing-wrap { grid-template-columns: 1fr; }
       .mockup-wrap { min-height: 520px; }
       .phone { right: 50%; transform: translateX(50%) rotate(2deg); animation-name: fadeScaleMobile, floatPhoneMobile; }
-      .demo-grid { grid-template-columns: repeat(2, 1fr); }
-      .steps, .features { grid-template-columns: 1fr; }
+      .demo-grid, .steps { grid-template-columns: repeat(2, 1fr); }
+      .features { grid-template-columns: 1fr; }
       .process-showcase { padding: 14px; border-radius: 30px; }
       .step-card, .step-middle, .step-middle:hover { min-height: auto; transform: none; }
       .process-arrow { position: relative; left: auto !important; top: auto; margin: -4px auto; transform: rotate(90deg); }
@@ -296,16 +288,35 @@
     </section>
 
     <section class="section reveal">
-      <div class="section-head"><h2>Start from scratch or send what you already have.</h2><p>Guests do not need another messy PDF. MyGuest turns what you already have into a polished trilingual experience.</p></div>
+      <div class="section-head"><h2>Ready in 4 simple steps.</h2><p>From payment to happy guests — we handle everything in between.</p></div>
       <div class="process-showcase">
         <div class="steps">
-          <article class="step-card"><div class="step-visual"><div class="step-number">1</div><img class="step-photo" src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80" alt="Host uploading an existing welcome book from a laptop" /><div class="step-label">PDF · Word · Canva · photos · notes</div></div><div class="step-content"><h3>Send what you already have</h3><p>Upload your welcome book, PDF, Word file, Canva export, photos, screenshots, house rules or check-in notes.</p></div></article>
-          <div class="process-arrow one">→</div>
-          <article class="step-card step-middle"><div class="step-visual"><div class="step-number">2</div><img class="step-photo" src="https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=900&q=80" alt="Simple form to fill in missing details" /><div class="step-label">Simple form</div></div><div class="step-content"><h3>Fill in anything missing</h3><p>If details are missing, you can add them through a simple form.</p></div></article>
-          <div class="process-arrow two">→</div>
-          <article class="step-card"><div class="step-visual"><div class="step-number">3</div><img class="step-photo" src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=900&q=80" alt="Guest using a mobile guide on a phone" /><div class="step-label">Web + PDF · EN / ES / FR</div></div><div class="step-content"><h3>Receive your guide</h3><p>We deliver a mobile guest guide, printable PDF and private guest link for sensitive stay details.</p></div></article>
+          <article class="step-card">
+            <div class="step-bg-num">1</div>
+            <div class="step-icon">💳</div>
+            <h3>Pay once, no surprises.</h3>
+            <p>One flat fee of $29. No subscription, no hidden costs, no design skills required.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-bg-num">2</div>
+            <div class="step-icon">📋</div>
+            <h3>Tell us about your place.</h3>
+            <p>Fill our simple form or send your PDF, Canva, photos or welcome notes. We take it from there.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-bg-num">3</div>
+            <div class="step-icon">✉️</div>
+            <h3>Your guide arrives by email.</h3>
+            <p>A polished mobile guide and printable PDF land in your inbox — in English, Spanish and French.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-bg-num">4</div>
+            <div class="step-icon">🌴</div>
+            <h3>Relax. Guests are covered.</h3>
+            <p>Your guests enjoy a seamless welcome in their language — and stop messaging you with every question.</p>
+          </article>
         </div>
-        <div class="process-note"><span>✨ Start with messy files. End with a premium guest experience.</span></div>
+        <div class="process-note"><span>✨ From messy files to a premium guest experience — without lifting a finger.</span></div>
       </div>
     </section>
 
