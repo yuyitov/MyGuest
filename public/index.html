@@ -170,16 +170,17 @@
       .demo-grid, .steps { grid-template-columns: repeat(2, 1fr); }
       .features { grid-template-columns: 1fr; }
       .process-showcase { padding: 14px; border-radius: 30px; }
-      .step-card, .step-middle, .step-middle:hover { min-height: auto; transform: none; }
-      .process-arrow { position: relative; left: auto !important; top: auto; margin: -4px auto; transform: rotate(90deg); }
+      .step-card { min-height: auto; }
       .process-note { margin-top: 18px; }
-      .demo-card { min-height: 310px; }
+      .demo-card { min-height: auto; }
+      .brand img { height: 300px !important; margin-top: -60px !important; margin-bottom: -60px !important; margin-left: -80px !important; }
     }
 
     @media (max-width: 560px) {
-      .nav { align-items: flex-start; gap: 12px; }
-      .nav-pill { font-size: 12px; }
-      .hero { padding-top: 44px; }
+      .nav { align-items: center; gap: 8px; }
+      .nav-pill { font-size: 11px; padding: 7px 10px; }
+      .brand img { height: 180px !important; margin-top: -35px !important; margin-bottom: -35px !important; margin-left: -45px !important; }
+      .hero { padding-top: 10px; }
       .hero-copy { font-size: 18px; }
       .hero-actions { align-items: stretch; }
       .cta, .ghost { width: 100%; }
@@ -194,6 +195,12 @@
       .style-picker-label { grid-column: 1 / -1; margin: 0 auto 2px; }
       .style-pill { text-align: center; padding: 8px 6px; }
       .style-pill.active { transform: translateY(-3px); }
+      .demo-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .process-section-head { flex-direction: column; gap: 12px; }
+      .process-section-head img { width: 90px !important; }
+      .section-head h2 { font-size: clamp(28px, 7vw, 40px); }
+      .pricing-wrap { grid-template-columns: 1fr; }
     }
 
     @keyframes dotOrbitAMobile { from { transform: rotate(0deg) translateX(208px) rotate(0deg); } to { transform: rotate(360deg) translateX(208px) rotate(-360deg); } }
@@ -288,7 +295,7 @@
     </section>
 
     <section class="section reveal">
-      <div style="display:flex;align-items:center;justify-content:flex-start;gap:32px;margin-bottom:30px;">
+      <div class="process-section-head" style="display:flex;align-items:center;justify-content:flex-start;gap:32px;margin-bottom:30px;">
         <div class="section-head" style="margin-bottom:0;">
           <h2>Ready in 4 simple steps.</h2>
           <p>From payment to happy guests — we handle everything in between.</p>
