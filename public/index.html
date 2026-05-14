@@ -120,18 +120,18 @@
     h2 { font-size: clamp(34px, 4vw, 54px); line-height: 1; letter-spacing: -0.06em; margin: 0 0 14px; }
     .section-head p, .section > p { color: var(--muted); font-size: 19px; margin: 0; }
 
-    .demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .demo-card { position: relative; min-height: 360px; border-radius: 30px; overflow: hidden; padding: 22px; display: flex; flex-direction: column; justify-content: flex-end; color: #fff; box-shadow: 0 18px 45px rgba(92,61,32,.16); transition: transform 360ms var(--ease-out), box-shadow 360ms var(--ease-out), filter 360ms ease; }
-    .demo-card:hover { transform: translateY(-10px) scale(1.015); box-shadow: 0 30px 72px rgba(26,116,110,.22); filter: saturate(1.08); }
-    .demo-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.72)); z-index: 1; }
-    .demo-card > * { position: relative; z-index: 2; }
-    .demo-beach { background: url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=900&q=80') center/cover; }
-    .demo-city { background: url('https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=900&q=80') center/cover; }
-    .demo-luxury { background: url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80') center/cover; }
-    .demo-card h3 { font-size: 25px; margin: 0 0 8px; letter-spacing: -0.04em; }
-    .demo-card p { color: rgba(255,255,255,.82); font-size: 16px; margin: 0 0 16px; }
-    .demo-link { display: inline-flex; width: fit-content; background: rgba(255,255,255,.92); color: var(--ink); text-decoration: none; border-radius: 999px; padding: 10px 14px; font-weight: 800; font-size: 14px; transition: transform 220ms var(--ease-out), background 220ms ease; }
-    .demo-link:hover { transform: translateX(4px); background: white; }
+    .demo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .demo-card { position: relative; border-radius: 24px; overflow: hidden; background: white; border: 1px solid var(--line); box-shadow: 0 8px 24px rgba(26,116,110,.08); transition: transform 360ms var(--ease-out), box-shadow 360ms var(--ease-out); display: flex; flex-direction: column; min-height: auto; color: var(--ink); }
+    .demo-card:hover { transform: translateY(-8px); box-shadow: 0 24px 52px rgba(26,116,110,.18); filter: none; }
+    .demo-card::before { display: none; }
+    .demo-card > * { position: static; z-index: auto; }
+    .demo-photo { height: 170px; background-size: cover; background-position: center; flex-shrink: 0; }
+    .demo-card-body { padding: 16px 18px 20px; display: flex; flex-direction: column; flex: 1; }
+    .demo-style-tag { display: inline-flex; width: fit-content; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px; }
+    .demo-card h3 { font-size: 18px; margin: 0 0 6px; letter-spacing: -0.03em; color: var(--ink); }
+    .demo-card p { color: var(--muted); font-size: 14px; margin: 0 0 16px; line-height: 1.45; flex: 1; }
+    .demo-link { display: inline-flex; align-items: center; gap: 5px; color: var(--terracotta); font-weight: 800; font-size: 14px; text-decoration: none; transition: gap 220ms var(--ease-out); }
+    .demo-link:hover { gap: 10px; }
 
     .process-showcase { position: relative; background: linear-gradient(135deg, rgba(255,255,255,.78), rgba(247,243,238,.44)), radial-gradient(circle at 12% 16%, rgba(89,195,195,.14), transparent 28%), radial-gradient(circle at 82% 76%, rgba(242,144,127,.14), transparent 30%); border: 1px solid var(--line); border-radius: 42px; padding: 24px; box-shadow: 0 26px 70px rgba(26,116,110,.1); overflow: hidden; }
     .process-showcase::before { content: ""; position: absolute; inset: 22px 12% auto auto; width: 220px; height: 220px; background: linear-gradient(135deg, rgba(89,195,195,.24), rgba(242,144,127,.18)); border-radius: 999px; filter: blur(14px); opacity: .7; pointer-events: none; }
@@ -175,7 +175,8 @@
       .hero, .pricing-wrap { grid-template-columns: 1fr; }
       .mockup-wrap { min-height: 520px; }
       .phone { right: 50%; transform: translateX(50%) rotate(2deg); animation-name: fadeScaleMobile, floatPhoneMobile; }
-      .demo-grid, .steps, .features { grid-template-columns: 1fr; }
+      .demo-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps, .features { grid-template-columns: 1fr; }
       .process-showcase { padding: 14px; border-radius: 30px; }
       .step-card, .step-middle, .step-middle:hover { min-height: auto; transform: none; }
       .process-arrow { position: relative; left: auto !important; top: auto; margin: -4px auto; transform: rotate(90deg); }
@@ -253,11 +254,44 @@
     </section>
 
     <section class="section reveal" id="demos">
-      <div class="section-head"><h2>Show guests something better than a PDF.</h2><p>Use polished sample welcome books to see the final experience your guests would receive.</p></div>
+      <div class="section-head"><h2>Show guests something better than a PDF.</h2><p>Four real welcome books — live and ready to explore.</p></div>
       <div class="demo-grid">
-        <article class="demo-card demo-beach"><h3>Beach Villa Demo</h3><p>Trilingual guide with arrival info, house rules, local tips and print PDF.</p><span class="demo-link">Demo coming soon</span></article>
-        <article class="demo-card demo-city"><h3>City Apartment Demo</h3><p>A simple rental guide transformed into a clean mobile guest experience.</p><span class="demo-link">Demo coming soon</span></article>
-        <article class="demo-card demo-luxury"><h3>Luxury Stay Demo</h3><p>Premium welcome book for international guests and high-end stays.</p><span class="demo-link">Demo coming soon</span></article>
+        <article class="demo-card">
+          <div class="demo-photo" style="background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80') center/cover;"></div>
+          <div class="demo-card-body">
+            <span class="demo-style-tag" style="background:#d4f0ed;color:#1A746E;">Coastal</span>
+            <h3>Ocean Drive Retreat</h3>
+            <p>Beach villa with arrival info, house rules, local tips and printable PDF.</p>
+            <a class="demo-link" href="villas/ocean-drive-retreat/">View demo →</a>
+          </div>
+        </article>
+        <article class="demo-card">
+          <div class="demo-photo" style="background:url('https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=600&q=80') center/cover;"></div>
+          <div class="demo-card-body">
+            <span class="demo-style-tag" style="background:#f0ede8;color:#5a4a38;">Minimalist</span>
+            <h3>The SoHo Loft</h3>
+            <p>Urban apartment with a clean, minimal layout for modern city stays.</p>
+            <a class="demo-link" href="villas/the-soho-loft/">View demo →</a>
+          </div>
+        </article>
+        <article class="demo-card">
+          <div class="demo-photo" style="background:url('https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=600&q=80') center/cover;"></div>
+          <div class="demo-card-body">
+            <span class="demo-style-tag" style="background:#fde4ce;color:#c95f43;">Sunset</span>
+            <h3>Casa Selva Tulum</h3>
+            <p>Tropical villa with warm tones and a trilingual guide for global guests.</p>
+            <a class="demo-link" href="villas/casa-selva-tulum/">View demo →</a>
+          </div>
+        </article>
+        <article class="demo-card">
+          <div class="demo-photo" style="background:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=600&q=80') center/cover;"></div>
+          <div class="demo-card-body">
+            <span class="demo-style-tag" style="background:#efebe4;color:#5a4a38;">Classic</span>
+            <h3>Le Marais Flat</h3>
+            <p>Parisian flat with an elegant classic style for international guests.</p>
+            <a class="demo-link" href="villas/le-marais-flat/">View demo →</a>
+          </div>
+        </article>
       </div>
     </section>
 
