@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>MyGuest — Before / After</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    body { background: var(--ivory); }
+
+    .canvas {
+      padding: 0;
+      flex-direction: column;
+    }
+
+    /* Top header bar */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 44px 72px 36px;
+      border-bottom: 1px solid var(--taupe);
+      background: var(--ivory);
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-size: 38px;
+      font-weight: 500;
+      color: var(--charcoal);
+      letter-spacing: -0.01em;
+    }
+
+    /* Two columns */
+    .columns {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Before column */
+    .col-before {
+      flex: 0 0 58%;
+      background: var(--sand);
+      padding: 52px 60px 60px 72px;
+      display: flex;
+      flex-direction: column;
+      border-right: 2px solid var(--teal);
+      position: relative;
+    }
+
+    /* Teal split dot */
+    .col-before::after {
+      content: 'vs';
+      position: absolute;
+      right: -24px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--teal);
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      box-shadow: 0 4px 16px rgba(89,195,195,0.3);
+    }
+
+    /* After column */
+    .col-after {
+      flex: 1;
+      background: var(--ivory);
+      padding: 52px 56px 60px 60px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Column labels */
+    .col-label {
+      font-size: 18px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 28px;
+    }
+
+    .col-label.before { color: var(--warm-gray); }
+    .col-label.after { color: var(--teal); }
+
+    /* List items */
+    .pain-list, .win-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .pain-item, .win-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      font-size: 26px;
+      line-height: 1.35;
+    }
+
+    .pain-item { color: var(--charcoal); }
+    .win-item { color: var(--charcoal); }
+
+    .pain-emoji {
+      font-size: 24px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      opacity: 0.7;
+    }
+
+    .win-check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #E8F7F7;
+      border: 1.5px solid var(--teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--deep-teal);
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Bottom footer */
+    .footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 72px;
+      border-top: 1px solid var(--taupe);
+      background: var(--ivory);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+  <!-- Header bar -->
+  <div class="header-bar">
+    <h1 class="header-title" id="headline">Before MyGuest vs. After</h1>
+    <img class="logo" src="../../public/landing/logo_principal-Photoroom.png" alt="MyGuest">
+  </div>
+
+  <!-- Two columns -->
+  <div class="columns">
+    <!-- Before -->
+    <div class="col-before">
+      <div class="col-label before">Before</div>
+      <div class="pain-list" id="beforeList">
+        <div class="pain-item"><span class="pain-emoji">📎</span><span>PDF buried in the email thread</span></div>
+        <div class="pain-item"><span class="pain-emoji">📱</span><span>Screenshots shared over WhatsApp</span></div>
+        <div class="pain-item"><span class="pain-emoji">📋</span><span>Info scattered across different notes</span></div>
+        <div class="pain-item"><span class="pain-emoji">🤷</span><span>Guests ask the same questions anyway</span></div>
+        <div class="pain-item"><span class="pain-emoji">🌐</span><span>Only available in one language</span></div>
+      </div>
+    </div>
+
+    <!-- After -->
+    <div class="col-after">
+      <div class="col-label after">After</div>
+      <div class="win-list" id="afterList">
+        <div class="win-item"><div class="win-check">✓</div><span>One clean link to share</span></div>
+        <div class="win-item"><div class="win-check">✓</div><span>EN · ES · FR</span></div>
+        <div class="win-item"><div class="win-check">✓</div><span>Mobile guide</span></div>
+        <div class="win-item"><div class="win-check">✓</div><span>Printable PDF</span></div>
+        <div class="win-item"><div class="win-check">✓</div><span>Fewer questions</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-bar">
+    <img class="logo-sm" src="../../public/landing/logo_principal-Photoroom.png" alt="MyGuest">
+    <span class="site-url">myguestguide.com</span>
+  </div>
+</div>
+
+<script>
+(function() {
+  const data = window.POST_DATA || null;
+  if (!data) {
+    const params = new URLSearchParams(window.location.search);
+    const postId = params.get('postId');
+    if (postId) {
+      fetch('../posts.json')
+        .then(r => r.json())
+        .then(posts => {
+          const p = posts.find(x => x.id === postId);
+          if (p) applyData(p);
+        }).catch(() => {});
+    }
+    return;
+  }
+  applyData(data);
+
+  function applyData(p) {
+    if (p.title) document.getElementById('headline').textContent = p.title;
+  }
+})();
+</script>
+</body>
+</html>

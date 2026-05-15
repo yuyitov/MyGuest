@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>MyGuest — How It Works</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    body { background: var(--ivory); }
+
+    .canvas {
+      padding: 72px 80px;
+      justify-content: flex-start;
+      gap: 0;
+    }
+
+    /* Top nav */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 52px;
+    }
+
+    /* Section heading */
+    .section-tag {
+      font-size: 18px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: 62px;
+      font-weight: 500;
+      color: var(--charcoal);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 48px;
+    }
+
+    /* 2x2 grid */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .step-card {
+      background: white;
+      border-radius: 24px;
+      border: 1px solid var(--taupe);
+      padding: 32px 34px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .step-card:nth-child(1) { border-top: 3px solid var(--teal); }
+    .step-card:nth-child(2) { border-top: 3px solid var(--deep-teal); }
+    .step-card:nth-child(3) { border-top: 3px solid var(--coral); }
+    .step-card:nth-child(4) { border-top: 3px solid var(--teal); }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .step-num {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--deep-teal);
+      color: white;
+      font-size: 20px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-card:nth-child(2) .step-num { background: var(--deep-teal); }
+    .step-card:nth-child(3) .step-num { background: #C96A4A; }
+
+    .step-title {
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--charcoal);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    .step-desc {
+      font-size: 22px;
+      color: var(--warm-gray);
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    .step-icon {
+      font-size: 32px;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+  <!-- Top nav -->
+  <div class="top-nav">
+    <img class="logo" id="logo" src="../../public/landing/logo_principal-Photoroom.png" alt="MyGuest">
+    <span class="site-url">myguestguide.com</span>
+  </div>
+
+  <!-- Title -->
+  <div class="section-tag">How it works</div>
+  <h1 class="section-title" id="headline">Four simple steps.</h1>
+
+  <!-- Steps grid -->
+  <div class="steps-grid" id="stepsGrid">
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <div class="step-title" id="step1-title">Pay once</div>
+      </div>
+      <p class="step-desc" id="step1-desc">One-time payment. No subscriptions, no monthly fees. Yours forever.</p>
+      <span class="step-icon">💳</span>
+    </div>
+
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <div class="step-title" id="step2-title">Send your info</div>
+      </div>
+      <p class="step-desc" id="step2-desc">Fill in a simple form with your property details, rules, and local tips.</p>
+      <span class="step-icon">📋</span>
+    </div>
+
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <div class="step-title" id="step3-title">Receive by email</div>
+      </div>
+      <p class="step-desc" id="step3-desc">We send your personalized guide link and printable PDF to your inbox.</p>
+      <span class="step-icon">📨</span>
+    </div>
+
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-num">4</div>
+        <div class="step-title" id="step4-title">Guests love it</div>
+      </div>
+      <p class="step-desc" id="step4-desc">Share your link with every booking. Better reviews, fewer questions.</p>
+      <span class="step-icon">⭐</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const data = window.POST_DATA || null;
+  if (!data) {
+    const params = new URLSearchParams(window.location.search);
+    const postId = params.get('postId');
+    if (postId) {
+      fetch('../posts.json')
+        .then(r => r.json())
+        .then(posts => {
+          const p = posts.find(x => x.id === postId);
+          if (p) applyData(p);
+        }).catch(() => {});
+    }
+    return;
+  }
+  applyData(data);
+
+  function applyData(p) {
+    if (p.title) document.getElementById('headline').textContent = p.title;
+    if (p.steps && Array.isArray(p.steps)) {
+      p.steps.forEach((step, i) => {
+        const ti = document.getElementById(`step${i+1}-title`);
+        const di = document.getElementById(`step${i+1}-desc`);
+        if (ti && step.title) ti.textContent = step.title;
+        if (di && step.desc) di.textContent = step.desc;
+      });
+    }
+  }
+})();
+</script>
+</body>
+</html>

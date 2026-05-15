@@ -1,0 +1,13 @@
+{
+  "name": "myguest-social-posts",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "preview": "npx serve -l 3100 marketing/social-post-system",
+    "export": "node marketing/social-post-system/scripts/export-posts.js",
+    "export:draft": "node marketing/social-post-system/scripts/export-posts.js --draft"
+  },
+  "dependencies": {
+    "puppeteer": "^22.0.0"
+  }
+}

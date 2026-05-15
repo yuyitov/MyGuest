@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>MyGuest — Template Showcase</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    body { background: var(--ivory); }
+
+    .canvas {
+      padding: 0;
+      flex-direction: row;
+    }
+
+    /* Left side — mockup */
+    .left-panel {
+      flex: 0 0 58%;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    /* Style-based backgrounds */
+    .left-panel.coastal { background: linear-gradient(160deg, #D4EEF2 0%, #A8D8D8 40%, #7BBFBF 100%); }
+    .left-panel.minimalist { background: linear-gradient(160deg, #F0EDE8 0%, #E3DDD5 50%, #C8BFB3 100%); }
+    .left-panel.sunset { background: linear-gradient(160deg, #F7DDD0 0%, #F0BC9A 40%, #E8956B 100%); }
+    .left-panel.classic { background: linear-gradient(160deg, #D8E8E4 0%, #A8C8C0 40%, #6EA8A0 100%); }
+
+    .mockup-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    /* Gradient overlay on left panel */
+    .left-panel::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent 60%, rgba(0,0,0,0.12) 100%);
+    }
+
+    /* Right panel */
+    .right-panel {
+      flex: 1;
+      background: var(--ivory);
+      display: flex;
+      flex-direction: column;
+      padding: 64px 56px 64px 52px;
+      justify-content: space-between;
+      border-left: 1px solid var(--taupe);
+    }
+
+    /* Style badge */
+    .style-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      border: 1px solid;
+    }
+
+    .style-badge.coastal { background: #E8F5F5; border-color: #59C3C3; color: #2D6A73; }
+    .style-badge.minimalist { background: #F5F2EE; border-color: #C8BFB3; color: #7A746E; }
+    .style-badge.sunset { background: #FDF0E8; border-color: #F29B7F; color: #C96A4A; }
+    .style-badge.classic { background: #E8F0EE; border-color: #6EA8A0; color: #2D6A73; }
+
+    .style-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .style-badge.coastal::before { background: #59C3C3; }
+    .style-badge.minimalist::before { background: #C8BFB3; }
+    .style-badge.sunset::before { background: #F29B7F; }
+    .style-badge.classic::before { background: #6EA8A0; }
+
+    /* Style name */
+    .style-name {
+      font-size: 68px;
+      font-weight: 500;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+
+    .style-name.coastal { color: #2D6A73; }
+    .style-name.sunset { color: #C96A4A; }
+    .style-name.classic { color: #2D6A73; }
+
+    .accent-line {
+      width: 40px;
+      height: 3px;
+      border-radius: 2px;
+      margin: 24px 0 28px;
+    }
+
+    .accent-line.coastal { background: #59C3C3; }
+    .accent-line.minimalist { background: #C8BFB3; }
+    .accent-line.sunset { background: #F29B7F; }
+    .accent-line.classic { background: #6EA8A0; }
+
+    .style-desc {
+      font-size: 24px;
+      color: var(--warm-gray);
+      line-height: 1.55;
+      font-weight: 400;
+      margin-bottom: 36px;
+    }
+
+    /* Style properties list */
+    .style-props {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .style-prop {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      color: var(--charcoal);
+    }
+
+    .prop-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .prop-dot.coastal { background: #59C3C3; }
+    .prop-dot.minimalist { background: #C8BFB3; }
+    .prop-dot.sunset { background: #F29B7F; }
+    .prop-dot.classic { background: #6EA8A0; }
+
+    /* Bottom of right panel */
+    .right-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .divider { width: 100%; height: 1px; background: var(--taupe); }
+
+    .right-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+  <!-- Left panel (mockup) -->
+  <div class="left-panel coastal" id="leftPanel">
+    <img class="mockup-img" id="mockupImg"
+      src="../../public/landing/Mockups/Coastal_Style_Beach_Cel_Mockup.png"
+      alt="Coastal style mockup">
+  </div>
+
+  <!-- Right panel -->
+  <div class="right-panel">
+    <!-- Top info -->
+    <div>
+      <div class="style-badge coastal" id="styleBadge">Coastal</div>
+      <div class="style-name coastal" id="styleName">Coastal</div>
+      <div class="style-name" id="styleSub" style="font-size:36px; color:var(--warm-gray); letter-spacing:-0.01em; margin-top:4px;">Style</div>
+      <div class="accent-line coastal" id="accentLine"></div>
+      <p class="style-desc" id="styleDesc">Light, airy, fresh. Blues and teals that feel like sea and sky. Perfect for beach houses, lake homes, and coastal retreats.</p>
+
+      <div class="style-props" id="styleProps">
+        <div class="style-prop"><div class="prop-dot coastal"></div> Ocean-inspired palette</div>
+        <div class="style-prop"><div class="prop-dot coastal"></div> Airy, spacious layout</div>
+        <div class="style-prop"><div class="prop-dot coastal"></div> Clean sans-serif type</div>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div class="right-bottom">
+      <div class="divider"></div>
+      <div class="right-footer">
+        <img class="logo-sm" src="../../public/landing/logo_principal-Photoroom.png" alt="MyGuest">
+        <span class="site-url">myguestguide.com</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const STYLES = {
+  coastal: {
+    mockup: '../../public/landing/Mockups/Coastal_Style_Beach_Cel_Mockup.png',
+    name: 'Coastal',
+    desc: 'Light, airy, fresh. Blues and teals that feel like sea and sky. Perfect for beach houses, lake homes, and coastal retreats.',
+    props: ['Ocean-inspired palette', 'Airy, spacious layout', 'Clean sans-serif type'],
+    cls: 'coastal'
+  },
+  minimalist: {
+    mockup: '../../public/landing/Mockups/Minnimalist_Beach_Cel_Mockup.png',
+    name: 'Minimalist',
+    desc: 'Pure, restrained, sophisticated. Neutral tones and maximum white space. For design-conscious hosts who prefer less.',
+    props: ['Warm neutral palette', 'Maximum white space', 'Refined typography'],
+    cls: 'minimalist'
+  },
+  sunset: {
+    mockup: '../../public/landing/Mockups/Sunset_Style_Beach_Cel_Mockup.png',
+    name: 'Sunset',
+    desc: 'Warm, golden, inviting. Coral and terracotta hues that evoke golden hour. Great for city apartments and desert homes.',
+    props: ['Warm coral palette', 'Rich, layered tones', 'Generous spacing'],
+    cls: 'sunset'
+  },
+  classic: {
+    mockup: '../../public/landing/Mockups/Classic_mock.png',
+    name: 'Classic',
+    desc: 'Timeless, elegant, refined. Deep greens and warm neutrals for properties that prize sophistication and tradition.',
+    props: ['Elegant green palette', 'Traditional structure', 'Editorial typography'],
+    cls: 'classic'
+  }
+};
+
+(function() {
+  const data = window.POST_DATA || null;
+  if (!data) {
+    const params = new URLSearchParams(window.location.search);
+    const postId = params.get('postId');
+    if (postId) {
+      fetch('../posts.json')
+        .then(r => r.json())
+        .then(posts => {
+          const p = posts.find(x => x.id === postId);
+          if (p) applyData(p);
+        }).catch(() => {});
+    }
+    return;
+  }
+  applyData(data);
+
+  function applyData(p) {
+    const style = (p.style || 'coastal').toLowerCase();
+    const s = STYLES[style] || STYLES.coastal;
+
+    document.getElementById('mockupImg').src = s.mockup;
+    document.getElementById('leftPanel').className = `left-panel ${s.cls}`;
+    document.getElementById('styleBadge').className = `style-badge ${s.cls}`;
+    document.getElementById('styleBadge').textContent = s.name;
+    document.getElementById('styleName').className = `style-name ${s.cls}`;
+    document.getElementById('styleName').textContent = s.name;
+    document.getElementById('accentLine').className = `accent-line ${s.cls}`;
+    document.getElementById('styleDesc').textContent = p.body || s.desc;
+
+    const propsEl = document.getElementById('styleProps');
+    propsEl.innerHTML = s.props.map(prop =>
+      `<div class="style-prop"><div class="prop-dot ${s.cls}"></div> ${prop}</div>`
+    ).join('');
+
+    if (p.title) document.getElementById('styleSub').textContent = p.title;
+  }
+})();
+</script>
+</body>
+</html>
