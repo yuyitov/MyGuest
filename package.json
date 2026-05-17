@@ -5,7 +5,8 @@
   "scripts": {
     "preview": "npx serve -l 3100 marketing/instagram",
     "export": "node marketing/instagram/scripts/export-posts.js",
-    "export:draft": "node marketing/instagram/scripts/export-posts.js --draft"
+    "export:draft": "node marketing/instagram/scripts/export-posts.js --draft",
+    "mockups": "node marketing/instagram/scripts/generate-mockups.js"
   },
   "dependencies": {
     "puppeteer": "^24.43.1"

@@ -7,10 +7,10 @@ on:
     branches:
       - main
     paths:
-      - 'public/marketing/pinterest/**'
-      - 'scripts/marketing/render_pinterest_pins.py'
+      - 'marketing/pinterest/v1/**'
+      - 'marketing/pinterest/scripts/render_pinterest_pins.py'
       - '.github/workflows/render-pinterest-pins.yml'
-      - 'requirements-render-pinterest.txt'
+      - 'marketing/pinterest/requirements-render-pinterest.txt'
 
 permissions:
   contents: read
@@ -31,26 +31,26 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-render-pinterest.txt
+          pip install -r marketing/pinterest/requirements-render-pinterest.txt
           python -m playwright install --with-deps chromium
 
       - name: Start local static server
         run: |
-          python -m http.server 8000 --directory public > /tmp/myguest-pinterest-server.log 2>&1 &
+          python -m http.server 8000 --directory marketing/pinterest > /tmp/myguest-pinterest-server.log 2>&1 &
           echo $! > /tmp/myguest-pinterest-server.pid
           sleep 3
 
       - name: Render pins
         run: |
-          python scripts/marketing/render_pinterest_pins.py \
-            --base-url http://127.0.0.1:8000/marketing/pinterest/ \
-            --output-dir output/pinterest
+          python marketing/pinterest/scripts/render_pinterest_pins.py \
+            --base-url http://127.0.0.1:8000/v1/ \
+            --output-dir marketing/pinterest/output/pins-v1
 
       - name: Upload rendered pins
         uses: actions/upload-artifact@v4
         with:
           name: pinterest-pins
-          path: output/pinterest
+          path: marketing/pinterest/output/pins-v1
           if-no-files-found: error
 
       - name: Stop local static server

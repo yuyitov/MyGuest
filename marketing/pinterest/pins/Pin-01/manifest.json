@@ -1,0 +1,182 @@
+[
+  {
+    "title": "pin-01-stop-guest-questions",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-01-stop-questions.html",
+    "output": "output/pinterest/pin-01-stop-guest-questions.png",
+    "template": "template-01-stop-questions.html",
+    "headline": "Stop answering the same guest questions.",
+    "cta": "Get your guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=stop_guest_questions_01"
+  },
+  {
+    "title": "pin-02-fewer-repeated-messages",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-01-stop-questions.html",
+    "output": "output/pinterest/pin-02-fewer-repeated-messages.png",
+    "template": "template-01-stop-questions.html",
+    "headline": "Fewer repeated messages from guests.",
+    "cta": "Create my guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=fewer_repeated_messages_02"
+  },
+  {
+    "title": "pin-03-answers-before-they-ask",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-01-stop-questions.html",
+    "output": "output/pinterest/pin-03-answers-before-they-ask.png",
+    "template": "template-01-stop-questions.html",
+    "headline": "Give guests answers before they ask.",
+    "cta": "Get your guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=answers_before_they_ask_03"
+  },
+  {
+    "title": "pin-04-guest-info-organized",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-01-stop-questions.html",
+    "output": "output/pinterest/pin-04-guest-info-organized.png",
+    "template": "template-01-stop-questions.html",
+    "headline": "Your guest info, finally organized.",
+    "cta": "Start my guest guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=guest_info_organized_04"
+  },
+  {
+    "title": "pin-05-mobile-plus-pdf",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-02-pdf.html",
+    "output": "output/pinterest/pin-05-mobile-plus-pdf.png",
+    "template": "template-02-pdf.html",
+    "headline": "A mobile guest guide plus a simple printable PDF.",
+    "cta": "Get your guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=mobile_plus_pdf_05"
+  },
+  {
+    "title": "pin-06-easier-to-share",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-02-pdf.html",
+    "output": "output/pinterest/pin-06-easier-to-share.png",
+    "template": "template-02-pdf.html",
+    "headline": "Make your Airbnb welcome info easier to share.",
+    "cta": "Create my guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=easier_to_share_06"
+  },
+  {
+    "title": "pin-07-phone-and-print",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-02-pdf.html",
+    "output": "output/pinterest/pin-07-phone-and-print.png",
+    "template": "template-02-pdf.html",
+    "headline": "One guest guide for phone and print.",
+    "cta": "Order your guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=phone_and_print_07"
+  },
+  {
+    "title": "pin-08-upgrade-guest-instructions",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-02-pdf.html",
+    "output": "output/pinterest/pin-08-upgrade-guest-instructions.png",
+    "template": "template-02-pdf.html",
+    "headline": "Upgrade your old guest instructions.",
+    "cta": "Get your guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=upgrade_guest_instructions_08"
+  },
+  {
+    "title": "pin-09-trilingual-guest-guide",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-03-trilingual.html",
+    "output": "output/pinterest/pin-09-trilingual-guest-guide.png",
+    "template": "template-03-trilingual.html",
+    "headline": "A guest guide in English, Spanish, and French.",
+    "cta": "Start my guest guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=trilingual_guest_guide_09"
+  },
+  {
+    "title": "pin-10-guest-clarity-languages",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-03-trilingual.html",
+    "output": "output/pinterest/pin-10-guest-clarity-languages.png",
+    "template": "template-03-trilingual.html",
+    "headline": "Help more guests understand your stay details.",
+    "cta": "Get your guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=guest_clarity_languages_10"
+  },
+  {
+    "title": "pin-11-international-guest-confidence",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-03-trilingual.html",
+    "output": "output/pinterest/pin-11-international-guest-confidence.png",
+    "template": "template-03-trilingual.html",
+    "headline": "Welcome international guests with more confidence.",
+    "cta": "Create my guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=international_guest_confidence_11"
+  },
+  {
+    "title": "pin-12-airbnb-guide-three-languages",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-03-trilingual.html",
+    "output": "output/pinterest/pin-12-airbnb-guide-three-languages.png",
+    "template": "template-03-trilingual.html",
+    "headline": "Your Airbnb guide, translated for more guests.",
+    "cta": "Get your guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=airbnb_guide_three_languages_12"
+  },
+  {
+    "title": "pin-13-no-website-needed",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-04-minutes.html",
+    "output": "output/pinterest/pin-13-no-website-needed.png",
+    "template": "template-04-minutes.html",
+    "headline": "A cleaner guest guide without building a website.",
+    "cta": "Get your guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=no_website_needed_13"
+  },
+  {
+    "title": "pin-14-digital-welcome-book-form",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-04-minutes.html",
+    "output": "output/pinterest/pin-14-digital-welcome-book-form.png",
+    "template": "template-04-minutes.html",
+    "headline": "Create a digital welcome book from a simple form.",
+    "cta": "Start my guest guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=digital_welcome_book_form_14"
+  },
+  {
+    "title": "pin-15-premium-rental-feel",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-04-minutes.html",
+    "output": "output/pinterest/pin-15-premium-rental-feel.png",
+    "template": "template-04-minutes.html",
+    "headline": "Make your rental feel more premium.",
+    "cta": "Create my guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=premium_rental_feel_15"
+  },
+  {
+    "title": "pin-16-guest-ready-guide",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-04-minutes.html",
+    "output": "output/pinterest/pin-16-guest-ready-guide.png",
+    "template": "template-04-minutes.html",
+    "headline": "Turn property details into a guest-ready guide.",
+    "cta": "Order your guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=guest_ready_guide_16"
+  },
+  {
+    "title": "pin-17-one-guest-guide-link",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-05-one-link.html",
+    "output": "output/pinterest/pin-17-one-guest-guide-link.png",
+    "template": "template-05-one-link.html",
+    "headline": "One link for your Airbnb guest guide.",
+    "cta": "Get your guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=one_guest_guide_link_17"
+  },
+  {
+    "title": "pin-18-everything-in-one-place",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-05-one-link.html",
+    "output": "output/pinterest/pin-18-everything-in-one-place.png",
+    "template": "template-05-one-link.html",
+    "headline": "Everything guests need, in one place.",
+    "cta": "Create my guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=everything_in_one_place_18"
+  },
+  {
+    "title": "pin-19-replace-long-messages",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-05-one-link.html",
+    "output": "output/pinterest/pin-19-replace-long-messages.png",
+    "template": "template-05-one-link.html",
+    "headline": "Replace long guest messages with one clean guide.",
+    "cta": "Start my guest guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=replace_long_messages_19"
+  },
+  {
+    "title": "pin-20-better-guest-experience",
+    "url": "http://127.0.0.1:8000/marketing/pinterest/template-05-one-link.html",
+    "output": "output/pinterest/pin-20-better-guest-experience.png",
+    "template": "template-05-one-link.html",
+    "headline": "A better guest experience starts with one link.",
+    "cta": "Get your guide",
+    "link": "https://yuyitov.github.io/MyGuest/?utm_source=pinterest&utm_medium=organic&utm_campaign=mvp_launch&utm_content=better_guest_experience_20"
+  }
+]

@@ -42,30 +42,47 @@ Plataforma de guías digitales para propiedades de Airbnb. URL: **myguestguide.c
 ## Estructura de archivos clave
 
 ```
-public/marketing/pinterest-v2/
-  styles/pinterest-v2.css          ← CSS compartido (Inter 800, 4 temas, phone, strip)
-  templates/
-    template-01-before-after.html  ← MODIFICADO, pendiente commit
-    template-02-demo-visual.html
-    template-03-printable-pdf.html
-    template-04-trilingual.html
-    template-05-stop-repeating.html
-    template-06-existing-materials.html
-    template-07-private-details.html
-    template-08-style-showcase.html
-  assets/screenshots/
-    ocean-drive-retreat/           ← full-demo.png, hero.png, etc.
-    the-soho-loft/
-    casa-selva-tulum/
-    le-marais-flat/
+marketing/
+  instagram/                        ← Sistema de posts para Instagram (1080×1080px)
+    templates/                      ← 9 plantillas HTML
+    scripts/
+      export-posts.js               ← Renderiza posts con Puppeteer
+      generate-mockups.js           ← Genera mockups de celular (npm run mockups)
+    assets/mockups/phone/           ← PNGs pre-generados del celular
 
-data/marketing/pinterest_campaign_v2.json   ← 32 pins definidos
-scripts/marketing/
-  render_qa_sample.py              ← Renderiza 8 QA samples (aprobación visual)
-  render_pinterest_v2.py           ← Renderiza 32 pins finales
-  validate_pinterest_copy.py       ← Valida copy antes de renderizar
+  pinterest/                        ← Sistema de pins para Pinterest
+    templates/                      ← 8 plantillas HTML (1000×1500px)
+      template-01-before-after.html ← MODIFICADO, pendiente commit
+    styles/pinterest-v2.css         ← CSS compartido (Inter 800, 4 temas, phone, strip)
+    assets/screenshots/             ← Screenshots de los 4 demos reales
+      ocean-drive-retreat/          ← full-demo.png, hero.png, etc.
+      the-soho-loft/
+      casa-selva-tulum/
+      le-marais-flat/
+    data/
+      pinterest_campaign_v2.json    ← 32 pins definidos
+      pinterest_demo_inventory.json
+      pinterest_keywords.json
+    scripts/
+      render_qa_sample.py           ← Renderiza 8 QA samples (aprobación visual)
+      render_pinterest_v2.py        ← Renderiza 32 pins finales
+      validate_pinterest_copy.py    ← Valida copy antes de renderizar
+      capture_pinterest_assets.py   ← Captura screenshots de demos
+      build_pinterest_metadata.py   ← Genera CSVs de metadata
+    output/                         ← PNGs generados y metadata
+      qa-sample/                    ← 8 PNGs de muestra (última versión: 2de61d3)
+      pins/                         ← 32 PNGs finales
+      metadata/
+    output-weekly/                  ← Pins semanales generados con ChatGPT
+    docs/                           ← Guías operativas
+    v1/                             ← Templates v1 (obsoletos, referencia)
+    pins/                           ← PNGs ya publicados en Pinterest
+    requirements-render-pinterest.txt
+    requirements-render-pinterest-v2.txt
 
-output/pinterest-v2/qa-sample/    ← 8 PNGs de muestra (última versión: 2de61d3)
+  assets/                           ← Materiales de marketing general
+    MyGuest_Mensajes_de_Venta.docx
+    MyGuest_Sales_OnePager.pdf
 ```
 
 ---
@@ -101,13 +118,13 @@ Las imágenes `hero.png` son screenshots de la app MyGuest (muestran UI con text
 ## Cómo renderizar QA samples localmente
 
 ```bash
-# 1. Servidor (raíz en pinterest-v2/)
-python -m http.server 8020 --directory public/marketing/pinterest-v2
+# 1. Servidor (raíz en marketing/pinterest/)
+python -m http.server 8020 --directory marketing/pinterest
 
 # 2. Render (en otra terminal)
-python scripts/marketing/render_qa_sample.py --base-url http://localhost:8020/templates/
+python marketing/pinterest/scripts/render_qa_sample.py --base-url http://localhost:8020/templates/
 
-# Output: output/pinterest-v2/qa-sample/qa-01-before-after.png ... qa-08-style-showcase.png
+# Output: marketing/pinterest/output/qa-sample/qa-01-before-after.png ... qa-08-style-showcase.png
 ```
 
 El script inyecta el screenshot real via JS (`img.src = '/assets/screenshots/{slug}/full-demo.png'`).
