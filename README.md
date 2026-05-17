@@ -26,6 +26,7 @@ books/                          Guest book generation engine
   templates/
     master.html                 Web guide template
     print_letter.html           Print PDF template
+  preview_print_redesign.html   Print redesign prototype
 
 marketing/
   instagram/                   Instagram post system (1080×1080px)
@@ -33,6 +34,7 @@ marketing/
     scripts/
       export-posts.js          Renders posts to PNG via Puppeteer
       generate-mockups.js      Generates phone mockup PNGs (npm run mockups)
+    assets/                    Logos, mascot, phone mockup PNGs
     posts.json                 Post definitions (copy + style)
     preview/                   Browser preview grid
 
@@ -51,6 +53,7 @@ marketing/
     output-weekly/             Weekly pins generated via ChatGPT
     pins/                      Published pins + tracking spreadsheet
     docs/                      Operating guides
+    v1/                        Legacy v1 templates (reference only)
 
   assets/                      General sales materials (PDF, DOCX)
 
@@ -63,6 +66,9 @@ public/                        GitHub Pages web root (myguestguide.com)
     le-marais-flat/
   assets/covers/               Cover images used in guides
   landing/                     Landing page assets (logos, mockups, mascot)
+
+worker/
+  worker.js                    Cloudflare Worker (Tally → KV → GitHub dispatch)
 ```
 
 ---
