@@ -1398,7 +1398,7 @@ def render_html_for_language(payload, active_language, output_filename):
     slug = safe_text(metadata.get("slug")) or "demo"
     guest_access_url = ""
 
-    with open("templates/master.html", "r", encoding="utf-8") as f:
+    with open("books/templates/master.html", "r", encoding="utf-8") as f:
         html = f.read()
 
     html = apply_static_template_translations(html, active_language)

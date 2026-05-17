@@ -101,19 +101,19 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL_TRANSLATION: ${{ vars.OPENAI_MODEL_TRANSLATION }}
         run: |
-          python scripts/generate_villa.py "$PUBLIC_PAYLOAD_JSON"
+          python books/scripts/generate_villa.py "$PUBLIC_PAYLOAD_JSON"
           
       - name: Postprocess Public Book Visual QA
         env:
           PUBLIC_PAYLOAD_JSON: ${{ toJson(github.event.client_payload) }}
         run: |
-          python scripts/postprocess_public_book.py "$PUBLIC_PAYLOAD_JSON"
+          python books/scripts/postprocess_public_book.py "$PUBLIC_PAYLOAD_JSON"
 
       - name: Build Print PDF
         env:
           PUBLIC_PAYLOAD_JSON: ${{ toJson(github.event.client_payload) }}
         run: |
-          python scripts/build_print_pdf.py "$PUBLIC_PAYLOAD_JSON"
+          python books/scripts/build_print_pdf.py "$PUBLIC_PAYLOAD_JSON"
 
       - name: QA public outputs for private data
         run: |

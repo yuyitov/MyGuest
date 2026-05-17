@@ -659,7 +659,7 @@ def render_print_html(payload):
     ]
     pages_html = "".join(p for p in pages if p)
 
-    with open("templates/print_letter.html", "r", encoding="utf-8") as f:
+    with open("books/templates/print_letter.html", "r", encoding="utf-8") as f:
         html = f.read()
 
     html = html.replace("{{HTML_LANG}}", escape(ui["html_lang"]))
