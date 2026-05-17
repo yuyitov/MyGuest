@@ -1,3 +1,4 @@
+# Sistema: marketing/  (renderiza pins de Pinterest)
 name: Render Pinterest Pins
 
 on:
