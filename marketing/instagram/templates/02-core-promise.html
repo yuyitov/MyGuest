@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>MyGuest — Core Promise</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+
+    /* ══════════════════════════════════════════
+       VARIANTE: coral (default — fondo ivory)
+    ══════════════════════════════════════════ */
+    body { background: var(--ivory); }
+
+    .canvas {
+      background: var(--ivory);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bg-shape {
+      position: absolute;
+      width: 820px; height: 820px;
+      border-radius: 50%;
+      top: -320px; right: -200px;
+      background: radial-gradient(circle at 55% 40%, #F2907F 0%, #f5b09f 45%, transparent 72%);
+      pointer-events: none;
+      transition: background 0.3s;
+    }
+    .bg-shape-2 {
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      bottom: -100px; left: -80px;
+      background: radial-gradient(circle, rgba(26,116,110,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── CONTENIDO izquierda ── */
+    .content {
+      position: absolute;
+      left: 68px; top: 100px;
+      width: 540px;
+      z-index: 3;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      border: 1.5px solid var(--coral);
+      border-radius: 999px;
+      padding: 8px 22px;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--coral);
+      margin-bottom: 28px;
+    }
+    .eyebrow::before {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .headline {
+      font-size: 86px;
+      font-weight: 900;
+      color: var(--charcoal);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .headline em { font-style: normal; color: var(--teal); }
+
+    .sub {
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--warm-gray);
+      line-height: 1.45;
+      margin-bottom: 44px;
+      max-width: 460px;
+    }
+
+    /* ── CHIPS ── */
+    .chips { display: flex; flex-direction: row; flex-wrap: wrap; gap: 12px; max-width: 540px; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      border-radius: 16px;
+      padding: 13px 22px;
+      font-size: 20px;
+      font-weight: 700;
+      width: fit-content;
+      color: white;
+    }
+    .chip-icon { font-size: 22px; line-height: 1; }
+    .chip-1 { background: var(--teal); }
+    .chip-2 { background: var(--coral); }
+    .chip-3 { background: var(--charcoal); }
+
+    /* ── MASCOTA WATERMARK ── */
+    .mascot-wm {
+      position: absolute;
+      bottom: -50px; left: 120px;
+      width: 500px;
+      pointer-events: none;
+      z-index: 1;
+      display: none;
+      opacity: 0.09;
+    }
+    .v-teal .mascot-wm { display: block; mix-blend-mode: screen; opacity: 0.1; }
+    .v-dark .mascot-wm { display: block; mix-blend-mode: screen; opacity: 0.08; }
+
+    /* ── MASCOTA ── */
+    .mascot-wrap {
+      position: absolute;
+      right: -20px; bottom: 80px;
+      z-index: 2;
+    }
+    .mascot-wrap img {
+      width: 480px;
+      mix-blend-mode: multiply;
+    }
+
+    /* ── PHONE (para variante teal) ── */
+    .phone-wrap {
+      position: absolute;
+      right: 10px; bottom: 40px;
+      z-index: 2;
+      display: none;
+      transform: rotate(-6deg);
+      transform-origin: center bottom;
+    }
+    .iphone {
+      position: relative;
+      width: 310px; height: 630px;
+      background: #0d0d0d;
+      border-radius: 48px;
+      box-shadow: 0 0 0 2px #2a2a2a, 0 0 0 4px #111, 0 40px 80px rgba(0,0,0,0.55);
+      overflow: hidden;
+    }
+    .iphone::before {
+      content: '';
+      position: absolute;
+      top: 12px; left: 50%;
+      transform: translateX(-50%);
+      width: 88px; height: 24px;
+      background: #0d0d0d;
+      border-radius: 999px;
+      z-index: 10;
+    }
+    .iphone-screen {
+      position: absolute; inset: 0;
+      overflow: hidden; border-radius: 48px;
+    }
+    .iphone-screen img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: top center;
+    }
+    .home-bar {
+      position: absolute; bottom: 8px; left: 50%;
+      transform: translateX(-50%);
+      width: 88px; height: 5px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 999px; z-index: 10;
+    }
+
+    /* ── BOTTOM fijo ── */
+    .bottom {
+      position: absolute;
+      bottom: 52px; left: 68px; right: 68px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 4;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--teal);
+      color: white;
+      border-radius: 999px;
+      padding: 14px 32px;
+      font-size: 21px;
+      font-weight: 700;
+    }
+    .url-bottom {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--warm-gray);
+    }
+
+    /* ══════════════════════════════════════════
+       VARIANTE: teal — fondo teal oscuro
+    ══════════════════════════════════════════ */
+    body.v-teal { background: var(--teal); }
+
+    .v-teal .canvas {
+      background: linear-gradient(150deg, #1d8278 0%, #145f5a 100%);
+    }
+    .v-teal .bg-shape {
+      background: radial-gradient(circle at 55% 40%, rgba(255,255,255,0.1) 0%, transparent 65%);
+      top: -200px; right: -150px;
+      width: 600px; height: 600px;
+    }
+    .v-teal .bg-shape-2 {
+      background: radial-gradient(circle, rgba(242,144,127,0.2) 0%, transparent 70%);
+      bottom: -80px; left: -60px;
+    }
+    .v-teal .eyebrow {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.3);
+      color: white;
+    }
+    .v-teal .eyebrow::before { background: var(--coral); }
+    .v-teal .headline { color: white; }
+    .v-teal .headline em { color: var(--coral); }
+    .v-teal .sub { color: rgba(255,255,255,0.7); }
+    .v-teal .chip-1 { background: white; color: var(--teal); }
+    .v-teal .chip-2 { background: var(--coral); color: white; }
+    .v-teal .chip-3 { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25); }
+    .v-teal .cta-btn { background: var(--coral); }
+    .v-teal .url-bottom { color: rgba(255,255,255,0.55); }
+    /* En teal mostramos phone, ocultamos mascota */
+    .v-teal .mascot-wrap { display: none; }
+    .v-teal .phone-wrap { display: flex; }
+
+    /* ══════════════════════════════════════════
+       VARIANTE: dark — fondo carbón oscuro
+    ══════════════════════════════════════════ */
+    body.v-dark { background: var(--charcoal); }
+
+    .v-dark .canvas {
+      background: linear-gradient(145deg, #343030 0%, #252020 100%);
+    }
+    .v-dark .bg-shape {
+      background: radial-gradient(circle at 50% 50%, rgba(26,116,110,0.35) 0%, transparent 65%);
+      top: -250px; right: -150px;
+      width: 700px; height: 700px;
+    }
+    .v-dark .bg-shape-2 {
+      background: radial-gradient(circle, rgba(242,144,127,0.15) 0%, transparent 70%);
+    }
+    .v-dark .eyebrow {
+      background: rgba(242,144,127,0.15);
+      border-color: var(--coral);
+      color: var(--coral);
+    }
+    .v-dark .headline { color: white; }
+    .v-dark .headline em { color: var(--teal-light); }
+    .v-dark .sub { color: rgba(255,255,255,0.55); }
+    .v-dark .chip-1 { background: var(--teal); }
+    .v-dark .chip-2 { background: var(--coral); }
+    .v-dark .chip-3 { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.15); }
+    .v-dark .cta-btn { background: var(--coral); }
+    .v-dark .url-bottom { color: rgba(255,255,255,0.4); }
+    /* En dark también mostramos phone */
+    .v-dark .mascot-wrap { display: none; }
+    .v-dark .phone-wrap { display: flex; }
+
+  </style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+  <div class="bg-shape"></div>
+  <div class="bg-shape-2"></div>
+
+  <!-- Watermark mascota (teal + dark variants) -->
+  <img class="mascot-wm" src="../assets/mascota.png" alt="">
+
+  <!-- Mascota (coral variant) -->
+  <div class="mascot-wrap">
+    <img src="../assets/mascota.png" alt="MyGuest mascota">
+  </div>
+
+  <!-- Phone mockup (teal + dark variants) -->
+  <div class="phone-wrap">
+    <div class="iphone">
+      <div class="iphone-screen">
+        <img src="../assets/mockups/minimalist.png" alt="MyGuest guide">
+      </div>
+      <div class="home-bar"></div>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="content">
+    <div class="eyebrow" id="tag">Digital Welcome Book</div>
+    <h1 class="headline" id="headline">One link.<br><em>Everything</em><br>they need.</h1>
+    <p class="sub" id="subtitle">Stop sending PDFs. Give your guests something they'll actually love.</p>
+    <div class="chips">
+      <div class="chip chip-1"><span class="chip-icon">📱</span> Mobile guide</div>
+      <div class="chip chip-2"><span class="chip-icon">🖨️</span> Printable PDF</div>
+      <div class="chip chip-3"><span class="chip-icon">🌐</span> EN · ES · FR</div>
+    </div>
+  </div>
+
+  <!-- Bottom -->
+  <div class="bottom">
+    <div class="cta-btn" id="cta">See a demo →</div>
+    <span class="url-bottom">myguestguide.com</span>
+  </div>
+</div>
+
+<script>
+(function() {
+  const data = window.POST_DATA || null;
+  window.addEventListener('message', function(e) { if (e.data && e.data.postData) { try { applyData(e.data.postData); } catch(er) {} } });
+  if (!data) {
+    const hash = window.location.hash.slice(1);
+    if (hash) { try { applyData(JSON.parse(decodeURIComponent(hash))); return; } catch(e) {} }
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get('key');
+    if (key) { try { const s = localStorage.getItem(key); if(s){ localStorage.removeItem(key); applyData(JSON.parse(s)); return; } } catch(e) {} }
+    const enc = params.get('data');
+    if (enc) { try { applyData(JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(enc)))))); } catch(e) {} return; }
+    const postId = params.get('postId');
+    if (postId) { fetch('../posts.json').then(r=>r.json()).then(posts=>{ const p=posts.find(x=>x.id===postId); if(p) applyData(p); }).catch(()=>{}); }
+    return;
+  }
+  applyData(data);
+
+  function applyData(p) {
+    // Aplicar variante visual
+    const v = p.style || 'coral';
+    if (v === 'teal') document.body.classList.add('v-teal');
+    if (v === 'dark') document.body.classList.add('v-dark');
+
+    if (p.title)    document.getElementById('headline').innerHTML = p.title;
+    if (p.subtitle) document.getElementById('subtitle').textContent = p.subtitle;
+    if (p.cta)      document.getElementById('cta').textContent = p.cta + ' →';
+    if (p.tag)      document.getElementById('tag').textContent = p.tag;
+  }
+})();
+</script>
+</body>
+</html>

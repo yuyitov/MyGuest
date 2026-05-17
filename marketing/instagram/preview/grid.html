@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyGuest — Instagram Grid Simulator</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ivory: #F7F3EE; --sand: #EFE7DD; --charcoal: #2B2B2B;
+      --warm-gray: #7A746E; --taupe: #D8CEC2; --teal: #59C3C3;
+      --coral: #F29B7F; --sidebar-w: 260px;
+    }
+    html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; background: var(--ivory); color: var(--charcoal); -webkit-font-smoothing: antialiased; }
+
+    .app { display: flex; height: 100vh; overflow: hidden; }
+
+    /* Sidebar */
+    .sidebar { width: var(--sidebar-w); flex-shrink: 0; background: white; border-right: 1px solid var(--taupe); display: flex; flex-direction: column; overflow-y: auto; padding: 28px 20px; gap: 20px; }
+    .sidebar h2 { font-size: 16px; font-weight: 600; }
+    .sidebar p { font-size: 13px; color: var(--warm-gray); line-height: 1.5; }
+    .back-link { font-size: 13px; color: var(--teal); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+    .back-link:hover { text-decoration: underline; }
+    .legend { display: flex; flex-direction: column; gap: 8px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+    .legend-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+    .issues-list { display: flex; flex-direction: column; gap: 8px; }
+    .issue { background: #FFF5F0; border: 1px solid #F5C5B0; border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.45; color: #8B3A1A; }
+    .issue strong { display: block; margin-bottom: 2px; font-size: 13px; }
+    .issue.ok { background: #F0FAF5; border-color: #B0DEC5; color: #1A6B3A; }
+    .section-title { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--warm-gray); font-weight: 600; }
+
+    /* Main */
+    .main { flex: 1; overflow-y: auto; padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+    .header { display: flex; align-items: center; justify-content: space-between; }
+    .header h1 { font-size: 22px; font-weight: 600; }
+    .header p { font-size: 14px; color: var(--warm-gray); }
+
+    /* Phone frame */
+    .phone-frame { background: #1a1a1a; border-radius: 36px; padding: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: fit-content; }
+    .phone-screen { background: white; border-radius: 24px; overflow: hidden; width: 360px; }
+
+    /* Instagram profile header */
+    .ig-header { padding: 16px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid #dbdbdb; }
+    .ig-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--teal), var(--coral)); flex-shrink: 0; }
+    .ig-name { font-size: 13px; font-weight: 700; color: #262626; }
+    .ig-sub { font-size: 11px; color: #737373; margin-top: 2px; }
+    .ig-stats { display: flex; gap: 12px; margin-top: 6px; }
+    .ig-stat { font-size: 11px; color: #262626; }
+    .ig-stat span { font-weight: 700; }
+
+    /* Grid tabs */
+    .ig-tabs { display: flex; border-bottom: 1px solid #dbdbdb; }
+    .ig-tab { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px; font-size: 11px; color: #737373; border-bottom: 2px solid transparent; }
+    .ig-tab.active { color: #262626; border-color: #262626; }
+
+    /* The grid */
+    .ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: #dbdbdb; }
+    .ig-cell { position: relative; aspect-ratio: 1; overflow: hidden; background: var(--sand); cursor: pointer; }
+    .ig-cell iframe { width: 1080px; height: 1080px; border: none; transform-origin: top left; pointer-events: none; }
+    .ig-cell .cell-hover { position: absolute; inset: 0; background: rgba(0,0,0,0); display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+    .ig-cell:hover .cell-hover { background: rgba(0,0,0,0.35); }
+    .ig-cell .cell-id { color: white; font-size: 11px; font-weight: 700; opacity: 0; transition: opacity 0.15s; letter-spacing: 0.04em; }
+    .ig-cell:hover .cell-id { opacity: 1; }
+
+    /* Row markers */
+    .row-wrap { position: relative; }
+    .row-label { position: absolute; left: -52px; top: 50%; transform: translateY(-50%); font-size: 10px; color: var(--warm-gray); width: 44px; text-align: right; font-weight: 500; }
+
+    .grid-outer { position: relative; padding-left: 60px; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <a class="back-link" href="index.html">← Back to preview</a>
+    <div>
+      <h2>Instagram Grid</h2>
+      <p>How posts look published 3×3 on your profile. Newest post = top-left.</p>
+    </div>
+
+    <div>
+      <div class="section-title" style="margin-bottom:10px">Color legend</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1A746E"></div>Teal</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#F2907F"></div>Coral</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2B2B2B"></div>Dark</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#EFEDDD;border:1px solid #ccc"></div>Sand / Ivory</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title" style="margin-bottom:10px">Grid issues</div>
+      <div class="issues-list" id="issuesList">
+        <div class="issue">Analyzing...</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="header">
+      <div>
+        <h1>Instagram Grid Simulator</h1>
+        <p>Posts appear newest → oldest, left → right, top → bottom</p>
+      </div>
+    </div>
+
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="ig-header">
+          <div class="ig-avatar"></div>
+          <div>
+            <div class="ig-name">myguestguide</div>
+            <div class="ig-sub">Digital welcome books for Airbnb hosts</div>
+            <div class="ig-stats">
+              <div class="ig-stat"><span id="postCount">—</span> posts</div>
+              <div class="ig-stat"><span>847</span> followers</div>
+            </div>
+          </div>
+        </div>
+        <div class="ig-tabs">
+          <div class="ig-tab active">⊞ POSTS</div>
+          <div class="ig-tab">▷ REELS</div>
+          <div class="ig-tab">♡ TAGGED</div>
+        </div>
+        <div class="ig-grid" id="igGrid">
+          <!-- filled by JS -->
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const TEMPLATE_FILES = {
+  'brand-intro': '01-brand-intro.html',
+  'core-promise': '02-core-promise.html',
+  'how-it-works': '03-how-it-works.html',
+  'host-problem': '04-host-problem.html',
+  'myguest-solution': '05-myguest-solution.html',
+  'before-after': '06-before-after.html',
+  'whats-included': '07-whats-included.html',
+  'template-showcase': '08-template-showcase.html',
+  'cta-launch-price': '09-cta-launch-price.html',
+};
+
+async function init() {
+  const res = await fetch('../posts.json');
+  const posts = await res.json();
+
+  document.getElementById('postCount').textContent = posts.length;
+
+  // Instagram shows newest first → reverse order
+  const reversed = [...posts].reverse();
+
+  const grid = document.getElementById('igGrid');
+
+  reversed.forEach(post => {
+    const cell = document.createElement('div');
+    cell.className = 'ig-cell';
+    cell.title = post.id;
+
+    const iframe = document.createElement('iframe');
+    const file = TEMPLATE_FILES[post.template] || '01-brand-intro.html';
+    iframe.src = `../templates/${file}`;
+    iframe.addEventListener('load', () => {
+      try { iframe.contentWindow.postMessage({ postData: post }, '*'); } catch(e) {}
+    });
+
+    const hover = document.createElement('div');
+    hover.className = 'cell-hover';
+    hover.innerHTML = `<span class="cell-id">${post.id}<br>${post.style || ''}</span>`;
+
+    cell.appendChild(iframe);
+    cell.appendChild(hover);
+    grid.appendChild(cell);
+  });
+
+  // Scale iframes to cell size
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.ig-cell').forEach(cell => {
+      const iframe = cell.querySelector('iframe');
+      const w = cell.offsetWidth;
+      const scale = w / 1080;
+      iframe.style.transform = `scale(${scale})`;
+      iframe.style.width = '1080px';
+      iframe.style.height = '1080px';
+    });
+  });
+
+  // Analyze issues (in publication order)
+  analyzeGrid(posts);
+}
+
+function colorOf(post) {
+  const s = post.style || '';
+  if (['dark','charcoal'].includes(s)) return 'dark';
+  if (['teal','coastal'].includes(s)) return 'teal';
+  if (['coral','sunset'].includes(s)) return 'coral';
+  if (['sand','ivory','minimalist','classic'].includes(s)) return 'light';
+  if (post.template === 'template-showcase') return 'dark';
+  return '?';
+}
+
+function analyzeGrid(posts) {
+  const issues = [];
+
+  for (let i = 0; i < posts.length; i += 3) {
+    const row = posts.slice(i, i + 3);
+    const rowNum = Math.floor(i / 3) + 1;
+    const colors = row.map(colorOf);
+    const templates = row.map(p => p.template);
+
+    // All same color
+    if (colors.every(c => c === colors[0] && c !== '?')) {
+      issues.push({ type: 'warn', text: `Fila ${rowNum}: los 3 posts son <strong>${colors[0]}</strong> — demasiado uniforme`, ids: row.map(p=>p.id) });
+    }
+    // 2 consecutive same color
+    else if (colors[0] === colors[1] && colors[0] !== '?') {
+      issues.push({ type: 'warn', text: `Fila ${rowNum}: primeros 2 posts son <strong>${colors[0]}</strong> (${row[0].id} + ${row[1].id})`, ids: [row[0].id, row[1].id] });
+    }
+    else if (colors[1] === colors[2] && colors[1] !== '?') {
+      issues.push({ type: 'warn', text: `Fila ${rowNum}: últimos 2 posts son <strong>${colors[1]}</strong> (${row[1].id} + ${row[2].id})`, ids: [row[1].id, row[2].id] });
+    }
+
+    // Same template twice in a row
+    if (templates[0] === templates[1] || templates[1] === templates[2]) {
+      issues.push({ type: 'info', text: `Fila ${rowNum}: mismo template repetido — puede verse monótono`, ids: row.map(p=>p.id) });
+    }
+
+    // Missing style
+    row.forEach(p => {
+      if (!p.style) issues.push({ type: 'warn', text: `${p.id}: sin estilo asignado`, ids: [p.id] });
+    });
+  }
+
+  // Check cross-row: last of row N and first of row N+1
+  for (let i = 2; i < posts.length - 1; i += 3) {
+    const a = colorOf(posts[i]);
+    const b = colorOf(posts[i+1]);
+    if (a === b && a === 'dark') {
+      issues.push({ type: 'warn', text: `Entre filas: ${posts[i].id} y ${posts[i+1].id} son ambos <strong>dark</strong> en diagonal`, ids: [posts[i].id, posts[i+1].id] });
+    }
+  }
+
+  const list = document.getElementById('issuesList');
+  if (issues.length === 0) {
+    list.innerHTML = '<div class="issue ok"><strong>Sin problemas</strong>El grid se ve bien variado.</div>';
+    return;
+  }
+  list.innerHTML = issues.map(iss =>
+    `<div class="issue">${iss.text.replace('<strong>','<strong>')}</div>`
+  ).join('');
+}
+
+init();
+</script>
+</body>
+</html>

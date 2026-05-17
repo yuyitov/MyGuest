@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ivory:      #F7F3EE;
+  --sand:       #EFEDDD;
+  --charcoal:   #343030;
+  --dark:       #1A2730;
+  --warm-gray:  #7A746E;
+  --taupe:      #D8CEC2;
+  --teal:       #1A746E;
+  --teal-light: #59C3C3;
+  --teal-pale:  #E0F5F4;
+  --coral:      #F2907F;
+  --coral-pale: #FDE8E3;
+  --white:      #FFFFFF;
+}
+
+html, body {
+  width: 1080px;
+  height: 1080px;
+  overflow: hidden;
+  font-family: 'Outfit', 'DM Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.canvas {
+  width: 1080px;
+  height: 1080px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Logo helpers */
+.logo-dark  { height: 38px; mix-blend-mode: multiply; }
+.logo-white { height: 38px; filter: brightness(0) invert(1); }
+.logo-sm    { height: 28px; mix-blend-mode: multiply; }
+.logo-sm-w  { height: 28px; filter: brightness(0) invert(1); }
+
+/* Mascot */
+.mascot { mix-blend-mode: multiply; }
+
+/* Utility */
+.flex     { display: flex; }
+.col      { flex-direction: column; }
+.center   { align-items: center; justify-content: center; }
+.between  { justify-content: space-between; }
+.gap-8    { gap: 8px; }
+.gap-12   { gap: 12px; }
+.gap-16   { gap: 16px; }
+.gap-20   { gap: 20px; }
+.gap-24   { gap: 24px; }
+.gap-32   { gap: 32px; }
+.gap-40   { gap: 40px; }
+.mt-auto  { margin-top: auto; }
+
+/* Tags */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 8px 22px;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.tag-teal  { background: var(--teal-pale); color: var(--teal); }
+.tag-coral { background: var(--coral-pale); color: #C0523C; }
+.tag-white { background: rgba(255,255,255,0.18); color: rgba(255,255,255,0.9); }
+.tag-dark  { background: rgba(0,0,0,0.2); color: rgba(255,255,255,0.9); }
+
+/* Pill / badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 16px;
+  padding: 18px 28px;
+  font-size: 22px;
+  font-weight: 600;
+}
+.badge-teal  { background: var(--teal-pale); color: var(--teal); }
+.badge-coral { background: var(--coral-pale); color: #C0523C; }
+.badge-white { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white; }
+.badge-sand  { background: var(--sand); color: var(--charcoal); }
+
+/* Check circle */
+.check {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--teal-pale);
+  border: 1.5px solid var(--teal-light);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--teal); font-size: 16px; font-weight: 700;
+  flex-shrink: 0;
+}
+.check-coral {
+  background: var(--coral-pale);
+  border-color: var(--coral);
+  color: #C0523C;
+}
+.check-white {
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(255,255,255,0.35);
+  color: white;
+}
+
+/* Step circle */
+.step-num {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* Divider */
+.divider { width: 100%; height: 1px; background: var(--taupe); }
+.divider-white { width: 100%; height: 1px; background: rgba(255,255,255,0.15); }
+
+/* Accent bar */
+.accent-bar {
+  width: 56px; height: 5px;
+  border-radius: 3px;
+}

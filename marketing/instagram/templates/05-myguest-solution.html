@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>MyGuest — Solution</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* ── BASE (teal) ── */
+    body { background: var(--teal); }
+    .canvas { background: linear-gradient(145deg, #1d8278 0%, #0e4e49 100%); position: relative; overflow: hidden; }
+
+    /* ── BACKGROUND BLOB ── */
+    .blob { position: absolute; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 65%); top: -200px; right: -180px; pointer-events: none; }
+    .blob-2 { position: absolute; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, rgba(242,144,127,0.15) 0%, transparent 70%); bottom: -80px; left: -60px; pointer-events: none; }
+
+    /* ── TOP ── */
+    .top { position: absolute; top: 52px; left: 68px; right: 68px; display: flex; justify-content: space-between; align-items: center; z-index: 3; }
+    .label { font-size: 17px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+    .url { font-size: 19px; color: rgba(255,255,255,0.35); }
+
+    /* ── LARGE PHONE — right, tall ── */
+    .phone-wrap {
+      position: absolute;
+      right: 48px; top: 64px;
+      z-index: 3;
+    }
+    .iphone {
+      position: relative;
+      width: 320px; height: 650px;
+      background: #0d0d0d;
+      border-radius: 50px;
+      box-shadow:
+        0 0 0 2px #2a2a2a,
+        0 0 0 4px #111,
+        0 48px 96px rgba(0,0,0,0.55),
+        -20px 0 60px rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+    .iphone::before {
+      content: ''; position: absolute;
+      top: 12px; left: 50%;
+      transform: translateX(-50%);
+      width: 90px; height: 24px;
+      background: #0d0d0d; border-radius: 999px; z-index: 10;
+    }
+    .iphone-screen { position: absolute; inset: 0; overflow: hidden; border-radius: 50px; }
+    .iphone-screen img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 88px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 999px; z-index: 10; }
+
+    /* ── LEFT CONTENT ── */
+    .content { position: absolute; left: 68px; top: 130px; width: 500px; z-index: 4; }
+
+    .headline { font-size: 80px; font-weight: 900; color: white; line-height: 1.0; letter-spacing: -0.03em; margin-bottom: 28px; }
+    .headline em { font-style: normal; color: var(--coral); }
+
+    /* ── BENEFIT CARDS ── */
+    .benefits { display: flex; flex-direction: column; gap: 14px; max-width: 440px; }
+    .benefit {
+      display: flex; align-items: center; gap: 16px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 16px 20px;
+    }
+    .benefit-icon { font-size: 30px; line-height: 1; flex-shrink: 0; }
+    .benefit-text { font-size: 21px; font-weight: 600; color: white; }
+
+    /* ── BOTTOM ── */
+    .bottom { position: absolute; bottom: 52px; left: 68px; right: 68px; display: flex; justify-content: space-between; align-items: center; z-index: 4; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--coral); color: white; border-radius: 999px; padding: 15px 34px; font-size: 22px; font-weight: 700; }
+
+    /* ── CORAL variant ── */
+    body.v-coral { background: var(--ivory); }
+    .v-coral .canvas { background: linear-gradient(150deg, #fdf6f0 0%, #f0e8da 100%); }
+    .v-coral .blob { background: radial-gradient(circle, rgba(242,144,127,0.2) 0%, transparent 70%); }
+    .v-coral .blob-2 { background: radial-gradient(circle, rgba(26,116,110,0.1) 0%, transparent 70%); }
+    .v-coral .label { color: var(--coral); }
+    .v-coral .url { color: var(--warm-gray); }
+    .v-coral .headline { color: var(--charcoal); }
+    .v-coral .headline em { color: var(--teal); }
+    .v-coral .benefit { background: white; border-color: rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .v-coral .benefit-text { color: var(--charcoal); }
+    .v-coral .cta-btn { background: var(--teal); }
+
+    /* ── DARK variant ── */
+    body.v-dark { background: var(--charcoal); }
+    .v-dark .canvas { background: linear-gradient(145deg, #343030 0%, #252020 100%); }
+    .v-dark .blob { background: radial-gradient(circle, rgba(26,116,110,0.35) 0%, transparent 65%); }
+    .v-dark .blob-2 { background: radial-gradient(circle, rgba(242,144,127,0.12) 0%, transparent 70%); }
+    .v-dark .label { color: rgba(255,255,255,0.35); }
+    .v-dark .url { color: rgba(255,255,255,0.3); }
+    .v-dark .headline { color: white; }
+    .v-dark .headline em { color: var(--coral); }
+    .v-dark .benefit { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.08); }
+    .v-dark .cta-btn { background: var(--coral); }
+
+    /* ── SAND variant ── */
+    body.v-sand { background: var(--sand); }
+    .v-sand .canvas { background: linear-gradient(150deg, #f0e9dd 0%, #e4d9c8 100%); }
+    .v-sand .blob { background: radial-gradient(circle, rgba(242,144,127,0.18) 0%, transparent 70%); }
+    .v-sand .label { color: var(--teal); }
+    .v-sand .url { color: var(--warm-gray); }
+    .v-sand .headline { color: var(--charcoal); }
+    .v-sand .headline em { color: var(--coral); }
+    .v-sand .benefit { background: white; border-color: rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+    .v-sand .benefit-text { color: var(--charcoal); }
+    .v-sand .cta-btn { background: var(--teal); }
+  </style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+  <div class="blob"></div>
+  <div class="blob-2"></div>
+
+  <div class="top">
+    <span class="label">The solution</span>
+    <span class="url">myguestguide.com</span>
+  </div>
+
+  <!-- Large phone right side -->
+  <div class="phone-wrap">
+    <div class="iphone">
+      <div class="iphone-screen">
+        <img id="phone-img" src="../assets/mockups/minimalist.png" alt="MyGuest guide">
+      </div>
+      <div class="home-bar"></div>
+    </div>
+  </div>
+
+  <!-- Left content -->
+  <div class="content">
+    <h1 class="headline" id="headline">One link.<br>Everything<br>they <em>need.</em></h1>
+    <div class="benefits" id="benefits-list">
+      <div class="benefit"><span class="benefit-icon">📱</span><span class="benefit-text">Mobile guide they'll actually use</span></div>
+      <div class="benefit"><span class="benefit-icon">🌍</span><span class="benefit-text">EN · ES · FR included</span></div>
+      <div class="benefit"><span class="benefit-icon">🖨️</span><span class="benefit-text">Printable PDF too</span></div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="cta-btn" id="cta">See it live →</div>
+    <span class="url">myguestguide.com</span>
+  </div>
+</div>
+<script>
+(function() {
+  const MOCKUP_MAP = {
+    teal:  '../assets/mockups/coastal.png',
+    coral: '../assets/mockups/minimalist.png',
+    dark:  '../assets/mockups/classic.png',
+    sand:  '../assets/mockups/sunset.png',
+  };
+  const SCREENSHOT_DIRS = {
+    teal:  '../assets/screenshots/ocean-drive-retreat/',
+    coral: '../assets/screenshots/the-soho-loft/',
+    dark:  '../assets/screenshots/le-marais-flat/',
+    sand:  '../assets/screenshots/casa-selva-tulum/',
+  };
+
+  const data = window.POST_DATA || null;
+  window.addEventListener('message', function(e) { if (e.data && e.data.postData) { try { applyData(e.data.postData); } catch(er) {} } });
+  if (!data) {
+    const hash = window.location.hash.slice(1);
+    if (hash) { try { applyData(JSON.parse(decodeURIComponent(hash))); return; } catch(e) {} }
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get('key');
+    if (key) { try { const s = localStorage.getItem(key); if(s){ localStorage.removeItem(key); applyData(JSON.parse(s)); return; } } catch(e) {} }
+    const enc = params.get('data');
+    if (enc) { try { applyData(JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(enc)))))); } catch(e) {} return; }
+    const postId = params.get('postId');
+    if (postId) { fetch('../posts.json').then(r=>r.json()).then(posts=>{ const p=posts.find(x=>x.id===postId); if(p) applyData(p); }).catch(()=>{}); }
+    return;
+  }
+  applyData(data);
+
+  function applyData(p) {
+    const v = p.style || 'teal';
+    if (v==='coral') document.body.classList.add('v-coral');
+    else if (v==='dark') document.body.classList.add('v-dark');
+    else if (v==='sand') document.body.classList.add('v-sand');
+
+    // Phone image
+    const phoneImg = document.getElementById('phone-img');
+    if (p.screen && SCREENSHOT_DIRS[v]) {
+      phoneImg.src = SCREENSHOT_DIRS[v] + p.screen + '.png';
+    } else if (p.mockup) {
+      phoneImg.src = '../assets/mockups/' + p.mockup + '.png';
+    } else if (MOCKUP_MAP[v]) {
+      phoneImg.src = MOCKUP_MAP[v];
+    }
+
+    if (p.title) document.getElementById('headline').innerHTML = p.title;
+    if (p.cta)   document.getElementById('cta').textContent = p.cta + ' →';
+    if (Array.isArray(p.benefits) && p.benefits.length) {
+      const icons = ['📱','🌍','🖨️','✨','⭐'];
+      const list = document.getElementById('benefits-list');
+      list.innerHTML = p.benefits.map((b,i) =>
+        `<div class="benefit"><span class="benefit-icon">${icons[i]||'✓'}</span><span class="benefit-text">${b}</span></div>`
+      ).join('');
+    }
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>MyGuest — How It Works</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* ════════════════════════════════════════════
+       REDESIGN: Large numbered steps (left column)
+       + Phone preview (right column)
+    ════════════════════════════════════════════ */
+
+    /* ── BASE (dark) ── */
+    body { background: var(--charcoal); }
+    .canvas { background: linear-gradient(145deg, #343030 0%, #222020 100%); position: relative; overflow: hidden; }
+
+    .blob { position: absolute; width: 580px; height: 580px; border-radius: 50%; background: radial-gradient(circle, rgba(26,116,110,0.3) 0%, transparent 68%); top: -180px; right: -120px; pointer-events: none; }
+    .blob-2 { position: absolute; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(242,144,127,0.15) 0%, transparent 70%); bottom: -60px; left: -50px; pointer-events: none; }
+
+    /* ── NAV ── */
+    .nav { position: absolute; top: 52px; left: 68px; right: 68px; display: flex; justify-content: space-between; align-items: center; z-index: 3; }
+    .tag { font-size: 17px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+    .url { font-size: 19px; color: rgba(255,255,255,0.3); }
+
+    /* ── HEADLINE ── */
+    .headline-wrap { position: absolute; top: 112px; left: 68px; z-index: 3; }
+    .headline { font-size: 66px; font-weight: 900; color: white; line-height: 1.05; letter-spacing: -0.03em; }
+    .headline em { font-style: normal; color: var(--coral); }
+
+    /* ── STEPS — left column ── */
+    .steps { position: absolute; top: 270px; left: 68px; width: 530px; z-index: 3; display: flex; flex-direction: column; gap: 0; }
+    .step { display: flex; align-items: flex-start; gap: 24px; padding: 24px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .step:last-child { border-bottom: none; }
+
+    .num-wrap { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .num {
+      width: 54px; height: 54px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; font-weight: 900; color: white; flex-shrink: 0;
+    }
+    .n1 { background: var(--coral); }
+    .n2 { background: var(--teal); }
+    .n3 { background: var(--coral); }
+    .n4 { background: var(--teal); }
+
+    .step-body { flex: 1; }
+    .step-title { font-size: 26px; font-weight: 800; color: white; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+    .step-icon { font-size: 22px; }
+    .step-desc { font-size: 19px; color: rgba(255,255,255,0.45); line-height: 1.4; }
+
+    /* ── PHONE — right side ── */
+    .phone-wrap { position: absolute; right: 48px; top: 78px; z-index: 4; }
+    .iphone {
+      position: relative;
+      width: 300px; height: 610px;
+      background: #0d0d0d;
+      border-radius: 48px;
+      box-shadow: 0 0 0 2px #2a2a2a, 0 0 0 4px #111, 0 44px 88px rgba(0,0,0,0.55);
+      overflow: hidden;
+    }
+    .iphone::before {
+      content: ''; position: absolute;
+      top: 12px; left: 50%; transform: translateX(-50%);
+      width: 86px; height: 23px;
+      background: #0d0d0d; border-radius: 999px; z-index: 10;
+    }
+    .iphone-screen { position: absolute; inset: 0; overflow: hidden; border-radius: 48px; }
+    .iphone-screen img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 84px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 999px; z-index: 10; }
+
+    /* label on phone */
+    .phone-label {
+      position: absolute; top: -36px; left: 50%; transform: translateX(-50%);
+      white-space: nowrap;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px; padding: 6px 18px;
+      font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.7);
+    }
+
+    /* ── BOTTOM ── */
+    .bottom { position: absolute; bottom: 52px; left: 68px; right: 68px; display: flex; justify-content: space-between; align-items: center; z-index: 3; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--coral); color: white; border-radius: 999px; padding: 15px 34px; font-size: 21px; font-weight: 700; }
+
+    /* ── CORAL variant ── */
+    body.v-coral { background: var(--ivory); }
+    .v-coral .canvas { background: linear-gradient(150deg, #fdf6f0 0%, #f0e8da 100%); }
+    .v-coral .blob { background: radial-gradient(circle, rgba(242,144,127,0.25) 0%, transparent 70%); }
+    .v-coral .blob-2 { background: radial-gradient(circle, rgba(26,116,110,0.12) 0%, transparent 70%); }
+    .v-coral .tag { color: var(--coral); }
+    .v-coral .url { color: var(--warm-gray); }
+    .v-coral .headline { color: var(--charcoal); }
+    .v-coral .step { border-color: rgba(0,0,0,0.08); }
+    .v-coral .step-title { color: var(--charcoal); }
+    .v-coral .step-desc { color: var(--warm-gray); }
+    .v-coral .phone-label { background: rgba(26,116,110,0.1); border-color: rgba(26,116,110,0.2); color: var(--teal); }
+    .v-coral .cta-btn { background: var(--teal); }
+
+    /* ── TEAL variant ── */
+    body.v-teal { background: var(--teal); }
+    .v-teal .canvas { background: linear-gradient(145deg, #1d8278 0%, #145f5a 100%); }
+    .v-teal .blob { background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); }
+    .v-teal .blob-2 { background: radial-gradient(circle, rgba(242,144,127,0.2) 0%, transparent 70%); }
+    .v-teal .tag { color: rgba(255,255,255,0.5); }
+    .v-teal .url { color: rgba(255,255,255,0.35); }
+    .v-teal .step { border-color: rgba(255,255,255,0.1); }
+    .v-teal .step-desc { color: rgba(255,255,255,0.55); }
+    .v-teal .phone-label { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
+    .v-teal .cta-btn { background: var(--coral); }
+
+    /* ── SAND variant ── */
+    body.v-sand { background: var(--sand); }
+    .v-sand .canvas { background: linear-gradient(150deg, #f0e9dd 0%, #e4d9c8 100%); }
+    .v-sand .blob { background: radial-gradient(circle, rgba(26,116,110,0.15) 0%, transparent 70%); }
+    .v-sand .blob-2 { background: radial-gradient(circle, rgba(242,144,127,0.18) 0%, transparent 70%); }
+    .v-sand .tag { color: var(--teal); }
+    .v-sand .url { color: var(--warm-gray); }
+    .v-sand .headline { color: var(--charcoal); }
+    .v-sand .step { border-color: rgba(0,0,0,0.08); }
+    .v-sand .step-title { color: var(--charcoal); }
+    .v-sand .step-desc { color: var(--warm-gray); }
+    .v-sand .phone-label { background: rgba(26,116,110,0.08); border-color: rgba(26,116,110,0.2); color: var(--teal); }
+    .v-sand .cta-btn { background: var(--teal); }
+  </style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+  <div class="blob"></div>
+  <div class="blob-2"></div>
+
+  <div class="nav">
+    <span class="tag">How it works</span>
+    <span class="url">myguestguide.com</span>
+  </div>
+
+  <div class="headline-wrap">
+    <h1 class="headline" id="headline">Up and running<br>in <em>48 hours.</em></h1>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps">
+    <div class="step">
+      <div class="num-wrap"><div class="num n1">1</div></div>
+      <div class="step-body">
+        <div class="step-title"><span class="step-icon">💳</span><span id="s1">Pay &amp; submit</span></div>
+        <div class="step-desc" id="d1">Choose your plan and complete payment online.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num-wrap"><div class="num n2">2</div></div>
+      <div class="step-body">
+        <div class="step-title"><span class="step-icon">📋</span><span id="s2">Fill the form</span></div>
+        <div class="step-desc" id="d2">Share your property details — takes about 15 minutes.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num-wrap"><div class="num n3">3</div></div>
+      <div class="step-body">
+        <div class="step-title"><span class="step-icon">📬</span><span id="s3">Receive your guide</span></div>
+        <div class="step-desc" id="d3">Mobile guide + PDF in your inbox within 48h.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num-wrap"><div class="num n4">4</div></div>
+      <div class="step-body">
+        <div class="step-title"><span class="step-icon">🌴</span><span id="s4">Share &amp; relax</span></div>
+        <div class="step-desc" id="d4">One link with every booking. Guests love it.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phone right -->
+  <div class="phone-wrap">
+    <div class="phone-label">Your guide, delivered</div>
+    <div class="iphone">
+      <div class="iphone-screen">
+        <img id="phone-img" src="../assets/mockups/minimalist.png" alt="MyGuest guide">
+      </div>
+      <div class="home-bar"></div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="cta-btn" id="cta">Get started →</div>
+    <span class="url">myguestguide.com</span>
+  </div>
+</div>
+<script>
+(function() {
+  const MOCKUP_MAP = {
+    dark:  '../assets/mockups/minimalist.png',
+    coral: '../assets/mockups/coastal.png',
+    teal:  '../assets/mockups/coastal.png',
+    sand:  '../assets/mockups/sunset.png',
+  };
+  const SCREENSHOT_DIRS = {
+    dark:  '../assets/screenshots/the-soho-loft/',
+    coral: '../assets/screenshots/ocean-drive-retreat/',
+    teal:  '../assets/screenshots/ocean-drive-retreat/',
+    sand:  '../assets/screenshots/casa-selva-tulum/',
+  };
+
+  const data = window.POST_DATA || null;
+  window.addEventListener('message', function(e) { if (e.data && e.data.postData) { try { applyData(e.data.postData); } catch(er) {} } });
+  if (!data) {
+    const hash = window.location.hash.slice(1);
+    if (hash) { try { applyData(JSON.parse(decodeURIComponent(hash))); return; } catch(e) {} }
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get('key');
+    if (key) { try { const s = localStorage.getItem(key); if(s){ localStorage.removeItem(key); applyData(JSON.parse(s)); return; } } catch(e) {} }
+    const enc = params.get('data');
+    if (enc) { try { applyData(JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(enc)))))); } catch(e) {} return; }
+    const postId = params.get('postId');
+    if (postId) { fetch('../posts.json').then(r=>r.json()).then(posts=>{ const p=posts.find(x=>x.id===postId); if(p) applyData(p); }).catch(()=>{}); }
+    return;
+  }
+  applyData(data);
+
+  function applyData(p) {
+    const v = p.style || 'dark';
+    if (v==='coral') document.body.classList.add('v-coral');
+    else if (v==='teal') document.body.classList.add('v-teal');
+    else if (v==='sand') document.body.classList.add('v-sand');
+
+    const phoneImg = document.getElementById('phone-img');
+    if (p.screen && SCREENSHOT_DIRS[v]) {
+      phoneImg.src = SCREENSHOT_DIRS[v] + p.screen + '.png';
+    } else if (p.mockup) {
+      phoneImg.src = '../assets/mockups/' + p.mockup + '.png';
+    } else if (MOCKUP_MAP[v]) {
+      phoneImg.src = MOCKUP_MAP[v];
+    }
+
+    if (p.title) document.getElementById('headline').innerHTML = p.title;
+    if (p.cta)   document.getElementById('cta').textContent = p.cta + ' →';
+  }
+})();
+</script>
+</body>
+</html>

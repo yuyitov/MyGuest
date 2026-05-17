@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="348" height="710" viewBox="0 0 348 710">
+  <defs>
+    <!-- Punch out the screen area from the frame -->
+    <mask id="frameMask">
+      <rect width="348" height="710" rx="54" ry="54" fill="white"/>
+      <rect x="13" y="45" width="322" height="652" rx="42" ry="42" fill="black"/>
+    </mask>
+    <!-- Subtle side highlight for 3D feel -->
+    <linearGradient id="frameGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#2a2a2a"/>
+      <stop offset="8%"   stop-color="#111111"/>
+      <stop offset="92%"  stop-color="#111111"/>
+      <stop offset="100%" stop-color="#222222"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Phone bezel (frame only, screen is transparent) -->
+  <rect width="348" height="710" rx="54" ry="54" fill="url(#frameGrad)" mask="url(#frameMask)"/>
+
+  <!-- Outer ring highlight (very subtle) -->
+  <rect width="348" height="710" rx="54" ry="54" fill="none"
+        stroke="rgba(255,255,255,0.08)" stroke-width="1"
+        mask="url(#frameMask)"/>
+
+  <!-- Dynamic Island -->
+  <rect x="124" y="13" width="100" height="28" rx="14" ry="14" fill="#080808"/>
+
+  <!-- Volume buttons (left side) -->
+  <rect x="-2" y="140" width="4" height="38" rx="2" fill="#1e1e1e"/>
+  <rect x="-2" y="190" width="4" height="60" rx="2" fill="#1e1e1e"/>
+  <rect x="-2" y="262" width="4" height="60" rx="2" fill="#1e1e1e"/>
+
+  <!-- Power button (right side) -->
+  <rect x="346" y="200" width="4" height="80" rx="2" fill="#1e1e1e"/>
+
+  <!-- Home bar -->
+  <rect x="134" y="695" width="80" height="5" rx="2.5" ry="2.5" fill="rgba(255,255,255,0.25)"/>
+</svg>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>MyGuest — What's Included</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* ════════════════════════════════════════════
+       BASE: ivory / warm white
+       Layout: top headline + left list + right phone
+    ════════════════════════════════════════════ */
+    body { background: var(--ivory); }
+    .canvas { background: linear-gradient(160deg, #f9f5f0 0%, #f0e8df 100%); position: relative; overflow: hidden; }
+
+    /* Soft background blobs */
+    .blob-tr { position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(26,116,110,0.1) 0%, transparent 68%); top: -140px; right: -100px; pointer-events: none; }
+    .blob-bl { position: absolute; width: 360px; height: 360px; border-radius: 50%; background: radial-gradient(circle, rgba(242,144,127,0.13) 0%, transparent 68%); bottom: -80px; left: -60px; pointer-events: none; }
+
+    /* ── NAV ── */
+    .nav { position: absolute; top: 52px; left: 68px; right: 68px; display: flex; justify-content: space-between; align-items: center; z-index: 5; }
+    .url { font-size: 20px; color: var(--warm-gray); }
+    .tag-pill {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: var(--teal-pale); border-radius: 999px;
+      padding: 8px 20px; font-size: 17px; font-weight: 700; color: var(--teal);
+    }
+    .tag-pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+
+    /* ── HEADLINE (top-left) ── */
+    .headline { position: absolute; top: 118px; left: 68px; font-size: 82px; font-weight: 900; color: var(--charcoal); line-height: 1.0; letter-spacing: -0.03em; z-index: 3; }
+    .headline em { font-style: normal; color: var(--teal); }
+
+    /* ── FEATURE LIST (left, below headline) ── */
+    .feat-list { position: absolute; top: 300px; left: 68px; width: 480px; z-index: 3; display: flex; flex-direction: column; gap: 0; }
+
+    .feat-row {
+      display: flex; align-items: center; gap: 20px;
+      padding: 22px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+    .feat-row:last-child { border-bottom: none; }
+
+    .feat-dot {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
+    }
+    .fd-teal   { background: var(--teal-pale); }
+    .fd-coral  { background: rgba(242,144,127,0.15); }
+    .fd-sand   { background: rgba(240,224,200,0.8); }
+    .fd-light  { background: rgba(26,116,110,0.08); }
+
+    .feat-copy { flex: 1; }
+    .feat-name { font-size: 23px; font-weight: 800; color: var(--charcoal); }
+    .feat-desc { font-size: 17px; color: var(--warm-gray); margin-top: 2px; }
+
+    .feat-check {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--teal); color: white;
+      font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── PHONE (right side) ── */
+    .phone-wrap { position: absolute; right: 52px; top: 96px; z-index: 4; }
+    .iphone {
+      position: relative;
+      width: 316px; height: 644px;
+      background: #0d0d0d; border-radius: 50px;
+      box-shadow: 0 0 0 2px #2a2a2a, 0 0 0 4px #111, 0 48px 96px rgba(0,0,0,0.28);
+      overflow: hidden;
+    }
+    .iphone::before {
+      content: ''; position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+      width: 88px; height: 24px; background: #0d0d0d; border-radius: 999px; z-index: 10;
+    }
+    .iphone-screen { position: absolute; inset: 0; overflow: hidden; border-radius: 50px; }
+    .iphone-screen img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 88px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 999px; z-index: 10; }
+
+    /* ── BOTTOM ── */
+    .bottom { position: absolute; bottom: 52px; left: 68px; right: 68px; display: flex; justify-content: space-between; align-items: center; z-index: 5; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--teal); color: white; border-radius: 999px; padding: 15px 34px; font-size: 21px; font-weight: 700; }
+    .tagline { font-size: 21px; color: var(--warm-gray); font-weight: 500; }
+
+    /* ════════════════════════════════════════════
+       TEAL variant
+    ════════════════════════════════════════════ */
+    body.v-teal { background: var(--teal); }
+    .v-teal .canvas { background: linear-gradient(145deg, #1d8278 0%, #145f5a 100%); }
+    .v-teal .blob-tr { background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 68%); }
+    .v-teal .blob-bl { background: radial-gradient(circle, rgba(242,144,127,0.18) 0%, transparent 68%); }
+    .v-teal .tag-pill { background: rgba(255,255,255,0.14); color: white; }
+    .v-teal .tag-pill::before { background: var(--coral); }
+    .v-teal .url { color: rgba(255,255,255,0.4); }
+    .v-teal .headline { color: white; }
+    .v-teal .headline em { color: var(--coral); }
+    .v-teal .feat-row { border-color: rgba(255,255,255,0.1); }
+    .v-teal .fd-teal   { background: rgba(255,255,255,0.12); }
+    .v-teal .fd-coral  { background: rgba(242,144,127,0.2); }
+    .v-teal .fd-sand   { background: rgba(255,255,255,0.1); }
+    .v-teal .fd-light  { background: rgba(255,255,255,0.1); }
+    .v-teal .feat-name { color: white; }
+    .v-teal .feat-desc { color: rgba(255,255,255,0.55); }
+    .v-teal .feat-check { background: var(--coral); }
+    .v-teal .tagline { color: rgba(255,255,255,0.45); }
+    .v-teal .cta-btn { background: var(--coral); }
+
+    /* ════════════════════════════════════════════
+       DARK variant
+    ════════════════════════════════════════════ */
+    body.v-dark { background: var(--charcoal); }
+    .v-dark .canvas { background: linear-gradient(145deg, #343030 0%, #252020 100%); }
+    .v-dark .blob-tr { background: radial-gradient(circle, rgba(26,116,110,0.3) 0%, transparent 68%); }
+    .v-dark .blob-bl { background: radial-gradient(circle, rgba(242,144,127,0.12) 0%, transparent 68%); }
+    .v-dark .tag-pill { background: rgba(242,144,127,0.15); color: var(--coral); }
+    .v-dark .tag-pill::before { background: var(--coral); }
+    .v-dark .url { color: rgba(255,255,255,0.3); }
+    .v-dark .headline { color: white; }
+    .v-dark .headline em { color: var(--teal-light); }
+    .v-dark .feat-row { border-color: rgba(255,255,255,0.07); }
+    .v-dark .fd-teal   { background: rgba(26,116,110,0.2); }
+    .v-dark .fd-coral  { background: rgba(242,144,127,0.15); }
+    .v-dark .fd-sand   { background: rgba(255,255,255,0.07); }
+    .v-dark .fd-light  { background: rgba(255,255,255,0.07); }
+    .v-dark .feat-name { color: white; }
+    .v-dark .feat-desc { color: rgba(255,255,255,0.45); }
+    .v-dark .feat-check { background: var(--teal); }
+    .v-dark .tagline { color: rgba(255,255,255,0.35); }
+    .v-dark .cta-btn { background: var(--coral); }
+  </style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+  <div class="blob-tr"></div>
+  <div class="blob-bl"></div>
+
+  <div class="nav">
+    <div class="tag-pill">What's included</div>
+    <span class="url">myguestguide.com</span>
+  </div>
+
+  <h1 class="headline" id="headline">What's<br><em>inside.</em></h1>
+
+  <!-- Feature rows -->
+  <div class="feat-list">
+    <div class="feat-row">
+      <div class="feat-dot fd-teal">📱</div>
+      <div class="feat-copy">
+        <div class="feat-name">Mobile guide</div>
+        <div class="feat-desc">Beautiful web guide on any phone — no app needed</div>
+      </div>
+      <div class="feat-check">✓</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-dot fd-coral">🖨️</div>
+      <div class="feat-copy">
+        <div class="feat-name">Printable PDF</div>
+        <div class="feat-desc">For guests who prefer a printed copy</div>
+      </div>
+      <div class="feat-check">✓</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-dot fd-light">🌍</div>
+      <div class="feat-copy">
+        <div class="feat-name">3 languages</div>
+        <div class="feat-desc">English, Spanish &amp; French — all included</div>
+      </div>
+      <div class="feat-check">✓</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-dot fd-sand">🔑</div>
+      <div class="feat-copy">
+        <div class="feat-name">Check-in + house rules</div>
+        <div class="feat-desc">Codes, WiFi, access &amp; house tips</div>
+      </div>
+      <div class="feat-check">✓</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-dot fd-teal">🗺️</div>
+      <div class="feat-copy">
+        <div class="feat-name">Local guide</div>
+        <div class="feat-desc">Your personal recommendations nearby</div>
+      </div>
+      <div class="feat-check">✓</div>
+    </div>
+  </div>
+
+  <!-- Phone right -->
+  <div class="phone-wrap">
+    <div class="iphone">
+      <div class="iphone-screen">
+        <img id="phone-img" src="../assets/mockups/coastal.png" alt="MyGuest guide">
+      </div>
+      <div class="home-bar"></div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="cta-btn" id="cta">Learn more →</div>
+    <p class="tagline">All in one guide.</p>
+  </div>
+</div>
+<script>
+(function() {
+  const MOCKUP_MAP = {
+    ivory: '../assets/mockups/coastal.png',
+    teal:  '../assets/mockups/minimalist.png',
+    dark:  '../assets/mockups/classic.png',
+  };
+  const SCREENSHOT_DIRS = {
+    ivory: '../assets/screenshots/ocean-drive-retreat/',
+    teal:  '../assets/screenshots/the-soho-loft/',
+    dark:  '../assets/screenshots/le-marais-flat/',
+  };
+
+  const data = window.POST_DATA || null;
+  window.addEventListener('message', function(e) { if (e.data && e.data.postData) { try { applyData(e.data.postData); } catch(er) {} } });
+  if (!data) {
+    const hash = window.location.hash.slice(1);
+    if (hash) { try { applyData(JSON.parse(decodeURIComponent(hash))); return; } catch(e) {} }
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get('key');
+    if (key) { try { const s = localStorage.getItem(key); if(s){ localStorage.removeItem(key); applyData(JSON.parse(s)); return; } } catch(e) {} }
+    const enc = params.get('data');
+    if (enc) { try { applyData(JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(enc)))))); } catch(e) {} return; }
+    const postId = params.get('postId');
+    if (postId) { fetch('../posts.json').then(r=>r.json()).then(posts=>{ const p=posts.find(x=>x.id===postId); if(p) applyData(p); }).catch(()=>{}); }
+    return;
+  }
+  applyData(data);
+
+  function applyData(p) {
+    const v = p.style || 'ivory';
+    if (v === 'teal') document.body.classList.add('v-teal');
+    else if (v === 'dark') document.body.classList.add('v-dark');
+
+    const phoneImg = document.getElementById('phone-img');
+    if (p.screen && SCREENSHOT_DIRS[v]) {
+      phoneImg.src = SCREENSHOT_DIRS[v] + p.screen + '.png';
+    } else if (p.mockup) {
+      phoneImg.src = '../assets/mockups/' + p.mockup + '.png';
+    } else if (MOCKUP_MAP[v]) {
+      phoneImg.src = MOCKUP_MAP[v];
+    }
+
+    if (p.title) document.getElementById('headline').innerHTML = p.title;
+    if (p.cta)   document.getElementById('cta').textContent = p.cta + ' →';
+  }
+})();
+</script>
+</body>
+</html>

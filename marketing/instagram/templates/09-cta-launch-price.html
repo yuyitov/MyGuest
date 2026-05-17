@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>MyGuest — CTA / Launch Price</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* ── BASE (coral) ── */
+    body { background: var(--coral); }
+    .canvas { background: linear-gradient(145deg, #F2907F 0%, #E06B55 100%); position: relative; overflow: hidden; }
+
+    .deco-1 { position: absolute; width: 560px; height: 560px; border-radius: 50%; background: rgba(255,255,255,0.08); top: -200px; right: -100px; pointer-events: none; }
+    .deco-2 { position: absolute; width: 320px; height: 320px; border-radius: 50%; background: rgba(255,255,255,0.05); bottom: -80px; left: -60px; pointer-events: none; }
+
+    .nav { position: absolute; top: 56px; left: 68px; right: 68px; display: flex; justify-content: space-between; align-items: center; z-index: 3; }
+    .url { font-size: 20px; color: rgba(255,255,255,0.5); }
+
+    .content { position: absolute; top: 140px; left: 68px; width: 520px; z-index: 3; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.28); border-radius: 999px; padding: 8px 20px; font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 24px; }
+    .eyebrow::before { content: '✦'; font-size: 12px; }
+    .headline { font-size: 72px; font-weight: 900; color: white; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 24px; }
+    .headline em { font-style: normal; color: rgba(255,255,255,0.82); text-decoration: underline; text-decoration-color: rgba(255,255,255,0.35); }
+    .sub { font-size: 25px; color: rgba(255,255,255,0.75); line-height: 1.4; margin-bottom: 36px; max-width: 420px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 12px; background: white; color: #C0523C; border-radius: 999px; padding: 15px 34px; font-size: 23px; font-weight: 800; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+    .cta-btn::after { content: '→'; }
+
+    .mascot-wrap { position: absolute; right: -20px; bottom: 70px; z-index: 2; }
+    .mascot-wrap img { width: 380px; mix-blend-mode: multiply; filter: brightness(1.05); }
+
+    .bottom { position: absolute; bottom: 52px; left: 68px; right: 68px; display: flex; justify-content: space-between; align-items: center; z-index: 4; }
+    .price-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 12px; padding: 10px 20px; font-size: 19px; font-weight: 700; color: white; }
+
+    /* ── TEAL ── */
+    body.v-teal { background: var(--teal); }
+    .v-teal .canvas { background: linear-gradient(145deg, #1d8278 0%, #0e4e49 100%); }
+    .v-teal .deco-1 { background: rgba(255,255,255,0.05); }
+    .v-teal .deco-2 { background: rgba(242,144,127,0.15); }
+    .v-teal .cta-btn { background: var(--coral); color: white; }
+    .v-teal .mascot-wrap img { mix-blend-mode: multiply; }
+
+    /* ── DARK ── */
+    body.v-dark { background: var(--charcoal); }
+    .v-dark .canvas { background: linear-gradient(145deg, #343030 0%, #252020 100%); }
+    .v-dark .deco-1 { background: radial-gradient(circle, rgba(26,116,110,0.3) 0%, transparent 70%); width: 700px; height: 700px; }
+    .v-dark .deco-2 { background: radial-gradient(circle, rgba(242,144,127,0.12) 0%, transparent 70%); }
+    .v-dark .eyebrow { background: rgba(242,144,127,0.15); border-color: var(--coral); color: var(--coral); }
+    .v-dark .headline { color: white; }
+    .v-dark .sub { color: rgba(255,255,255,0.55); }
+    .v-dark .cta-btn { background: var(--coral); color: white; }
+    .v-dark .url { color: rgba(255,255,255,0.35); }
+    .v-dark .price-badge { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12); }
+    .v-dark .mascot-wrap img { mix-blend-mode: screen; opacity: 0.85; }
+
+    /* ── SAND ── */
+    body.v-sand { background: var(--sand); }
+    .v-sand .canvas { background: linear-gradient(150deg, #f0e9dd 0%, #e8dfcf 100%); }
+    .v-sand .deco-1 { background: radial-gradient(circle, rgba(242,144,127,0.25) 0%, transparent 70%); }
+    .v-sand .deco-2 { background: radial-gradient(circle, rgba(26,116,110,0.12) 0%, transparent 70%); }
+    .v-sand .eyebrow { background: rgba(26,116,110,0.1); border-color: var(--teal); color: var(--teal); }
+    .v-sand .headline { color: var(--charcoal); }
+    .v-sand .headline em { color: var(--teal); text-decoration-color: rgba(26,116,110,0.3); }
+    .v-sand .sub { color: var(--warm-gray); }
+    .v-sand .cta-btn { background: var(--teal); color: white; }
+    .v-sand .url { color: var(--warm-gray); }
+    .v-sand .price-badge { background: rgba(26,116,110,0.08); border-color: rgba(26,116,110,0.2); color: var(--teal); }
+  </style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+  <div class="deco-1"></div>
+  <div class="deco-2"></div>
+
+  <div class="nav">
+    <span class="eyebrow" id="tag">Launch offer</span>
+    <span class="url">myguestguide.com</span>
+  </div>
+
+  <div class="mascot-wrap">
+    <img src="../assets/mascota.png" alt="MyGuest mascota">
+  </div>
+
+  <div class="content">
+    <h1 class="headline" id="headline">Your guests deserve a better <em>welcome</em></h1>
+    <p class="sub" id="subtitle">Stop sending PDFs. Start sharing a guide they'll actually love.</p>
+    <div class="cta-btn" id="cta">Get your guide</div>
+  </div>
+
+  <div class="bottom">
+    <span class="url">myguestguide.com</span>
+    <div class="price-badge" id="price">🎉 Special launch pricing</div>
+  </div>
+</div>
+<script>
+(function() {
+  const data = window.POST_DATA || null;
+  window.addEventListener('message', function(e) { if (e.data && e.data.postData) { try { applyData(e.data.postData); } catch(er) {} } });
+  if (!data) {
+    const hash = window.location.hash.slice(1);
+    if (hash) { try { applyData(JSON.parse(decodeURIComponent(hash))); return; } catch(e) {} }
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get('key');
+    if (key) { try { const s = localStorage.getItem(key); if(s){ localStorage.removeItem(key); applyData(JSON.parse(s)); return; } } catch(e) {} }
+    const enc = params.get('data');
+    if (enc) { try { applyData(JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(enc)))))); } catch(e) {} return; }
+    const postId = params.get('postId');
+    if (postId) { fetch('../posts.json').then(r=>r.json()).then(posts=>{ const p=posts.find(x=>x.id===postId); if(p) applyData(p); }).catch(()=>{}); }
+    return;
+  }
+  applyData(data);
+  function applyData(p) {
+    const v = p.style || 'coral';
+    if (v==='teal') document.body.classList.add('v-teal');
+    else if (v==='dark') document.body.classList.add('v-dark');
+    else if (v==='sand') document.body.classList.add('v-sand');
+    if (p.title)    document.getElementById('headline').innerHTML = p.title;
+    if (p.subtitle) document.getElementById('subtitle').textContent = p.subtitle;
+    if (p.cta)      document.getElementById('cta').textContent = p.cta;
+    if (p.tag)      document.getElementById('tag').textContent = p.tag;
+    if (p.price)    document.getElementById('price').textContent = '🎉 $' + p.price + ' one-time';
+  }
+})();
+</script>
+</body>
+</html>

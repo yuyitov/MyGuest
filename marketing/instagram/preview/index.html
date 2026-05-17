@@ -552,44 +552,53 @@ function renderGrid() {
     grid.appendChild(card);
   });
 
-  // Scale iframes to fit cards after render
-  requestAnimationFrame(() => {
-    document.querySelectorAll('.card-preview').forEach(container => {
-      const iframe = container.querySelector('iframe');
-      if (!iframe) return;
-      const containerW = container.offsetWidth;
-      const scale = containerW / 1080;
-      iframe.style.transform = `scale(${scale})`;
-      container.style.height = (1080 * scale) + 'px';
-    });
-  });
+  // Scale iframes to fit cards
+  requestAnimationFrame(scaleIframes);
 }
 
 function buildCard(post) {
   const templateFile = TEMPLATE_FILES[post.template] || '01-brand-intro.html';
-  const templateUrl = `../templates/${templateFile}?postId=${post.id}`;
+  const templateUrl = `../templates/${templateFile}`;
 
   const card = document.createElement('div');
   card.className = 'post-card';
-  card.innerHTML = `
-    <div class="card-preview">
-      <iframe src="${templateUrl}" scrolling="no" loading="lazy"></iframe>
+
+  const preview = document.createElement('div');
+  preview.className = 'card-preview';
+
+  const iframe = document.createElement('iframe');
+  iframe.scrolling = 'no';
+  iframe.src = templateUrl;
+  iframe.addEventListener('load', () => {
+    try { iframe.contentWindow.postMessage({ postData: post }, '*'); } catch(e) {}
+  });
+
+  preview.appendChild(iframe);
+
+  const meta = document.createElement('div');
+  meta.className = 'card-meta';
+  meta.innerHTML = `
+    <div class="card-top">
+      <span class="card-id">${post.id}</span>
+      <span class="status-badge ${post.status}">${post.status}</span>
     </div>
-    <div class="card-meta">
-      <div class="card-top">
-        <span class="card-id">${post.id}</span>
-        <span class="status-badge ${post.status}">${post.status}</span>
-      </div>
-      <div class="card-title">${escHtml(post.title)}</div>
-      <div class="card-bottom">
-        <span class="template-tag">${TEMPLATE_LABELS[post.template] || post.template}${post.style ? ' · ' + cap(post.style) : ''}</span>
-        <span class="publish-date">${formatDate(post.publish_date)}</span>
-      </div>
+    <div class="card-title">${escHtml(post.title)}</div>
+    <div class="card-bottom">
+      <span class="template-tag">${TEMPLATE_LABELS[post.template] || post.template}${post.style ? ' · ' + cap(post.style) : ''}</span>
+      <span class="publish-date">${formatDate(post.publish_date)}</span>
     </div>
   `;
 
+  card.appendChild(preview);
+  card.appendChild(meta);
+
   card.addEventListener('click', () => {
-    window.open(templateUrl, '_blank');
+    const slim = { id: post.id, template: post.template, style: post.style,
+      title: post.title, subtitle: post.subtitle, cta: post.cta,
+      tag: post.tag, mockup: post.mockup, benefits: post.benefits,
+      price: post.price, body: post.body };
+    const hash = encodeURIComponent(JSON.stringify(slim));
+    window.open(`../templates/${templateFile}#${hash}`, '_blank');
   });
 
   return card;
@@ -610,6 +619,19 @@ function formatDate(dateStr) {
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   } catch { return dateStr; }
 }
+
+function scaleIframes() {
+  document.querySelectorAll('.card-preview').forEach(container => {
+    const iframe = container.querySelector('iframe');
+    if (!iframe) return;
+    const containerW = container.offsetWidth;
+    const scale = containerW / 1080;
+    iframe.style.transform = `scale(${scale})`;
+    container.style.height = (1080 * scale) + 'px';
+  });
+}
+
+window.addEventListener('resize', scaleIframes);
 
 init();
 </script>
