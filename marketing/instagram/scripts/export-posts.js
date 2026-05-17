@@ -136,7 +136,7 @@ async function main() {
   console.log(`✅  Export complete`);
   console.log(`   Exported: ${successCount} post${successCount !== 1 ? 's' : ''}`);
   if (errorCount > 0) console.log(`   Errors:   ${errorCount}`);
-  console.log(`   Output:   marketing/social-post-system/exports/`);
+  console.log(`   Output:   marketing/instagram/exports/`);
   console.log(`${'─'.repeat(50)}\n`);
 }
 

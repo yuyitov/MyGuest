@@ -93,7 +93,7 @@ Puppeteer opens each template in a headless browser, renders it at 2x resolution
 ## 6. Where the PNGs land
 
 ```
-marketing/social-post-system/exports/
+marketing/instagram/exports/
   01-post-001.png
   02-post-002.png
   ...
