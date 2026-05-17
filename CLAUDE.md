@@ -12,36 +12,28 @@ Plataforma de guías digitales para propiedades de Airbnb. URL: **myguestguide.c
 
 ### Para PUBLICIDAD (Pinterest pins):
 - **ChatGPT genera las imágenes directamente** — no se usa HTML/CSS
-- El usuario tiene 8 imágenes referencia en: `C:\Users\veron\Downloads\ChatGPT Image 10 may 2026, 10_24_03 p.m..png`
 - No se necesitan datos reales en las imágenes de publicidad
 - **Pendiente**: crear 8 prompts reutilizables de ChatGPT (uno por diseño) para flujo semanal
 
 ### Para el PRODUCTO / DEMOS:
 - Se sigue usando el sistema HTML/CSS + Playwright para renderizar guías reales
-- Los 4 demos reales tienen screenshots capturados en `/assets/screenshots/`
-
----
-
-## Estado actual del sistema HTML (pinterest-v2)
-
-### Último commit con 8 QA samples: `2de61d3`
-### Templates modificados DESPUÉS del commit (sin commitear aún):
-- `template-01-before-after.html` — tiene cambios de layout importantes (ver abajo)
-
-### Cambios en template-01 (pendientes de commit):
-- Headline movido a **TOP-LEFT** (`top:90px; right:500px`) — ya no está en el bottom
-- BEFORE/AFTER zone movida al **MEDIO** (`top:460px`)
-- Fondo: gradiente CSS tipo playa (cielo → teal → arena), sin foto de fondo (las hero.png son screenshots de la app, no fotos reales)
-- Blur + scale en `::before` removido (causaba artefactos)
-- Phone baja a `top:230px`
-- Strip labels en mixed case ("Mobile guide" no "MOBILE GUIDE")
-- AFTER label flota junto al phone (`left:508px; top:232px`)
+- Los 4 demos reales tienen screenshots capturados en `marketing/pinterest/assets/screenshots/`
 
 ---
 
 ## Estructura de archivos clave
 
 ```
+books/                              ← Motor de generación de guest books
+  scripts/
+    generate_villa.py               ← Genera la guía web (HTML) de una propiedad
+    build_print_pdf.py              ← Genera el PDF imprimible
+    _generate_demo_*.py             ← Generadores de demos
+  templates/
+    master.html                     ← Template web
+    print_letter.html               ← Template PDF imprimible
+  preview_print_redesign.html       ← Prototipo rediseño PDF (borrador)
+
 marketing/
   instagram/                        ← Sistema de posts para Instagram (1080×1080px)
     templates/                      ← 9 plantillas HTML
@@ -49,11 +41,12 @@ marketing/
       export-posts.js               ← Renderiza posts con Puppeteer
       generate-mockups.js           ← Genera mockups de celular (npm run mockups)
     assets/mockups/phone/           ← PNGs pre-generados del celular
+    posts.json                      ← Definición de posts (copy + estilo)
+    preview/                        ← Preview grid en browser
 
-  pinterest/                        ← Sistema de pins para Pinterest
-    templates/                      ← 8 plantillas HTML (1000×1500px)
-      template-01-before-after.html ← MODIFICADO, pendiente commit
-    styles/pinterest-v2.css         ← CSS compartido (Inter 800, 4 temas, phone, strip)
+  pinterest/                        ← Sistema de pins para Pinterest (1000×1500px)
+    templates/                      ← 8 plantillas HTML
+    styles/pinterest-v2.css         ← CSS compartido (4 temas, phone, strip)
     assets/screenshots/             ← Screenshots de los 4 demos reales
       ocean-drive-retreat/          ← full-demo.png, hero.png, etc.
       the-soho-loft/
@@ -70,19 +63,28 @@ marketing/
       capture_pinterest_assets.py   ← Captura screenshots de demos
       build_pinterest_metadata.py   ← Genera CSVs de metadata
     output/                         ← PNGs generados y metadata
-      qa-sample/                    ← 8 PNGs de muestra (última versión: 2de61d3)
+      qa-sample/                    ← 8 PNGs de muestra
       pins/                         ← 32 PNGs finales
       metadata/
     output-weekly/                  ← Pins semanales generados con ChatGPT
+    pins/                           ← PNGs ya publicados + Excel de seguimiento
     docs/                           ← Guías operativas
     v1/                             ← Templates v1 (obsoletos, referencia)
-    pins/                           ← PNGs ya publicados en Pinterest
     requirements-render-pinterest.txt
     requirements-render-pinterest-v2.txt
 
-  assets/                           ← Materiales de marketing general
+  assets/                           ← Materiales de ventas generales
     MyGuest_Mensajes_de_Venta.docx
     MyGuest_Sales_OnePager.pdf
+
+public/                             ← Web root de GitHub Pages (myguestguide.com)
+  index.html                        ← Landing page
+  villas/                           ← 4 demos reales desplegados
+  assets/covers/                    ← Imágenes de portada usadas en guías
+  landing/                          ← Assets de landing (logos, mockups, mascota)
+
+worker/
+  worker.js                         ← Cloudflare Worker (Tally → KV → GitHub dispatch)
 ```
 
 ---
@@ -90,17 +92,17 @@ marketing/
 ## CSS — Estructura del sistema (pinterest-v2.css)
 
 ### 4 temas: `style-coastal` | `style-minimalist` | `style-sunset` | `style-classic`
-Cada tema define variables CSS: `--bg-grad`, `--bg-img`, `--bg-overlay`, `--c-text`, `--c-mid`, `--c-rule`, `--c-strip`, `--c-strip-text`, `--c-before-bg`, `--c-before-border`, `--c-arrow-bg`
+Cada tema define: `--bg-grad`, `--bg-img`, `--bg-overlay`, `--c-text`, `--c-mid`, `--c-rule`, `--c-strip`, `--c-strip-text`, `--c-before-bg`, `--c-before-border`, `--c-arrow-bg`
 
 ### Layout fijo (compartido):
 - `main.pin`: 1000×1500px, `overflow:hidden`, fondo = `::before` (foto) + `::after` (overlay)
 - `.v2-brand`: top-center, `+ MyGuest`
-- `.v2-phone`: `right:28px; top:108px; width:420px; height:860px` (override por template si necesario)
-- `.v2-copy`: `left:40px; right:40px; top:1008px` (bottom-left — **template-01 lo overridea a top:90px**)
+- `.v2-phone`: `right:28px; top:108px; width:420px; height:860px`
+- `.v2-copy`: `left:40px; right:40px; top:1008px` (bottom-left — template-01 lo overridea a `top:90px`)
 - `.v2-strip`: `bottom:0; height:192px` dark strip con 3 iconos
 
 ### PROBLEMA CONOCIDO con fondos:
-Las imágenes `hero.png` son screenshots de la app MyGuest (muestran UI con texto), NO fotos reales de propiedades. Cuando se usan como `background-image` CSS, el texto de la app se filtra a través del overlay aunque esté al 72% de opacidad. **Solución aplicada en template-01**: gradiente CSS puro sin foto de fondo.
+Las imágenes `hero.png` son screenshots de la app MyGuest (muestran UI con texto), NO fotos reales. Cuando se usan como `background-image` CSS, el texto se filtra a través del overlay. **Solución en template-01**: gradiente CSS puro sin foto de fondo.
 
 ---
 
@@ -131,13 +133,30 @@ El script inyecta el screenshot real via JS (`img.src = '/assets/screenshots/{sl
 
 ---
 
+## Comandos frecuentes
+
+```bash
+# Instagram
+npm run preview        # preview en http://localhost:3100
+npm run export         # renderiza posts a PNG
+npm run mockups        # regenera mockups de celular
+
+# Pinterest
+python -m http.server 8020 --directory marketing/pinterest
+python marketing/pinterest/scripts/render_qa_sample.py --base-url http://localhost:8020/templates/
+
+# Guest books
+python books/scripts/generate_villa.py <property-slug>
+```
+
+---
+
 ## Pendientes al retomar
 
-1. **Commitear template-01** con los cambios de layout (headline top, BEFORE en medio, gradiente de playa)
-2. **Crear 8 prompts de ChatGPT** para generación semanal de imágenes publicitarias
-3. **Workflow semanal**: los prompts generan variaciones → descargar → subir a Pinterest
-4. **NO renderizar los 32 pins finales** hasta aprobación visual de los 8 QA samples
-5. Si se continúa con HTML templates: revisar templates 02-08 con el usuario uno por uno
+1. **Crear 8 prompts de ChatGPT** para generación semanal de imágenes publicitarias de Pinterest
+2. **Workflow semanal**: los prompts generan variaciones → descargar → subir a Pinterest
+3. **NO renderizar los 32 pins finales** hasta aprobación visual de los 8 QA samples
+4. Si se continúa con HTML templates: revisar templates 02-08 con el usuario uno por uno
 
 ---
 
