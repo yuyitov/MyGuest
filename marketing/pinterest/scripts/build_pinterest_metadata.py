@@ -6,8 +6,8 @@ import json
 import sys
 from pathlib import Path
 
-CAMPAIGN_PATH = Path("data/marketing/pinterest_campaign_v2.json")
-OUTPUT_DIR = Path("output/pinterest-v2/metadata")
+CAMPAIGN_PATH = Path("marketing/pinterest/data/pinterest_campaign_v2.json")
+OUTPUT_DIR = Path("marketing/pinterest/output/metadata")
 README_PATH = OUTPUT_DIR / "README.md"
 
 

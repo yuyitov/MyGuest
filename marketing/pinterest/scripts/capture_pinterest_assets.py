@@ -8,8 +8,8 @@ from pathlib import Path
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 
-INVENTORY_PATH = Path("data/marketing/pinterest_demo_inventory.json")
-BASE_SCREENSHOTS_DIR = Path("public/marketing/pinterest-v2/assets/screenshots")
+INVENTORY_PATH = Path("marketing/pinterest/data/pinterest_demo_inventory.json")
+BASE_SCREENSHOTS_DIR = Path("marketing/pinterest/assets/screenshots")
 
 CAPTURES = [
     {

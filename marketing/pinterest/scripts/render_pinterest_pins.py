@@ -18,7 +18,7 @@ DEFAULT_TEMPLATES = [
     "template-05-one-link.html",
 ]
 
-DEFAULT_VARIATIONS_PATH = "public/marketing/pinterest/pin_variations.json"
+DEFAULT_VARIATIONS_PATH = "marketing/pinterest/v1/pin_variations.json"
 
 REQUIRED_PIN_FIELDS = [
     "template",

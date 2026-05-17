@@ -30,8 +30,8 @@
       "demo_url": "https://myguestguide.com/villas/ocean-drive-retreat/",
       "pdf_url": "https://myguestguide.com/villas/ocean-drive-retreat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat/hero.png",
-        "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat/guide-section.png"
+        "marketing/pinterest/assets/screenshots/ocean-drive-retreat/hero.png",
+        "marketing/pinterest/assets/screenshots/ocean-drive-retreat/guide-section.png"
       ]
     },
     {
@@ -59,8 +59,8 @@
       "demo_url": "https://myguestguide.com/villas/the-soho-loft/",
       "pdf_url": "https://myguestguide.com/villas/the-soho-loft/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft/hero.png",
-        "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft/guide-section.png"
+        "marketing/pinterest/assets/screenshots/the-soho-loft/hero.png",
+        "marketing/pinterest/assets/screenshots/the-soho-loft/guide-section.png"
       ]
     },
     {
@@ -88,8 +88,8 @@
       "demo_url": "https://myguestguide.com/villas/casa-selva-tulum/",
       "pdf_url": "https://myguestguide.com/villas/casa-selva-tulum/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum/hero.png",
-        "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum/guide-section.png"
+        "marketing/pinterest/assets/screenshots/casa-selva-tulum/hero.png",
+        "marketing/pinterest/assets/screenshots/casa-selva-tulum/guide-section.png"
       ]
     },
     {
@@ -117,8 +117,8 @@
       "demo_url": "https://myguestguide.com/villas/le-marais-flat/",
       "pdf_url": "https://myguestguide.com/villas/le-marais-flat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat/hero.png",
-        "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat/guide-section.png"
+        "marketing/pinterest/assets/screenshots/le-marais-flat/hero.png",
+        "marketing/pinterest/assets/screenshots/le-marais-flat/guide-section.png"
       ]
     },
     {
@@ -146,8 +146,8 @@
       "demo_url": "https://myguestguide.com/villas/ocean-drive-retreat/",
       "pdf_url": "https://myguestguide.com/villas/ocean-drive-retreat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat/full-demo.png",
-        "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat/hero.png"
+        "marketing/pinterest/assets/screenshots/ocean-drive-retreat/full-demo.png",
+        "marketing/pinterest/assets/screenshots/ocean-drive-retreat/hero.png"
       ]
     },
     {
@@ -175,8 +175,8 @@
       "demo_url": "https://myguestguide.com/villas/the-soho-loft/",
       "pdf_url": "https://myguestguide.com/villas/the-soho-loft/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft/full-demo.png",
-        "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft/hero.png"
+        "marketing/pinterest/assets/screenshots/the-soho-loft/full-demo.png",
+        "marketing/pinterest/assets/screenshots/the-soho-loft/hero.png"
       ]
     },
     {
@@ -204,8 +204,8 @@
       "demo_url": "https://myguestguide.com/villas/casa-selva-tulum/",
       "pdf_url": "https://myguestguide.com/villas/casa-selva-tulum/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum/full-demo.png",
-        "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum/hero.png"
+        "marketing/pinterest/assets/screenshots/casa-selva-tulum/full-demo.png",
+        "marketing/pinterest/assets/screenshots/casa-selva-tulum/hero.png"
       ]
     },
     {
@@ -233,8 +233,8 @@
       "demo_url": "https://myguestguide.com/villas/le-marais-flat/",
       "pdf_url": "https://myguestguide.com/villas/le-marais-flat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat/full-demo.png",
-        "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat/hero.png"
+        "marketing/pinterest/assets/screenshots/le-marais-flat/full-demo.png",
+        "marketing/pinterest/assets/screenshots/le-marais-flat/hero.png"
       ]
     },
     {
@@ -262,8 +262,8 @@
       "demo_url": "https://myguestguide.com/villas/ocean-drive-retreat/",
       "pdf_url": "https://myguestguide.com/villas/ocean-drive-retreat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat/print-preview.png",
-        "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat/hero.png"
+        "marketing/pinterest/assets/screenshots/ocean-drive-retreat/print-preview.png",
+        "marketing/pinterest/assets/screenshots/ocean-drive-retreat/hero.png"
       ]
     },
     {
@@ -291,8 +291,8 @@
       "demo_url": "https://myguestguide.com/villas/the-soho-loft/",
       "pdf_url": "https://myguestguide.com/villas/the-soho-loft/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft/print-preview.png",
-        "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft/hero.png"
+        "marketing/pinterest/assets/screenshots/the-soho-loft/print-preview.png",
+        "marketing/pinterest/assets/screenshots/the-soho-loft/hero.png"
       ]
     },
     {
@@ -320,8 +320,8 @@
       "demo_url": "https://myguestguide.com/villas/casa-selva-tulum/",
       "pdf_url": "https://myguestguide.com/villas/casa-selva-tulum/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum/print-preview.png",
-        "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum/hero.png"
+        "marketing/pinterest/assets/screenshots/casa-selva-tulum/print-preview.png",
+        "marketing/pinterest/assets/screenshots/casa-selva-tulum/hero.png"
       ]
     },
     {
@@ -349,8 +349,8 @@
       "demo_url": "https://myguestguide.com/villas/le-marais-flat/",
       "pdf_url": "https://myguestguide.com/villas/le-marais-flat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat/print-preview.png",
-        "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat/hero.png"
+        "marketing/pinterest/assets/screenshots/le-marais-flat/print-preview.png",
+        "marketing/pinterest/assets/screenshots/le-marais-flat/hero.png"
       ]
     },
     {
@@ -378,7 +378,7 @@
       "demo_url": "https://myguestguide.com/villas/ocean-drive-retreat/",
       "pdf_url": "https://myguestguide.com/villas/ocean-drive-retreat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat/hero.png"
+        "marketing/pinterest/assets/screenshots/ocean-drive-retreat/hero.png"
       ]
     },
     {
@@ -406,7 +406,7 @@
       "demo_url": "https://myguestguide.com/villas/the-soho-loft/",
       "pdf_url": "https://myguestguide.com/villas/the-soho-loft/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft/hero.png"
+        "marketing/pinterest/assets/screenshots/the-soho-loft/hero.png"
       ]
     },
     {
@@ -434,7 +434,7 @@
       "demo_url": "https://myguestguide.com/villas/casa-selva-tulum/",
       "pdf_url": "https://myguestguide.com/villas/casa-selva-tulum/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum/hero.png"
+        "marketing/pinterest/assets/screenshots/casa-selva-tulum/hero.png"
       ]
     },
     {
@@ -462,7 +462,7 @@
       "demo_url": "https://myguestguide.com/villas/le-marais-flat/",
       "pdf_url": "https://myguestguide.com/villas/le-marais-flat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat/hero.png"
+        "marketing/pinterest/assets/screenshots/le-marais-flat/hero.png"
       ]
     },
     {
@@ -490,7 +490,7 @@
       "demo_url": "https://myguestguide.com/villas/ocean-drive-retreat/",
       "pdf_url": "https://myguestguide.com/villas/ocean-drive-retreat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat/guide-section.png"
+        "marketing/pinterest/assets/screenshots/ocean-drive-retreat/guide-section.png"
       ]
     },
     {
@@ -518,7 +518,7 @@
       "demo_url": "https://myguestguide.com/villas/the-soho-loft/",
       "pdf_url": "https://myguestguide.com/villas/the-soho-loft/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft/guide-section.png"
+        "marketing/pinterest/assets/screenshots/the-soho-loft/guide-section.png"
       ]
     },
     {
@@ -546,7 +546,7 @@
       "demo_url": "https://myguestguide.com/villas/casa-selva-tulum/",
       "pdf_url": "https://myguestguide.com/villas/casa-selva-tulum/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum/guide-section.png"
+        "marketing/pinterest/assets/screenshots/casa-selva-tulum/guide-section.png"
       ]
     },
     {
@@ -574,7 +574,7 @@
       "demo_url": "https://myguestguide.com/villas/le-marais-flat/",
       "pdf_url": "https://myguestguide.com/villas/le-marais-flat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat/guide-section.png"
+        "marketing/pinterest/assets/screenshots/le-marais-flat/guide-section.png"
       ]
     },
     {
@@ -602,7 +602,7 @@
       "demo_url": "https://myguestguide.com/villas/ocean-drive-retreat/",
       "pdf_url": "https://myguestguide.com/villas/ocean-drive-retreat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat/hero.png"
+        "marketing/pinterest/assets/screenshots/ocean-drive-retreat/hero.png"
       ]
     },
     {
@@ -630,7 +630,7 @@
       "demo_url": "https://myguestguide.com/villas/the-soho-loft/",
       "pdf_url": "https://myguestguide.com/villas/the-soho-loft/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft/hero.png"
+        "marketing/pinterest/assets/screenshots/the-soho-loft/hero.png"
       ]
     },
     {
@@ -658,7 +658,7 @@
       "demo_url": "https://myguestguide.com/villas/casa-selva-tulum/",
       "pdf_url": "https://myguestguide.com/villas/casa-selva-tulum/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum/hero.png"
+        "marketing/pinterest/assets/screenshots/casa-selva-tulum/hero.png"
       ]
     },
     {
@@ -686,7 +686,7 @@
       "demo_url": "https://myguestguide.com/villas/le-marais-flat/",
       "pdf_url": "https://myguestguide.com/villas/le-marais-flat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat/hero.png"
+        "marketing/pinterest/assets/screenshots/le-marais-flat/hero.png"
       ]
     },
     {
@@ -714,7 +714,7 @@
       "demo_url": "https://myguestguide.com/villas/ocean-drive-retreat/",
       "pdf_url": "https://myguestguide.com/villas/ocean-drive-retreat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat/hero.png"
+        "marketing/pinterest/assets/screenshots/ocean-drive-retreat/hero.png"
       ]
     },
     {
@@ -742,7 +742,7 @@
       "demo_url": "https://myguestguide.com/villas/the-soho-loft/",
       "pdf_url": "https://myguestguide.com/villas/the-soho-loft/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft/hero.png"
+        "marketing/pinterest/assets/screenshots/the-soho-loft/hero.png"
       ]
     },
     {
@@ -770,7 +770,7 @@
       "demo_url": "https://myguestguide.com/villas/casa-selva-tulum/",
       "pdf_url": "https://myguestguide.com/villas/casa-selva-tulum/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum/hero.png"
+        "marketing/pinterest/assets/screenshots/casa-selva-tulum/hero.png"
       ]
     },
     {
@@ -798,7 +798,7 @@
       "demo_url": "https://myguestguide.com/villas/le-marais-flat/",
       "pdf_url": "https://myguestguide.com/villas/le-marais-flat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat/hero.png"
+        "marketing/pinterest/assets/screenshots/le-marais-flat/hero.png"
       ]
     },
     {
@@ -826,8 +826,8 @@
       "demo_url": "https://myguestguide.com/villas/ocean-drive-retreat/",
       "pdf_url": "https://myguestguide.com/villas/ocean-drive-retreat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat/full-demo.png",
-        "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat/hero.png"
+        "marketing/pinterest/assets/screenshots/ocean-drive-retreat/full-demo.png",
+        "marketing/pinterest/assets/screenshots/ocean-drive-retreat/hero.png"
       ]
     },
     {
@@ -855,8 +855,8 @@
       "demo_url": "https://myguestguide.com/villas/the-soho-loft/",
       "pdf_url": "https://myguestguide.com/villas/the-soho-loft/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft/full-demo.png",
-        "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft/hero.png"
+        "marketing/pinterest/assets/screenshots/the-soho-loft/full-demo.png",
+        "marketing/pinterest/assets/screenshots/the-soho-loft/hero.png"
       ]
     },
     {
@@ -884,8 +884,8 @@
       "demo_url": "https://myguestguide.com/villas/casa-selva-tulum/",
       "pdf_url": "https://myguestguide.com/villas/casa-selva-tulum/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum/full-demo.png",
-        "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum/hero.png"
+        "marketing/pinterest/assets/screenshots/casa-selva-tulum/full-demo.png",
+        "marketing/pinterest/assets/screenshots/casa-selva-tulum/hero.png"
       ]
     },
     {
@@ -913,8 +913,8 @@
       "demo_url": "https://myguestguide.com/villas/le-marais-flat/",
       "pdf_url": "https://myguestguide.com/villas/le-marais-flat/print.pdf",
       "screenshot_sources": [
-        "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat/full-demo.png",
-        "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat/hero.png"
+        "marketing/pinterest/assets/screenshots/le-marais-flat/full-demo.png",
+        "marketing/pinterest/assets/screenshots/le-marais-flat/hero.png"
       ]
     }
   ]

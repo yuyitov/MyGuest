@@ -6,7 +6,7 @@ import re
 import sys
 from pathlib import Path
 
-CAMPAIGN_PATH = Path("data/marketing/pinterest_campaign_v2.json")
+CAMPAIGN_PATH = Path("marketing/pinterest/data/pinterest_campaign_v2.json")
 
 PROHIBITED_COPY_PATTERNS = [
     (r"\bai reads\b", "Prohibited claim: 'AI reads'"),

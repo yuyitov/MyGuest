@@ -11,7 +11,7 @@
     "color_bg": "#e8f4f8",
     "color_accent": "#b8dce8",
     "color_text": "#1a3a4a",
-    "screenshot_dir": "public/marketing/pinterest-v2/assets/screenshots/ocean-drive-retreat"
+    "screenshot_dir": "marketing/pinterest/assets/screenshots/ocean-drive-retreat"
   },
   {
     "style": "Minimalist",
@@ -25,7 +25,7 @@
     "color_bg": "#f5f5f5",
     "color_accent": "#d0d0d0",
     "color_text": "#333333",
-    "screenshot_dir": "public/marketing/pinterest-v2/assets/screenshots/the-soho-loft"
+    "screenshot_dir": "marketing/pinterest/assets/screenshots/the-soho-loft"
   },
   {
     "style": "Sunset",
@@ -39,7 +39,7 @@
     "color_bg": "#fff0e8",
     "color_accent": "#f5c4a8",
     "color_text": "#4a1a0a",
-    "screenshot_dir": "public/marketing/pinterest-v2/assets/screenshots/casa-selva-tulum"
+    "screenshot_dir": "marketing/pinterest/assets/screenshots/casa-selva-tulum"
   },
   {
     "style": "Classic",
@@ -53,6 +53,6 @@
     "color_bg": "#f5f0e0",
     "color_accent": "#c8b880",
     "color_text": "#2a2010",
-    "screenshot_dir": "public/marketing/pinterest-v2/assets/screenshots/le-marais-flat"
+    "screenshot_dir": "marketing/pinterest/assets/screenshots/le-marais-flat"
   }
 ]

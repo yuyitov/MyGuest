@@ -3,54 +3,158 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1000,initial-scale=1">
-<title>MyGuest — Before & After</title>
+<title>MyGuest — Before &amp; After</title>
 <link rel="stylesheet" href="../styles/pinterest-v2.css">
 <style>
+
+/* ── Beach gradient background (cielo → teal oceánico → arena) ── */
+body.style-coastal main.pin{
+  background: linear-gradient(180deg,
+    #c2dfe8 0%,
+    #7cc0d0 22%,
+    #48a8c0 42%,
+    #58b2a8 58%,
+    #a8c878 72%,
+    #c8bc68 84%,
+    #c4b060 100%
+  );
+}
+/* Capa decorativa: brillo de horizonte + sombra de palmeras */
+body.style-coastal main.pin::before{
+  background:
+    radial-gradient(ellipse 90% 28% at 50% 12%, rgba(255,255,255,.22) 0%, transparent 70%),
+    radial-gradient(ellipse 38% 26% at 88% 4%, rgba(15,50,25,.14) 0%, transparent 100%);
+  filter:none;
+  transform:none;
+}
+/* Overlay suave sobre el gradiente */
+body.style-coastal main.pin::after{
+  background:rgba(160,218,232,.20);
+}
+
+/* ── Move copy to TOP-LEFT (left column only) ── */
+.v2-copy{
+  top:90px;
+  left:40px;
+  right:500px;
+}
+.v2-headline{font-size:60px;line-height:.95;}
+.v2-sub{font-size:22px;}
+
+/* ── Phone starts lower to clear headline area ── */
+.v2-phone{top:230px;}
+
+/* ── Strip: mixed case (override text-transform) ── */
+.v2-strip-label{text-transform:none;font-size:18px;}
+
+/* ── AFTER label floats near phone ── */
+.v2-after-float{
+  position:absolute;
+  left:508px;top:232px;
+  font-family:'Inter',sans-serif;
+  font-size:13px;font-weight:800;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--c-strip-text);
+  background:var(--c-arrow-bg);
+  padding:7px 18px;border-radius:999px;
+  z-index:8;
+  box-shadow:0 6px 18px rgba(0,0,0,.22);
+}
+
+/* ── Left zone: BEFORE zone in the MIDDLE ── */
 .v2-left-zone{
-  position:absolute;left:38px;top:118px;width:490px;z-index:4;
+  position:absolute;left:38px;top:460px;width:450px;z-index:4;
 }
-.v2-ba-header{
-  display:flex;align-items:center;gap:18px;margin-bottom:28px;
+.v2-before-lbl{
+  font-family:'Inter',sans-serif;
+  font-size:13px;font-weight:800;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--c-mid);
+  margin-bottom:16px;
 }
-.v2-ba-arrow{
-  display:flex;align-items:center;justify-content:center;
-  width:56px;height:56px;border-radius:999px;
-  background:var(--c-arrow-bg);color:#fff;font-size:26px;
-  box-shadow:0 8px 20px rgba(0,0,0,.22);flex:0 0 auto;
-}
-.v2-notebook-wrap{
-  background:var(--c-before-bg);
-  border:1px solid var(--c-before-border);
-  border-radius:16px;
-  box-shadow:0 18px 42px rgba(0,0,0,.14);
-  overflow:hidden;
+
+/* ── Notebook — larger, tilted, realistic ── */
+.v2-book-wrap{
   position:relative;
+  display:inline-block;
+  transform:rotate(-3deg);
+  transform-origin:bottom left;
+  margin-bottom:28px;
 }
-.v2-notebook-spine{
-  position:absolute;left:0;top:0;bottom:0;width:20px;
-  background:repeating-linear-gradient(to bottom,rgba(0,0,0,.06) 0,rgba(0,0,0,.06) 10px,transparent 10px,transparent 20px);
-  border-right:1px solid rgba(0,0,0,.07);
+.v2-nb{
+  background:#fefdfc;
+  border:1px solid rgba(0,0,0,.10);
+  border-radius:4px 8px 8px 4px;
+  box-shadow:
+    5px 10px 34px rgba(0,0,0,.24),
+    2px 2px 0 rgba(0,0,0,.06),
+    -2px 0 0 #d0ccc8;
+  overflow:visible;
+  position:relative;
+  width:360px;
 }
-.v2-notebook-inner{padding:18px 18px 18px 30px;}
-.v2-notebook-text{
-  font-family:'Inter',sans-serif;font-size:14px;font-weight:500;
-  color:var(--c-mid);line-height:1.7;
+/* Spine strip */
+.v2-nb-spine{
+  position:absolute;left:0;top:0;bottom:0;
+  width:26px;
+  background:linear-gradient(to right,#d8d4d0,#e8e4e0);
+  border-right:1px solid #c8c4c0;
+  border-radius:4px 0 0 4px;
 }
-.v2-notebook-text span{display:block;}
-.v2-notebook-line{height:7px;background:rgba(0,0,0,.09);border-radius:3px;margin-bottom:6px;}
-.v2-notebook-line.s{width:55%;}
-.v2-notebook-line.m{width:72%;}
-.v2-sticky-note{
-  position:absolute;right:18px;bottom:16px;
-  background:#fff9c4;
-  border-radius:4px;
-  box-shadow:0 6px 16px rgba(0,0,0,.13);
+/* Spiral rings overlay */
+.v2-nb-rings{
+  position:absolute;left:-9px;top:0;bottom:0;
+  width:18px;z-index:6;
+  display:flex;flex-direction:column;
+  justify-content:space-evenly;
+  align-items:center;
+  pointer-events:none;
+}
+.v2-nb-ring{
+  width:16px;height:16px;border-radius:999px;
+  border:3px solid #aaa;
+  background:#fff;
+  box-shadow:0 2px 4px rgba(0,0,0,.18);
+  flex:0 0 auto;
+}
+.v2-nb-inner{
+  padding:20px 18px 20px 38px;
+}
+.v2-nb-text{
+  font-family:'Inter',sans-serif;font-size:14.5px;font-weight:500;
+  color:#3a3a3a;line-height:1.85;
+}
+.v2-nb-text span{display:block;}
+.v2-nb-lines{margin-top:14px;}
+.v2-nb-line{
+  height:1px;
+  background:rgba(70,90,180,.10);
+  margin-bottom:19px;
+  border-radius:0;
+}
+/* Sticky note overlapping notebook */
+.v2-stk{
+  position:absolute;right:-22px;bottom:-16px;
+  background:#fffacd;
+  border-radius:3px;
+  box-shadow:3px 6px 20px rgba(0,0,0,.18),0 1px 0 rgba(0,0,0,.06);
   padding:10px 14px;
   font-family:'Inter',sans-serif;font-size:12px;
-  line-height:1.45;color:#555;
-  transform:rotate(3deg);
-  max-width:140px;
+  line-height:1.6;color:#444;
+  transform:rotate(5deg);
+  z-index:10;
+  width:136px;
 }
+
+/* ── Arrow button — large ── */
+.v2-arrow-lg{
+  width:80px;height:80px;border-radius:999px;
+  background:var(--c-arrow-bg);
+  color:#fff;font-size:32px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 14px 32px rgba(0,0,0,.28);
+}
+
 </style>
 </head>
 <body class="style-coastal">
@@ -58,7 +162,7 @@
 
   <div class="v2-brand"><span class="v2-brand-star">+</span> MyGuest</div>
 
-  <!-- Phone (right) -->
+  <!-- Phone — top right -->
   <div class="v2-phone">
     <div class="v2-phone-side"></div>
     <div class="v2-phone-side-vol"></div>
@@ -74,7 +178,7 @@
           <div class="v2-phone-section-title">QUICK ACCESS</div>
           <div class="v2-phone-grid">
             <div class="v2-phone-cell"><b>✓</b>Check-in</div>
-            <div class="v2-phone-cell"><b>📶</b>House Rules</div>
+            <div class="v2-phone-cell"><b>🏠</b>House Rules</div>
             <div class="v2-phone-cell"><b>🍽</b>Local Tips</div>
             <div class="v2-phone-cell"><b>📍</b>Places to Eat</div>
             <div class="v2-phone-cell"><b>📶</b>WiFi Info</div>
@@ -86,47 +190,59 @@
     </div>
   </div>
 
-  <!-- Left visual zone: BEFORE/AFTER -->
-  <div class="v2-left-zone">
-    <div class="v2-ba-header">
-      <div class="v2-after-label">AFTER</div>
-    </div>
-    <div class="v2-before-label" style="margin-bottom:14px;">BEFORE</div>
-    <div class="v2-notebook-wrap" style="position:relative;">
-      <div class="v2-notebook-spine"></div>
-      <div class="v2-notebook-inner">
-        <div class="v2-notebook-text">
-          <span>House Rules</span>
-          <span>WiFi: Beach1234</span>
-          <span>Parking in back…</span>
-          <span>Check out: 11am</span>
-          <span>Lots of PDF's and notes…</span>
-        </div>
-        <div style="margin-top:14px;">
-          <div class="v2-notebook-line"></div>
-          <div class="v2-notebook-line m"></div>
-          <div class="v2-notebook-line s"></div>
-          <div class="v2-notebook-line m"></div>
-          <div class="v2-notebook-line"></div>
-        </div>
-      </div>
-      <div class="v2-sticky-note">
-        Before check-in<br>→ send PDF<br>→ text WiFi pw<br>→ print rules
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:18px;margin-top:24px;">
-      <div class="v2-ba-arrow">→</div>
-    </div>
-  </div>
+  <!-- AFTER label near phone -->
+  <div class="v2-after-float">AFTER</div>
 
-  <!-- Copy (bottom-left) -->
+  <!-- Headline + subtitle — TOP LEFT -->
   <div class="v2-copy">
     <h1 class="v2-headline">From scattered info to a beautiful guest guide.</h1>
     <div class="v2-rule"></div>
     <p class="v2-sub">Turn your Airbnb welcome book into a mobile guest guide.</p>
   </div>
 
-  <!-- Bottom strip -->
+  <!-- BEFORE zone — MIDDLE LEFT -->
+  <div class="v2-left-zone">
+    <div class="v2-before-lbl">BEFORE</div>
+
+    <!-- Notebook with spiral binding -->
+    <div class="v2-book-wrap">
+      <div class="v2-nb-rings">
+        <div class="v2-nb-ring"></div>
+        <div class="v2-nb-ring"></div>
+        <div class="v2-nb-ring"></div>
+        <div class="v2-nb-ring"></div>
+        <div class="v2-nb-ring"></div>
+        <div class="v2-nb-ring"></div>
+        <div class="v2-nb-ring"></div>
+        <div class="v2-nb-ring"></div>
+      </div>
+      <div class="v2-nb">
+        <div class="v2-nb-spine"></div>
+        <div class="v2-nb-inner">
+          <div class="v2-nb-text">
+            <span>House Rules</span>
+            <span>WiFi: Beach1234</span>
+            <span>Parking in back…</span>
+            <span>Check out: 11am</span>
+            <span>Lots of PDF's and notes…</span>
+          </div>
+          <div class="v2-nb-lines">
+            <div class="v2-nb-line"></div>
+            <div class="v2-nb-line"></div>
+            <div class="v2-nb-line"></div>
+          </div>
+        </div>
+        <div class="v2-stk">
+          Before check-in<br>→ send PDF<br>→ text WiFi pw<br>→ print rules
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow button -->
+    <div class="v2-arrow-lg">→</div>
+  </div>
+
+  <!-- Dark strip -->
   <div class="v2-strip">
     <div class="v2-strip-item">
       <div class="v2-strip-icon">📱</div>
@@ -134,7 +250,7 @@
     </div>
     <div class="v2-strip-sep"></div>
     <div class="v2-strip-item">
-      <div class="v2-strip-icon">🖨</div>
+      <div class="v2-strip-icon">📄</div>
       <div class="v2-strip-label">Printable PDF</div>
     </div>
     <div class="v2-strip-sep"></div>
@@ -144,7 +260,6 @@
     </div>
   </div>
 
-  <!-- Hidden compat elements -->
   <div class="v2-badges" style="display:none;"></div>
   <p class="v2-supporting-line" style="display:none;"></p>
   <a class="v2-cta" href="#" style="display:none;"></a>

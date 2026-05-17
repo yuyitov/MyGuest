@@ -12,8 +12,8 @@ from urllib.parse import urljoin
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 
-CAMPAIGN_PATH = Path("data/marketing/pinterest_campaign_v2.json")
-SCREENSHOTS_BASE = Path("public/marketing/pinterest-v2/assets/screenshots")
+CAMPAIGN_PATH = Path("marketing/pinterest/data/pinterest_campaign_v2.json")
+SCREENSHOTS_BASE = Path("marketing/pinterest/assets/screenshots")
 PLACEHOLDER_COLOR_MAP = {
     "Coastal": "#b8dce8",
     "Minimalist": "#d0d0d0",
@@ -156,7 +156,7 @@ def render_pin(page, url: str, output_path: Path, wait_ms: int, pin: dict) -> di
 def main() -> int:
     parser = argparse.ArgumentParser(description="Render MyGuest Pinterest v2 pins to PNG.")
     parser.add_argument("--base-url", required=True, help="Base URL for the templates directory.")
-    parser.add_argument("--output-dir", default="output/pinterest-v2/pins", help="Output directory for PNGs.")
+    parser.add_argument("--output-dir", default="marketing/pinterest/output/pins", help="Output directory for PNGs.")
     parser.add_argument("--wait-ms", type=int, default=1200, help="Extra wait after page load (ms).")
     parser.add_argument("--campaign", default=str(CAMPAIGN_PATH), help="Path to pinterest_campaign_v2.json.")
     args = parser.parse_args()

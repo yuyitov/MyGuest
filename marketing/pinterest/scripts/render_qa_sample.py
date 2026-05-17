@@ -9,9 +9,9 @@ from urllib.parse import urljoin
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 
-CAMPAIGN_PATH = Path("data/marketing/pinterest_campaign_v2.json")
-SCREENSHOTS_BASE = Path("public/marketing/pinterest-v2/assets/screenshots")
-OUTPUT_DIR = Path("output/pinterest-v2/qa-sample")
+CAMPAIGN_PATH = Path("marketing/pinterest/data/pinterest_campaign_v2.json")
+SCREENSHOTS_BASE = Path("marketing/pinterest/assets/screenshots")
+OUTPUT_DIR = Path("marketing/pinterest/output/qa-sample")
 
 TEMPLATES_ORDER = [
     "template-01-before-after",
