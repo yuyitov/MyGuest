@@ -1,3 +1,4 @@
+# Sistema: books/  (genera los guest books de clientes)
 name: MyGuest Dispatch Smoke
 
 on:
