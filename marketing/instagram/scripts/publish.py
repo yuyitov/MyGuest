@@ -19,6 +19,7 @@ Usage:
 import json
 import os
 import sys
+import time
 import requests
 from datetime import date
 from pathlib import Path
@@ -119,6 +120,7 @@ def main():
         try:
             container_id = create_media_container(ig_user_id, token, image_url, caption)
             print(f"  container created: {container_id}")
+            time.sleep(10)
             published_post_id = publish_container(ig_user_id, token, container_id)
             print(f"  published! post id: {published_post_id}")
             published_ids.add(post_id)
