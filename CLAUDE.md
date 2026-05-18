@@ -40,7 +40,10 @@ marketing/
     scripts/
       export-posts.js               ← Renderiza posts con Puppeteer
       generate-mockups.js           ← Genera mockups de celular (npm run mockups)
-    assets/mockups/phone/           ← PNGs pre-generados del celular
+    assets/mockups/phone/           ← PNGs pre-generados del celular (frame + screen combinados)
+    assets/mockups/*-hi.png         ← Imágenes de pantalla compuestas manualmente (portada + botones de menú)
+                                       NO son screenshots de los demos. Se crean con Gemini/diseño.
+                                       NUNCA reemplazar con capturas automáticas de public/villas/.
     posts.json                      ← Definición de posts (copy + estilo)
     preview/                        ← Preview grid en browser
 

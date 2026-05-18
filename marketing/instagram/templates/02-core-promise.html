@@ -282,7 +282,7 @@
   <div class="phone-wrap">
     <div class="iphone">
       <div class="iphone-screen">
-        <img src="../assets/mockups/minimalist.png" alt="MyGuest guide">
+        <img src="../assets/mockups/minimalist-hi.png" alt="MyGuest guide">
       </div>
       <div class="home-bar"></div>
     </div>
@@ -332,7 +332,7 @@
     if (v === 'dark') document.body.classList.add('v-dark');
 
     if (p.title)    document.getElementById('headline').innerHTML = p.title;
-    if (p.subtitle) document.getElementById('subtitle').textContent = p.subtitle;
+    if (p.subtitle) document.getElementById('subtitle').innerHTML = p.subtitle;
     if (p.cta)      document.getElementById('cta').textContent = p.cta + ' →';
     if (p.tag)      document.getElementById('tag').textContent = p.tag;
   }

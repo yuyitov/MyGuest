@@ -22,12 +22,15 @@
 
     /* HERO AREA — left */
     .hero { position: absolute; top: 130px; left: 64px; width: 510px; z-index: 3; }
-    .hero-icon { font-size: 86px; line-height: 1; display: block; margin-bottom: 20px; }
+    .stars { font-size: 54px; line-height: 1; display: block; margin-bottom: 20px; color: #FFB800; letter-spacing: 4px; }
     .headline { font-size: 72px; font-weight: 800; color: var(--charcoal); line-height: 1.06; letter-spacing: -0.028em; }
     .headline em { font-style: normal; color: var(--coral); }
 
+    /* CTA left — above mascot */
+    .cta-left { position: absolute; bottom: 330px; left: 64px; z-index: 5; }
+
     /* CHAT BUBBLES — right column */
-    .bubbles { position: absolute; right: 52px; top: 130px; width: 388px; display: flex; flex-direction: column; gap: 18px; z-index: 4; }
+    .bubbles { position: absolute; right: 52px; top: 130px; width: 388px; display: flex; flex-direction: column; gap: 28px; z-index: 4; }
 
     .bubble {
       background: white;
@@ -55,8 +58,8 @@
     .mascot-wrap { position: absolute; bottom: 96px; left: 64px; z-index: 2; }
     .mascot-wrap img { width: 200px; mix-blend-mode: multiply; }
 
-    /* BOTTOM */
-    .bottom { position: absolute; bottom: 48px; left: 296px; right: 64px; display: flex; justify-content: space-between; align-items: center; z-index: 5; }
+    /* BOTTOM — tagline only */
+    .bottom { position: absolute; bottom: 48px; left: 64px; right: 64px; display: flex; justify-content: flex-end; align-items: center; z-index: 5; }
     .cta-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--teal); color: white; border-radius: 999px; padding: 14px 30px; font-size: 21px; font-weight: 700; }
     .tagline { font-size: 22px; color: var(--warm-gray); font-weight: 500; }
     .tagline em { font-style: normal; color: var(--teal); font-weight: 700; }
@@ -126,7 +129,7 @@
 
   <!-- Left: hero -->
   <div class="hero">
-    <span class="hero-icon">🌙</span>
+    <span class="stars">★★★★★</span>
     <h1 class="headline" id="headline">Your guests are messaging you at <em>11pm.</em> Again.</h1>
   </div>
 
@@ -166,14 +169,18 @@
     </div>
   </div>
 
+  <!-- CTA left — above mascot -->
+  <div class="cta-left">
+    <div class="cta-btn" id="cta">See the solution →</div>
+  </div>
+
   <!-- Mascot bottom-left -->
   <div class="mascot-wrap">
     <img src="../assets/mascota.png" alt="MyGuest">
   </div>
 
-  <!-- Bottom -->
+  <!-- Bottom — tagline only -->
   <div class="bottom">
-    <div class="cta-btn" id="cta">See the solution →</div>
     <p class="tagline">There's a <em>simpler way.</em></p>
   </div>
 </div>

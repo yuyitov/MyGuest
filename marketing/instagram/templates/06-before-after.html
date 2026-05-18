@@ -194,7 +194,7 @@
     <div class="phone-wrap">
       <div class="iphone">
         <div class="iphone-screen">
-          <img id="phone-img" src="../assets/mockups/coastal.png" alt="MyGuest guide">
+          <img id="phone-img" src="../assets/mockups/coastal-hi.png" alt="MyGuest guide">
         </div>
         <div class="home-bar"></div>
       </div>
@@ -210,8 +210,8 @@
 <script>
 (function() {
   const MOCKUP_MAP = {
-    ivory: '../assets/mockups/coastal.png',
-    dark:  '../assets/mockups/minimalist.png',
+    ivory: '../assets/mockups/coastal-hi.png',
+    dark:  '../assets/mockups/minimalist-hi.png',
   };
   const SCREENSHOT_DIRS = {
     ivory: '../assets/screenshots/ocean-drive-retreat/',
@@ -241,7 +241,7 @@
     if (p.screen && SCREENSHOT_DIRS[v]) {
       phoneImg.src = SCREENSHOT_DIRS[v] + p.screen + '.png';
     } else if (p.mockup) {
-      phoneImg.src = '../assets/mockups/' + p.mockup + '.png';
+      phoneImg.src = '../assets/mockups/' + p.mockup + '-hi.png';
     } else if (MOCKUP_MAP[v]) {
       phoneImg.src = MOCKUP_MAP[v];
     }

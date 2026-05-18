@@ -28,15 +28,15 @@
     .tag-pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
 
     /* ── HEADLINE (top-left) ── */
-    .headline { position: absolute; top: 118px; left: 68px; font-size: 82px; font-weight: 900; color: var(--charcoal); line-height: 1.0; letter-spacing: -0.03em; z-index: 3; }
+    .headline { position: absolute; top: 118px; left: 68px; max-width: 510px; font-size: 66px; font-weight: 900; color: var(--charcoal); line-height: 1.0; letter-spacing: -0.03em; z-index: 3; }
     .headline em { font-style: normal; color: var(--teal); }
 
-    /* ── FEATURE LIST (left, below headline) ── */
-    .feat-list { position: absolute; top: 300px; left: 68px; width: 480px; z-index: 3; display: flex; flex-direction: column; gap: 0; }
+    /* ── FEATURE LIST (left, below headline — stretches to fill column) ── */
+    .feat-list { position: absolute; top: 326px; bottom: 120px; left: 68px; width: 490px; z-index: 3; display: flex; flex-direction: column; justify-content: space-between; }
 
     .feat-row {
       display: flex; align-items: center; gap: 20px;
-      padding: 22px 0;
+      padding: 14px 0;
       border-bottom: 1px solid rgba(0,0,0,0.07);
     }
     .feat-row:last-child { border-bottom: none; }
@@ -63,25 +63,31 @@
       flex-shrink: 0;
     }
 
-    /* ── PHONE (right side) ── */
-    .phone-wrap { position: absolute; right: 52px; top: 96px; z-index: 4; }
-    .iphone {
-      position: relative;
-      width: 316px; height: 644px;
-      background: #0d0d0d; border-radius: 50px;
-      box-shadow: 0 0 0 2px #2a2a2a, 0 0 0 4px #111, 0 48px 96px rgba(0,0,0,0.28);
+    /* ── PHONE (right side — two-layer: screen clip + svg frame) ── */
+    .phone-wrap {
+      position: absolute;
+      right: 46px; top: 104px;
+      width: 370px; height: 754px;
+      z-index: 4;
+    }
+    .phone-screen-clip {
+      position: absolute;
+      top: 48px; left: 14px;
+      width: 343px; height: 693px;
+      border-radius: 45px;
       overflow: hidden;
+      background: #000;
     }
-    .iphone::before {
-      content: ''; position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
-      width: 88px; height: 24px; background: #0d0d0d; border-radius: 999px; z-index: 10;
+    .phone-screen { display: block; width: 100%; height: auto; }
+    .phone-frame {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 2;
+      filter: drop-shadow(0 24px 48px rgba(0,0,0,0.32));
     }
-    .iphone-screen { position: absolute; inset: 0; overflow: hidden; border-radius: 50px; }
-    .iphone-screen img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
-    .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 88px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 999px; z-index: 10; }
 
     /* ── BOTTOM ── */
-    .bottom { position: absolute; bottom: 52px; left: 68px; right: 68px; display: flex; justify-content: space-between; align-items: center; z-index: 5; }
+    .bottom { position: absolute; bottom: 48px; left: 68px; right: 68px; display: flex; justify-content: space-between; align-items: center; z-index: 5; }
     .cta-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--teal); color: white; border-radius: 999px; padding: 15px 34px; font-size: 21px; font-weight: 700; }
     .tagline { font-size: 21px; color: var(--warm-gray); font-weight: 500; }
 
@@ -147,55 +153,53 @@
   <!-- Feature rows -->
   <div class="feat-list">
     <div class="feat-row">
-      <div class="feat-dot fd-teal">📱</div>
-      <div class="feat-copy">
-        <div class="feat-name">Mobile guide</div>
-        <div class="feat-desc">Beautiful web guide on any phone — no app needed</div>
-      </div>
-      <div class="feat-check">✓</div>
-    </div>
-    <div class="feat-row">
-      <div class="feat-dot fd-coral">🖨️</div>
-      <div class="feat-copy">
-        <div class="feat-name">Printable PDF</div>
-        <div class="feat-desc">For guests who prefer a printed copy</div>
-      </div>
-      <div class="feat-check">✓</div>
-    </div>
-    <div class="feat-row">
-      <div class="feat-dot fd-light">🌍</div>
-      <div class="feat-copy">
-        <div class="feat-name">3 languages</div>
-        <div class="feat-desc">English, Spanish &amp; French — all included</div>
-      </div>
-      <div class="feat-check">✓</div>
-    </div>
-    <div class="feat-row">
       <div class="feat-dot fd-sand">🔑</div>
       <div class="feat-copy">
-        <div class="feat-name">Check-in + house rules</div>
-        <div class="feat-desc">Codes, WiFi, access &amp; house tips</div>
+        <div class="feat-name">Check-in</div>
+        <div class="feat-desc">Door code, WiFi &amp; step-by-step arrival</div>
       </div>
       <div class="feat-check">✓</div>
     </div>
     <div class="feat-row">
-      <div class="feat-dot fd-teal">🗺️</div>
+      <div class="feat-dot fd-teal">🏠</div>
+      <div class="feat-copy">
+        <div class="feat-name">House manual</div>
+        <div class="feat-desc">Rules, appliances &amp; handy tips</div>
+      </div>
+      <div class="feat-check">✓</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-dot fd-coral">🗺️</div>
       <div class="feat-copy">
         <div class="feat-name">Local guide</div>
-        <div class="feat-desc">Your personal recommendations nearby</div>
+        <div class="feat-desc">Your handpicked spots nearby</div>
+      </div>
+      <div class="feat-check">✓</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-dot fd-light">📞</div>
+      <div class="feat-copy">
+        <div class="feat-name">Emergency info</div>
+        <div class="feat-desc">Host contact &amp; local services</div>
+      </div>
+      <div class="feat-check">✓</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-dot fd-teal">🌍</div>
+      <div class="feat-copy">
+        <div class="feat-name">3 languages</div>
+        <div class="feat-desc">EN · ES · FR — all included</div>
       </div>
       <div class="feat-check">✓</div>
     </div>
   </div>
 
-  <!-- Phone right -->
+  <!-- Phone right: screen layer + svg frame overlay -->
   <div class="phone-wrap">
-    <div class="iphone">
-      <div class="iphone-screen">
-        <img id="phone-img" src="../assets/mockups/coastal.png" alt="MyGuest guide">
-      </div>
-      <div class="home-bar"></div>
+    <div class="phone-screen-clip">
+      <img class="phone-screen" id="phone-img" src="../assets/mockups/coastal-hi.png" alt="MyGuest guide">
     </div>
+    <img class="phone-frame" src="../assets/phone-frame.svg" alt="">
   </div>
 
   <div class="bottom">
@@ -206,9 +210,9 @@
 <script>
 (function() {
   const MOCKUP_MAP = {
-    ivory: '../assets/mockups/coastal.png',
-    teal:  '../assets/mockups/minimalist.png',
-    dark:  '../assets/mockups/classic.png',
+    ivory: '../assets/mockups/coastal-hi.png',
+    teal:  '../assets/mockups/minimalist-hi.png',
+    dark:  '../assets/mockups/classic-hi.png',
   };
   const SCREENSHOT_DIRS = {
     ivory: '../assets/screenshots/ocean-drive-retreat/',
@@ -241,7 +245,7 @@
     if (p.screen && SCREENSHOT_DIRS[v]) {
       phoneImg.src = SCREENSHOT_DIRS[v] + p.screen + '.png';
     } else if (p.mockup) {
-      phoneImg.src = '../assets/mockups/' + p.mockup + '.png';
+      phoneImg.src = '../assets/mockups/' + p.mockup + '-hi.png';
     } else if (MOCKUP_MAP[v]) {
       phoneImg.src = MOCKUP_MAP[v];
     }

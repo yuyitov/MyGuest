@@ -174,7 +174,7 @@
     <div class="phone-label">Your guide, delivered</div>
     <div class="iphone">
       <div class="iphone-screen">
-        <img id="phone-img" src="../assets/mockups/minimalist.png" alt="MyGuest guide">
+        <img id="phone-img" src="../assets/mockups/minimalist-hi.png" alt="MyGuest guide">
       </div>
       <div class="home-bar"></div>
     </div>
@@ -188,10 +188,10 @@
 <script>
 (function() {
   const MOCKUP_MAP = {
-    dark:  '../assets/mockups/minimalist.png',
-    coral: '../assets/mockups/coastal.png',
-    teal:  '../assets/mockups/coastal.png',
-    sand:  '../assets/mockups/sunset.png',
+    dark:  '../assets/mockups/minimalist-hi.png',
+    coral: '../assets/mockups/coastal-hi.png',
+    teal:  '../assets/mockups/coastal-hi.png',
+    sand:  '../assets/mockups/sunset-hi.png',
   };
   const SCREENSHOT_DIRS = {
     dark:  '../assets/screenshots/the-soho-loft/',
@@ -226,7 +226,7 @@
     if (p.screen && SCREENSHOT_DIRS[v]) {
       phoneImg.src = SCREENSHOT_DIRS[v] + p.screen + '.png';
     } else if (p.mockup) {
-      phoneImg.src = '../assets/mockups/' + p.mockup + '.png';
+      phoneImg.src = '../assets/mockups/' + p.mockup + '-hi.png';
     } else if (MOCKUP_MAP[v]) {
       phoneImg.src = MOCKUP_MAP[v];
     }

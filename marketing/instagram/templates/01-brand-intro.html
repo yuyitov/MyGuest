@@ -83,19 +83,39 @@
     }
     .chip-icon { font-size: 22px; line-height: 1; }
 
-    /* PHONE MOCKUP */
-    .phone-mockup {
+    /* PHONE MOCKUP — two-layer: screenshot behind, frame on top */
+    .phone-wrap {
       position: absolute;
       right: 28px; top: 180px;
-      width: 395px; height: auto;
+      width: 395px; height: 806px;
       z-index: 4;
       transform: rotate(3deg);
       transform-origin: center top;
     }
+    /* Clip region matches the SVG screen opening (scaled 348→395: ×1.1351) */
+    .phone-screen-clip {
+      position: absolute;
+      top: 51px; left: 15px;
+      width: 366px; height: 740px;
+      border-radius: 48px;
+      overflow: hidden;
+      background: #000;
+    }
+    .phone-screen {
+      display: block;
+      width: 100%; height: auto;
+    }
+    .phone-frame {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 2;
+      filter: drop-shadow(0 24px 48px rgba(0,0,0,0.45));
+    }
 
     /* BOTTOM */
     .bottom {
-      position: absolute; bottom: 52px; left: 68px; right: 68px;
+      position: absolute; bottom: 42px; left: 68px; right: 68px;
       display: flex; justify-content: space-between; align-items: center; z-index: 5;
     }
     .cta-btn {
@@ -152,17 +172,22 @@
   <h1 class="headline" id="headline">The digital welcome book your guests will actually <em>use.</em></h1>
 
   <!-- Subtitle — stacked lines -->
-  <p class="sub" id="subtitle">Mobile guide + printable PDF.<br>Everything in one link.<br>In 3 languages.</p>
+  <p class="sub" id="subtitle">Mobile guide for your guests.<br>Everything in one link.<br>In 3 languages.</p>
 
   <!-- Feature chips -->
   <div class="chips">
     <div class="chip"><span class="chip-icon">📱</span>Works on any phone — no app needed</div>
-    <div class="chip"><span class="chip-icon">🌍</span>EN · ES · FR included</div>
-    <div class="chip"><span class="chip-icon">🖨️</span>Printable PDF too</div>
+    <div class="chip"><span class="chip-icon">🌍</span>EN · ES · FR</div>
+
   </div>
 
-  <!-- Phone mockup -->
-  <img class="phone-mockup" id="mockup-img" src="../assets/mockups/phone/coastal-phone.png" alt="MyGuest demo">
+  <!-- Phone mockup: screenshot layer + frame overlay -->
+  <div class="phone-wrap">
+    <div class="phone-screen-clip">
+      <img class="phone-screen" id="screen-img" src="../assets/mockups/coastal-hi.png" alt="MyGuest demo">
+    </div>
+    <img class="phone-frame" src="../assets/phone-frame.svg" alt="">
+  </div>
 
   <!-- Bottom -->
   <div class="bottom">
@@ -189,11 +214,11 @@
   }
   applyData(data);
 
-  const PHONE_IMGS = {
-    coastal:    '../assets/mockups/phone/coastal-phone.png',
-    minimalist: '../assets/mockups/phone/minimalist-phone.png',
-    sunset:     '../assets/mockups/phone/sunset-phone.png',
-    classic:    '../assets/mockups/phone/classic-phone.png',
+  const SCREEN_IMGS = {
+    coastal:    '../assets/mockups/coastal-hi.png',
+    minimalist: '../assets/mockups/minimalist-hi.png',
+    sunset:     '../assets/mockups/sunset-hi.png',
+    classic:    '../assets/mockups/classic-hi.png',
   };
 
   function applyData(p) {
@@ -201,8 +226,8 @@
     if (v === 'coral') document.body.classList.add('v-coral');
     else if (v === 'dark') document.body.classList.add('v-dark');
 
-    if (p.mockup && PHONE_IMGS[p.mockup])
-      document.getElementById('mockup-img').src = PHONE_IMGS[p.mockup];
+    if (p.mockup && SCREEN_IMGS[p.mockup])
+      document.getElementById('screen-img').src = SCREEN_IMGS[p.mockup];
 
     if (p.title)    document.getElementById('headline').innerHTML = p.title;
     if (p.subtitle) document.getElementById('subtitle').innerHTML = p.subtitle;
