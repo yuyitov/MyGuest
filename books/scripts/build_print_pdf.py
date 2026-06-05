@@ -41,7 +41,7 @@ PRINT_UI = {
         "email": "Email",
         "review": "Leave a Review",
         "instagram": "Instagram",
-        "footer": "Public guest version only. Private access details are intentionally excluded.",
+        "footer": "For the complete stay details, open the secure digital guide link provided by your host.",
     },
     "Español": {
         "html_lang": "es",
@@ -77,7 +77,7 @@ PRINT_UI = {
         "email": "Correo",
         "review": "Dejar Reseña",
         "instagram": "Instagram",
-        "footer": "Versión pública para huéspedes. Los datos de acceso privado se excluyen intencionalmente.",
+        "footer": "Para ver todos los detalles completos de la estancia, abre el link seguro de la guía digital proporcionado por tu anfitrión.",
     },
     "Français": {
         "html_lang": "fr",
@@ -113,7 +113,7 @@ PRINT_UI = {
         "email": "Email",
         "review": "Laisser un Avis",
         "instagram": "Instagram",
-        "footer": "Version publique destinée aux invités. Les informations d'accès privé sont volontairement exclues.",
+        "footer": "Pour consulter tous les détails complets du séjour, ouvrez le lien sécurisé du guide numérique fourni par votre hôte.",
     },
 }
 

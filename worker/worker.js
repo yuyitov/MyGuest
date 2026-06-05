@@ -259,6 +259,88 @@ async function handleTallyWebhook(request, env) {
     now
   });
 
+  // ─── Delivery record base (para email al completar) ─────────────────────
+  let customerEmail = cleanValue(getAnswer(normalized.answers, 'customer_email')) || '';
+  if (!customerEmail && reservedOrderRecord) {
+    customerEmail = reservedOrderRecord.customer_email || reservedOrderRecord.email || '';
+  }
+  const langMap = { 'English': 'en', 'Español': 'es', 'Français': 'fr' };
+  const bookLang = langMap[cleanValue(getAnswer(normalized.answers, 'primary_language'))] || 'en';
+  const publicBase = (cleanValue(env.PUBLIC_BOOK_BASE_URL) || 'https://myguestguide.com').replace(/\/+$/, '');
+  // ─────────────────────────────────────────────────────────────────────────
+
+  // ─── Detección de adjuntos — DEBE ocurrir ANTES del dispatch ─────────────
+  // Si el cliente subió materiales (PDF, Word, fotos, capturas), el flujo
+  // se pausa aquí. No se genera el book hasta que Vero revise y extraiga
+  // la información manualmente. Estado: needs_manual_extraction.
+  const existingBookFile = cleanValue(getAnswer(normalized.answers, 'existing_book_file')) || null;
+  const existingBookPhotos = cleanValue(getAnswer(normalized.answers, 'existing_book_photos')) || null;
+  const hasMaterials = !!(existingBookFile || existingBookPhotos);
+
+  if (hasMaterials) {
+    // Guardar registro de intake para revisión manual
+    try {
+      await env.MYGUEST_KV.put(`intake:${slug}`, JSON.stringify({
+        slug,
+        submission_id: normalized.submission_id,
+        customer_email: customerEmail,
+        existing_book_file: existingBookFile,
+        existing_book_photos: existingBookPhotos,
+        has_materials: true,
+        status: 'needs_manual_extraction',
+        created_at: now
+      }));
+    } catch (err) {
+      console.error('intake record save failed (non-fatal):', safeError(err));
+    }
+
+    // Actualizar estado del índice
+    index.status = 'needs_manual_extraction';
+    index.last_updated_at = now;
+    await env.MYGUEST_KV.put(indexKey, JSON.stringify(index));
+
+    // Marcar order como pendiente de extracción manual
+    if (incomingOrderId && reservedOrderRecord) {
+      try {
+        await env.MYGUEST_KV.put(`order:${incomingOrderId}`, JSON.stringify({
+          ...reservedOrderRecord,
+          status: 'needs_manual_extraction',
+          submission_id: normalized.submission_id,
+          slug,
+          submitted_at: now
+        }));
+      } catch (err) {
+        console.error('order manual extraction status update failed (non-fatal):', safeError(err));
+      }
+    }
+
+    // Guardar delivery record con estado pausado
+    const deliveryRecord = {
+      slug,
+      order_id: incomingOrderId || null,
+      customer_email: customerEmail,
+      public_url: buildPublicBookUrl(env, slug, bookLang),
+      guest_access_url: privatePayload.guest_access.guest_access_url,
+      status: 'needs_manual_extraction',
+      created_at: now
+    };
+    try {
+      await env.MYGUEST_KV.put(`delivery:${slug}`, JSON.stringify(deliveryRecord));
+    } catch (err) {
+      console.error('delivery record save failed (non-fatal):', safeError(err));
+    }
+
+    // Responder sin despachar a GitHub — Vero debe revisar primero
+    return jsonResponse({
+      ok: true,
+      status: 'needs_manual_extraction',
+      submission_id: normalized.submission_id,
+      slug,
+      message: 'Submission received. Manual extraction required before generation.'
+    });
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
   // Reservar order ANTES del dispatch para evitar doble generación (anti-race)
   if (incomingOrderId && reservedOrderRecord) {
     try {
@@ -311,41 +393,12 @@ async function handleTallyWebhook(request, env) {
     throw error;
   }
 
-  // ─── NUEVO 16.1-B: intake (materiales operativos/manuales) ───────────────
-  const existingBookFile = cleanValue(getAnswer(normalized.answers, 'existing_book_file')) || null;
-  const existingBookPhotos = cleanValue(getAnswer(normalized.answers, 'existing_book_photos')) || null;
-  const hasMaterials = !!(existingBookFile || existingBookPhotos);
-  if (hasMaterials) {
-    try {
-      await env.MYGUEST_KV.put(`intake:${slug}`, JSON.stringify({
-        slug,
-        submission_id: normalized.submission_id,
-        existing_book_file: existingBookFile,
-        existing_book_photos: existingBookPhotos,
-        has_materials: true,
-        created_at: now
-      }));
-    } catch (err) {
-      console.error('intake record save failed (non-fatal):', safeError(err));
-    }
-  }
-  // ─────────────────────────────────────────────────────────────────────────
-
-  // ─── NUEVO 16.1-B: delivery record (para email al completar) ─────────────
-  let customerEmail = cleanValue(getAnswer(normalized.answers, 'customer_email')) || '';
-  if (!customerEmail && reservedOrderRecord) {
-    customerEmail = reservedOrderRecord.customer_email || reservedOrderRecord.email || '';
-  }
-  const langMap = { 'English': 'en', 'Español': 'es', 'Français': 'fr' };
-  const bookLang = langMap[cleanValue(getAnswer(normalized.answers, 'primary_language'))] || 'en';
-  const pdfFilename = (env.PDF_FILENAME && env.PDF_FILENAME.trim()) || 'print.pdf';
-  const publicBase = (cleanValue(env.PUBLIC_BOOK_BASE_URL) || 'https://yuyitov.github.io/MyGuest').replace(/\/+$/, '');
+  // Guardar delivery record
   const deliveryRecord = {
     slug,
     order_id: incomingOrderId || null,
     customer_email: customerEmail,
     public_url: buildPublicBookUrl(env, slug, bookLang),
-    pdf_url: `${publicBase}/villas/${encodeURIComponent(slug)}/${pdfFilename}`,
     guest_access_url: privatePayload.guest_access.guest_access_url,
     status: 'pending',
     created_at: now
@@ -355,9 +408,8 @@ async function handleTallyWebhook(request, env) {
   } catch (err) {
     console.error('delivery record save failed (non-fatal):', safeError(err));
   }
-  // ─────────────────────────────────────────────────────────────────────────
 
-   return jsonResponse({
+  return jsonResponse({
     ok: true,
     status: 'dispatched_to_github',
     submission_id: normalized.submission_id,

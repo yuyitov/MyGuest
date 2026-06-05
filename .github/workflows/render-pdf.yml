@@ -1,17 +1,44 @@
-# Sistema: books/  (genera los guest books de clientes)
-name: Render Print PDF
+# Sistema: books/  — QA visual de print.html (SOLO DEMOS)
+#
+# ─── PARA QUÉ SIRVE ESTE WORKFLOW ───────────────────────────────────────────
+# Genera un PDF a partir de print.html para revisar visualmente el diseño.
+# SOLO puede ejecutarse en los 4 slugs de demo oficiales del proyecto.
+# No ejecutar en slugs de clientes reales.
+#
+# ─── POR QUÉ NO SE USA PARA CLIENTES REALES ─────────────────────────────────
+# El print.html generado por GitHub Actions contiene únicamente datos públicos
+# (sin WiFi, códigos, acceso ni información sensible). Esos datos viven en
+# Cloudflare KV y se cargan en tiempo de ejecución con el token del link.
+# Por eso un PDF generado aquí estaría incompleto para un cliente real.
+#
+# El PDF completo para clientes se obtiene así:
+#   1. El host abre la guía con el link/token seguro.
+#   2. Los datos completos se cargan desde Cloudflare Worker/KV.
+#   3. El host usa Print / Save as PDF en el navegador.
+#
+# ─── SEGURIDAD ───────────────────────────────────────────────────────────────
+# Este workflow BLOQUEA la ejecución si:
+#   - el slug no corresponde a uno de los 4 demos oficiales
+#   - el campo confirm_demo_only no es "true"
+#   - el print.html contiene patrones de datos sensibles
+#
+# El PDF generado se sube como artefacto (no se commitea a public/).
+name: Render Print PDF (Demo QA only)
 
 on:
   workflow_dispatch:
     inputs:
       slug:
-        description: "Villa slug (e.g. ocean-drive-retreat)"
+        description: "Demo slug — solo demos oficiales"
         required: true
         default: "ocean-drive-retreat"
+      confirm_demo_only:
+        description: "Confirmar que es demo con datos ficticios (escribe: true)"
+        required: true
+        default: "false"
 
 permissions:
-  contents: write
-  actions: write
+  contents: read
 
 jobs:
   render:
@@ -20,6 +47,89 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Validate demo-only guard
+        run: |
+          python - <<'PY'
+          import os
+          import sys
+
+          slug = os.environ["SLUG"]
+          confirm = os.environ["CONFIRM_DEMO_ONLY"].strip().lower()
+
+          DEMO_SLUGS = {
+              "ocean-drive-retreat",
+              "the-soho-loft",
+              "casa-selva-tulum",
+              "le-marais-flat",
+          }
+
+          if confirm != "true":
+              print("ERROR: confirm_demo_only must be 'true'.")
+              print("Este workflow solo puede usarse para demos con datos ficticios.")
+              print("El PDF completo de clientes reales se obtiene con Print/Save as PDF")
+              print("desde la guía cargada con el link/token seguro.")
+              sys.exit(1)
+
+          if slug not in DEMO_SLUGS:
+              print(f"ERROR: '{slug}' no es un demo oficial.")
+              print(f"Slugs permitidos: {sorted(DEMO_SLUGS)}")
+              print("No ejecutar este workflow en slugs de clientes reales.")
+              sys.exit(1)
+
+          print(f"OK: slug '{slug}' es demo oficial y confirmación recibida.")
+          PY
+        env:
+          SLUG: ${{ github.event.inputs.slug }}
+          CONFIRM_DEMO_ONLY: ${{ github.event.inputs.confirm_demo_only }}
+
+      - name: Scan print.html for sensitive data patterns
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          import sys
+
+          slug = os.environ["SLUG"]
+          html_path = os.path.join("public", "villas", slug, "print.html")
+
+          if not os.path.exists(html_path):
+              print(f"ERROR: {html_path} not found.")
+              sys.exit(1)
+
+          with open(html_path, "r", encoding="utf-8", errors="ignore") as f:
+              content = f.read()
+
+          # Patrones que nunca deben aparecer en print.html de demos
+          SENSITIVE_PATTERNS = [
+              (r'\b\d{4,8}\b', "standalone numeric code"),
+              (r'wifi_password', "wifi_password field"),
+              (r'door.?code', "door code"),
+              (r'lockbox', "lockbox reference"),
+              (r'keypad', "keypad reference"),
+              (r'guest_access_token', "guest access token"),
+              (r'priv-', "private record key prefix"),
+          ]
+
+          hits = []
+          for pattern, label in SENSITIVE_PATTERNS:
+              matches = re.findall(pattern, content, re.IGNORECASE)
+              if matches:
+                  hits.append(f"  - {label}: {matches[:3]}")
+
+          if hits:
+              print("WARNING: Possible sensitive patterns found in print.html:")
+              for h in hits:
+                  print(h)
+              print()
+              print("Revisa manualmente antes de continuar.")
+              print("Si son datos de demo ficticios, este warning puede ignorarse.")
+              print("Si son datos reales, NO uses este workflow para ese slug.")
+          else:
+              print("OK: No sensitive patterns found in print.html.")
+          PY
+        env:
+          SLUG: ${{ github.event.inputs.slug }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -39,7 +149,7 @@ jobs:
 
           slug = os.environ["SLUG"]
           html_path = os.path.join("public", "villas", slug, "print.html")
-          pdf_path  = os.path.join("public", "villas", slug, "print.pdf")
+          pdf_path  = "print.pdf"
 
           if not os.path.exists(html_path):
               print(f"ERROR: {html_path} not found.")
@@ -49,25 +159,18 @@ jobs:
           HTML(filename=html_path).write_pdf(pdf_path)
           size = os.path.getsize(pdf_path)
           print(f"Generated {pdf_path} ({size:,} bytes)")
+          print()
+          print("NOTA: Este PDF contiene solo datos públicos del demo.")
+          print("No contiene WiFi, códigos ni datos sensibles (viven en Cloudflare KV).")
+          print("El PDF completo de clientes se obtiene con Print/Save as PDF")
+          print("desde la guía cargada con el link/token seguro.")
           PY
         env:
           SLUG: ${{ github.event.inputs.slug }}
 
-      - name: Commit and push PDF
-        run: |
-          git config --global user.name "MyGuest Bot"
-          git config --global user.email "actions@github.com"
-          git add public/villas/${{ github.event.inputs.slug }}/print.pdf
-
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-            exit 0
-          fi
-
-          git commit -m "Render print.pdf for ${{ github.event.inputs.slug }}"
-          git push
-
-      - name: Trigger Pages deployment
-        run: gh workflow run pages.yml --ref main
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload PDF as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-print-pdf-${{ github.event.inputs.slug }}
+          path: print.pdf
+          retention-days: 14
