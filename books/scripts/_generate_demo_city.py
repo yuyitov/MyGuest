@@ -61,7 +61,9 @@ PAYLOAD = {
             "checkin_time": "3:00 PM",
             "checkout_time": "11:00 AM",
             "house_access_public": (
-                "Detailed access instructions will be sent privately before check-in."
+                "Self check-in at the main entrance — no host meeting needed. "
+                "Your loft is on the 4th floor — turn right out of the elevator. "
+                "Full arrival details and all entry instructions are in your private access section below."
             ),
             "parking_info": (
                 "Street parking in SoHo is very limited. "
@@ -197,8 +199,9 @@ PRE_TRANSLATIONS = {
             "Devuelve las llaves a la caja de seguridad al hacer el checkout."
         ),
         "house_access_public": (
-            "Las instrucciones detalladas de acceso se enviarán de forma privada "
-            "antes del check-in."
+            "Acceso autónomo en la entrada principal — sin necesidad de recibimiento. "
+            "Tu loft está en el 4to piso — gira a la derecha al salir del ascensor. "
+            "Los detalles completos de llegada e instrucciones de entrada están en tu sección de acceso privado más abajo."
         ),
         "parking_info": (
             "El estacionamiento en SoHo es muy limitado. "
@@ -299,8 +302,9 @@ PRE_TRANSLATIONS = {
             "Remettez les clés dans la boîte à clés au départ."
         ),
         "house_access_public": (
-            "Les instructions d'accès détaillées seront envoyées de façon privée "
-            "avant le check-in."
+            "Accès autonome à l'entrée principale — aucune rencontre avec l'hôte nécessaire. "
+            "Votre loft se trouve au 4e étage — tournez à droite en sortant de l'ascenseur. "
+            "Les détails complets d'arrivée et toutes les instructions d'entrée se trouvent dans votre section d'accès privé ci-dessous."
         ),
         "parking_info": (
             "Le stationnement à SoHo est très limité. "

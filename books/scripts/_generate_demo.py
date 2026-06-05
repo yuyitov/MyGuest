@@ -64,7 +64,10 @@ PAYLOAD = {
             "checkin_time": "3:00 PM",
             "checkout_time": "11:00 AM",
             "house_access_public": (
-                "Detailed arrival instructions will be shared privately before check-in."
+                "Self check-in — no host meeting needed. "
+                "Park in the driveway, space for 2 vehicles. "
+                "Full arrival details, entry instructions, and access codes "
+                "are in your private access section below."
             ),
             "parking_info": (
                 "Street parking available on Ocean Drive and Collins Ave. "
@@ -228,8 +231,10 @@ PRE_TRANSLATIONS = {
             "Por favor deja todas las llaves en la caja de seguridad al salir."
         ),
         "house_access_public": (
-            "Las instrucciones detalladas de llegada se compartirán de forma "
-            "privada antes del check-in."
+            "Acceso autónomo — sin necesidad de recibimiento. "
+            "Estaciona en el camino de entrada, espacio para 2 vehículos. "
+            "Los detalles completos de llegada, instrucciones de entrada y códigos de acceso "
+            "están en tu sección de acceso privado más abajo."
         ),
         "parking_info": (
             "Estacionamiento en la calle disponible en Ocean Drive y Collins Ave. "
@@ -331,8 +336,10 @@ PRE_TRANSLATIONS = {
             "Veuillez laisser toutes les clés dans la boîte à clés au départ."
         ),
         "house_access_public": (
-            "Les instructions détaillées d'arrivée seront communiquées de façon "
-            "privée avant le check-in."
+            "Accès autonome — aucune rencontre avec l'hôte nécessaire. "
+            "Garez-vous dans l'allée, place pour 2 véhicules. "
+            "Les détails complets d'arrivée, les instructions d'entrée et les codes d'accès "
+            "se trouvent dans votre section d'accès privé ci-dessous."
         ),
         "parking_info": (
             "Stationnement possible dans la rue sur Ocean Drive et Collins Ave. "

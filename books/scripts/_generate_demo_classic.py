@@ -61,7 +61,10 @@ PAYLOAD = {
             "checkin_time": "3:00 PM",
             "checkout_time": "11:00 AM",
             "house_access_public": (
-                "Detailed access instructions will be sent privately before check-in."
+                "Apartment 3A on the 3rd floor — no lift, staircase only. "
+                "Self check-in — no host meeting needed. "
+                "Full arrival details, door codes, and key safe instructions "
+                "are in your private access section below."
             ),
             "parking_info": (
                 "Street parking in Le Marais is very limited and time-restricted. "
@@ -200,8 +203,9 @@ PRE_TRANSLATIONS = {
             "Por favor devuelve todas las llaves a la caja al hacer el checkout."
         ),
         "house_access_public": (
-            "Las instrucciones detalladas de acceso se enviarán de forma privada "
-            "antes del check-in."
+            "Apartamento 3A en el 3er piso — sin ascensor, solo escalera. "
+            "Acceso autónomo — sin necesidad de recibimiento. "
+            "Los detalles completos de llegada e instrucciones de entrada están en tu sección de acceso privado más abajo."
         ),
         "parking_info": (
             "El estacionamiento en Le Marais es muy limitado y con horario restringido. "
@@ -305,8 +309,9 @@ PRE_TRANSLATIONS = {
             "Veuillez remettre toutes les clés dans la boîte à clés au départ."
         ),
         "house_access_public": (
-            "Les instructions d'accès détaillées vous seront envoyées de façon privée "
-            "avant le check-in."
+            "Appartement 3A au 3e étage — sans ascenseur, escalier uniquement. "
+            "Accès autonome — aucune rencontre avec l'hôte nécessaire. "
+            "Les détails complets d'arrivée et les instructions d'entrée se trouvent dans votre section d'accès privé ci-dessous."
         ),
         "parking_info": (
             "Le stationnement dans le Marais est très limité et soumis à des horaires. "

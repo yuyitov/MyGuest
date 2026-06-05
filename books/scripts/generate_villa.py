@@ -1208,6 +1208,7 @@ def build_things_to_do_html(content_flat, property_address, active_language):
         ui["open_link"],
         ui["call"],
         RECOMMENDATION_IMAGE_POOLS["things_to_do"],
+        translated_label("Representative image", active_language),
     )
 
 def has_recommendation_items(content_flat, field_name, property_address=""):
@@ -1267,7 +1268,10 @@ def build_directions_map_block(content_flat, ui, villa_name="", property_address
     if maps_url:
         maps_html = f'''
             <a href="{escape(maps_url)}" target="_blank" rel="noopener noreferrer">
-                {escape(ui["open_maps"])}
+                <span class="map-open-btn">
+                    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 18s-7-5-7-10a7 7 0 0 1 14 0c0 5-7 10-7 10Z"></path><circle cx="10" cy="8" r="2.5" fill="currentColor" stroke="none"></circle></svg>
+                    {escape(ui["open_maps"])}
+                </span>
             </a>
         '''
 
@@ -1338,6 +1342,15 @@ def inject_demo_private_data(html, content_flat, active_language):
     if not content_flat.get("demo_mode"):
         return html
 
+    # ⚠️  DEMO MODE: fake credentials are written directly into the HTML <script>.
+    # This is intentional for demo guides that have no real Cloudflare KV token.
+    # NEVER set demo_mode=True for a real guest guide — real credentials would
+    # become visible in the page source and GitHub Pages.
+    print(
+        "\n*** DEMO MODE ACTIVE — fake private data is being embedded in the HTML. ***\n"
+        "    Never use demo_mode=True with real guest credentials.\n"
+    )
+
     trans = STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {})
     label_wifi_net = trans.get("WiFi network", "WiFi network")
     label_wifi_pw = trans.get("WiFi password", "WiFi password")
@@ -1364,12 +1377,45 @@ def inject_demo_private_data(html, content_flat, active_language):
     return html.replace("        loadPrivateDetails();", f"        {inline_js}")
 
 
+_SENSITIVE_PATTERNS = re.compile(
+    r"""
+    \b(?:code|código|codigo|keypad|lockbox|password|passcode|pin|
+        door\s+code|access\s+code|building\s+code|entry\s+code|gate\s+code)\b
+    | \#\d{3,}          # #4521-style keypad codes
+    | \b\d{4,}\b        # 4+ digit numeric codes
+    | \b[A-Z]{1,3}\d{3,}[A-Z0-9]*\b  # alphanumeric codes like A1847B
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+def validate_house_access_public(value, demo_mode=False):
+    """Raise ValueError if house_access_public looks like it contains secrets."""
+    if not value:
+        return
+    matches = _SENSITIVE_PATTERNS.findall(value)
+    if matches:
+        prefix = "[DEMO] " if demo_mode else ""
+        raise ValueError(
+            f"{prefix}house_access_public contains potentially sensitive data "
+            f"(matched: {matches[:5]!r}). "
+            "Move codes, passwords, and lockbox/keypad instructions to "
+            "house_access_private instead. "
+            "house_access_public must contain only general, non-secret orientation text."
+        )
+
+
 def render_html_for_language(payload, active_language, output_filename):
     metadata = payload.get("metadata", {}) or {}
     property_data = payload.get("property", {}) or {}
     content = payload.get("content", {}) or {}
     content_flat = flatten_content(content)
     content_flat = translate_public_content(content_flat, active_language)
+
+    demo_mode = bool(content_flat.get("demo_mode"))
+    validate_house_access_public(
+        content_flat.get("house_access_public", ""),
+        demo_mode=demo_mode,
+    )
 
     styles = {
         "Coastal": {"primary": "#2C7A7B", "accent": "#F4A261", "bg": "#F0F9FF", "text": "#1F3A3A"},
@@ -1398,7 +1444,9 @@ def render_html_for_language(payload, active_language, output_filename):
     slug = safe_text(metadata.get("slug")) or "demo"
     guest_access_url = ""
 
-    with open("books/templates/master.html", "r", encoding="utf-8") as f:
+    _scripts_dir = os.path.dirname(os.path.abspath(__file__))
+    _template_path = os.path.join(_scripts_dir, "..", "templates", "master.html")
+    with open(_template_path, "r", encoding="utf-8") as f:
         html = f.read()
 
     html = apply_static_template_translations(html, active_language)
@@ -1470,7 +1518,8 @@ def render_html_for_language(payload, active_language, output_filename):
     html = inject_public_qa_overrides(html)
     html = inject_demo_private_data(html, content_flat, active_language)
 
-    output_dir = os.path.join("public", "villas", slug)
+    _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    output_dir = os.path.join(_project_root, "..", "public", "villas", slug)
     os.makedirs(output_dir, exist_ok=True)
 
     output_path = os.path.join(output_dir, output_filename)
@@ -1496,7 +1545,8 @@ def generate():
 
     metadata = payload.get("metadata", {}) or {}
     slug = safe_text(metadata.get("slug")) or "demo"
-    output_dir = os.path.join("public", "villas", slug)
+    _project_root2 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    output_dir = os.path.join(_project_root2, "..", "public", "villas", slug)
 
     primary_path = os.path.join(output_dir, primary_filename)
     index_path = os.path.join(output_dir, "index.html")

@@ -62,7 +62,9 @@ PAYLOAD = {
             "checkin_time": "3:00 PM",
             "checkout_time": "10:00 AM",
             "house_access_public": (
-                "Detailed arrival instructions will be shared privately before check-in."
+                "Self check-in — no host meeting needed. "
+                "Your key opens both the main gate and the front door. "
+                "Full arrival details and access information are in your private access section below."
             ),
             "parking_info": (
                 "Free parking available inside the gated property — space for one car. "
@@ -205,8 +207,9 @@ PRE_TRANSLATIONS = {
             "Por favor devuelve todas las llaves a la caja de seguridad al salir."
         ),
         "house_access_public": (
-            "Las instrucciones detalladas de llegada se compartirán de forma "
-            "privada antes del check-in."
+            "Acceso autónomo — sin necesidad de recibimiento. "
+            "Tu llave abre tanto el portón principal como la puerta de la casa. "
+            "Los detalles completos de llegada e información de acceso están en tu sección de acceso privado más abajo."
         ),
         "parking_info": (
             "Estacionamiento gratuito dentro de la propiedad cerrada — espacio para un auto. "
@@ -315,8 +318,9 @@ PRE_TRANSLATIONS = {
             "Veuillez remettre toutes les clés dans la boîte à clés au départ."
         ),
         "house_access_public": (
-            "Les instructions détaillées d'arrivée seront communiquées de façon "
-            "privée avant le check-in."
+            "Accès autonome — aucune rencontre avec l'hôte nécessaire. "
+            "Votre clé ouvre à la fois le portail principal et la porte d'entrée. "
+            "Les détails complets d'arrivée et les informations d'accès se trouvent dans votre section d'accès privé ci-dessous."
         ),
         "parking_info": (
             "Parking gratuit à l'intérieur de la propriété clôturée — place pour une voiture. "
