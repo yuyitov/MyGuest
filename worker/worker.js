@@ -330,6 +330,18 @@ async function handleTallyWebhook(request, env) {
       console.error('delivery record save failed (non-fatal):', safeError(err));
     }
 
+    // Notificar a Vero por email (no-fatal — no debe bloquear la respuesta)
+    if (env.ALERT_EMAIL && env.RESEND_API_KEY) {
+      const propertyName = cleanValue(getAnswer(normalized.answers, 'property_name')) || slug;
+      const clientName   = cleanValue(getAnswer(normalized.answers, 'customer_name')) || '';
+      sendEmail({
+        env,
+        to:      env.ALERT_EMAIL,
+        subject: `[MyGuest] Revisión manual pendiente: ${propertyName}`,
+        html:    buildAlertEmail({ propertyName, clientName, customerEmail, slug, submissionId: normalized.submission_id, now })
+      }).catch(err => console.error('alert email failed (non-fatal):', safeError(err)));
+    }
+
     // Responder sin despachar a GitHub — Vero debe revisar primero
     return jsonResponse({
       ok: true,
@@ -1873,6 +1885,55 @@ async function sendEmail({ env, to, subject, html }) {
   }
 
   return response.json();
+}
+
+function buildAlertEmail({ propertyName, clientName, customerEmail, slug, submissionId, now }) {
+  const reviewUrl = 'https://tally.so/r/yP1y9B';
+  const rows = [
+    ['Propiedad',     escapeHtml(propertyName)],
+    ['Cliente',       escapeHtml(clientName || '—')],
+    ['Email cliente', escapeHtml(customerEmail || '—')],
+    ['Slug',          escapeHtml(slug)],
+    ['Submission ID', escapeHtml(submissionId)],
+    ['Recibido',      escapeHtml(now)],
+  ].map(([label, value]) =>
+    `<tr><td style="padding:6px 12px;color:#888;white-space:nowrap">${label}</td>` +
+    `<td style="padding:6px 12px;color:#111;font-family:monospace">${value}</td></tr>`
+  ).join('');
+
+  return `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f5f5f5;font-family:sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:40px 0">
+  <tr><td align="center">
+    <table width="560" cellpadding="0" cellspacing="0"
+           style="background:#fff;border-radius:12px;padding:40px;max-width:560px">
+      <tr><td>
+        <p style="font-size:12px;font-weight:700;letter-spacing:1px;color:#59C3C3;margin:0 0 8px">MYGUEST — ALERTA INTERNA</p>
+        <h1 style="font-size:20px;font-weight:700;color:#111;margin:0 0 16px">
+          Revisión manual pendiente
+        </h1>
+        <p style="color:#444;line-height:1.6;margin:0 0 24px">
+          Un cliente subió archivos adjuntos (welcome book, fotos o capturas).
+          Revisa los archivos en Tally y extrae la información necesaria antes de generar la guía.
+        </p>
+        <table style="width:100%;border-collapse:collapse;background:#f9f9f9;border-radius:8px;margin:0 0 24px">${rows}</table>
+        <p style="text-align:center;margin:0 0 16px">
+          <a href="${escapeAttribute(reviewUrl)}"
+             style="background:#2D6A73;color:#fff;padding:14px 28px;border-radius:8px;
+                    text-decoration:none;font-size:15px;font-weight:600;display:inline-block">
+            Abrir formulario de revisión →
+          </a>
+        </p>
+        <p style="font-size:12px;color:#aaa;text-align:center;margin:0">
+          Los archivos del cliente están en Tally bajo submission ${escapeHtml(submissionId)}.
+        </p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
 }
 
 function buildFormEmail({ formUrl }) {
