@@ -300,7 +300,23 @@
     justify-content: flex-start;
     min-height: var(--mg-screen-height);
     padding: clamp(18px, 4dvh, 34px) 6px 16px;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
 }
+
+/* Botanical corner decorations on cover screen */
+.cover-botanical {
+    position: absolute;
+    top: -6px;
+    width: clamp(82px, 26vw, 116px);
+    pointer-events: none;
+    z-index: -1;
+    color: color-mix(in srgb, var(--primary) 40%, var(--bg));
+}
+.cover-botanical.right { right: -8px; }
+.cover-botanical.left  { left: -8px; transform: scaleX(-1); }
+.cover-botanical svg   { display: block; width: 100%; height: auto; }
 
 .cover-screen > div:last-child {
     width: 100%;
@@ -1169,6 +1185,11 @@
 
         <!-- 1. Cover -->
         <section class="screen cover-screen" id="cover-screen">
+
+            <div class="cover-botanical right" aria-hidden="true"><svg viewBox="0 0 100 230" xmlns="http://www.w3.org/2000/svg"><path style="fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round" d="M 78 2 C 70 32 56 72 46 112 C 38 146 37 178 43 206"/><path style="fill:currentColor;stroke:none" d="M 73 13 C 78 5 88 2 93 7 C 88 13 79 15 73 13Z"/><path style="fill:currentColor;stroke:none" d="M 68 24 C 73 15 83 11 88 16 C 83 23 74 26 68 24Z"/><path style="fill:currentColor;stroke:none" d="M 62 30 C 56 39 46 43 42 38 C 47 30 57 27 62 30Z"/><path style="fill:currentColor;stroke:none" d="M 59 51 C 64 42 74 38 79 43 C 74 50 65 53 59 51Z"/><path style="fill:currentColor;stroke:none" d="M 53 57 C 47 66 37 70 33 65 C 38 57 48 54 53 57Z"/><path style="fill:currentColor;stroke:none" d="M 52 77 C 57 68 67 64 72 69 C 67 76 58 79 52 77Z"/><path style="fill:currentColor;stroke:none" d="M 47 83 C 41 92 31 96 27 91 C 32 83 42 80 47 83Z"/><path style="fill:currentColor;stroke:none" d="M 48 103 C 53 94 63 90 68 95 C 63 102 54 105 48 103Z"/><path style="fill:currentColor;stroke:none" d="M 44 109 C 38 118 28 122 24 117 C 29 109 39 106 44 109Z"/><path style="fill:currentColor;stroke:none" d="M 44 129 C 49 120 59 116 64 121 C 59 128 50 131 44 129Z"/><path style="fill:currentColor;stroke:none" d="M 42 135 C 36 144 26 148 22 143 C 27 135 37 132 42 135Z"/></svg></div>
+
+            <div class="cover-botanical left" aria-hidden="true"><svg viewBox="0 0 100 230" xmlns="http://www.w3.org/2000/svg"><path style="fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round" d="M 78 2 C 70 32 56 72 46 112 C 38 146 37 178 43 206"/><path style="fill:currentColor;stroke:none" d="M 73 13 C 78 5 88 2 93 7 C 88 13 79 15 73 13Z"/><path style="fill:currentColor;stroke:none" d="M 68 24 C 73 15 83 11 88 16 C 83 23 74 26 68 24Z"/><path style="fill:currentColor;stroke:none" d="M 62 30 C 56 39 46 43 42 38 C 47 30 57 27 62 30Z"/><path style="fill:currentColor;stroke:none" d="M 59 51 C 64 42 74 38 79 43 C 74 50 65 53 59 51Z"/><path style="fill:currentColor;stroke:none" d="M 53 57 C 47 66 37 70 33 65 C 38 57 48 54 53 57Z"/><path style="fill:currentColor;stroke:none" d="M 52 77 C 57 68 67 64 72 69 C 67 76 58 79 52 77Z"/><path style="fill:currentColor;stroke:none" d="M 47 83 C 41 92 31 96 27 91 C 32 83 42 80 47 83Z"/><path style="fill:currentColor;stroke:none" d="M 48 103 C 53 94 63 90 68 95 C 63 102 54 105 48 103Z"/><path style="fill:currentColor;stroke:none" d="M 44 109 C 38 118 28 122 24 117 C 29 109 39 106 44 109Z"/><path style="fill:currentColor;stroke:none" d="M 44 129 C 49 120 59 116 64 121 C 59 128 50 131 44 129Z"/><path style="fill:currentColor;stroke:none" d="M 42 135 C 36 144 26 148 22 143 C 27 135 37 132 42 135Z"/></svg></div>
+
             <h1 class="cover-title">WELCOME</h1>
 
             <div class="cover-image-wrap">
