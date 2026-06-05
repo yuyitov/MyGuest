@@ -192,7 +192,7 @@ STATIC_TEMPLATE_TRANSLATIONS = {
 
 SHARED_IMAGES = {
     "cover": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
-    "welcome": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1400&q=80",
+    "welcome": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80",
     "things_to_do": "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1400&q=80",
     "places_to_eat": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1400&q=80",
     "places_to_drink": "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1400&q=80",
@@ -1418,7 +1418,7 @@ def render_html_for_language(payload, active_language, output_filename):
     )
 
     styles = {
-        "Coastal": {"primary": "#285260", "accent": "#AB9072", "bg": "#E0D7CF", "text": "#285260"},
+        "Coastal": {"primary": "#285260", "accent": "#AB9072", "bg": "#EDE8E0", "text": "#285260"},
         "Minimalist": {"primary": "#8B6F47", "accent": "#D9CEBA", "bg": "#F9F6F0", "text": "#3A2A1C"},
         "Classic": {"primary": "#000000", "accent": "#A0A0A0", "bg": "#FFFFFF", "text": "#1A1A1A"},
         "Sunset": {"primary": "#E76F51", "accent": "#E9C46A", "bg": "#FFF5F2", "text": "#264653"},

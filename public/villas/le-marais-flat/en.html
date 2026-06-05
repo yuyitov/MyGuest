@@ -531,25 +531,37 @@
             text-decoration: none;
             color: var(--mg-body);
             -webkit-tap-highlight-color: transparent;
+            background: rgba(255, 253, 250, 0.92);
+            border: 1.5px solid rgba(138, 112, 74, 0.28);
+            border-radius: 14px;
+            padding: 14px 4px 10px;
+            box-shadow: 0 4px 14px rgba(58, 42, 28, 0.09), 0 1px 3px rgba(58, 42, 28, 0.05);
+            transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
         }
+
+        .menu-screen-approved .menu-link:active {
+            transform: scale(0.96);
+            background: rgba(242, 232, 218, 0.95);
+            box-shadow: 0 2px 6px rgba(58, 42, 28, 0.09);
+        }
+
     .menu-screen-approved .menu-tile {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border-radius: 999px;
-    background: rgba(255, 253, 248, 0.72);
-    border: 1.3px solid rgba(138, 112, 74, 0.24);
-    box-shadow: 0 8px 18px rgba(58, 42, 28, 0.05);
+    width: auto;
+    aspect-ratio: auto;
+    border-radius: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 8px;
-    transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    margin-bottom: 6px;
 }
 
 .menu-screen-approved .menu-link:active .menu-tile {
-    transform: scale(0.96);
-    background: rgba(242, 232, 218, 0.92);
-    box-shadow: 0 4px 10px rgba(58, 42, 28, 0.08);
+    transform: none;
+    background: none;
+    box-shadow: none;
 }
 
 .menu-screen-approved .menu-icon {
@@ -966,15 +978,21 @@
     border-color: var(--mg-card-border);
 }
 
-.menu-screen-approved .menu-tile {
-    background: color-mix(in srgb, var(--mg-card) 78%, #ffffff 22%);
+.menu-screen-approved .menu-link {
+    background: color-mix(in srgb, var(--mg-card) 82%, #ffffff 18%);
     border-color: var(--mg-line);
-    box-shadow: 0 8px 18px color-mix(in srgb, var(--text) 7%, transparent);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--text) 8%, transparent), 0 1px 3px color-mix(in srgb, var(--text) 4%, transparent);
 }
 
-.menu-screen-approved .menu-link:active .menu-tile {
-    background: color-mix(in srgb, var(--accent) 24%, var(--mg-card) 76%);
-    box-shadow: 0 4px 10px color-mix(in srgb, var(--text) 10%, transparent);
+.menu-screen-approved .menu-tile {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.menu-screen-approved .menu-link:active {
+    background: color-mix(in srgb, var(--accent) 16%, var(--mg-card) 84%);
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--text) 9%, transparent);
 }
 
 .menu-screen-approved .menu-icon {
@@ -1197,7 +1215,7 @@
             <h2 class="welcome-title">A Warm Welcome</h2>
 
             <div class="welcome-image">
-                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Le Marais Flat">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Le Marais Flat">
             </div>
 
             <div class="welcome-message" data-field-block data-dynamic>
