@@ -5,7 +5,7 @@ import re
 import socket
 import time
 from html import escape
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urlparse, parse_qs
 import urllib.request
 import urllib.error
 
@@ -1252,41 +1252,77 @@ def build_final_notes_block(content_flat, active_language):
         </div>
     '''
 
+def build_maps_embed_url(raw_url, villa_name, property_address=""):
+    clean_url = safe_text(raw_url)
+    query = ""
+
+    if clean_url:
+        if not clean_url.startswith(("http://", "https://")):
+            clean_url = "https://" + clean_url
+        try:
+            parsed = urlparse(clean_url)
+            params = parse_qs(parsed.query)
+            if "q" in params:
+                query = params["q"][0]
+        except Exception:
+            pass
+
+    if not query:
+        parts = [p for p in [villa_name, property_address] if p]
+        query = ", ".join(parts)
+
+    if not query:
+        return ""
+
+    return f"https://maps.google.com/maps?q={quote_plus(query)}&output=embed"
+
+
 def build_directions_map_block(content_flat, ui, villa_name="", property_address="", active_language="English"):
     maps_url = build_property_maps_url(
         content_flat.get("google_maps_link"),
         villa_name,
         property_address
     )
+    embed_url = build_maps_embed_url(
+        content_flat.get("google_maps_link"),
+        villa_name,
+        property_address
+    )
 
-    address = safe_text(property_address)
-
-    if not maps_url and not address:
+    if not maps_url and not embed_url:
         return ""
 
-    maps_html = ""
-    if maps_url:
-        maps_html = f'''
-            <a href="{escape(maps_url)}" target="_blank" rel="noopener noreferrer">
-                <span class="map-open-btn">
-                    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 18s-7-5-7-10a7 7 0 0 1 14 0c0 5-7 10-7 10Z"></path><circle cx="10" cy="8" r="2.5" fill="currentColor" stroke="none"></circle></svg>
-                    {escape(ui["open_maps"])}
-                </span>
-            </a>
-        '''
-
-    address_html = ""
-    if address:
-        address_title = translated_label("Address", active_language)
-
-        address_html = f'''
-            <div class="private-card">
-                <div class="private-card-title">{escape(address_title)}</div>
-                <div class="private-card-text">{html_multiline(address)}</div>
+    iframe_html = ""
+    if embed_url:
+        iframe_html = f'''
+            <div class="info-map-iframe">
+                <iframe
+                    src="{escape(embed_url)}"
+                    width="100%"
+                    height="200"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Property location map"
+                ></iframe>
             </div>
         '''
 
-    return f"{maps_html}{address_html}"
+    btn_html = ""
+    if maps_url:
+        btn_html = f'''
+            <div class="map-btn-wrap">
+                <a href="{escape(maps_url)}" target="_blank" rel="noopener noreferrer">
+                    <span class="map-open-btn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.5-8-11a8 8 0 0 1 16 0c0 5.5-8 11-8 11Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        {escape(ui["open_maps"])}
+                    </span>
+                </a>
+            </div>
+        '''
+
+    return f"{iframe_html}{btn_html}"
 
 
 def build_pet_friendly_text(content_flat, ui):
