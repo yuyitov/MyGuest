@@ -55,6 +55,13 @@
 
         body {
             min-height: 100vh;
+            background:
+                linear-gradient(160deg,
+                    color-mix(in srgb, var(--primary) 18%, var(--bg)) 0%,
+                    color-mix(in srgb, var(--primary) 6%, var(--bg)) 35%,
+                    var(--bg) 65%,
+                    color-mix(in srgb, var(--accent) 10%, var(--bg)) 100%
+                ) fixed;
         }
 
         a {
@@ -67,7 +74,7 @@
             min-height: 100vh;
             margin: 0 auto;
             padding: 18px 18px 36px;
-            background: var(--bg);
+            background: transparent;
         }
 
         .language-bar {
@@ -481,9 +488,12 @@
         .menu-screen-approved {
             min-height: var(--mg-screen-height);
             background:
-                radial-gradient(circle at 85% 6%, rgba(216, 206, 186, 0.36), transparent 34%),
-                linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,250,244,0.92));
-            border: 1px solid rgba(138, 112, 74, 0.14);
+                radial-gradient(circle at 85% 6%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 34%),
+                linear-gradient(180deg,
+                    color-mix(in srgb, var(--mg-card) 88%, var(--primary) 12%) 0%,
+                    color-mix(in srgb, var(--mg-card) 96%, transparent) 100%
+                );
+            border: 1px solid var(--mg-card-border);
             border-radius: 34px;
             box-shadow: var(--mg-shadow);
             padding: 18px 16px 22px;
@@ -1902,9 +1912,6 @@
             </div>
         </section>
 
-        <p class="footer-note">
-    Algunos detalles de la estancia están protegidos y solo aparecen con un enlace válido de huésped.
-</p>
     </div>
 
     <script>
