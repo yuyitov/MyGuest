@@ -172,6 +172,11 @@ def safe_text(value):
     return "" if text.lower() in EMPTY_TEXT_VALUES else text
 
 
+def _clean_seps(text):
+    import re as _re
+    return _re.sub(r'\s*[�·•]\s*', '\n', text).strip()
+
+
 def normalize_text_block(value):
     if value is None:
         return ""
@@ -180,7 +185,9 @@ def normalize_text_block(value):
     if isinstance(value, dict):
         return "\n".join(safe_text(i) for i in value.values() if safe_text(i)).strip()
     text = str(value).strip()
-    return "" if text.lower() in EMPTY_TEXT_VALUES else text
+    if not text or text.lower() in EMPTY_TEXT_VALUES:
+        return ""
+    return _clean_seps(text)
 
 
 def has_value(v):

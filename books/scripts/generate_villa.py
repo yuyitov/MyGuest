@@ -403,6 +403,12 @@ def html_multiline(value):
     text = normalize_text_block(value)
     if not text:
         return ""
+    # Normalize inline bullet/middot separators to line breaks before escaping
+    import re as _re
+    text = _re.sub(r'\s*[�·•]\s*', '\n', text)
+    text = text.strip()
+    if not text:
+        return ""
     return escape(text).replace("\n", "<br>")
 
 
@@ -932,9 +938,12 @@ def ensure_link_or_search(url, name, property_address=""):
     clean_url = safe_text(url)
     if clean_url:
         if clean_url.startswith(("http://", "https://", "mailto:", "tel:")):
-            return clean_url
-        if "." in clean_url and " " not in clean_url:
-            return "https://" + clean_url
+            if not is_generic_maps_link(clean_url):
+                return clean_url
+        elif "." in clean_url and " " not in clean_url:
+            candidate = "https://" + clean_url
+            if not is_generic_maps_link(candidate):
+                return candidate
     return google_maps_search_url(name, property_address)
 
 def is_generic_maps_link(url):
@@ -1454,7 +1463,7 @@ def render_html_for_language(payload, active_language, output_filename):
     )
 
     styles = {
-        "Coastal": {"primary": "#285260", "accent": "#AB9072", "bg": "#EDE8E0", "text": "#285260"},
+        "Coastal": {"primary": "#285260", "accent": "#AB9072", "bg": "#F1EBE3", "text": "#285260"},
         "Minimalist": {"primary": "#8B6F47", "accent": "#D9CEBA", "bg": "#F9F6F0", "text": "#3A2A1C"},
         "Classic": {"primary": "#000000", "accent": "#A0A0A0", "bg": "#FFFFFF", "text": "#1A1A1A"},
         "Sunset": {"primary": "#E76F51", "accent": "#E9C46A", "bg": "#FFF5F2", "text": "#264653"},
