@@ -334,9 +334,9 @@ async function handleTallyWebhook(request, env, ctx) {
   // Si el cliente subió materiales (PDF, Word, fotos, capturas), el flujo
   // se pausa aquí. No se genera el book hasta que Vero revise y extraiga
   // la información manualmente. Estado: needs_manual_extraction.
-  const existingBookFile = cleanValue(getAnswer(normalized.answers, 'existing_book_file')) || null;
-  const existingBookPhotos = cleanValue(getAnswer(normalized.answers, 'existing_book_photos')) || null;
-  const hasMaterials = !!(existingBookFile || existingBookPhotos);
+  const hasMaterials =
+    hasUploadedMaterial(getAnswer(normalized.answers, 'existing_book_file')) ||
+    hasUploadedMaterial(getAnswer(normalized.answers, 'existing_book_photos'));
 
   if (hasMaterials) {
     // Guardar registro de intake para revisión manual
@@ -1085,6 +1085,33 @@ function isEmpty(value) {
   if (value === undefined || value === null) return true;
   if (typeof value === 'string' && value.trim() === '') return true;
   if (Array.isArray(value) && value.length === 0) return true;
+  return false;
+}
+
+function hasUploadedMaterial(value) {
+  if (value === undefined || value === null) return false;
+
+  if (typeof value === 'string') {
+    const s = value.trim().toLowerCase();
+    if (s === '' || s === 'null' || s === 'undefined' ||
+        s === '[]' || s === '{}' || s === 'none') return false;
+    return s.length > 0;
+  }
+
+  if (Array.isArray(value)) {
+    return value.some(item =>
+      item !== null && item !== undefined && item !== '' && (
+        typeof item === 'object'
+          ? !!(item.url || item.name || item.id)
+          : String(item).trim().length > 0
+      )
+    );
+  }
+
+  if (typeof value === 'object') {
+    return !!(value.url || value.name || value.id);
+  }
+
   return false;
 }
 
