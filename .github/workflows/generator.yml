@@ -121,23 +121,38 @@ jobs:
           python - <<'PY'
           import os
           import sys
+          import re
 
-          forbidden_terms = [
+          # These internal identifiers must NEVER appear in public HTML in any context.
+          always_forbidden = [
               "guest_access_pin",
+              "access_pin",
               "private_record_key",
               "priv-",
-              "wifi_password",
-              "wifi_ssid",
               "door_code",
               "keypad_code",
               "lockbox_code",
-              "host_phone",
-              "house_access_private",
               "passcode",
-              "pin",
           ]
 
-          # Official demo slugs with demo_mode are permitted to contain
+          # These terms appear as JS property names in the Worker injection mechanism
+          # (e.g. d.wifi_password, d.wifi_ssid). They are safe as code identifiers.
+          # Only flag them when they appear as actual key=value data with a real value,
+          # which would mean private data is hardcoded in public HTML.
+          # Matches: "wifi_password": "value"  |  wifi_ssid = "value"
+          # Does NOT match: d.wifi_password  |  .wifi_ssid  |  func(d.host_phone)
+          _injection_terms = [
+              "wifi_password",
+              "wifi_ssid",
+              "host_phone",
+              "house_access_private",
+          ]
+          _value_pat = re.compile(
+              r'(?<![.\w])(' + '|'.join(re.escape(t) for t in _injection_terms) + r')\s*[=:]\s*["\'][^"\']{3,}',
+              re.IGNORECASE
+          )
+
+          # Official demo directories are fully exempted — they contain
           # realistic-looking but entirely fictitious credentials.
           demo_slugs = {
               "ocean-drive-retreat",
@@ -147,11 +162,9 @@ jobs:
           }
 
           public_root = "public"
-
           hits = []
 
           for root, dirs, files in os.walk(public_root):
-              # Detect if this path belongs to a known official demo
               path_parts = root.replace("\\", "/").split("/")
               in_official_demo = any(slug in path_parts for slug in demo_slugs)
 
@@ -167,13 +180,15 @@ jobs:
                   except Exception:
                       continue
 
-                  # Official demo directories are allowed to have realistic-looking fictitious credentials
                   if in_official_demo:
                       continue
 
-                  for term in forbidden_terms:
+                  for term in always_forbidden:
                       if term in content:
                           hits.append((path, term))
+
+                  for m in _value_pat.finditer(content):
+                      hits.append((path, f"{m.group(1)} (hardcoded value)"))
 
           if hits:
               print("Private/sensitive terms found in public outputs:")
