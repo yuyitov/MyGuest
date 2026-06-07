@@ -4,10 +4,10 @@
 
 MyGuest es un sistema para crear welcome books digitales para anfitriones de Airbnb y rentas vacacionales.
 
-El cliente (dueño del Airbnb) recibe 2 entregables completos:
+El cliente (dueño del Airbnb) recibe 2 entregables, ambos accesibles por link seguro con token:
 
-1. Una guía digital móvil completa (link seguro).
-2. Una versión PDF / imprimible completa (Print / Save as PDF desde la guía).
+1. **Guía digital móvil** → `/guest/<slug>?token=` — versión mobile completa con datos privados inyectados por el Worker.
+2. **Guía imprimible** → `/print/<slug>?token=` — versión para imprimir con datos privados inyectados por el Worker. El host abre este link y usa `Print / Save as PDF` desde el navegador para obtener el PDF completo.
 
 La guía y el PDF deben contener toda la información necesaria para la estancia:
 bienvenida, dirección, Google Maps, check-in/check-out, instrucciones de acceso, códigos de entrada, lockbox/keypad, WiFi, reglas, amenidades, recomendaciones locales, contacto, emergencias, instrucciones de salida.
@@ -185,13 +185,15 @@ delivered
 
 ### Regla MVP aprobada
 
-El PDF completo para clientes reales se obtiene con **Print / Save as PDF** desde la guía ya cargada con el link/token seguro en el navegador.
+El PDF completo para clientes reales se obtiene con **Print / Save as PDF** desde la guía imprimible segura cargada con token en el navegador.
 
 Flujo correcto:
-1. El host abre la guía con su link seguro (token válido).
-2. Los datos completos se cargan desde Cloudflare Worker/KV.
+1. El host abre el link de la guía imprimible: `/print/<slug>?token=<token>`.
+2. El Worker valida el token, inyecta WiFi, códigos y acceso en el HTML de `print.html`.
 3. El host usa `Print / Save as PDF` desde el navegador.
 4. El PDF resultante incluye WiFi, códigos, acceso y toda la información completa.
+
+El email de entrega incluye este link como "Open printable guide →".
 
 Ventajas:
 - No se guarda PDF sensible en GitHub.
@@ -225,9 +227,11 @@ El workflow tiene tres protecciones:
 
 Los 4 demos en `public/villas/*/print.pdf` fueron generados con datos ficticios. Son aceptables como demos visibles. No agregar más `print.pdf` a `public/` salvo para demos con datos claramente ficticios.
 
-### Opción futura — PDF servido por Worker
+### Opción futura — PDF generado por Worker
 
-Endpoint: `/guest/<slug>/pdf` — valida token, genera o entrega el PDF completo. Usar `cache-control: no-store`.
+Endpoint: `/print/<slug>/pdf` — valida token, genera el PDF completo en el servidor. Usar `cache-control: no-store`.
+
+Actualmente el endpoint `/print/<slug>?token=` sirve el HTML con datos privados inyectados. El host hace `Print / Save as PDF` manualmente. En el futuro, el Worker podría generar el PDF directamente (requiere headless browser o servicio externo).
 
 ---
 
@@ -496,10 +500,27 @@ python books/scripts/generate_villa.py <property-slug>
 
 ## Pendientes al retomar
 
-1. **Crear 8 prompts de ChatGPT** para generación semanal de imágenes publicitarias de Pinterest
-2. **Workflow semanal**: prompts → AI images → descargar → subir a Pinterest
-3. **NO renderizar los 32 pins finales** hasta aprobación visual de los 8 QA samples
-4. Si se continúa con HTML templates: revisar templates 02-08 con el usuario uno por uno
+### Seguridad / Infraestructura
+1. **Rotar `NOTIFY_SECRET`** — valor temporal `myguest-notify-2026` debe reemplazarse con un secreto seguro en GitHub Actions y Cloudflare Worker.
+2. **Llenar KV namespace ID** en `worker/wrangler.toml` (tiene placeholder `REPLACE_WITH_YOUR_KV_NAMESPACE_ID`).
+3. **Verificar Resend API key** — confirmar que pertenece a la cuenta correcta y que `hello@myguestguide.com` está verificado.
+4. **Configurar webhook en Tally**: Tally → Integrations → Webhooks → `https://myguest-worker.veronica-perezarroyo.workers.dev/tally-webhook`.
+5. **Limpiar KV de prueba**: registros SMOKETEST01-05, SMOKETEST10, FLOWATEST01.
+6. **Limpiar páginas de prueba**: `public/villas/smoke-test-flujo-a-no-entregar-lowatest01/` y slugs villa-maralto-0260606a01/b01/c01 si ya no se necesitan.
+7. **Node.js 20 deprecation** en GitHub Actions — actualizar antes de septiembre 2026.
+8. **Desplegar worker.js via Wrangler** una vez que la autenticación esté configurada (actualmente se despliega manualmente desde el dashboard de Cloudflare).
+
+### Diseño (diferido)
+9. Diseño visual de la guía móvil (`master.html`)
+10. Diseño visual de la guía imprimible (`print_letter.html`)
+
+### Pinterest / Marketing
+11. **Crear 8 prompts de ChatGPT** para generación semanal de imágenes publicitarias de Pinterest
+12. **Workflow semanal**: prompts → AI images → descargar → subir a Pinterest
+13. **NO renderizar los 32 pins finales** hasta aprobación visual de los 8 QA samples
+14. Si se continúa con HTML templates: revisar templates 02-08 con el usuario uno por uno
+
+Ver detalle completo en `docs/mvp-delivery-flow.md`.
 
 ---
 
