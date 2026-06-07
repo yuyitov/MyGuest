@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -65,7 +65,12 @@
 
     .nav { max-width: 1180px; margin: 0 auto; padding: 6px 22px 0; display: flex; justify-content: space-between; align-items: center; }
     .brand { display: flex; align-items: center; opacity: 0; animation: fadeUp 780ms var(--ease-out) forwards; }
-    .nav-pill { border: 1px solid var(--line); background: rgba(255,255,255,.62); backdrop-filter: blur(18px); padding: 9px 14px; border-radius: 999px; font-size: 14px; color: var(--muted); opacity: 0; animation: fadeUp 780ms var(--ease-out) 90ms forwards; }
+    .nav-right { display: flex; align-items: center; gap: 10px; opacity: 0; animation: fadeUp 780ms var(--ease-out) 90ms forwards; }
+    .nav-pill { border: 1px solid var(--line); background: rgba(255,255,255,.62); backdrop-filter: blur(18px); padding: 9px 14px; border-radius: 999px; font-size: 14px; color: var(--muted); }
+    .lang-switch { display: flex; gap: 4px; align-items: center; }
+    .lang-btn { border: 1px solid var(--line); background: rgba(255,255,255,.62); backdrop-filter: blur(18px); padding: 7px 11px; border-radius: 999px; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; transition: background 180ms ease, color 180ms ease, border-color 180ms ease; }
+    .lang-btn.active { background: var(--terracotta); color: white; border-color: var(--terracotta); }
+    .lang-btn:hover:not(.active) { background: white; color: var(--ink); }
 
     .hero { max-width: 1180px; margin: 0 auto; padding: 10px 22px 70px; display: grid; grid-template-columns: 1.02fr .98fr; gap: 54px; align-items: center; }
     .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.72); border: 1px solid var(--line); border-radius: 999px; padding: 9px 14px; font-size: 14px; color: var(--ink); box-shadow: 0 10px 30px rgba(26,116,110,.08); }
@@ -130,8 +135,8 @@
     .demo-style-tag { display: inline-flex; width: fit-content; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px; }
     .demo-card h3 { font-size: 18px; margin: 0 0 6px; letter-spacing: -0.03em; color: var(--ink); }
     .demo-card p { color: var(--muted); font-size: 14px; margin: 0 0 16px; line-height: 1.45; flex: 1; }
-    .demo-link { display: inline-flex; align-items: center; gap: 5px; color: var(--terracotta); font-weight: 800; font-size: 14px; text-decoration: none; transition: gap 220ms var(--ease-out); }
-    .demo-link:hover { gap: 10px; }
+    .demo-link { display: inline-flex; align-items: center; gap: 6px; background: color-mix(in srgb, var(--terracotta) 10%, transparent); border: 1.5px solid color-mix(in srgb, var(--terracotta) 30%, transparent); color: var(--terracotta); font-weight: 800; font-size: 15px; text-decoration: none; padding: 10px 16px; border-radius: 12px; transition: gap 220ms var(--ease-out), background 200ms ease, border-color 200ms ease; }
+    .demo-link:hover { gap: 11px; background: color-mix(in srgb, var(--terracotta) 16%, transparent); border-color: color-mix(in srgb, var(--terracotta) 50%, transparent); }
 
     .process-showcase { position: relative; background: linear-gradient(135deg, rgba(255,255,255,.78), rgba(247,243,238,.44)), radial-gradient(circle at 12% 16%, rgba(89,195,195,.14), transparent 28%), radial-gradient(circle at 82% 76%, rgba(242,144,127,.14), transparent 30%); border: 1px solid var(--line); border-radius: 42px; padding: 24px; box-shadow: 0 26px 70px rgba(26,116,110,.1); overflow: hidden; }
     .process-showcase::before { content: ""; position: absolute; inset: 22px 12% auto auto; width: 220px; height: 220px; background: linear-gradient(135deg, rgba(89,195,195,.24), rgba(242,144,127,.18)); border-radius: 999px; filter: blur(14px); opacity: .7; pointer-events: none; }
@@ -179,6 +184,8 @@
     @media (max-width: 560px) {
       .nav { align-items: center; gap: 8px; }
       .nav-pill { font-size: 11px; padding: 7px 10px; }
+      .nav-right { gap: 6px; }
+      .lang-btn { padding: 6px 8px; font-size: 12px; }
       .brand img { height: 180px !important; margin-top: -35px !important; margin-bottom: -35px !important; margin-left: -45px !important; }
       .hero { padding-top: 10px; }
       .hero-copy { font-size: 18px; }
@@ -213,21 +220,28 @@
 <body>
   <header class="nav">
     <div class="brand"><img src="landing/logo_principal-Photoroom.png" alt="my guest" style="height:500px;display:block;mix-blend-mode:multiply;margin-top:-110px;margin-bottom:-110px;margin-left:-155px;" /></div>
-    <div class="nav-pill">Mobile guide + PDF · EN / ES / FR</div>
+    <div class="nav-right">
+      <div class="nav-pill" data-i18n="nav_pill">Mobile guide + PDF · EN / ES / FR</div>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="es">ES</button>
+        <button class="lang-btn" data-lang="fr">FR</button>
+      </div>
+    </div>
   </header>
 
   <main>
     <section class="hero">
       <div>
-        <div class="badge hero-animate hero-delay-1">✨ For Airbnb hosts, villas and vacation rentals</div>
-        <h1 class="hero-animate hero-delay-2">Your Airbnb guest guide, <span class="highlight">done for you.</span></h1>
-        <p class="hero-copy hero-animate hero-delay-3">Start from scratch with our simple form, or send your existing PDF, Canva file, photos or screenshots.</p>
+        <div class="badge hero-animate hero-delay-1" data-i18n="badge">✨ For Airbnb hosts, villas and vacation rentals</div>
+        <h1 class="hero-animate hero-delay-2" data-i18n-html="h1">Your Airbnb guest guide, <span class="highlight">done for you.</span></h1>
+        <p class="hero-copy hero-animate hero-delay-3" data-i18n="hero_copy">Start from scratch with our simple form, or send your existing PDF, Canva file, photos or screenshots.</p>
         <div class="hero-actions hero-animate hero-delay-4">
-          <a class="cta" href="https://buy.stripe.com/00wcN5fvo5hQfcuaL8ffy00">Get My Guest Guide for $29 →</a>
-          <a class="cta ghost" href="#demos">View demos</a>
+          <a class="cta" href="https://buy.stripe.com/00wcN5fvo5hQfcuaL8ffy00" data-i18n="cta_main">Get My Guest Guide for $29 USD →</a>
+          <a class="cta ghost" href="#demos" data-i18n="cta_demos">View demos</a>
         </div>
         <div class="proof-row hero-animate hero-delay-5">
-          <div class="proof">Early Access Launch Price · Mobile guide + PDF included.</div>
+          <div class="proof" data-i18n="proof">Early Access Launch Price · Mobile guide + PDF included.</div>
         </div>
       </div>
 
@@ -246,22 +260,25 @@
           </div>
         </div>
         <div class="style-pills" aria-label="Available book styles">
-          <div class="style-picker-label">Choose your style</div>
+          <div class="style-picker-label" data-i18n="style_label">Choose your style</div>
           <div class="style-pill active" data-style-pill="0">Coastal</div><div class="style-pill" data-style-pill="1">Minimalist</div><div class="style-pill" data-style-pill="2">Sunset</div><div class="style-pill" data-style-pill="3">Classic</div>
         </div>
       </div>
     </section>
 
     <section class="section reveal" id="demos">
-      <div class="section-head"><h2>Show guests something better than a PDF.</h2><p>Four real welcome books — live and ready to explore.</p></div>
+      <div class="section-head">
+        <h2 data-i18n="demos_h2">Show guests something better than a PDF.</h2>
+        <p data-i18n="demos_p">Choose from 4 different styles — all designed so information looks organized, elegant and easy to browse.</p>
+      </div>
       <div class="demo-grid">
         <article class="demo-card">
           <div class="demo-photo" style="background:linear-gradient(rgba(30,100,180,0.38),rgba(30,100,180,0.38)),url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80') center 30%/160%;"></div>
           <div class="demo-card-body">
             <span class="demo-style-tag" style="background:#d4f0ed;color:#1A746E;">Coastal</span>
             <h3>Ocean Drive Retreat</h3>
-            <p>Beach villa with arrival info, house rules, local tips and printable PDF.</p>
-            <a class="demo-link" href="villas/ocean-drive-retreat/index.html">View demo →</a>
+            <p data-i18n="demo1_p">Beach villa with arrival info, house rules, local tips and printable PDF.</p>
+            <a class="demo-link" href="villas/ocean-drive-retreat/index.html" data-i18n="demo_link">View demo →</a>
           </div>
         </article>
         <article class="demo-card">
@@ -269,8 +286,8 @@
           <div class="demo-card-body">
             <span class="demo-style-tag" style="background:#f0ede8;color:#5a4a38;">Minimalist</span>
             <h3>The SoHo Loft</h3>
-            <p>Urban apartment with a clean, minimal layout for modern city stays.</p>
-            <a class="demo-link" href="villas/the-soho-loft/index.html">View demo →</a>
+            <p data-i18n="demo2_p">Urban apartment with a clean, minimal layout for modern city stays.</p>
+            <a class="demo-link" href="villas/the-soho-loft/index.html" data-i18n="demo_link">View demo →</a>
           </div>
         </article>
         <article class="demo-card">
@@ -278,8 +295,8 @@
           <div class="demo-card-body">
             <span class="demo-style-tag" style="background:#fde4ce;color:#c95f43;">Sunset</span>
             <h3>Casa Selva Tulum</h3>
-            <p>Tropical villa with warm tones and a trilingual guide for global guests.</p>
-            <a class="demo-link" href="villas/casa-selva-tulum/index.html">View demo →</a>
+            <p data-i18n="demo3_p">Tropical villa with warm tones and a trilingual guide for global guests.</p>
+            <a class="demo-link" href="villas/casa-selva-tulum/index.html" data-i18n="demo_link">View demo →</a>
           </div>
         </article>
         <article class="demo-card">
@@ -287,8 +304,8 @@
           <div class="demo-card-body">
             <span class="demo-style-tag" style="background:#efebe4;color:#5a4a38;">Classic</span>
             <h3>Le Marais Flat</h3>
-            <p>Parisian flat with an elegant classic style for international guests.</p>
-            <a class="demo-link" href="villas/le-marais-flat/index.html">View demo →</a>
+            <p data-i18n="demo4_p">Parisian flat with an elegant classic style for international guests.</p>
+            <a class="demo-link" href="villas/le-marais-flat/index.html" data-i18n="demo_link">View demo →</a>
           </div>
         </article>
       </div>
@@ -297,8 +314,8 @@
     <section class="section reveal">
       <div class="process-section-head" style="display:flex;align-items:center;justify-content:flex-start;gap:32px;margin-bottom:30px;">
         <div class="section-head" style="margin-bottom:0;">
-          <h2>Ready in 4 simple steps.</h2>
-          <p>From payment to happy guests — we handle everything in between.</p>
+          <h2 data-i18n="process_h2">Ready in 4 simple steps.</h2>
+          <p data-i18n="process_p">From payment to happy guests — we handle everything in between.</p>
         </div>
         <img src="landing/mascota-photoroom.png" alt="" aria-hidden="true" style="width:140px;flex-shrink:0;mix-blend-mode:multiply;" />
       </div>
@@ -307,45 +324,297 @@
           <article class="step-card">
             <div class="step-bg-num">1</div>
             <div class="step-icon">💳</div>
-            <h3>Pay once, no surprises.</h3>
-            <p>One flat fee of $29. No subscription, no hidden costs, no design skills required.</p>
+            <h3 data-i18n="step1_h3">Pay once, no surprises.</h3>
+            <p data-i18n="step1_p">One flat fee of $29. No subscription, no hidden costs, no design skills required.</p>
           </article>
           <article class="step-card">
             <div class="step-bg-num">2</div>
             <div class="step-icon">📋</div>
-            <h3>Tell us about your place.</h3>
-            <p>Fill our simple form or send your PDF, Canva, photos or welcome notes. We take it from there.</p>
+            <h3 data-i18n="step2_h3">Tell us about your place.</h3>
+            <p data-i18n="step2_p">Fill our simple form or send your PDF, Canva, photos or welcome notes. We take it from there.</p>
           </article>
           <article class="step-card">
             <div class="step-bg-num">3</div>
             <div class="step-icon">✉️</div>
-            <h3>Your guide arrives by email.</h3>
-            <p>A polished mobile guide and printable PDF land in your inbox — in English, Spanish and French.</p>
+            <h3 data-i18n="step3_h3">Your guide arrives by email.</h3>
+            <p data-i18n="step3_p">A polished mobile guide and printable PDF land in your inbox — in English, Spanish and French.</p>
           </article>
           <article class="step-card">
             <div class="step-bg-num">4</div>
             <div class="step-icon">🌴</div>
-            <h3>Relax. Guests are covered.</h3>
-            <p>Your guests enjoy a seamless welcome in their language — and stop messaging you with every question.</p>
+            <h3 data-i18n="step4_h3">Relax. Guests are covered.</h3>
+            <p data-i18n="step4_p">Your guests enjoy a seamless welcome in their language — and stop messaging you with every question.</p>
           </article>
         </div>
-        <div class="process-note"><span>✨ From messy files to a premium guest experience — without lifting a finger.</span></div>
+        <div class="process-note"><span data-i18n="process_note">✨ From messy files to a premium guest experience — without lifting a finger.</span></div>
       </div>
     </section>
 
-    <section class="section reveal"><div class="section-head"><h2>Built for international guests.</h2><p>Every guide is designed for clarity, speed and fewer guest questions.</p></div><div class="features"><div class="feature">✔ Mobile welcome book</div><div class="feature">✔ Printable PDF included</div><div class="feature">✔ English, Spanish and French</div><div class="feature">✔ No design work needed</div><div class="feature">✔ Upload PDF, Canva, photos or notes</div><div class="feature">✔ Great for Airbnb and vacation rentals</div></div></section>
+    <section class="section reveal">
+      <div class="section-head">
+        <h2 data-i18n="features_h2">Built for international guests.</h2>
+        <p data-i18n="features_p">Every guide is designed for clarity, speed and fewer guest questions.</p>
+      </div>
+      <div class="features">
+        <div class="feature" data-i18n="feature1">✔ Mobile welcome book</div>
+        <div class="feature" data-i18n="feature2">✔ Printable PDF included</div>
+        <div class="feature" data-i18n="feature3">✔ English, Spanish and French</div>
+        <div class="feature" data-i18n="feature4">✔ No design work needed</div>
+        <div class="feature" data-i18n="feature5">✔ Upload PDF, Canva, photos or notes</div>
+        <div class="feature" data-i18n="feature6">✔ Great for Airbnb and vacation rentals</div>
+      </div>
+    </section>
 
-    <section class="section reveal"><div class="pricing-wrap"><div class="price-card"><div class="badge" style="background:rgba(255,255,255,0.12);color:white;border-color:rgba(255,255,255,0.18);">Launch price</div><div class="price">$29</div><p>One trilingual mobile welcome book plus one printable PDF.</p><p style="font-size:13px;color:rgba(255,255,255,.58);margin:10px 0 16px;">Early access launch price. This is a manual setup version, not an instant AI import.</p><a class="cta" style="background:white;color:#1A746E;box-shadow:none;" href="https://buy.stripe.com/00wcN5fvo5hQfcuaL8ffy00">Start now — $29</a></div><div class="included"><h2 style="font-size:36px;">Included</h2><ul><li>Mobile guest guide</li><li>Printable PDF version</li><li>EN / ES / FR language selector</li></ul></div></div></section>
+    <section class="section reveal">
+      <div class="pricing-wrap">
+        <div class="price-card">
+          <div class="badge" style="background:rgba(255,255,255,0.12);color:white;border-color:rgba(255,255,255,0.18);" data-i18n="price_badge">Launch price</div>
+          <div class="price">$29 <span style="font-size:28px;font-weight:700;opacity:.8;">USD</span></div>
+          <p data-i18n="price_copy">One trilingual mobile welcome book plus one printable PDF.</p>
+          <p style="font-size:13px;color:rgba(255,255,255,.58);margin:10px 0 16px;" data-i18n="price_note">Early access launch price. This is a manual setup version, not an instant AI import.</p>
+          <a class="cta" style="background:white;color:#1A746E;box-shadow:none;" href="https://buy.stripe.com/00wcN5fvo5hQfcuaL8ffy00" data-i18n="price_cta">Start now — $29</a>
+        </div>
+        <div class="included">
+          <h2 style="font-size:36px;" data-i18n="included_h2">Included</h2>
+          <ul>
+            <li data-i18n="included_1">Mobile guest guide</li>
+            <li data-i18n="included_2">Printable PDF version</li>
+            <li data-i18n="included_3">EN / ES / FR language selector</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-    <section class="section faq reveal"><h2>Questions</h2><div class="faq-item"><strong>Do I need to design anything?</strong><p>No. You can start with our simple form or upload what you already have.</p></div><div class="faq-item"><strong>Can guests choose the language?</strong><p>Yes. Every guide includes English, Spanish and French.</p></div><div class="faq-item"><strong>Do I get a PDF too?</strong><p>Yes. You receive a printable PDF version.</p></div><div class="faq-item"><strong>Is this only for Airbnb?</strong><p>No. It works for villas, cabins, guest houses and vacation rentals.</p></div><div class="faq-item"><strong>Do I need to rewrite everything?</strong><p>No. You can send your existing welcome book, PDF, Word file, Canva export, photos or screenshots, and fill in only what is missing.</p></div><div class="faq-item"><strong>Is this AI automatic?</strong><p>Not yet. During early access, materials are reviewed and set up manually so we can keep the guide accurate and protect private details.</p></div><div class="faq-item"><strong>What information is private?</strong><p>WiFi passwords, access codes and private host contact details are handled through a private guest link, not published on the public page.</p></div></section>
+    <section class="section faq reveal">
+      <h2 data-i18n="faq_h2">Questions</h2>
+      <div class="faq-item"><strong data-i18n="faq1_q">Do I need to design anything?</strong><p data-i18n="faq1_a">No. You can start with our simple form or upload what you already have.</p></div>
+      <div class="faq-item"><strong data-i18n="faq2_q">Can guests choose the language?</strong><p data-i18n="faq2_a">Yes. Every guide includes English, Spanish and French.</p></div>
+      <div class="faq-item"><strong data-i18n="faq3_q">Do I get a PDF too?</strong><p data-i18n="faq3_a">Yes. You receive a printable PDF version.</p></div>
+      <div class="faq-item"><strong data-i18n="faq4_q">Is this only for Airbnb?</strong><p data-i18n="faq4_a">No. It works for villas, cabins, guest houses and vacation rentals.</p></div>
+      <div class="faq-item"><strong data-i18n="faq5_q">Do I need to rewrite everything?</strong><p data-i18n="faq5_a">No. You can send your existing welcome book, PDF, Word file, Canva export, photos or screenshots, and fill in only what is missing.</p></div>
+      <div class="faq-item"><strong data-i18n="faq6_q">Is this AI automatic?</strong><p data-i18n="faq6_a">Not yet. During early access, materials are reviewed and set up manually so we can keep the guide accurate and protect private details.</p></div>
+      <div class="faq-item"><strong data-i18n="faq7_q">What information is private?</strong><p data-i18n="faq7_a">WiFi passwords, access codes and private host contact details are handled through a private guest link, not published on the public page.</p></div>
+    </section>
   </main>
 
   <footer>
     <img src="landing/mascota-photoroom.png" alt="" aria-hidden="true" style="width:100px;margin-bottom:8px;mix-blend-mode:multiply;" />
-    <div>my guest · Trilingual welcome books for vacation rentals</div>
+    <div data-i18n="footer_text">my guest · Trilingual welcome books for vacation rentals</div>
   </footer>
 
   <script>
+    const I18N = {
+      en: {
+        nav_pill: "Mobile guide + PDF · EN / ES / FR",
+        badge: "✨ For Airbnb hosts, villas and vacation rentals",
+        h1: 'Your Airbnb guest guide, <span class="highlight">done for you.</span>',
+        hero_copy: "Start from scratch with our simple form, or send your existing PDF, Canva file, photos or screenshots.",
+        cta_main: "Get My Guest Guide for $29 USD →",
+        cta_demos: "View demos",
+        proof: "Early Access Launch Price · Mobile guide + PDF included.",
+        style_label: "Choose your style",
+        demos_h2: "Show guests something better than a PDF.",
+        demos_p: "Choose from 4 different styles — all designed so information looks organized, elegant and easy to browse.",
+        demo1_p: "Beach villa with arrival info, house rules, local tips and printable PDF.",
+        demo2_p: "Urban apartment with a clean, minimal layout for modern city stays.",
+        demo3_p: "Tropical villa with warm tones and a trilingual guide for global guests.",
+        demo4_p: "Parisian flat with an elegant classic style for international guests.",
+        demo_link: "View demo →",
+        process_h2: "Ready in 4 simple steps.",
+        process_p: "From payment to happy guests — we handle everything in between.",
+        step1_h3: "Pay once, no surprises.",
+        step1_p: "One flat fee of $29 USD. No subscription, no hidden costs, no design skills required.",
+        step2_h3: "Tell us about your place.",
+        step2_p: "Fill our simple form or send your PDF, Canva, photos or welcome notes. We take it from there.",
+        step3_h3: "Your guide arrives by email.",
+        step3_p: "A polished mobile guide and printable PDF land in your inbox — in English, Spanish and French.",
+        step4_h3: "Relax. Guests are covered.",
+        step4_p: "Your guests enjoy a seamless welcome in their language — and stop messaging you with every question.",
+        process_note: "✨ From messy files to a premium guest experience — without lifting a finger.",
+        features_h2: "Built for international guests.",
+        features_p: "Every guide is designed for clarity, speed and fewer guest questions.",
+        feature1: "✔ Mobile welcome book",
+        feature2: "✔ Printable PDF included",
+        feature3: "✔ English, Spanish and French",
+        feature4: "✔ No design work needed",
+        feature5: "✔ Upload PDF, Canva, photos or notes",
+        feature6: "✔ Great for Airbnb and vacation rentals",
+        price_badge: "Launch price",
+        price_copy: "One trilingual mobile welcome book plus one printable PDF.",
+        price_note: "Early access launch price. This is a manual setup version, not an instant AI import.",
+        price_cta: "Start now — $29 USD",
+        included_h2: "Included",
+        included_1: "Mobile guest guide",
+        included_2: "Printable PDF version",
+        included_3: "EN / ES / FR language selector",
+        faq_h2: "Questions",
+        faq1_q: "Do I need to design anything?",
+        faq1_a: "No. You can start with our simple form or upload what you already have.",
+        faq2_q: "Can guests choose the language?",
+        faq2_a: "Yes. Every guide includes English, Spanish and French.",
+        faq3_q: "Do I get a PDF too?",
+        faq3_a: "Yes. You receive a printable PDF version.",
+        faq4_q: "Is this only for Airbnb?",
+        faq4_a: "No. It works for villas, cabins, guest houses and vacation rentals.",
+        faq5_q: "Do I need to rewrite everything?",
+        faq5_a: "No. You can send your existing welcome book, PDF, Word file, Canva export, photos or screenshots, and fill in only what is missing.",
+        faq6_q: "Is this AI automatic?",
+        faq6_a: "Not yet. During early access, materials are reviewed and set up manually so we can keep the guide accurate and protect private details.",
+        faq7_q: "What information is private?",
+        faq7_a: "WiFi passwords, access codes and private host contact details are handled through a private guest link, not published on the public page.",
+        footer_text: "my guest · Trilingual welcome books for vacation rentals"
+      },
+      es: {
+        nav_pill: "Guía móvil + PDF · EN / ES / FR",
+        badge: "✨ Para hosts de Airbnb, villas y rentas vacacionales",
+        h1: 'Tu guía de bienvenida para Airbnb, <span class="highlight">lista para ti.</span>',
+        hero_copy: "Empieza desde cero con nuestro formulario, o envíanos tu PDF, Canva, fotos o notas existentes.",
+        cta_main: "Obtener mi guía por $29 USD →",
+        cta_demos: "Ver demos",
+        proof: "Precio de lanzamiento · Guía móvil + PDF incluidos.",
+        style_label: "Elige tu estilo",
+        demos_h2: "Dale a tus huéspedes algo mejor que un PDF.",
+        demos_p: "Elige entre 4 estilos diferentes — todos diseñados para que la información se vea organizada, elegante y fácil de consultar.",
+        demo1_p: "Villa de playa con info de llegada, reglas, tips locales y PDF imprimible.",
+        demo2_p: "Apartamento urbano con diseño limpio y minimalista para estadías en la ciudad.",
+        demo3_p: "Villa tropical con tonos cálidos y guía trilingüe para huéspedes internacionales.",
+        demo4_p: "Piso parisino con estilo clásico elegante para huéspedes internacionales.",
+        demo_link: "Ver demo →",
+        process_h2: "Listo en 4 pasos simples.",
+        process_p: "Del pago a los huéspedes felices — nosotros nos encargamos de todo.",
+        step1_h3: "Paga una vez, sin sorpresas.",
+        step1_p: "Un pago único de $29 USD. Sin suscripción, sin costos ocultos, sin conocimientos de diseño.",
+        step2_h3: "Cuéntanos sobre tu propiedad.",
+        step2_p: "Llena nuestro formulario o envía tu PDF, Canva, fotos o notas. Nosotros nos encargamos del resto.",
+        step3_h3: "Tu guía llega por email.",
+        step3_p: "Una guía móvil y un PDF imprimible llegan a tu bandeja — en inglés, español y francés.",
+        step4_h3: "Relájate. Tus huéspedes están cubiertos.",
+        step4_p: "Tus huéspedes disfrutan una bienvenida fluida en su idioma — y dejan de preguntarte todo.",
+        process_note: "✨ De archivos desordenados a una experiencia premium — sin esfuerzo.",
+        features_h2: "Diseñado para huéspedes internacionales.",
+        features_p: "Cada guía está diseñada para mayor claridad, rapidez y menos preguntas.",
+        feature1: "✔ Welcome book móvil",
+        feature2: "✔ PDF imprimible incluido",
+        feature3: "✔ Inglés, español y francés",
+        feature4: "✔ Sin trabajo de diseño",
+        feature5: "✔ Sube PDF, Canva, fotos o notas",
+        feature6: "✔ Perfecto para Airbnb y rentas vacacionales",
+        price_badge: "Precio de lanzamiento",
+        price_copy: "Un welcome book móvil trilingüe y un PDF imprimible.",
+        price_note: "Precio de acceso anticipado. Esta es una versión de configuración manual, no una importación AI instantánea.",
+        price_cta: "Comenzar — $29 USD",
+        included_h2: "Incluye",
+        included_1: "Guía móvil para huéspedes",
+        included_2: "Versión PDF imprimible",
+        included_3: "Selector de idioma EN / ES / FR",
+        faq_h2: "Preguntas frecuentes",
+        faq1_q: "¿Necesito diseñar algo?",
+        faq1_a: "No. Puedes empezar con nuestro formulario o subir lo que ya tienes.",
+        faq2_q: "¿Los huéspedes pueden elegir el idioma?",
+        faq2_a: "Sí. Cada guía incluye inglés, español y francés.",
+        faq3_q: "¿También recibo un PDF?",
+        faq3_a: "Sí. Recibes una versión PDF imprimible.",
+        faq4_q: "¿Es solo para Airbnb?",
+        faq4_a: "No. Funciona para villas, cabañas, casas de huéspedes y rentas vacacionales.",
+        faq5_q: "¿Necesito reescribir todo?",
+        faq5_a: "No. Puedes enviar tu welcome book actual, PDF, Word, exportación de Canva, fotos o capturas, y solo completar lo que falta.",
+        faq6_q: "¿Es automático con IA?",
+        faq6_a: "Todavía no. Durante el acceso anticipado, los materiales se revisan y configuran manualmente para mantener la guía precisa y proteger los datos privados.",
+        faq7_q: "¿Qué información es privada?",
+        faq7_a: "Las contraseñas de WiFi, códigos de acceso y datos privados del anfitrión se gestionan a través de un link privado para el huésped, no se publican en la página pública.",
+        footer_text: "my guest · Welcome books trilingües para rentas vacacionales"
+      },
+      fr: {
+        nav_pill: "Guide mobile + PDF · EN / ES / FR",
+        badge: "✨ Pour les hôtes Airbnb, villas et locations saisonnières",
+        h1: 'Votre guide de bienvenue Airbnb, <span class="highlight">prêt pour vous.</span>',
+        hero_copy: "Commencez avec notre formulaire simple ou envoyez votre PDF, Canva, photos ou notes existants.",
+        cta_main: "Obtenir mon guide pour $29 USD →",
+        cta_demos: "Voir les démos",
+        proof: "Prix de lancement · Guide mobile + PDF inclus.",
+        style_label: "Choisissez votre style",
+        demos_h2: "Offrez à vos hôtes mieux qu'un PDF.",
+        demos_p: "Choisissez parmi 4 styles différents — tous conçus pour que l'information soit organisée, élégante et facile à consulter.",
+        demo1_p: "Villa de plage avec arrivée, règles de la maison, bons plans locaux et PDF imprimable.",
+        demo2_p: "Appartement urbain avec une mise en page épurée et minimaliste pour les séjours en ville.",
+        demo3_p: "Villa tropicale aux tons chauds avec un guide trilingue pour les hôtes internationaux.",
+        demo4_p: "Appartement parisien avec un style classique élégant pour les hôtes internationaux.",
+        demo_link: "Voir la démo →",
+        process_h2: "Prêt en 4 étapes simples.",
+        process_p: "Du paiement aux hôtes satisfaits — nous gérons tout entre les deux.",
+        step1_h3: "Payez une fois, sans surprise.",
+        step1_p: "Un forfait de $29 USD. Pas d'abonnement, pas de frais cachés, aucune compétence en design requise.",
+        step2_h3: "Parlez-nous de votre propriété.",
+        step2_p: "Remplissez notre formulaire simple ou envoyez votre PDF, Canva, photos ou notes. Nous nous occupons du reste.",
+        step3_h3: "Votre guide arrive par e-mail.",
+        step3_p: "Un guide mobile soigné et un PDF imprimable arrivent dans votre boîte — en anglais, espagnol et français.",
+        step4_h3: "Détendez-vous. Vos hôtes sont pris en charge.",
+        step4_p: "Vos hôtes profitent d'un accueil fluide dans leur langue — et arrêtent de vous poser toutes leurs questions.",
+        process_note: "✨ De fichiers désordonnés à une expérience premium — sans effort.",
+        features_h2: "Conçu pour les hôtes internationaux.",
+        features_p: "Chaque guide est conçu pour la clarté, la rapidité et moins de questions.",
+        feature1: "✔ Guide mobile de bienvenue",
+        feature2: "✔ PDF imprimable inclus",
+        feature3: "✔ Anglais, espagnol et français",
+        feature4: "✔ Aucun travail de design nécessaire",
+        feature5: "✔ Importez PDF, Canva, photos ou notes",
+        feature6: "✔ Idéal pour Airbnb et locations saisonnières",
+        price_badge: "Prix de lancement",
+        price_copy: "Un guide mobile trilingue de bienvenue plus un PDF imprimable.",
+        price_note: "Prix d'accès anticipé. Il s'agit d'une version de configuration manuelle, pas d'une importation IA instantanée.",
+        price_cta: "Commencer — $29 USD",
+        included_h2: "Inclus",
+        included_1: "Guide mobile pour hôtes",
+        included_2: "Version PDF imprimable",
+        included_3: "Sélecteur de langue EN / ES / FR",
+        faq_h2: "Questions",
+        faq1_q: "Ai-je besoin de créer des designs ?",
+        faq1_a: "Non. Vous pouvez commencer avec notre formulaire simple ou télécharger ce que vous avez déjà.",
+        faq2_q: "Les hôtes peuvent-ils choisir la langue ?",
+        faq2_a: "Oui. Chaque guide inclut l'anglais, l'espagnol et le français.",
+        faq3_q: "Est-ce que je reçois aussi un PDF ?",
+        faq3_a: "Oui. Vous recevez une version PDF imprimable.",
+        faq4_q: "Est-ce uniquement pour Airbnb ?",
+        faq4_a: "Non. Cela fonctionne pour les villas, chalets, maisons d'hôtes et locations saisonnières.",
+        faq5_q: "Dois-je tout réécrire ?",
+        faq5_a: "Non. Vous pouvez envoyer votre welcome book existant, PDF, Word, export Canva, photos ou captures d'écran, et ne remplir que ce qui manque.",
+        faq6_q: "Est-ce automatique avec l'IA ?",
+        faq6_a: "Pas encore. Pendant l'accès anticipé, les matériaux sont examinés et configurés manuellement pour maintenir l'exactitude du guide et protéger les données privées.",
+        faq7_q: "Quelles informations sont privées ?",
+        faq7_a: "Les mots de passe WiFi, les codes d'accès et les coordonnées privées de l'hôte sont gérés via un lien privé pour l'hôte, non publiés sur la page publique.",
+        footer_text: "my guest · Guides de bienvenue trilingues pour locations saisonnières"
+      }
+    };
+
+    function setLang(lang) {
+      if (!I18N[lang]) return;
+      document.documentElement.lang = lang;
+      const t = I18N[lang];
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.dataset.i18n;
+        if (t[key] !== undefined) el.textContent = t[key];
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach((el) => {
+        const key = el.dataset.i18nHtml;
+        if (t[key] !== undefined) el.innerHTML = t[key];
+      });
+      document.querySelectorAll('.lang-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      try { localStorage.setItem('mg-lang', lang); } catch(e) {}
+    }
+
+    document.querySelectorAll('.lang-btn').forEach((btn) => {
+      btn.addEventListener('click', () => setLang(btn.dataset.lang));
+    });
+
+    // Restore saved language preference
+    try {
+      const saved = localStorage.getItem('mg-lang');
+      if (saved && saved !== 'en') setLang(saved);
+    } catch(e) {}
+
+    // Reveal on scroll
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -356,6 +625,7 @@
     }, { threshold: 0.16 });
     document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
+    // Style theme switcher
     const styleThemes = [
       { primary: '#2f8f9d', secondary: '#f2b880', soft: '#dff3f1', image: 'landing/Mockups/Coastal_Style_Beach_Cel_Mockup.png', alt: 'Ocean Drive Retreat guest guide — Coastal style' },
       { primary: '#7c5c3a', secondary: '#c4a07c', soft: '#f0e6d8', image: 'landing/Mockups/Minnimalist_Beach_Cel_Mockup.png', alt: 'The SoHo Loft guest guide — Minimalist style' },
