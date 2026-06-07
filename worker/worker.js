@@ -37,7 +37,7 @@ const VALID_LANGUAGES = ['English', 'Español', 'Français'];
 const VALID_PROPERTY_ENVIRONMENTS = ['Beach', 'City', 'Cozy'];
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const pathname = url.pathname;
 
@@ -53,7 +53,10 @@ export default {
           has_github_repo: !!env.GITHUB_REPO,
           has_github_token: !!env.GITHUB_TOKEN,
           has_tally_signing_secret: !!env.TALLY_SIGNING_SECRET,
-          has_kv: !!env.MYGUEST_KV
+          has_kv: !!env.MYGUEST_KV,
+          has_resend_api_key: !!env.RESEND_API_KEY,
+          has_alert_email: !!env.ALERT_EMAIL,
+          has_from_email: !!env.FROM_EMAIL
         });
       }
 
@@ -61,8 +64,12 @@ export default {
         return await handleGuestPrivateAccess(request, env);
       }
 
+      if (request.method === 'GET' && pathname.startsWith('/print/')) {
+        return await handlePrintAccess(request, env);
+      }
+
       if (request.method === 'POST' && (pathname === '/' || pathname === '/tally-webhook')) {
-        return await handleTallyWebhook(request, env);
+        return await handleTallyWebhook(request, env, ctx);
       }
 
       // ─── NUEVO 16.1-B ────────────────────────────────────────────────────
@@ -79,7 +86,7 @@ export default {
     } catch (error) {
       console.error('Worker error:', safeError(error));
 
-      if (pathname.startsWith('/guest/')) {
+      if (pathname.startsWith('/guest/') || pathname.startsWith('/print/')) {
         return privateErrorHtml('Private access is temporarily unavailable.', 500);
       }
 
@@ -95,7 +102,7 @@ export default {
   }
 };
 
-async function handleTallyWebhook(request, env) {
+async function handleTallyWebhook(request, env, ctx) {
   assertEnv(env);
 
   const rawPayload = await request.json().catch(() => null);
@@ -105,6 +112,12 @@ async function handleTallyWebhook(request, env) {
   }
 
   const normalized = normalizeTallyPayload(rawPayload);
+
+  // Formulario interno de revisión manual — flujo distinto al intake normal
+  const flowType = cleanValue(getAnswer(normalized.answers, 'flow_type')) || '';
+  if (flowType === 'manual_extraction_review') {
+    return await handleManualExtractionReview(request, normalized, env);
+  }
 
   if (!normalized.submission_id) {
     return jsonResponse({
@@ -288,7 +301,8 @@ async function handleTallyWebhook(request, env) {
         existing_book_photos: existingBookPhotos,
         has_materials: true,
         status: 'needs_manual_extraction',
-        created_at: now
+        created_at: now,
+        original_answers: normalized.answers
       }));
     } catch (err) {
       console.error('intake record save failed (non-fatal):', safeError(err));
@@ -330,16 +344,28 @@ async function handleTallyWebhook(request, env) {
       console.error('delivery record save failed (non-fatal):', safeError(err));
     }
 
-    // Notificar a Vero por email (no-fatal — no debe bloquear la respuesta)
+    // Notificar a Vero por email — ctx.waitUntil garantiza que el fetch a Resend
+    // se completa aunque el Worker ya haya devuelto la respuesta HTTP.
     if (env.ALERT_EMAIL && env.RESEND_API_KEY) {
       const propertyName = cleanValue(getAnswer(normalized.answers, 'property_name')) || slug;
       const clientName   = cleanValue(getAnswer(normalized.answers, 'customer_name')) || '';
-      sendEmail({
-        env,
-        to:      env.ALERT_EMAIL,
-        subject: `[MyGuest] Revisión manual pendiente: ${propertyName}`,
-        html:    buildAlertEmail({ propertyName, clientName, customerEmail, slug, submissionId: normalized.submission_id, now })
-      }).catch(err => console.error('alert email failed (non-fatal):', safeError(err)));
+      const emailPromise = (async () => {
+        console.log('alert email: attempting send to', env.ALERT_EMAIL);
+        try {
+          const result = await sendEmail({
+            env,
+            to:      env.ALERT_EMAIL,
+            subject: `[MyGuest] Revisión manual pendiente: ${propertyName}`,
+            html:    buildAlertEmail({ propertyName, clientName, customerEmail, slug, submissionId: normalized.submission_id, now })
+          });
+          console.log('alert email sent', result?.id || '');
+        } catch (err) {
+          console.error('alert email failed:', safeError(err));
+        }
+      })();
+      if (ctx?.waitUntil) {
+        ctx.waitUntil(emailPromise);
+      }
     }
 
     // Responder sin despachar a GitHub — Vero debe revisar primero
@@ -496,6 +522,81 @@ async function handleGuestPrivateAccess(request, env) {
       'referrer-policy': 'no-referrer'
     }
   });
+}
+
+async function handlePrintAccess(request, env) {
+  if (!env.MYGUEST_KV) {
+    return privateErrorHtml('Private access is not configured.', 500);
+  }
+
+  const url = new URL(request.url);
+  const token = url.searchParams.get('token') || '';
+
+  const match = url.pathname.match(/^\/print\/([^/]+)$/);
+  const slug = match ? decodeURIComponent(match[1]) : null;
+
+  if (!slug || !token) {
+    return privateErrorHtml('Missing or invalid print access link.', 401);
+  }
+
+  const record = await env.MYGUEST_KV.get(`priv-${slug}`, { type: 'json' });
+
+  if (!record) {
+    return privateErrorHtml('Print access record was not found.', 404);
+  }
+
+  const expectedToken = record?.guest_access?.guest_access_token;
+  if (!expectedToken || token !== expectedToken) {
+    return privateErrorHtml('This print access link is invalid or expired.', 403);
+  }
+
+  const base = cleanValue(env.PUBLIC_BOOK_BASE_URL) || 'https://yuyitov.github.io/MyGuest';
+  const printUrl = `${base.replace(/\/+$/, '')}/villas/${encodeURIComponent(slug)}/print.html`;
+
+  const printResponse = await fetch(printUrl, { cf: { cacheTtl: 60, cacheEverything: false } });
+  if (!printResponse.ok) {
+    return privateErrorHtml('The printable guide is not available yet.', 404);
+  }
+
+  const printHtml = await printResponse.text();
+  const injected = injectPrivateDetailsIntoPrintHtml({ html: printHtml, secrets: record.secrets || {} });
+
+  return new Response(injected, {
+    status: 200,
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'cache-control': 'no-store, no-cache, must-revalidate, private',
+      'pragma': 'no-cache',
+      'x-robots-tag': 'noindex, nofollow, noarchive',
+      'x-content-type-options': 'nosniff',
+      'referrer-policy': 'no-referrer'
+    }
+  });
+}
+
+function injectPrivateDetailsIntoPrintHtml({ html, secrets }) {
+  let output = String(html || '');
+  const s = secrets || {};
+
+  const rows = [];
+  if (s.wifi_ssid)            rows.push(`<div class="contact-row"><span class="contact-label">WiFi Network</span><span class="contact-val">${escapeHtml(String(s.wifi_ssid))}</span></div>`);
+  if (s.wifi_password)        rows.push(`<div class="contact-row"><span class="contact-label">WiFi Password</span><span class="contact-val">${escapeHtml(String(s.wifi_password))}</span></div>`);
+  if (s.door_code)            rows.push(`<div class="contact-row"><span class="contact-label">Door Code</span><span class="contact-val">${escapeHtml(String(s.door_code))}</span></div>`);
+  if (s.building_code)        rows.push(`<div class="contact-row"><span class="contact-label">Building Code</span><span class="contact-val">${escapeHtml(String(s.building_code))}</span></div>`);
+  if (s.house_access_private) rows.push(`<div class="contact-row"><span class="contact-label">Access</span><span class="contact-val">${escapeHtml(String(s.house_access_private))}</span></div>`);
+  if (s.host_phone)           rows.push(`<div class="contact-row"><span class="contact-label">Host Phone</span><span class="contact-val">${escapeHtml(String(s.host_phone))}</span></div>`);
+
+  if (rows.length === 0) return output;
+
+  const privateBlock = `<div class="contact-rows" style="margin-top:20px;padding-top:16px;border-top:1px solid #e0d8ce">${rows.join('')}</div>`;
+
+  // Replace footer note (intentional public-only placeholder) with actual private details
+  output = output.replace(
+    /<div class="footer-note">[\s\S]*?<\/div>/,
+    privateBlock
+  );
+
+  return output;
 }
 
 function normalizeTallyPayload(payload) {
@@ -1759,10 +1860,11 @@ async function handleNotify(request, env) {
     return jsonResponse({ ok: true, slug, idempotent: true, alreadyDelivered: true });
   }
 
-  const publicUrl      = (body?.public_url  || '').trim() || delivery.public_url      || '';
-  const pdfUrl         = (body?.pdf_url     || '').trim() || delivery.pdf_url         || '';
   const guestAccessUrl = delivery.guest_access_url || '';
   const customerEmail  = delivery.customer_email   || '';
+
+  // Derive print URL from guestAccessUrl: same token, /print/ instead of /guest/
+  const printUrl = guestAccessUrl ? guestAccessUrl.replace('/guest/', '/print/') : '';
 
   if (!customerEmail) {
     console.error(`notify: no customer_email for slug=${slug}`);
@@ -1781,14 +1883,13 @@ async function handleNotify(request, env) {
       env,
       to: customerEmail,
       subject: 'Your MyGuest welcome book is ready',
-      html: buildDeliveryEmail({ publicUrl, pdfUrl, guestAccessUrl })
+      html: buildDeliveryEmail({ guestAccessUrl, printUrl })
     });
   } catch (err) {
     console.error('delivery email failed:', safeError(err));
     await env.MYGUEST_KV.put(deliveryKey, JSON.stringify({
       ...delivery,
-      public_url: publicUrl,
-      pdf_url: pdfUrl,
+      print_url: printUrl,
       status: 'email_failed',
       notified_at: new Date().toISOString()
     })).catch(() => {});
@@ -1798,8 +1899,7 @@ async function handleNotify(request, env) {
   // ok:true solo cuando el email realmente se envió
   await env.MYGUEST_KV.put(deliveryKey, JSON.stringify({
     ...delivery,
-    public_url: publicUrl,
-    pdf_url: pdfUrl,
+    print_url: printUrl,
     status: 'delivered',
     notified_at: new Date().toISOString()
   })).catch(() => {});
@@ -1888,7 +1988,7 @@ async function sendEmail({ env, to, subject, html }) {
 }
 
 function buildAlertEmail({ propertyName, clientName, customerEmail, slug, submissionId, now }) {
-  const reviewUrl = 'https://tally.so/r/yP1y9B';
+  const reviewUrl = 'https://tally.so/r/yP1y9B?flow_type=manual_extraction_review';
   const rows = [
     ['Propiedad',     escapeHtml(propertyName)],
     ['Cliente',       escapeHtml(clientName || '—')],
@@ -1974,12 +2074,14 @@ function buildFormEmail({ formUrl }) {
 </body></html>`;
 }
 
-function buildDeliveryEmail({ publicUrl, pdfUrl, guestAccessUrl }) {
-  const row = (href, label) =>
+function buildDeliveryEmail({ guestAccessUrl, printUrl }) {
+  const btn = (href, label, description) =>
     href
-      ? `<p style="margin:8px 0">
-           <a href="${escapeAttribute(href)}" style="color:#2563eb;font-weight:600">${label}</a>
-         </p>`
+      ? `<div style="margin:0 0 16px 0;padding:20px;background:#f9f9f9;border-radius:8px">
+           <a href="${escapeAttribute(href)}"
+              style="color:#2D6A73;font-size:16px;font-weight:700;text-decoration:none">${label}</a>
+           <p style="color:#666;font-size:13px;margin:6px 0 0;line-height:1.5">${description}</p>
+         </div>`
       : '';
 
   return `<!DOCTYPE html>
@@ -1991,25 +2093,215 @@ function buildDeliveryEmail({ publicUrl, pdfUrl, guestAccessUrl }) {
     <table width="560" cellpadding="0" cellspacing="0"
            style="background:#fff;border-radius:12px;padding:40px;max-width:560px">
       <tr><td>
-        <h1 style="font-size:22px;font-weight:700;color:#111;margin:0 0 16px">
+        <h1 style="font-size:22px;font-weight:700;color:#111;margin:0 0 8px">
           Your welcome book is ready
         </h1>
-        <p style="color:#444;line-height:1.6;margin:0 0 24px">
-          Your personalized MyGuest welcome book has been generated.
-          Your guests can now access everything they need.
+        <p style="color:#666;line-height:1.6;margin:0 0 28px;font-size:15px">
+          Your personalized MyGuest guide has been generated with everything your guests need.
+          Share the link below directly with them.
         </p>
-        <div style="background:#f9f9f9;border-radius:8px;padding:24px;margin:0 0 24px">
-          ${row(publicUrl,      'View welcome book online →')}
-          ${row(pdfUrl,         'Download PDF →')}
-          ${row(guestAccessUrl, 'View private details (WiFi, access codes) →')}
-        </div>
-        <p style="color:#999;font-size:13px;margin:0">
-          Share the private details link only with your guests —
-          it contains WiFi passwords and access codes.
+        ${btn(guestAccessUrl,
+          'Open secure digital guide →',
+          'Full guide with WiFi, access codes, and all stay details. Send this link to your guests.')}
+        ${btn(printUrl,
+          'Open printable guide →',
+          'Print-ready version with all details including WiFi and access codes. Open in browser and use Print / Save as PDF.')}
+        <p style="color:#aaa;font-size:12px;margin:24px 0 0;line-height:1.6">
+          Both links contain your complete stay information. Keep them private and share only with your guests.
         </p>
       </td></tr>
     </table>
   </td></tr>
 </table>
 </body></html>`;
+}
+
+// ─── Flujo de revisión manual ─────────────────────────────────────────────────
+
+async function handleManualExtractionReview(request, normalized, env) {
+  const now = new Date().toISOString();
+  const reviewSubmissionId = normalized.submission_id || `review-${Date.now()}`;
+
+  const originalSubmissionId = cleanValue(getAnswer(normalized.answers, 'original_submission_id')) || '';
+  const slug                  = cleanValue(getAnswer(normalized.answers, 'slug')) || '';
+
+  if (!originalSubmissionId) {
+    return jsonResponse({ ok: false, error: 'Missing original_submission_id in review form' }, 400);
+  }
+  if (!slug) {
+    return jsonResponse({ ok: false, error: 'Missing slug in review form' }, 400);
+  }
+
+  const indexKey    = `subm-${originalSubmissionId}`;
+  const intakeKey   = `intake:${slug}`;
+  const privateKey  = `priv-${slug}`;
+  const deliveryKey = `delivery:${slug}`;
+
+  const [index, intakeRecord, privateRecord] = await Promise.all([
+    env.MYGUEST_KV.get(indexKey,   { type: 'json' }).catch(() => null),
+    env.MYGUEST_KV.get(intakeKey,  { type: 'json' }).catch(() => null),
+    env.MYGUEST_KV.get(privateKey, { type: 'json' }).catch(() => null),
+  ]);
+
+  if (!index) {
+    return jsonResponse({ ok: false, error: 'Original submission not found', submission_id: originalSubmissionId }, 404);
+  }
+  if (!privateRecord) {
+    return jsonResponse({ ok: false, error: 'Private record not found', slug }, 404);
+  }
+  if (index.status !== 'needs_manual_extraction') {
+    return jsonResponse({
+      ok: false,
+      error: 'Submission is not awaiting manual extraction',
+      current_status: index.status
+    }, 409);
+  }
+
+  // Merge: original client answers + Vero's manually extracted answers
+  const originalAnswers = intakeRecord?.original_answers || {};
+  const reviewAnswers   = normalized.answers;
+  const { merged, conflicts, additions } = mergeAnswersForReview(originalAnswers, reviewAnswers);
+
+  console.log('manual extraction merge:', JSON.stringify({
+    slug,
+    original_submission_id: originalSubmissionId,
+    fields_added_count: additions.length,
+    fields_added: additions,
+    conflicts_count: conflicts.length,
+    conflict_keys: conflicts
+  }));
+
+  // Update sensitive secrets with merged data (existing value wins if both present)
+  const SENSITIVE_MERGE = [
+    'wifi_ssid', 'wifi_password', 'door_code', 'building_code',
+    'host_phone', 'house_access_private', 'private_notes'
+  ];
+  const updatedSecrets = { ...(privateRecord.secrets || {}) };
+  for (const key of SENSITIVE_MERGE) {
+    const fromMerge = cleanValue(getAnswer(merged, key));
+    if (fromMerge && !updatedSecrets[key]) {
+      updatedSecrets[key] = fromMerge;
+    }
+  }
+
+  const updatedPrivateRecord = {
+    ...privateRecord,
+    secrets: updatedSecrets,
+    metadata: {
+      ...(privateRecord.metadata || {}),
+      status: 'manual_extraction_complete',
+      manual_review_at: now,
+      review_submission_id: reviewSubmissionId
+    },
+    manual_extraction: {
+      reviewed_at: now,
+      review_submission_id: reviewSubmissionId,
+      fields_added_count: additions.length,
+      fields_added: additions,
+      conflicts_count: conflicts.length,
+      conflict_keys: conflicts
+    }
+  };
+
+  try {
+    await env.MYGUEST_KV.put(privateKey, JSON.stringify(updatedPrivateRecord));
+  } catch (err) {
+    console.error('review: failed to update private record (aborting dispatch):', safeError(err));
+    return jsonResponse({ ok: false, error: 'Failed to update private record', slug }, 500);
+  }
+
+  // Build public payload for GitHub dispatch using merged answers
+  const origin = new URL(request.url).origin;
+  const fakeNormalized = {
+    submission_id: originalSubmissionId,
+    submitted_at:  privateRecord.metadata?.submitted_at || now,
+    answers:       merged
+  };
+  const publicPayload = buildPublicPayload({
+    normalized:       fakeNormalized,
+    slug,
+    privateRecordKey: privateKey,
+    origin,
+    now
+  });
+
+  // Update index and dispatch
+  index.status = 'manual_extraction_complete';
+  index.last_updated_at = now;
+  await env.MYGUEST_KV.put(indexKey, JSON.stringify(index)).catch(() => {});
+
+  try {
+    await dispatchToGitHub(publicPayload, env);
+  } catch (err) {
+    index.status = 'failed_dispatch';
+    index.last_error = err.message;
+    index.last_updated_at = now;
+    await env.MYGUEST_KV.put(indexKey, JSON.stringify(index)).catch(() => {});
+    console.error('review: github dispatch failed:', safeError(err));
+    throw err;
+  }
+
+  index.status = 'dispatched_to_github';
+  index.last_updated_at = now;
+  await env.MYGUEST_KV.put(indexKey, JSON.stringify(index)).catch(() => {});
+
+  // Update delivery record status
+  try {
+    const delivery = await env.MYGUEST_KV.get(deliveryKey, { type: 'json' }).catch(() => null);
+    if (delivery) {
+      await env.MYGUEST_KV.put(deliveryKey, JSON.stringify({
+        ...delivery,
+        status: 'dispatched_to_github',
+        manual_review_at: now
+      }));
+    }
+  } catch (err) {
+    console.error('review: delivery record update failed (non-fatal):', safeError(err));
+  }
+
+  console.log('manual extraction dispatch success:', slug);
+
+  return jsonResponse({
+    ok: true,
+    status: 'dispatched_to_github',
+    slug,
+    original_submission_id: originalSubmissionId,
+    fields_added: additions.length,
+    conflicts: conflicts.length,
+    message: 'Manual extraction complete. Generation dispatched to GitHub.'
+  });
+}
+
+function mergeAnswersForReview(original, review) {
+  // Campos propios del formulario interno — no son datos de la propiedad
+  const REVIEW_META_KEYS = new Set([
+    'flow_type', 'original_submission_id', 'slug',
+    'review_confirmed', 'extraction_notes', 'reviewer_name',
+    'submission_id', 'submissionId', 'responseId'
+  ]);
+
+  const merged    = { ...original };
+  const conflicts = [];
+  const additions = [];
+
+  for (const [key, reviewValue] of Object.entries(review)) {
+    if (REVIEW_META_KEYS.has(key)) continue;
+
+    const cleanReview = typeof reviewValue === 'string' ? reviewValue.trim() : reviewValue;
+    if (cleanReview === null || cleanReview === undefined || cleanReview === '') continue;
+
+    const originalValue   = original[key];
+    const cleanOriginal   = typeof originalValue === 'string' ? originalValue.trim() : originalValue;
+    const originalIsEmpty = (cleanOriginal === null || cleanOriginal === undefined || cleanOriginal === '');
+
+    if (originalIsEmpty) {
+      merged[key] = cleanReview;
+      additions.push(key);
+    } else {
+      // Original value wins — conflict recorded (key name only, never values)
+      conflicts.push(key);
+    }
+  }
+
+  return { merged, conflicts, additions };
 }
