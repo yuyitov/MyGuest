@@ -115,30 +115,35 @@ PAYLOAD = {
             "property_environment": "Beach",
             "restaurant_1_name": "Larios on the Beach",
             "restaurant_1_maps_link": "https://maps.google.com/?q=820+Ocean+Dr+Miami+Beach+FL",
+            "restaurant_1_phone": "+1 (305) 532-9577",
             "restaurant_1_description": (
                 "Cuban classics and fresh mojitos right on the boulevard. "
                 "Great for people-watching — an Ocean Drive staple."
             ),
             "restaurant_2_name": "Joe's Stone Crab",
             "restaurant_2_maps_link": "https://maps.google.com/?q=11+Washington+Ave+Miami+Beach+FL",
+            "restaurant_2_phone": "+1 (305) 673-0365",
             "restaurant_2_description": (
                 "Miami Beach institution since 1913. Stone crabs are a must when "
                 "in season (Oct–May). Reservations recommended."
             ),
             "restaurant_3_name": "Yardbird Southern Table & Bar",
             "restaurant_3_maps_link": "https://maps.google.com/?q=1600+Lenox+Ave+Miami+Beach+FL",
+            "restaurant_3_phone": "+1 (305) 538-5220",
             "restaurant_3_description": (
                 "Beloved Southern comfort food with exceptional fried chicken. "
                 "Reservations strongly recommended on weekends."
             ),
             "bar_1_name": "Sweet Liberty",
             "bar_1_maps_link": "https://maps.google.com/?q=237+20th+St+Miami+Beach+FL",
+            "bar_1_phone": "+1 (305) 763-8217",
             "bar_1_description": (
                 "Award-winning craft cocktail bar with an inventive menu and lively crowd. "
                 "Try the Paper Plane."
             ),
             "bar_2_name": "The Broken Shaker",
             "bar_2_maps_link": "https://maps.google.com/?q=2727+Indian+Creek+Dr+Miami+Beach+FL",
+            "bar_2_phone": "+1 (305) 531-2727",
             "bar_2_description": (
                 "Outdoor garden bar in a courtyard setting — one of Miami's most beloved "
                 "and atmospheric spots."
@@ -151,12 +156,15 @@ PAYLOAD = {
             ),
             "activity_2_name": "Art Deco Walking Tour",
             "activity_2_link": "https://mdpl.org/tours/",
+            "activity_2_location": "Art Deco Historic District, Miami Beach",
+            "activity_2_phone": "+1 (305) 672-2014",
             "activity_2_description": (
                 "Explore Miami Beach's iconic Art Deco architecture on a guided or "
                 "self-guided tour through the historic district."
             ),
             "activity_3_name": "Wynwood Walls",
             "activity_3_link": "https://maps.google.com/?q=Wynwood+Walls+Miami+FL",
+            "activity_3_phone": "+1 (305) 531-4411",
             "activity_3_description": (
                 "World-famous outdoor street art museum, 15 minutes by rideshare. "
                 "A must-see Miami cultural landmark."

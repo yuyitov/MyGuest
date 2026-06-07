@@ -248,7 +248,9 @@ def get_numbered_places(content, prefix, link_field, max_items=5):
         desc = safe_text(
             recs.get(f"{prefix}_{i}_description") or recs.get(f"{prefix}_{i}_notes")
         ) or ""
-        places.append({"name": name, "link": link, "desc": desc})
+        phone = safe_text(recs.get(f"{prefix}_{i}_phone")) or ""
+        location = safe_text(recs.get(f"{prefix}_{i}_location")) or ""
+        places.append({"name": name, "link": link, "desc": desc, "phone": phone, "location": location})
     return places
 
 
@@ -295,7 +297,6 @@ def build_cover(villa_name, address, ui, cover_img, style):
     addr_html = f'<div class="cover-address">{h(address)}</div>' if address else ""
 
     text_block = f"""
-<p class="cover-eyebrow">MyGuest · Your Guest Guide</p>
 <div class="cover-welcome">{h(ui['eyebrow'])}</div>
 <span class="cover-script">{h(ui['guide_to'])}</span>
 <div class="cover-name">{h(villa_name)}</div>
@@ -313,7 +314,9 @@ def build_cover(villa_name, address, ui, cover_img, style):
     elif cover_style == "split":
         body = f"""
 <table class="cover-classic"><tr>
-  <td class="cover-classic-left">{text_block}</td>
+  <td class="cover-classic-left">
+    {text_block}
+  </td>
   <td class="cover-classic-right"><img src="{h(img)}" alt="" loading="eager"></td>
 </tr></table>"""
         return page(body, "cover-pg cover-alt-pg")
@@ -407,10 +410,6 @@ def build_arrival(content, ui):
   <div class="info-block-text">{ht(parking)}</div>
 </div>""" if parking else ""
 
-    maps_btn = ""
-    if maps and maps.startswith(("http://", "https://")):
-        maps_btn = f'<a class="maps-btn" href="{h(maps)}" target="_blank">{h(ui["maps"])}</a>'
-
     dir_block = f"""
 <div class="info-block">
   <div class="info-block-text">{ht(directions)}</div>
@@ -424,8 +423,7 @@ def build_arrival(content, ui):
 {time_grid}
 {access_block}
 {parking_block}
-{dir_block}
-{maps_btn}"""
+{dir_block}"""
 
     body = f"""
 <table class="split-layout arrival-layout"><tr>
@@ -562,6 +560,18 @@ def build_recommendations(content, ui):
     if not restaurants and not bars and not activities and not directory:
         return ""
 
+    def _maps_address(url):
+        """Extract location from a Google Maps URL for print."""
+        try:
+            from urllib.parse import urlparse, parse_qs, unquote_plus
+            parsed = urlparse(url)
+            q = parse_qs(parsed.query).get("q", [None])[0]
+            if q:
+                return unquote_plus(q).strip()
+        except Exception:
+            pass
+        return None
+
     def rec_section(script, title, places, img_src):
         if not places:
             return ""
@@ -569,10 +579,22 @@ def build_recommendations(content, ui):
         for p in places[:5]:
             name_html = h(p["name"])
             desc_html = f'<div class="rec-detail">{h(p["desc"])}</div>' if p.get("desc") else ""
-            link_html = ""
+            addr_html = ""
+            website_html = ""
             if p.get("link") and p["link"].startswith(("http://", "https://")):
-                link_html = f'<a class="rec-link" href="{h(p["link"])}" target="_blank">Maps</a>'
-            items += f'<div class="rec-item"><div class="rec-name">{name_html}{link_html}</div>{desc_html}</div>'
+                addr = _maps_address(p["link"])
+                if addr:
+                    addr_html = f'<div class="rec-address">{h(addr)}</div>'
+                else:
+                    from urllib.parse import urlparse as _up
+                    _parsed = _up(p["link"])
+                    _display = _parsed.netloc.lstrip("www.") + _parsed.path.rstrip("/")
+                    if _display:
+                        website_html = f'<div class="rec-website">{h(_display)}</div>'
+            if not addr_html and p.get("location"):
+                addr_html = f'<div class="rec-address">{h(p["location"])}</div>'
+            phone_html = f'<div class="rec-phone">{h(p["phone"])}</div>' if p.get("phone") else ""
+            items += f'<div class="rec-item"><div class="rec-name">{name_html}</div>{addr_html}{website_html}{phone_html}{desc_html}</div>'
         return f"""
 <div class="rec-block">
   <div class="rec-heading">
@@ -590,10 +612,6 @@ def build_recommendations(content, ui):
         right_col += f'<div class="rec-block"><div class="rec-heading"><span class="rec-bold">{h(ui["directory"])}</span></div><div class="page-text">{ht(directory)}</div></div>'
 
     body = f"""
-<div class="recs-page-header">
-  <span class="page-script">{h(ui['eat_script'])}</span>
-  <div class="page-bold recs-main-title">{h(ui['eat_title'])}</div>
-</div>
 <table class="recs-layout"><tr>
   <td class="recs-col">{left_col}</td>
   <td class="recs-divider"></td>
@@ -617,20 +635,33 @@ def build_contact(content, villa_name, ui):
     if instagram_raw and not instagram_raw.startswith("@"):
         instagram_display = "@" + instagram_raw.lstrip("https://instagram.com/").lstrip("instagram.com/")
 
-    rows = contact_row(ui["email"], email)
-    rows += contact_row(ui["instagram"], instagram_display)
-    rows += contact_row(ui["emergency"], emergency)
+    contact_rows = contact_row(ui["email"], email)
+    contact_rows += contact_row(ui["instagram"], instagram_display)
 
-    review_btn = ""
-    if review and review.startswith(("http://", "https://")):
-        review_btn = f'<a class="review-btn" href="{h(review)}" target="_blank">{h(ui["review"])}</a>'
+    emergency_rows = f'<div class="emergency-text">{h(emergency)}</div>' if emergency else ""
+
+    contact_block = ""
+    if contact_rows:
+        contact_block = f"""
+<div class="thanks-section">
+  <div class="thanks-section-title">{h(ui['contact'])}</div>
+  <div class="contact-rows">{contact_rows}</div>
+</div>"""
+
+    emergency_block = ""
+    if emergency_rows:
+        emergency_block = f"""
+<div class="thanks-section">
+  <div class="thanks-section-title">{h(ui['emergency'])}</div>
+  <div class="contact-rows">{emergency_rows}</div>
+</div>"""
 
     body = f"""
 <div class="thanks-center">
   <span class="thanks-script">{h(ui['thanks_script'])}</span>
   <div class="thanks-sub">{h(ui['thanks_sub'])} <em>{h(villa_name)}</em></div>
-  <div class="contact-rows">{rows}</div>
-  {review_btn}
+  {contact_block}
+  {emergency_block}
   <div class="footer-note">{h(ui['footer'])}</div>
   <div class="footer-brand">MyGuest · myguestguide.com</div>
 </div>"""
@@ -666,7 +697,9 @@ def render_print_html(payload):
     ]
     pages_html = "".join(p for p in pages if p)
 
-    with open("books/templates/print_letter.html", "r", encoding="utf-8") as f:
+    _scripts_dir = os.path.dirname(os.path.abspath(__file__))
+    _template_path = os.path.join(_scripts_dir, "..", "templates", "print_letter.html")
+    with open(_template_path, "r", encoding="utf-8") as f:
         html = f.read()
 
     html = html.replace("{{HTML_LANG}}", escape(ui["html_lang"]))
@@ -702,7 +735,9 @@ def main():
 
     slug, html = render_print_html(payload)
 
-    output_dir = os.path.join("public", "villas", slug)
+    _scripts_dir2 = os.path.dirname(os.path.abspath(__file__))
+    _project_root = os.path.join(_scripts_dir2, "..", "..")
+    output_dir = os.path.join(_project_root, "public", "villas", slug)
     os.makedirs(output_dir, exist_ok=True)
 
     html_path = os.path.join(output_dir, "print.html")

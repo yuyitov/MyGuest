@@ -153,6 +153,7 @@ PAYLOAD = {
             ),
             "activity_2_name": "Centre Pompidou",
             "activity_2_link": "https://centrepompidou.fr",
+            "activity_2_phone": "+33 1 44 78 12 33",
             "activity_2_description": (
                 "Europe's premier modern and contemporary art museum, 10 minutes on foot. "
                 "The rooftop offers one of the best panoramic views of Paris."

@@ -150,12 +150,14 @@ PAYLOAD = {
             ),
             "activity_2_name": "The High Line",
             "activity_2_link": "https://thehighline.org",
+            "activity_2_phone": "+1 (212) 500-6035",
             "activity_2_description": (
                 "Elevated park built on a former railway — 1.5 miles of art, gardens, "
                 "and stunning city views. Free entry, 10 minutes by subway."
             ),
             "activity_3_name": "Whitney Museum of American Art",
             "activity_3_link": "https://whitney.org",
+            "activity_3_phone": "+1 (212) 570-3600",
             "activity_3_description": (
                 "World-class collection of 20th and 21st century American art, "
                 "housed in a striking Renzo Piano building in the Meatpacking District."

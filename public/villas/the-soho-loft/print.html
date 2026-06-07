@@ -40,6 +40,7 @@ body {
   overflow: hidden;
   page-break-after: always;
   position: relative;
+  background: var(--cream);
 }
 
 /* ═══════════════════════════════════════
@@ -135,29 +136,36 @@ body {
 .cover-coastal .cover-address { color: rgba(255,255,255,0.85); text-shadow: 0 1px 5px rgba(0,0,0,0.8); }
 .cover-coastal .cover-rule { background: var(--accent); }
 
-/* Classic: dark left panel + editorial photo right */
+/* Classic: ivory left panel + editorial photo right — print-friendly */
 .cover-classic { display: table; width: 100%; height: var(--page-h); border-collapse: collapse; }
 .cover-classic-left {
-  display: table-cell; width: 52%; height: var(--page-h);
-  background: var(--dark);
-  padding: 1.6cm var(--pad);
-  vertical-align: bottom;
+  display: table-cell; width: 50%; height: var(--page-h);
+  background: #F7F3EE;
+  padding: 1.6cm var(--pad) 1.6cm 1.4cm;
+  vertical-align: middle;
+  border-right: 1.5px solid #D8CEC2;
 }
-.cover-classic-right { display: table-cell; width: 48%; padding: 0; vertical-align: top; }
+.cover-classic-brand {
+  font-size: 8pt;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: #9E9590;
+  margin-bottom: 1.8cm;
+}
+.cover-classic-right { display: table-cell; width: 50%; padding: 0; vertical-align: top; }
 .cover-classic-right img { width: 100%; height: var(--page-h); object-fit: cover; display: block; }
-.cover-classic-left .cover-eyebrow { color: rgba(255,255,255,0.35); }
-.cover-classic-left .cover-welcome { color: #fff; }
-.cover-classic-left .cover-script { color: var(--accent); }
-.cover-classic-left .cover-name { color: rgba(255,255,255,0.9); }
-.cover-classic-left .cover-address { color: rgba(255,255,255,0.35); }
-.cover-classic-left .cover-rule { background: var(--accent); }
+.cover-classic-left .cover-welcome { color: var(--dark); letter-spacing: -1px; }
+.cover-classic-left .cover-script { color: var(--primary); }
+.cover-classic-left .cover-name { color: var(--dark); }
+.cover-classic-left .cover-address { color: #7A746E; }
+.cover-classic-left .cover-rule { background: var(--primary); }
 
 /* Sunset: full-bleed photo + warm tinted overlay + centered text */
 .cover-sunset { position: relative; width: 100%; height: var(--page-h); overflow: hidden; }
 .cover-sunset-photo { position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .cover-sunset-overlay {
   position: absolute; top: 0; right: 0; bottom: 0; left: 0;
-  background: linear-gradient(160deg, rgba(231,111,81,0.62) 0%, rgba(38,70,83,0.75) 100%);
+  background: linear-gradient(160deg, rgba(231,111,81,0.38) 0%, rgba(38,70,83,0.52) 100%);
 }
 .cover-sunset-body {
   position: absolute; bottom: 0; left: 0; right: 0;
@@ -595,6 +603,20 @@ body {
   border-radius: 2px;
 }
 
+.rec-address {
+  font-size: 10.5pt;
+  color: var(--primary);
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+.rec-phone {
+  font-size: 10.5pt;
+  color: #555;
+  margin-top: 1px;
+  line-height: 1.3;
+}
+
 .rec-detail {
   font-size: 11.5pt;
   color: #666;
@@ -637,8 +659,22 @@ body {
   margin-bottom: 0.8cm;
 }
 
+.thanks-section {
+  margin-bottom: 0.5cm;
+}
+
+.thanks-section-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 0.15cm;
+}
+
 .contact-rows {
-  margin-bottom: 0.6cm;
+  margin-bottom: 0.3cm;
   text-align: left;
   display: inline-block;
   min-width: 10cm;
@@ -664,6 +700,8 @@ body {
 }
 
 .contact-val { color: var(--text); }
+.emergency-text { font-size: 11pt; color: var(--text); line-height: 1.6; white-space: pre-line; }
+.rec-website { font-size: 10.5pt; color: var(--primary); margin-top: 2px; }
 
 .review-btn {
   display: inline-block;
@@ -751,7 +789,6 @@ body {
 <div class="book-page cover-pg">
 <img class="cover-photo" src="../../assets/covers/city.png" alt="" loading="eager">
 <div class="cover-body">
-<p class="cover-eyebrow">MyGuest · Your Guest Guide</p>
 <div class="cover-welcome">WELCOME</div>
 <span class="cover-script">Your Guide to</span>
 <div class="cover-name">The SoHo Loft</div>
@@ -793,7 +830,7 @@ body {
 
 <div class="info-block">
   <div class="info-block-label">Property Access</div>
-  <div class="info-block-text">Detailed access instructions will be sent privately before check-in.</div>
+  <div class="info-block-text">Self check-in at the main entrance — no host meeting needed. Your loft is on the 4th floor — turn right out of the elevator. Full arrival details and all entry instructions are in your private access section below.</div>
 </div>
 
 <div class="info-block">
@@ -803,8 +840,7 @@ body {
 
 <div class="info-block">
   <div class="info-block-text">Located in the heart of SoHo, one block from the C/E subway at Spring St. From JFK Airport: take the AirTrain to Jamaica, then the E train to Spring St — approximately 55 minutes. From Newark Airport: NJ Transit to Penn Station, then the C or E to Spring St.</div>
-</div>
-<a class="maps-btn" href="https://maps.google.com/?q=285+Spring+Street+New+York+NY+10013" target="_blank">Open on Maps</a></td>
+</div></td>
   <td class="arrival-image-cell"><img class="side-photo" src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="eager"></td>
 </tr></table></div>
 <div class="book-page house-pg">
@@ -858,10 +894,6 @@ body {
 </td><td class="rule-card rule-empty"></td></tr></table>
 <div class="before-section"><div class="before-title">Before You Leave</div><div class="checklist"><div class="checklist-item">Strip used bedding and leave it on the floor by the bed.</div><div class="checklist-item">Leave used towels in the bathtub.</div><div class="checklist-item">Empty the fridge of any opened food items.</div><div class="checklist-item">Turn off all lights and appliances.</div><div class="checklist-item">Return keys to the lockbox and close the apartment door firmly.</div></div></div></div>
 <div class="book-page recs-pg">
-<div class="recs-page-header">
-  <span class="page-script">Places</span>
-  <div class="page-bold recs-main-title">TO EAT</div>
-</div>
 <table class="recs-layout"><tr>
   <td class="recs-col">
 <div class="rec-block">
@@ -869,14 +901,14 @@ body {
     <span class="rec-script">Places</span>
     <span class="rec-bold">TO EAT</span>
   </div>
-  <div class="rec-list"><div class="rec-item"><div class="rec-name">Raoul&#x27;s<a class="rec-link" href="https://maps.google.com/?q=180+Prince+St+New+York+NY+10012" target="_blank">Maps</a></div><div class="rec-detail">A SoHo legend since 1975. Dark, romantic French bistro with outstanding steak au poivre. Reservations essential.</div></div><div class="rec-item"><div class="rec-name">Charlie Bird<a class="rec-link" href="https://maps.google.com/?q=5+King+St+New+York+NY+10012" target="_blank">Maps</a></div><div class="rec-detail">Vibrant Italian-American spot with excellent pasta and natural wines. Walk-in bar seating is often available at the counter.</div></div><div class="rec-item"><div class="rec-name">Estela<a class="rec-link" href="https://maps.google.com/?q=47+E+Houston+St+New+York+NY+10012" target="_blank">Maps</a></div><div class="rec-detail">One of NYC&#x27;s most celebrated restaurants — refined small plates with unexpected flavour combinations. Book well in advance.</div></div></div>
+  <div class="rec-list"><div class="rec-item"><div class="rec-name">Raoul&#x27;s</div><div class="rec-address">180 Prince St New York NY 10012</div><div class="rec-detail">A SoHo legend since 1975. Dark, romantic French bistro with outstanding steak au poivre. Reservations essential.</div></div><div class="rec-item"><div class="rec-name">Charlie Bird</div><div class="rec-address">5 King St New York NY 10012</div><div class="rec-detail">Vibrant Italian-American spot with excellent pasta and natural wines. Walk-in bar seating is often available at the counter.</div></div><div class="rec-item"><div class="rec-name">Estela</div><div class="rec-address">47 E Houston St New York NY 10012</div><div class="rec-detail">One of NYC&#x27;s most celebrated restaurants — refined small plates with unexpected flavour combinations. Book well in advance.</div></div></div>
 </div>
 <div class="rec-block">
   <div class="rec-heading">
     <span class="rec-script">Places</span>
     <span class="rec-bold">TO DRINK</span>
   </div>
-  <div class="rec-list"><div class="rec-item"><div class="rec-name">Fanelli Cafe<a class="rec-link" href="https://maps.google.com/?q=94+Prince+St+New+York+NY+10012" target="_blank">Maps</a></div><div class="rec-detail">The oldest bar in SoHo, open since 1847. No frills, cold beer, great burgers — a New York institution.</div></div><div class="rec-item"><div class="rec-name">The Ear Inn<a class="rec-link" href="https://maps.google.com/?q=326+Spring+St+New+York+NY+10013" target="_blank">Maps</a></div><div class="rec-detail">One of the oldest bars in New York City, steps from the apartment. Cozy and unpretentious — locals love it.</div></div></div>
+  <div class="rec-list"><div class="rec-item"><div class="rec-name">Fanelli Cafe</div><div class="rec-address">94 Prince St New York NY 10012</div><div class="rec-detail">The oldest bar in SoHo, open since 1847. No frills, cold beer, great burgers — a New York institution.</div></div><div class="rec-item"><div class="rec-name">The Ear Inn</div><div class="rec-address">326 Spring St New York NY 10013</div><div class="rec-detail">One of the oldest bars in New York City, steps from the apartment. Cozy and unpretentious — locals love it.</div></div></div>
 </div></td>
   <td class="recs-divider"></td>
   <td class="recs-col">
@@ -885,17 +917,25 @@ body {
     <span class="rec-script">Things</span>
     <span class="rec-bold">TO DO</span>
   </div>
-  <div class="rec-list"><div class="rec-item"><div class="rec-name">SoHo Gallery Walk<a class="rec-link" href="https://maps.google.com/?q=SoHo+Art+Galleries+New+York+NY" target="_blank">Maps</a></div><div class="rec-detail">The neighbourhood is packed with world-class art galleries. Start on West Broadway and wander — most are free to enter.</div></div><div class="rec-item"><div class="rec-name">The High Line<a class="rec-link" href="https://thehighline.org" target="_blank">Maps</a></div><div class="rec-detail">Elevated park built on a former railway — 1.5 miles of art, gardens, and stunning city views. Free entry, 10 minutes by subway.</div></div><div class="rec-item"><div class="rec-name">Whitney Museum of American Art<a class="rec-link" href="https://whitney.org" target="_blank">Maps</a></div><div class="rec-detail">World-class collection of 20th and 21st century American art, housed in a striking Renzo Piano building in the Meatpacking District.</div></div></div>
+  <div class="rec-list"><div class="rec-item"><div class="rec-name">SoHo Gallery Walk</div><div class="rec-address">SoHo Art Galleries New York NY</div><div class="rec-detail">The neighbourhood is packed with world-class art galleries. Start on West Broadway and wander — most are free to enter.</div></div><div class="rec-item"><div class="rec-name">The High Line</div><div class="rec-website">thehighline.org</div><div class="rec-phone">+1 (212) 500-6035</div><div class="rec-detail">Elevated park built on a former railway — 1.5 miles of art, gardens, and stunning city views. Free entry, 10 minutes by subway.</div></div><div class="rec-item"><div class="rec-name">Whitney Museum of American Art</div><div class="rec-website">hitney.org</div><div class="rec-phone">+1 (212) 570-3600</div><div class="rec-detail">World-class collection of 20th and 21st century American art, housed in a striking Renzo Piano building in the Meatpacking District.</div></div></div>
 </div><div class="rec-block"><div class="rec-heading"><span class="rec-bold">Local Directory</span></div><div class="page-text">Nearest Whole Foods: 270 Greenwich St (10 min walk)<br>Nearest pharmacy (CVS): 180 W Houston St<br>NYU Langone Health: +1 (212) 263-7300</div></div></td>
 </tr></table></div>
 <div class="book-page thanks-pg">
 <div class="thanks-center">
   <span class="thanks-script">Thank You</span>
   <div class="thanks-sub">for choosing <em>The SoHo Loft</em></div>
-  <div class="contact-rows"><div class="contact-row"><span class="contact-label">Email</span><span class="contact-val">hello@thesoholoft.com</span></div><div class="contact-row"><span class="contact-label">Instagram</span><span class="contact-val">@thesoholoft.nyc</span></div><div class="contact-row"><span class="contact-label">Emergency</span><span class="contact-val">Emergency: 911
+  
+<div class="thanks-section">
+  <div class="thanks-section-title">Contact</div>
+  <div class="contact-rows"><div class="contact-row"><span class="contact-label">Email</span><span class="contact-val">hello@thesoholoft.com</span></div><div class="contact-row"><span class="contact-label">Instagram</span><span class="contact-val">@thesoholoft.nyc</span></div></div>
+</div>
+  
+<div class="thanks-section">
+  <div class="thanks-section-title">Emergency</div>
+  <div class="contact-rows"><div class="emergency-text">Emergency: 911
 NYC non-emergency: 311
-Host team: hello@thesoholoft.com</span></div></div>
-  <a class="review-btn" href="https://airbnb.com/" target="_blank">Leave a Review</a>
+Host team: hello@thesoholoft.com</div></div>
+</div>
   <div class="footer-note">For the complete stay details, open the secure digital guide link provided by your host.</div>
   <div class="footer-brand">MyGuest · myguestguide.com</div>
 </div></div>

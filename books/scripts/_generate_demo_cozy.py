@@ -149,6 +149,7 @@ PAYLOAD = {
             ),
             "activity_1_name": "Gran Cenote",
             "activity_1_link": "https://maps.google.com/?q=Gran+Cenote+Tulum+Mexico",
+            "activity_1_phone": "+52 984 871 2060",
             "activity_1_description": (
                 "The most beautiful cenote near Tulum — crystal-clear water, "
                 "stalactites, and turtles. Reachable by bicycle in 15 minutes. "

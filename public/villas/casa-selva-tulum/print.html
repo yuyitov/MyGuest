@@ -40,6 +40,7 @@ body {
   overflow: hidden;
   page-break-after: always;
   position: relative;
+  background: var(--cream);
 }
 
 /* ═══════════════════════════════════════
@@ -157,7 +158,7 @@ body {
 .cover-sunset-photo { position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .cover-sunset-overlay {
   position: absolute; top: 0; right: 0; bottom: 0; left: 0;
-  background: linear-gradient(160deg, rgba(231,111,81,0.62) 0%, rgba(38,70,83,0.75) 100%);
+  background: linear-gradient(160deg, rgba(231,111,81,0.38) 0%, rgba(38,70,83,0.52) 100%);
 }
 .cover-sunset-body {
   position: absolute; bottom: 0; left: 0; right: 0;
@@ -595,6 +596,20 @@ body {
   border-radius: 2px;
 }
 
+.rec-address {
+  font-size: 10.5pt;
+  color: var(--primary);
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+.rec-phone {
+  font-size: 10.5pt;
+  color: #555;
+  margin-top: 1px;
+  line-height: 1.3;
+}
+
 .rec-detail {
   font-size: 11.5pt;
   color: #666;
@@ -637,8 +652,22 @@ body {
   margin-bottom: 0.8cm;
 }
 
+.thanks-section {
+  margin-bottom: 0.5cm;
+}
+
+.thanks-section-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 0.15cm;
+}
+
 .contact-rows {
-  margin-bottom: 0.6cm;
+  margin-bottom: 0.3cm;
   text-align: left;
   display: inline-block;
   min-width: 10cm;
@@ -664,6 +693,8 @@ body {
 }
 
 .contact-val { color: var(--text); }
+.emergency-text { font-size: 11pt; color: var(--text); line-height: 1.6; white-space: pre-line; }
+.rec-website { font-size: 10.5pt; color: var(--primary); margin-top: 2px; }
 
 .review-btn {
   display: inline-block;
@@ -753,7 +784,6 @@ body {
   <img class="cover-sunset-photo" src="../../assets/covers/cozy.png" alt="" loading="eager">
   <div class="cover-sunset-overlay"></div>
   <div class="cover-sunset-body">
-<p class="cover-eyebrow">MyGuest · Your Guest Guide</p>
 <div class="cover-welcome">WELCOME</div>
 <span class="cover-script">Your Guide to</span>
 <div class="cover-name">Casa Selva</div>
@@ -796,7 +826,7 @@ body {
 
 <div class="info-block">
   <div class="info-block-label">Property Access</div>
-  <div class="info-block-text">Detailed arrival instructions will be shared privately before check-in.</div>
+  <div class="info-block-text">Self check-in — no host meeting needed. Your key opens both the main gate and the front door. Full arrival details and access information are in your private access section below.</div>
 </div>
 
 <div class="info-block">
@@ -806,8 +836,7 @@ body {
 
 <div class="info-block">
   <div class="info-block-text">Casa Selva is located inside Aldea Zamá, Tulum&#x27;s premier eco-residential development. From Cancún International Airport: take Highway 307 south for approximately 130 km — about 2 hours by car or ADO bus. From central Tulum town: 10 minutes south by taxi or rental car.</div>
-</div>
-<a class="maps-btn" href="https://maps.google.com/?q=Aldea+Zama+Tulum+Quintana+Roo+Mexico" target="_blank">Open on Maps</a></td>
+</div></td>
   <td class="arrival-image-cell"><img class="side-photo" src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="eager"></td>
 </tr></table></div>
 <div class="book-page house-pg">
@@ -861,10 +890,6 @@ body {
 </td><td class="rule-card rule-empty"></td></tr></table>
 <div class="before-section"><div class="before-title">Before You Leave</div><div class="checklist"><div class="checklist-item">Bag any food waste in the compostable bags under the kitchen sink.</div><div class="checklist-item">Leave used towels on the bathroom floor.</div><div class="checklist-item">Close all windows and the patio door before leaving.</div><div class="checklist-item">Return the bicycles to the rack by the entrance.</div><div class="checklist-item">Return all keys to the lockbox and close the gate behind you.</div></div></div></div>
 <div class="book-page recs-pg">
-<div class="recs-page-header">
-  <span class="page-script">Places</span>
-  <div class="page-bold recs-main-title">TO EAT</div>
-</div>
 <table class="recs-layout"><tr>
   <td class="recs-col">
 <div class="rec-block">
@@ -872,14 +897,14 @@ body {
     <span class="rec-script">Places</span>
     <span class="rec-bold">TO EAT</span>
   </div>
-  <div class="rec-list"><div class="rec-item"><div class="rec-name">Hartwood<a class="rec-link" href="https://maps.google.com/?q=Hartwood+Tulum+Mexico" target="_blank">Maps</a></div><div class="rec-detail">Tulum&#x27;s most celebrated restaurant — all wood-fired, all local. No reservations. Arrive early (opens at 6 PM) or expect a wait. Worth every minute.</div></div><div class="rec-item"><div class="rec-name">Arca<a class="rec-link" href="https://maps.google.com/?q=Arca+Tulum+Mexico" target="_blank">Maps</a></div><div class="rec-detail">Contemporary Mexican cuisine in a stunning open-air space. Creative tasting menus using local ingredients. Reservations recommended.</div></div><div class="rec-item"><div class="rec-name">El Camello Jr.<a class="rec-link" href="https://maps.google.com/?q=El+Camello+Jr+Tulum+Mexico" target="_blank">Maps</a></div><div class="rec-detail">No-frills local seafood at its best — fresh ceviche, grilled fish, cold beers. A true Tulum gem that tourists rarely find.</div></div></div>
+  <div class="rec-list"><div class="rec-item"><div class="rec-name">Hartwood</div><div class="rec-address">Hartwood Tulum Mexico</div><div class="rec-detail">Tulum&#x27;s most celebrated restaurant — all wood-fired, all local. No reservations. Arrive early (opens at 6 PM) or expect a wait. Worth every minute.</div></div><div class="rec-item"><div class="rec-name">Arca</div><div class="rec-address">Arca Tulum Mexico</div><div class="rec-detail">Contemporary Mexican cuisine in a stunning open-air space. Creative tasting menus using local ingredients. Reservations recommended.</div></div><div class="rec-item"><div class="rec-name">El Camello Jr.</div><div class="rec-address">El Camello Jr Tulum Mexico</div><div class="rec-detail">No-frills local seafood at its best — fresh ceviche, grilled fish, cold beers. A true Tulum gem that tourists rarely find.</div></div></div>
 </div>
 <div class="rec-block">
   <div class="rec-heading">
     <span class="rec-script">Places</span>
     <span class="rec-bold">TO DRINK</span>
   </div>
-  <div class="rec-list"><div class="rec-item"><div class="rec-name">Gitano<a class="rec-link" href="https://maps.google.com/?q=Gitano+Tulum+Mexico" target="_blank">Maps</a></div><div class="rec-detail">A magical jungle bar with mezcal cocktails, live music, and a setting unlike anywhere else on earth. Sunset is perfect timing.</div></div><div class="rec-item"><div class="rec-name">Batey Mojito &amp; Guarapo Bar<a class="rec-link" href="https://maps.google.com/?q=Batey+Mojito+Tulum+Mexico" target="_blank">Maps</a></div><div class="rec-detail">Crushed sugarcane mojitos made fresh to order in an open-air shack. Cash only, unforgettable, and impossibly cheap.</div></div></div>
+  <div class="rec-list"><div class="rec-item"><div class="rec-name">Gitano</div><div class="rec-address">Gitano Tulum Mexico</div><div class="rec-detail">A magical jungle bar with mezcal cocktails, live music, and a setting unlike anywhere else on earth. Sunset is perfect timing.</div></div><div class="rec-item"><div class="rec-name">Batey Mojito &amp; Guarapo Bar</div><div class="rec-address">Batey Mojito Tulum Mexico</div><div class="rec-detail">Crushed sugarcane mojitos made fresh to order in an open-air shack. Cash only, unforgettable, and impossibly cheap.</div></div></div>
 </div></td>
   <td class="recs-divider"></td>
   <td class="recs-col">
@@ -888,17 +913,25 @@ body {
     <span class="rec-script">Things</span>
     <span class="rec-bold">TO DO</span>
   </div>
-  <div class="rec-list"><div class="rec-item"><div class="rec-name">Gran Cenote<a class="rec-link" href="https://maps.google.com/?q=Gran+Cenote+Tulum+Mexico" target="_blank">Maps</a></div><div class="rec-detail">The most beautiful cenote near Tulum — crystal-clear water, stalactites, and turtles. Reachable by bicycle in 15 minutes. Arrive before 9 AM to beat the crowds.</div></div><div class="rec-item"><div class="rec-name">Tulum Ruins<a class="rec-link" href="https://maps.google.com/?q=Tulum+Ruins+Mexico" target="_blank">Maps</a></div><div class="rec-detail">Ancient Mayan cliff-top ruins overlooking the turquoise Caribbean. One of the most photogenic archaeological sites in Mexico. Open daily from 8 AM.</div></div><div class="rec-item"><div class="rec-name">Sian Ka&#x27;an Biosphere Reserve<a class="rec-link" href="https://maps.google.com/?q=Sian+Kaan+Biosphere+Tulum" target="_blank">Maps</a></div><div class="rec-detail">UNESCO World Heritage Site just 30 minutes south. Boat tours through mangroves, wildlife spotting, and remote beaches that feel like the edge of the world.</div></div></div>
+  <div class="rec-list"><div class="rec-item"><div class="rec-name">Gran Cenote</div><div class="rec-address">Gran Cenote Tulum Mexico</div><div class="rec-phone">+52 984 871 2060</div><div class="rec-detail">The most beautiful cenote near Tulum — crystal-clear water, stalactites, and turtles. Reachable by bicycle in 15 minutes. Arrive before 9 AM to beat the crowds.</div></div><div class="rec-item"><div class="rec-name">Tulum Ruins</div><div class="rec-address">Tulum Ruins Mexico</div><div class="rec-detail">Ancient Mayan cliff-top ruins overlooking the turquoise Caribbean. One of the most photogenic archaeological sites in Mexico. Open daily from 8 AM.</div></div><div class="rec-item"><div class="rec-name">Sian Ka&#x27;an Biosphere Reserve</div><div class="rec-address">Sian Kaan Biosphere Tulum</div><div class="rec-detail">UNESCO World Heritage Site just 30 minutes south. Boat tours through mangroves, wildlife spotting, and remote beaches that feel like the edge of the world.</div></div></div>
 </div><div class="rec-block"><div class="rec-heading"><span class="rec-bold">Local Directory</span></div><div class="page-text">Nearest supermarket: Chedraui, Tulum town (15 min by car)<br>Nearest pharmacy: Farmacia Similares, Av. Tulum (15 min)<br>Cruz Roja Tulum (Red Cross): +52 (984) 871-2222</div></div></td>
 </tr></table></div>
 <div class="book-page thanks-pg">
 <div class="thanks-center">
   <span class="thanks-script">Thank You</span>
   <div class="thanks-sub">for choosing <em>Casa Selva</em></div>
-  <div class="contact-rows"><div class="contact-row"><span class="contact-label">Email</span><span class="contact-val">hola@casaselvatulum.com</span></div><div class="contact-row"><span class="contact-label">Instagram</span><span class="contact-val">@casaselva.tulum</span></div><div class="contact-row"><span class="contact-label">Emergency</span><span class="contact-val">Emergency: 911
+  
+<div class="thanks-section">
+  <div class="thanks-section-title">Contact</div>
+  <div class="contact-rows"><div class="contact-row"><span class="contact-label">Email</span><span class="contact-val">hola@casaselvatulum.com</span></div><div class="contact-row"><span class="contact-label">Instagram</span><span class="contact-val">@casaselva.tulum</span></div></div>
+</div>
+  
+<div class="thanks-section">
+  <div class="thanks-section-title">Emergency</div>
+  <div class="contact-rows"><div class="emergency-text">Emergency: 911
 Cruz Roja Tulum: +52 (984) 871-2222
-Host Ana &amp; Luis: hola@casaselvatulum.com</span></div></div>
-  <a class="review-btn" href="https://airbnb.com/" target="_blank">Leave a Review</a>
+Host Ana &amp; Luis: hola@casaselvatulum.com</div></div>
+</div>
   <div class="footer-note">For the complete stay details, open the secure digital guide link provided by your host.</div>
   <div class="footer-brand">MyGuest · myguestguide.com</div>
 </div></div>

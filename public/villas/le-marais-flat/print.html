@@ -40,6 +40,7 @@ body {
   overflow: hidden;
   page-break-after: always;
   position: relative;
+  background: var(--cream);
 }
 
 /* ═══════════════════════════════════════
@@ -135,29 +136,36 @@ body {
 .cover-coastal .cover-address { color: rgba(255,255,255,0.85); text-shadow: 0 1px 5px rgba(0,0,0,0.8); }
 .cover-coastal .cover-rule { background: var(--accent); }
 
-/* Classic: dark left panel + editorial photo right */
+/* Classic: ivory left panel + editorial photo right — print-friendly */
 .cover-classic { display: table; width: 100%; height: var(--page-h); border-collapse: collapse; }
 .cover-classic-left {
-  display: table-cell; width: 52%; height: var(--page-h);
-  background: var(--dark);
-  padding: 1.6cm var(--pad);
-  vertical-align: bottom;
+  display: table-cell; width: 50%; height: var(--page-h);
+  background: #F7F3EE;
+  padding: 1.6cm var(--pad) 1.6cm 1.4cm;
+  vertical-align: middle;
+  border-right: 1.5px solid #D8CEC2;
 }
-.cover-classic-right { display: table-cell; width: 48%; padding: 0; vertical-align: top; }
+.cover-classic-brand {
+  font-size: 8pt;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: #9E9590;
+  margin-bottom: 1.8cm;
+}
+.cover-classic-right { display: table-cell; width: 50%; padding: 0; vertical-align: top; }
 .cover-classic-right img { width: 100%; height: var(--page-h); object-fit: cover; display: block; }
-.cover-classic-left .cover-eyebrow { color: rgba(255,255,255,0.35); }
-.cover-classic-left .cover-welcome { color: #fff; }
-.cover-classic-left .cover-script { color: var(--accent); }
-.cover-classic-left .cover-name { color: rgba(255,255,255,0.9); }
-.cover-classic-left .cover-address { color: rgba(255,255,255,0.35); }
-.cover-classic-left .cover-rule { background: var(--accent); }
+.cover-classic-left .cover-welcome { color: var(--dark); letter-spacing: -1px; }
+.cover-classic-left .cover-script { color: var(--primary); }
+.cover-classic-left .cover-name { color: var(--dark); }
+.cover-classic-left .cover-address { color: #7A746E; }
+.cover-classic-left .cover-rule { background: var(--primary); }
 
 /* Sunset: full-bleed photo + warm tinted overlay + centered text */
 .cover-sunset { position: relative; width: 100%; height: var(--page-h); overflow: hidden; }
 .cover-sunset-photo { position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .cover-sunset-overlay {
   position: absolute; top: 0; right: 0; bottom: 0; left: 0;
-  background: linear-gradient(160deg, rgba(231,111,81,0.62) 0%, rgba(38,70,83,0.75) 100%);
+  background: linear-gradient(160deg, rgba(231,111,81,0.38) 0%, rgba(38,70,83,0.52) 100%);
 }
 .cover-sunset-body {
   position: absolute; bottom: 0; left: 0; right: 0;
@@ -595,6 +603,20 @@ body {
   border-radius: 2px;
 }
 
+.rec-address {
+  font-size: 10.5pt;
+  color: var(--primary);
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+.rec-phone {
+  font-size: 10.5pt;
+  color: #555;
+  margin-top: 1px;
+  line-height: 1.3;
+}
+
 .rec-detail {
   font-size: 11.5pt;
   color: #666;
@@ -637,8 +659,22 @@ body {
   margin-bottom: 0.8cm;
 }
 
+.thanks-section {
+  margin-bottom: 0.5cm;
+}
+
+.thanks-section-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 0.15cm;
+}
+
 .contact-rows {
-  margin-bottom: 0.6cm;
+  margin-bottom: 0.3cm;
   text-align: left;
   display: inline-block;
   min-width: 10cm;
@@ -664,6 +700,8 @@ body {
 }
 
 .contact-val { color: var(--text); }
+.emergency-text { font-size: 11pt; color: var(--text); line-height: 1.6; white-space: pre-line; }
+.rec-website { font-size: 10.5pt; color: var(--primary); margin-top: 2px; }
 
 .review-btn {
   display: inline-block;
@@ -751,12 +789,13 @@ body {
 <div class="book-page cover-pg cover-alt-pg">
 <table class="cover-classic"><tr>
   <td class="cover-classic-left">
-<p class="cover-eyebrow">MyGuest · Your Guest Guide</p>
+    
 <div class="cover-welcome">WELCOME</div>
 <span class="cover-script">Your Guide to</span>
 <div class="cover-name">Le Marais Flat</div>
 <div class="cover-rule"></div>
-<div class="cover-address">12 Rue des Francs-Bourgeois, Paris 75004, France</div></td>
+<div class="cover-address">12 Rue des Francs-Bourgeois, Paris 75004, France</div>
+  </td>
   <td class="cover-classic-right"><img src="../../assets/covers/city.png" alt="" loading="eager"></td>
 </tr></table></div>
 <div class="book-page welcome-pg">
@@ -795,7 +834,7 @@ body {
 
 <div class="info-block">
   <div class="info-block-label">Property Access</div>
-  <div class="info-block-text">Detailed access instructions will be sent privately before check-in.</div>
+  <div class="info-block-text">Apartment 3A on the 3rd floor — no lift, staircase only. Self check-in — no host meeting needed. Full arrival details, door codes, and key safe instructions are in your private access section below.</div>
 </div>
 
 <div class="info-block">
@@ -805,8 +844,7 @@ body {
 
 <div class="info-block">
   <div class="info-block-text">Located in Le Marais, one of Paris&#x27;s most historic and vibrant districts. From Charles de Gaulle Airport: take the RER B to Châtelet-Les Halles, then 15 minutes on foot or one stop on line 1 to Saint-Paul — about 50 minutes total. From Orly Airport: take Orlyval + RER B or taxi directly (approx. 45 min).</div>
-</div>
-<a class="maps-btn" href="https://maps.google.com/?q=12+Rue+des+Francs-Bourgeois+Paris+75004+France" target="_blank">Open on Maps</a></td>
+</div></td>
   <td class="arrival-image-cell"><img class="side-photo" src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="eager"></td>
 </tr></table></div>
 <div class="book-page house-pg">
@@ -860,10 +898,6 @@ body {
 </td><td class="rule-card rule-empty"></td></tr></table>
 <div class="before-section"><div class="before-title">Before You Leave</div><div class="checklist"><div class="checklist-item">Strip used bedding and leave it at the foot of the bed.</div><div class="checklist-item">Leave used towels in the bathtub.</div><div class="checklist-item">Dispose of all food waste in the bins in the courtyard.</div><div class="checklist-item">Ensure windows are closed and locked.</div><div class="checklist-item">Return keys to the safe and pull the front door firmly shut.</div></div></div></div>
 <div class="book-page recs-pg">
-<div class="recs-page-header">
-  <span class="page-script">Places</span>
-  <div class="page-bold recs-main-title">TO EAT</div>
-</div>
 <table class="recs-layout"><tr>
   <td class="recs-col">
 <div class="rec-block">
@@ -871,14 +905,14 @@ body {
     <span class="rec-script">Places</span>
     <span class="rec-bold">TO EAT</span>
   </div>
-  <div class="rec-list"><div class="rec-item"><div class="rec-name">L&#x27;As du Fallafel<a class="rec-link" href="https://maps.google.com/?q=34+Rue+des+Rosiers+Paris+75004" target="_blank">Maps</a></div><div class="rec-detail">A Le Marais legend — the best falafel in Paris, possibly in Europe. Expect a queue. Takeaway or eat standing. Cash only. Worth it.</div></div><div class="rec-item"><div class="rec-name">Septime<a class="rec-link" href="https://maps.google.com/?q=80+Rue+de+Charonne+Paris+75011" target="_blank">Maps</a></div><div class="rec-detail">One of Paris&#x27;s most celebrated bistronomy restaurants. Seasonal, creative, and deeply French. Book 3–4 weeks in advance.</div></div><div class="rec-item"><div class="rec-name">Breizh Café<a class="rec-link" href="https://maps.google.com/?q=109+Rue+Vieille+du+Temple+Paris+75003" target="_blank">Maps</a></div><div class="rec-detail">The finest crêpes in Paris, made with Breton buckwheat and exceptional ingredients. The salted caramel crêpe is unmissable.</div></div></div>
+  <div class="rec-list"><div class="rec-item"><div class="rec-name">L&#x27;As du Fallafel</div><div class="rec-address">34 Rue des Rosiers Paris 75004</div><div class="rec-detail">A Le Marais legend — the best falafel in Paris, possibly in Europe. Expect a queue. Takeaway or eat standing. Cash only. Worth it.</div></div><div class="rec-item"><div class="rec-name">Septime</div><div class="rec-address">80 Rue de Charonne Paris 75011</div><div class="rec-detail">One of Paris&#x27;s most celebrated bistronomy restaurants. Seasonal, creative, and deeply French. Book 3–4 weeks in advance.</div></div><div class="rec-item"><div class="rec-name">Breizh Café</div><div class="rec-address">109 Rue Vieille du Temple Paris 75003</div><div class="rec-detail">The finest crêpes in Paris, made with Breton buckwheat and exceptional ingredients. The salted caramel crêpe is unmissable.</div></div></div>
 </div>
 <div class="rec-block">
   <div class="rec-heading">
     <span class="rec-script">Places</span>
     <span class="rec-bold">TO DRINK</span>
   </div>
-  <div class="rec-list"><div class="rec-item"><div class="rec-name">Le Mary Celeste<a class="rec-link" href="https://maps.google.com/?q=1+Rue+Commines+Paris+75003" target="_blank">Maps</a></div><div class="rec-detail">Natural wines, craft cocktails and excellent oysters in a lively Le Marais setting. No reservations — arrive early or late.</div></div><div class="rec-item"><div class="rec-name">Candelaria<a class="rec-link" href="https://maps.google.com/?q=52+Rue+de+Saintonge+Paris+75003" target="_blank">Maps</a></div><div class="rec-detail">Hidden speakeasy behind a taqueria — some of the most inventive cocktails in Paris. Ring the bell on the unmarked door at the back.</div></div></div>
+  <div class="rec-list"><div class="rec-item"><div class="rec-name">Le Mary Celeste</div><div class="rec-address">1 Rue Commines Paris 75003</div><div class="rec-detail">Natural wines, craft cocktails and excellent oysters in a lively Le Marais setting. No reservations — arrive early or late.</div></div><div class="rec-item"><div class="rec-name">Candelaria</div><div class="rec-address">52 Rue de Saintonge Paris 75003</div><div class="rec-detail">Hidden speakeasy behind a taqueria — some of the most inventive cocktails in Paris. Ring the bell on the unmarked door at the back.</div></div></div>
 </div></td>
   <td class="recs-divider"></td>
   <td class="recs-col">
@@ -887,17 +921,25 @@ body {
     <span class="rec-script">Things</span>
     <span class="rec-bold">TO DO</span>
   </div>
-  <div class="rec-list"><div class="rec-item"><div class="rec-name">Le Marais Gallery Walk<a class="rec-link" href="https://maps.google.com/?q=Le+Marais+Paris+galleries" target="_blank">Maps</a></div><div class="rec-detail">The apartment is surrounded by private contemporary art galleries. Most are open Tuesday–Saturday and free to enter. Rue Vieille-du-Temple and Rue Debelleyme are the best streets to explore.</div></div><div class="rec-item"><div class="rec-name">Centre Pompidou<a class="rec-link" href="https://centrepompidou.fr" target="_blank">Maps</a></div><div class="rec-detail">Europe&#x27;s premier modern and contemporary art museum, 10 minutes on foot. The rooftop offers one of the best panoramic views of Paris.</div></div><div class="rec-item"><div class="rec-name">Place des Vosges<a class="rec-link" href="https://maps.google.com/?q=Place+des+Vosges+Paris" target="_blank">Maps</a></div><div class="rec-detail">Paris&#x27;s oldest planned square — a masterpiece of French Renaissance architecture, 5 minutes on foot. Perfect for a morning coffee under the arcades.</div></div></div>
+  <div class="rec-list"><div class="rec-item"><div class="rec-name">Le Marais Gallery Walk</div><div class="rec-address">Le Marais Paris galleries</div><div class="rec-detail">The apartment is surrounded by private contemporary art galleries. Most are open Tuesday–Saturday and free to enter. Rue Vieille-du-Temple and Rue Debelleyme are the best streets to explore.</div></div><div class="rec-item"><div class="rec-name">Centre Pompidou</div><div class="rec-website">centrepompidou.fr</div><div class="rec-phone">+33 1 44 78 12 33</div><div class="rec-detail">Europe&#x27;s premier modern and contemporary art museum, 10 minutes on foot. The rooftop offers one of the best panoramic views of Paris.</div></div><div class="rec-item"><div class="rec-name">Place des Vosges</div><div class="rec-address">Place des Vosges Paris</div><div class="rec-detail">Paris&#x27;s oldest planned square — a masterpiece of French Renaissance architecture, 5 minutes on foot. Perfect for a morning coffee under the arcades.</div></div></div>
 </div><div class="rec-block"><div class="rec-heading"><span class="rec-bold">Local Directory</span></div><div class="page-text">Nearest supermarket: Monoprix, 71 Rue Saint-Antoine (5 min walk)<br>Nearest pharmacy: Pharmacie du Marais, 88 Rue de Rivoli<br>Hôtel-Dieu Hospital (emergency): +33 1 42 34 82 34</div></div></td>
 </tr></table></div>
 <div class="book-page thanks-pg">
 <div class="thanks-center">
   <span class="thanks-script">Thank You</span>
   <div class="thanks-sub">for choosing <em>Le Marais Flat</em></div>
-  <div class="contact-rows"><div class="contact-row"><span class="contact-label">Email</span><span class="contact-val">hello@lemarasflat.com</span></div><div class="contact-row"><span class="contact-label">Instagram</span><span class="contact-val">@lemarisflat.paris</span></div><div class="contact-row"><span class="contact-label">Emergency</span><span class="contact-val">European emergency: 112
+  
+<div class="thanks-section">
+  <div class="thanks-section-title">Contact</div>
+  <div class="contact-rows"><div class="contact-row"><span class="contact-label">Email</span><span class="contact-val">hello@lemarasflat.com</span></div><div class="contact-row"><span class="contact-label">Instagram</span><span class="contact-val">@lemarisflat.paris</span></div></div>
+</div>
+  
+<div class="thanks-section">
+  <div class="thanks-section-title">Emergency</div>
+  <div class="contact-rows"><div class="emergency-text">European emergency: 112
 Police: 17 / SAMU (ambulance): 15
-Host team: hello@lemarasflat.com</span></div></div>
-  <a class="review-btn" href="https://airbnb.com/" target="_blank">Leave a Review</a>
+Host team: hello@lemarasflat.com</div></div>
+</div>
   <div class="footer-note">For the complete stay details, open the secure digital guide link provided by your host.</div>
   <div class="footer-brand">MyGuest · myguestguide.com</div>
 </div></div>
