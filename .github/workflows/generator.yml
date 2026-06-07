@@ -125,14 +125,36 @@ jobs:
           forbidden_terms = [
               "guest_access_pin",
               "private_record_key",
-              "priv-"
+              "priv-",
+              "wifi_password",
+              "wifi_ssid",
+              "door_code",
+              "keypad_code",
+              "lockbox_code",
+              "host_phone",
+              "house_access_private",
+              "passcode",
+              "pin",
           ]
+
+          # Official demo slugs with demo_mode are permitted to contain
+          # realistic-looking but entirely fictitious credentials.
+          demo_slugs = {
+              "ocean-drive-retreat",
+              "the-soho-loft",
+              "casa-selva-tulum",
+              "le-marais-flat",
+          }
 
           public_root = "public"
 
           hits = []
 
           for root, dirs, files in os.walk(public_root):
+              # Detect if this path belongs to a known official demo
+              path_parts = root.replace("\\", "/").split("/")
+              in_official_demo = any(slug in path_parts for slug in demo_slugs)
+
               for filename in files:
                   path = os.path.join(root, filename)
 
@@ -143,6 +165,10 @@ jobs:
                       with open(path, "r", encoding="utf-8", errors="ignore") as f:
                           content = f.read()
                   except Exception:
+                      continue
+
+                  # demo_mode files are allowed to have realistic-looking (fictitious) credentials
+                  if in_official_demo and "demo_mode" in content:
                       continue
 
                   for term in forbidden_terms:

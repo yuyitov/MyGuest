@@ -103,12 +103,14 @@ Entrada de datos del host. Recolecta información general, acceso, WiFi, reglas,
 ## Fórmula del slug oficial
 
 ```
-slug = slugify(property_name) + "-" + últimos 4 caracteres de submission_id
+slug = slugify(property_name) + "-" + últimos 10 caracteres de submission_id
 ```
 
-Ejemplo: `Casa Serena` + `01JSG4J8P2K9X7` → `casa-serena-k9x7`
+Ejemplo: `Casa Serena` + `01JSG4J8P2K9X7` → `casa-serena-4j8p2k9x7`
 
 Reglas: minúsculas, sin acentos, espacios → guiones, sin símbolos, sin dobles guiones, máx 50-60 caracteres antes del sufijo.
+
+**Nota de implementación**: El código usa `.slice(-10)` (10 caracteres), no 4. Esto es intencional para reducir la probabilidad de colisiones. Se recomienda mantener 10 caracteres.
 
 ---
 
@@ -344,7 +346,7 @@ El MVP está listo para vender cuando se cumpla:
 - Menú aprobado
 - Google Maps claro y clickable
 - No hay placeholders incorrectos
-- Demos no usan credenciales que parezcan reales
+- Demos en `demo_mode` usan credenciales ficticias realistas (WiFi/códigos inventados) — nunca datos reales de clientes
 - QA manual documentado
 - Entrega final clara al cliente
 
@@ -451,7 +453,9 @@ worker/
 | `casa-selva-tulum` | Sunset | Casa Selva Tulum |
 | `le-marais-flat` | Classic | Le Marais Flat |
 
-**Demo mode**: solo para demos comerciales. Nunca usar datos reales. El código debe mostrar warning claro si `demo_mode: True`.
+**Demo mode**: solo para demos comerciales. El código debe mostrar warning claro si `demo_mode: True`.
+
+**Política de credenciales en demos oficiales**: Los 4 demos oficiales (`ocean-drive-retreat`, `the-soho-loft`, `casa-selva-tulum`, `le-marais-flat`) pueden contener credenciales ficticias realistas (WiFi network, contraseñas, códigos de acceso, teléfonos inventados) para mostrar la experiencia real del huésped. Esto es aceptable **solo en `demo_mode: True`** y **solo con datos completamente inventados**. Usar datos reales de un cliente en `demo_mode` es un bug crítico de seguridad. Las guías reales de clientes nunca exponen WiFi, códigos ni acceso en HTML público — esos datos solo se sirven vía Worker/KV con token válido.
 
 ---
 
@@ -501,7 +505,7 @@ python books/scripts/generate_villa.py <property-slug>
 ## Pendientes al retomar
 
 ### Seguridad / Infraestructura
-1. **Rotar `NOTIFY_SECRET`** — valor temporal `myguest-notify-2026` debe reemplazarse con un secreto seguro en GitHub Actions y Cloudflare Worker.
+1. **Rotar `NOTIFY_SECRET`** — reemplazar con un secreto seguro (mínimo 32 caracteres aleatorios). Actualizar en: GitHub Actions Secrets → `NOTIFY_SECRET`, y Cloudflare Worker → Variables → `NOTIFY_SECRET`. No poner el nuevo valor en el repo ni en logs.
 2. **Llenar KV namespace ID** en `worker/wrangler.toml` (tiene placeholder `REPLACE_WITH_YOUR_KV_NAMESPACE_ID`).
 3. **Verificar Resend API key** — confirmar que pertenece a la cuenta correcta y que `hello@myguestguide.com` está verificado.
 4. **Configurar webhook en Tally**: Tally → Integrations → Webhooks → `https://myguest-worker.veronica-perezarroyo.workers.dev/tally-webhook`.
@@ -509,6 +513,7 @@ python books/scripts/generate_villa.py <property-slug>
 6. **Limpiar páginas de prueba**: `public/villas/smoke-test-flujo-a-no-entregar-lowatest01/` y slugs villa-maralto-0260606a01/b01/c01 si ya no se necesitan.
 7. **Node.js 20 deprecation** en GitHub Actions — actualizar antes de septiembre 2026.
 8. **Desplegar worker.js via Wrangler** una vez que la autenticación esté configurada (actualmente se despliega manualmente desde el dashboard de Cloudflare).
+9. **Pinear SHAs en GitHub Actions** — las actions de terceros (checkout, setup-python, etc.) deben anclarse a SHA completo en lugar de tag. Pendiente para post-MVP.
 
 ### Diseño (diferido)
 9. Diseño visual de la guía móvil (`master.html`)

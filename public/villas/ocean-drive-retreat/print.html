@@ -40,6 +40,7 @@ body {
   overflow: hidden;
   page-break-after: always;
   position: relative;
+  background: var(--cream);
 }
 
 /* ═══════════════════════════════════════
@@ -135,29 +136,36 @@ body {
 .cover-coastal .cover-address { color: rgba(255,255,255,0.85); text-shadow: 0 1px 5px rgba(0,0,0,0.8); }
 .cover-coastal .cover-rule { background: var(--accent); }
 
-/* Classic: dark left panel + editorial photo right */
+/* Classic: ivory left panel + editorial photo right — print-friendly */
 .cover-classic { display: table; width: 100%; height: var(--page-h); border-collapse: collapse; }
 .cover-classic-left {
-  display: table-cell; width: 52%; height: var(--page-h);
-  background: var(--dark);
-  padding: 1.6cm var(--pad);
-  vertical-align: bottom;
+  display: table-cell; width: 50%; height: var(--page-h);
+  background: #F7F3EE;
+  padding: 1.6cm var(--pad) 1.6cm 1.4cm;
+  vertical-align: middle;
+  border-right: 1.5px solid #D8CEC2;
 }
-.cover-classic-right { display: table-cell; width: 48%; padding: 0; vertical-align: top; }
+.cover-classic-brand {
+  font-size: 8pt;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: #9E9590;
+  margin-bottom: 1.8cm;
+}
+.cover-classic-right { display: table-cell; width: 50%; padding: 0; vertical-align: top; }
 .cover-classic-right img { width: 100%; height: var(--page-h); object-fit: cover; display: block; }
-.cover-classic-left .cover-eyebrow { color: rgba(255,255,255,0.35); }
-.cover-classic-left .cover-welcome { color: #fff; }
-.cover-classic-left .cover-script { color: var(--accent); }
-.cover-classic-left .cover-name { color: rgba(255,255,255,0.9); }
-.cover-classic-left .cover-address { color: rgba(255,255,255,0.35); }
-.cover-classic-left .cover-rule { background: var(--accent); }
+.cover-classic-left .cover-welcome { color: var(--dark); letter-spacing: -1px; }
+.cover-classic-left .cover-script { color: var(--primary); }
+.cover-classic-left .cover-name { color: var(--dark); }
+.cover-classic-left .cover-address { color: #7A746E; }
+.cover-classic-left .cover-rule { background: var(--primary); }
 
 /* Sunset: full-bleed photo + warm tinted overlay + centered text */
 .cover-sunset { position: relative; width: 100%; height: var(--page-h); overflow: hidden; }
 .cover-sunset-photo { position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .cover-sunset-overlay {
   position: absolute; top: 0; right: 0; bottom: 0; left: 0;
-  background: linear-gradient(160deg, rgba(231,111,81,0.62) 0%, rgba(38,70,83,0.75) 100%);
+  background: linear-gradient(160deg, rgba(231,111,81,0.38) 0%, rgba(38,70,83,0.52) 100%);
 }
 .cover-sunset-body {
   position: absolute; bottom: 0; left: 0; right: 0;

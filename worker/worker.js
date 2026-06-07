@@ -46,29 +46,29 @@ export default {
     }
 
     try {
+      const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+      const minuteSlot = Math.floor(Date.now() / 60000);
+      const hourSlot   = Math.floor(Date.now() / 3600000);
+
       if (request.method === 'GET' && pathname === '/health') {
-        return jsonResponse({
-          ok: true,
-          worker: 'myguest-worker',
-          has_github_repo: !!env.GITHUB_REPO,
-          has_github_token: !!env.GITHUB_TOKEN,
-          has_tally_signing_secret: !!env.TALLY_SIGNING_SECRET,
-          has_kv: !!env.MYGUEST_KV,
-          has_resend_api_key: !!env.RESEND_API_KEY,
-          has_alert_email: !!env.ALERT_EMAIL,
-          has_from_email: !!env.FROM_EMAIL
-        });
+        return jsonResponse({ ok: true, worker: 'myguest-worker' });
       }
 
       if (request.method === 'GET' && pathname.startsWith('/guest/')) {
+        const allowed = await checkRateLimit(env, `rl:guest:${ip}:${hourSlot}`, 60, 3600);
+        if (!allowed) return privateErrorHtml('Too many requests. Please try again later.', 429);
         return await handleGuestPrivateAccess(request, env);
       }
 
       if (request.method === 'GET' && pathname.startsWith('/print/')) {
+        const allowed = await checkRateLimit(env, `rl:print:${ip}:${hourSlot}`, 30, 3600);
+        if (!allowed) return privateErrorHtml('Too many requests. Please try again later.', 429);
         return await handlePrintAccess(request, env);
       }
 
       if (request.method === 'POST' && (pathname === '/' || pathname === '/tally-webhook')) {
+        const allowed = await checkRateLimit(env, `rl:tally:${ip}:${minuteSlot}`, 10, 120);
+        if (!allowed) return jsonResponse({ ok: false, error: 'Too many requests' }, 429);
         return await handleTallyWebhook(request, env, ctx);
       }
 
@@ -78,6 +78,8 @@ export default {
       }
 
       if (request.method === 'POST' && pathname === '/notify') {
+        const allowed = await checkRateLimit(env, `rl:notify:${ip}:${minuteSlot}`, 20, 120);
+        if (!allowed) return jsonResponse({ ok: false, error: 'Too many requests' }, 429);
         return await handleNotify(request, env);
       }
       // ─────────────────────────────────────────────────────────────────────
@@ -102,10 +104,56 @@ export default {
   }
 };
 
+async function verifyTallySignature(rawBody, signatureHeader, secret) {
+  // Source: https://tally.so/help/webhooks and https://developers.tally.so
+  // Header: "Tally-Signature" (HTTP headers are case-insensitive)
+  // Algorithm: HMAC-SHA256 of JSON.stringify(parsedPayload)
+  // Format: base64-encoded digest (NOT hex)
+  if (!secret || !signatureHeader) return false;
+
+  let normalizedBody;
+  try {
+    normalizedBody = JSON.stringify(JSON.parse(rawBody));
+  } catch {
+    normalizedBody = rawBody;
+  }
+
+  const key = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(normalizedBody));
+  const expectedBase64 = btoa(String.fromCharCode(...new Uint8Array(sig)));
+  return timingSafeEqual(expectedBase64, signatureHeader.trim());
+}
+
 async function handleTallyWebhook(request, env, ctx) {
   assertEnv(env);
 
-  const rawPayload = await request.json().catch(() => null);
+  const rawBody = await request.text().catch(() => null);
+
+  if (rawBody === null) {
+    return jsonResponse({ ok: false, error: 'Could not read request body' }, 400);
+  }
+
+  // HMAC signature validation — rejects requests not from Tally
+  if (env.TALLY_SIGNING_SECRET) {
+    const sigHeader = request.headers.get('tally-signature') || '';
+    const valid = await verifyTallySignature(rawBody, sigHeader, env.TALLY_SIGNING_SECRET);
+    if (!valid) {
+      return jsonResponse({ ok: false, error: 'Invalid webhook signature' }, 401);
+    }
+  }
+
+  let rawPayload;
+  try {
+    rawPayload = JSON.parse(rawBody);
+  } catch {
+    rawPayload = null;
+  }
 
   if (!rawPayload) {
     return jsonResponse({ ok: false, error: 'Invalid JSON payload' }, 400);
@@ -481,7 +529,7 @@ async function handleGuestPrivateAccess(request, env) {
 
   const expectedToken = record?.guest_access?.guest_access_token;
 
-  if (!expectedToken || token !== expectedToken) {
+  if (!expectedToken || !timingSafeEqual(token, expectedToken)) {
     return privateErrorHtml('This private access link is invalid or expired.', 403);
   }
 
@@ -546,7 +594,7 @@ async function handlePrintAccess(request, env) {
   }
 
   const expectedToken = record?.guest_access?.guest_access_token;
-  if (!expectedToken || token !== expectedToken) {
+  if (!expectedToken || !timingSafeEqual(token, expectedToken)) {
     return privateErrorHtml('This print access link is invalid or expired.', 403);
   }
 
@@ -1699,7 +1747,7 @@ function escapeAttribute(value) {
 
 function corsHeaders() {
   return {
-    'access-control-allow-origin': '*',
+    'access-control-allow-origin': 'https://myguestguide.com',
     'access-control-allow-methods': 'GET, POST, OPTIONS',
     'access-control-allow-headers': 'Content-Type, Authorization'
   };
@@ -1950,6 +1998,18 @@ async function validateStripeSignature(rawBody, signatureHeader, secret) {
     .join('');
 
   return timingSafeEqual(expectedHex, signature);
+}
+
+async function checkRateLimit(env, key, limit, ttlSeconds) {
+  if (!env.MYGUEST_KV) return true;
+  try {
+    const current = parseInt(await env.MYGUEST_KV.get(key) || '0', 10);
+    if (current >= limit) return false;
+    await env.MYGUEST_KV.put(key, String(current + 1), { expirationTtl: ttlSeconds });
+    return true;
+  } catch {
+    return true;
+  }
 }
 
 function timingSafeEqual(a, b) {

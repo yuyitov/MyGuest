@@ -179,7 +179,7 @@ Future: An internal Tally form (`MyGuest — Manual Extraction Review`) will all
 ## 12. Pending Items
 
 ### Security / Infrastructure
-- [ ] **Rotate `NOTIFY_SECRET`** — current value `myguest-notify-2026` is temporary. Replace with a securely generated secret in both GitHub Actions and Cloudflare Worker.
+- [ ] **Rotate `NOTIFY_SECRET`** — replace with a securely generated secret (min 32 random chars). Update in GitHub Actions Secrets and Cloudflare Worker Variables. Do not put the new value in the repo or logs.
 - [ ] **Fill KV namespace ID** in `worker/wrangler.toml` (currently has placeholder `REPLACE_WITH_YOUR_KV_NAMESPACE_ID`).
 - [ ] **Verify Resend API key** belongs to correct account — emails arrive but confirm the sending domain `hello@myguestguide.com` is properly verified.
 - [ ] **Configure Tally webhook**: Tally → Integrations → Webhooks → `https://myguest-worker.veronica-perezarroyo.workers.dev/tally-webhook`.
