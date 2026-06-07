@@ -305,18 +305,6 @@
     overflow: hidden;
 }
 
-/* Botanical corner decorations on cover screen */
-.cover-botanical {
-    position: absolute;
-    top: -6px;
-    width: clamp(82px, 26vw, 116px);
-    pointer-events: none;
-    z-index: -1;
-    color: color-mix(in srgb, var(--primary) 40%, var(--bg));
-}
-.cover-botanical.right { right: -8px; }
-.cover-botanical.left  { left: -8px; transform: scaleX(-1); }
-.cover-botanical svg   { display: block; width: 100%; height: auto; }
 
 .cover-screen > div:last-child {
     width: 100%;
@@ -369,7 +357,7 @@
     line-height: 0.78;
     color: var(--mg-title);
     text-align: center;
-    margin: 0 0 8px;
+    margin: 0 0 14px;
     font-weight: 400;
 }
 
@@ -379,7 +367,7 @@
     letter-spacing: 0.20em;
     color: var(--mg-body) !important;
     text-align: center;
-    margin: 0 0 7px;
+    margin: 0 0 11px;
     text-transform: uppercase;
 }
 
@@ -906,6 +894,17 @@
             color: rgba(58,42,28,0.56);
         }
 
+        .review-text-link {
+            display: inline;
+            color: var(--mg-title);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            font-size: clamp(16px, 4.2vw, 19px);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
        .is-hidden {
     display: none !important;
 }
@@ -1074,7 +1073,7 @@
             }
 
             .cover-script {
-                font-size: clamp(52px, 15vw, 70px);
+                font-size: clamp(42px, 13vw, 58px);
             }
 
             .welcome-title {
@@ -1170,17 +1169,6 @@
             #menu-sheet {
                 display: none !important;
             }
-        }
-    
-        .review-text-link {
-            display: inline;
-            color: var(--mg-title);
-            text-decoration: underline;
-            text-underline-offset: 3px;
-            font-size: clamp(16px, 4.2vw, 19px);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            line-height: 1.6;
         }
     </style>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "f6bdf0e4f2aa49f0bd8935a3fecb850f"}'></script><!-- End Cloudflare Web Analytics -->
@@ -1870,7 +1858,7 @@
                         </div>
                         <div>
                             <div class="info-row-title">Reseña</div>
-                            <a class="review-text-link" href="" target="_blank" rel="noopener noreferrer" data-link-block>Dejar una Reseña</a>
+                            <a class="review-text-link" href="https://airbnb.com" target="_blank" rel="noopener noreferrer" data-link-block>Dejar una Reseña</a>
                         </div>
                     </div>
 

@@ -174,6 +174,7 @@ PAYLOAD = {
                 "Property Team: hello@oceandriveretreat.com"
             ),
             "instagram_handle": "@oceandriveretreat",
+            "airbnb_review_link": "https://airbnb.com",
         },
     },
 }
