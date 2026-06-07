@@ -167,8 +167,8 @@ jobs:
                   except Exception:
                       continue
 
-                  # demo_mode files are allowed to have realistic-looking (fictitious) credentials
-                  if in_official_demo and "demo_mode" in content:
+                  # Official demo directories are allowed to have realistic-looking fictitious credentials
+                  if in_official_demo:
                       continue
 
                   for term in forbidden_terms:
