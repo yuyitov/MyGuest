@@ -67,9 +67,21 @@ jobs:
           fi
 
           echo "Notifying Worker for slug: ${SLUG}"
-          curl --fail-with-body --silent --show-error --max-time 30 \
+          HTTP_CODE=$(curl --silent --show-error --max-time 30 \
+            -o /tmp/notify_response.json \
+            -w "%{http_code}" \
             -X POST \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${NOTIFY_SECRET}" \
             -d "{\"slug\":\"${SLUG}\"}" \
-            "${WORKER_URL}/notify"
+            "${WORKER_URL}/notify")
+          BODY=$(cat /tmp/notify_response.json 2>/dev/null || echo "")
+          echo "Worker response (HTTP ${HTTP_CODE}): ${BODY}"
+          if [ "${HTTP_CODE}" -ge 500 ]; then
+            echo "Worker server error — failing workflow" >&2
+            exit 1
+          elif [ "${HTTP_CODE}" -ge 400 ]; then
+            echo "Warning: Worker returned ${HTTP_CODE} — delivery may not have been sent. Check Worker logs."
+          else
+            echo "Delivery notification sent successfully."
+          fi
