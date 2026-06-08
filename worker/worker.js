@@ -2079,7 +2079,15 @@ async function sendEmail({ env, to, subject, html }) {
 }
 
 function buildAlertEmail({ propertyName, clientName, customerEmail, slug, submissionId, now, existingBookFile, existingBookPhotos }) {
-  const reviewUrl = 'https://tally.so/r/yP1y9B?flow_type=manual_extraction_review';
+  const reviewParams = [
+    ['flow_type',              'manual_extraction_review'],
+    ['original_submission_id', submissionId   || ''],
+    ['slug',                   slug           || ''],
+    ['property_name',          propertyName   || ''],
+    ['client_name',            clientName     || ''],
+    ['customer_email',         customerEmail  || ''],
+  ].filter(([, v]) => v);
+  const reviewUrl = `https://tally.so/r/yP1y9B?${new URLSearchParams(reviewParams).toString()}`;
   const tallySubmissionsUrl = 'https://tally.so/forms/MedpvA/submissions';
 
   const rows = [
