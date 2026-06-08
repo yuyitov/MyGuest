@@ -660,7 +660,6 @@ def build_contact(content, villa_name, ui):
   <div class="thanks-sub">{h(ui['thanks_sub'])} <em>{h(villa_name)}</em></div>
   {contact_block}
   {emergency_block}
-  <div class="footer-note">{h(ui['footer'])}</div>
   <div class="footer-brand">MyGuest · myguestguide.com</div>
 </div>"""
     return page(body, "thanks-pg")
