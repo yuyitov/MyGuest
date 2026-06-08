@@ -638,9 +638,8 @@ function injectPrivateDetailsIntoPrintHtml({ html, secrets }) {
 
   const privateBlock = `<div class="contact-rows" style="margin-top:20px;padding-top:16px;border-top:1px solid #e0d8ce">${rows.join('')}</div>`;
 
-  // Replace footer note (intentional public-only placeholder) with actual private details
   output = output.replace(
-    /<div class="footer-note">[\s\S]*?<\/div>/,
+    '<div id="private-house-print-block"></div>',
     privateBlock
   );
 
@@ -902,12 +901,15 @@ function buildRecommendationsPayload(answers) {
   for (let i = 1; i <= 5; i++) {
     recommendations[`restaurant_${i}_name`] = cleanValue(getAnswer(answers, `restaurant_${i}_name`));
     recommendations[`restaurant_${i}_maps_link`] = cleanValue(getAnswer(answers, `restaurant_${i}_maps_link`));
+    recommendations[`restaurant_${i}_phone`] = cleanValue(getAnswer(answers, `restaurant_${i}_phone`));
 
     recommendations[`bar_${i}_name`] = cleanValue(getAnswer(answers, `bar_${i}_name`));
     recommendations[`bar_${i}_maps_link`] = cleanValue(getAnswer(answers, `bar_${i}_maps_link`));
+    recommendations[`bar_${i}_phone`] = cleanValue(getAnswer(answers, `bar_${i}_phone`));
 
     recommendations[`activity_${i}_name`] = cleanValue(getAnswer(answers, `activity_${i}_name`));
     recommendations[`activity_${i}_link`] = cleanValue(getAnswer(answers, `activity_${i}_link`));
+    recommendations[`activity_${i}_phone`] = cleanValue(getAnswer(answers, `activity_${i}_phone`));
   }
 
   return recommendations;
@@ -2188,14 +2190,16 @@ function buildDeliveryEmail({ guestAccessUrl, printUrl }) {
           Share the link below directly with them.
         </p>
         ${btn(guestAccessUrl,
-          'Open secure digital guide →',
+          'Open digital guide →',
           'Full guide with WiFi, access codes, and all stay details. Send this link to your guests.')}
         ${btn(printUrl,
           'Open printable guide →',
           'Print-ready version with all details including WiFi and access codes. Open in browser and use Print / Save as PDF.')}
-        <p style="color:#aaa;font-size:12px;margin:24px 0 0;line-height:1.6">
-          Both links contain your complete stay information. Keep them private and share only with your guests.
-        </p>
+        <div style="background:#faf7f4;border:1px solid #ddd5cc;border-radius:8px;padding:14px 16px;margin:24px 0 0">
+          <p style="color:#776150;font-size:13px;margin:0;line-height:1.6">
+            Both links contain your complete stay information. Keep them private and share only with your guests.
+          </p>
+        </div>
       </td></tr>
     </table>
   </td></tr>

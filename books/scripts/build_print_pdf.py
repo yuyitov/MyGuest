@@ -478,7 +478,8 @@ def build_house(content, ui):
   <span class="page-script">{h(ui['know_script'])}</span>
   <div class="page-bold">{h(ui['know_title'])}</div>
 </div>
-<div class="know-table">{rows_html}</div>"""
+<div class="know-table">{rows_html}</div>
+<div id="private-house-print-block"></div>"""
 
     body = f"""
 <table class="split-layout house-layout"><tr>
