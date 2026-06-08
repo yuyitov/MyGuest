@@ -200,8 +200,8 @@ SHARED_IMAGES = {
 
 COVER_IMAGES_BY_ENVIRONMENT = {
     "Beach": SHARED_IMAGES["cover"],
-    "City": "../../assets/covers/city.png",
-    "Cozy": "../../assets/covers/cozy.png",
+    "City": "https://myguestguide.com/assets/covers/city.png",
+    "Cozy": "https://myguestguide.com/assets/covers/cozy.png",
 }
 
 ENVIRONMENT_ALIASES = {

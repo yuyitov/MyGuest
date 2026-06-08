@@ -138,8 +138,8 @@ STYLE_MAP = {
 
 COVER_IMAGES_BY_ENV = {
     "Beach": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80",
-    "City":  "../../assets/covers/city.png",
-    "Cozy":  "../../assets/covers/cozy.png",
+    "City":  "https://myguestguide.com/assets/covers/city.png",
+    "Cozy":  "https://myguestguide.com/assets/covers/cozy.png",
 }
 
 ENV_ALIASES = {
@@ -249,7 +249,7 @@ def get_numbered_places(content, prefix, link_field, max_items=5):
             recs.get(f"{prefix}_{i}_description") or recs.get(f"{prefix}_{i}_notes")
         ) or ""
         phone = safe_text(recs.get(f"{prefix}_{i}_phone")) or ""
-        location = safe_text(recs.get(f"{prefix}_{i}_location")) or ""
+        location = safe_text(recs.get(f"{prefix}_{i}_address")) or ""
         places.append({"name": name, "link": link, "desc": desc, "phone": phone, "location": location})
     return places
 
@@ -582,20 +582,17 @@ def build_recommendations(content, ui):
             desc_html = f'<div class="rec-detail">{h(p["desc"])}</div>' if p.get("desc") else ""
             addr_html = ""
             website_html = ""
-            if p.get("link") and p["link"].startswith(("http://", "https://")):
-                addr = _maps_address(p["link"])
-                if addr:
-                    addr_html = f'<div class="rec-address">{h(addr)}</div>'
-                else:
-                    from urllib.parse import urlparse as _up
-                    _parsed = _up(p["link"])
-                    _display = _parsed.netloc.lstrip("www.") + _parsed.path.rstrip("/")
-                    if _display:
-                        website_html = f'<div class="rec-website">{h(_display)}</div>'
-            if not addr_html and p.get("location"):
+            maps_html = ""
+            if p.get("location"):
                 addr_html = f'<div class="rec-address">{h(p["location"])}</div>'
+            if p.get("link") and p["link"].startswith(("http://", "https://")):
+                if not addr_html:
+                    addr = _maps_address(p["link"])
+                    if addr:
+                        addr_html = f'<div class="rec-address">{h(addr)}</div>'
+                maps_html = f'<div class="rec-maps"><a href="{h(p["link"])}">{h(ui.get("maps", "Open map"))}</a></div>'
             phone_html = f'<div class="rec-phone">{h(p["phone"])}</div>' if p.get("phone") else ""
-            items += f'<div class="rec-item"><div class="rec-name">{name_html}</div>{addr_html}{website_html}{phone_html}{desc_html}</div>'
+            items += f'<div class="rec-item"><div class="rec-name">{name_html}</div>{addr_html}{phone_html}{maps_html}{desc_html}</div>'
         return f"""
 <div class="rec-block">
   <div class="rec-heading">
@@ -682,21 +679,41 @@ def render_print_html(payload):
     primary_language = resolve_language(property_data.get("primary_language"))
 
     style = STYLE_MAP.get(selected_style, STYLE_MAP["Minimalist"])
-    ui = PRINT_UI[primary_language]
 
     env = resolve_env(property_data.get("property_environment"))
     cover_img = COVER_IMAGES_BY_ENV.get(env, COVER_IMAGES_BY_ENV["Beach"])
 
-    pages = [
-        build_cover(villa_name, address, ui, cover_img, style),
-        build_welcome(content, ui),
-        build_arrival(content, ui),
-        build_house(content, ui),
-        build_rules(content, ui),
-        build_recommendations(content, ui),
-        build_contact(content, villa_name, ui),
-    ]
-    pages_html = "".join(p for p in pages if p)
+    def _pages_for_lang(lang):
+        ui = PRINT_UI[lang]
+        pages = [
+            build_cover(villa_name, address, ui, cover_img, style),
+            build_welcome(content, ui),
+            build_arrival(content, ui),
+            build_house(content, ui),
+            build_rules(content, ui),
+            build_recommendations(content, ui),
+            build_contact(content, villa_name, ui),
+        ]
+        return "".join(p for p in pages if p)
+
+    def _lang_divider(label):
+        body = (
+            f'<div style="display:flex;align-items:center;justify-content:center;'
+            f'height:100%;min-height:22cm;text-align:center;">'
+            f'<div style="font-family:\'Cormorant Garamond\',serif;font-size:54pt;'
+            f'letter-spacing:0.12em;color:#8B6F47;">{h(label)}</div>'
+            f'</div>'
+        )
+        return page(body, "lang-divider-pg")
+
+    sections = []
+    for i, lang in enumerate(SUPPORTED_LANGUAGES):
+        if i > 0:
+            sections.append(_lang_divider(lang))
+        sections.append(_pages_for_lang(lang))
+    pages_html = "".join(sections)
+
+    ui = PRINT_UI[primary_language]
 
     _scripts_dir = os.path.dirname(os.path.abspath(__file__))
     _template_path = os.path.join(_scripts_dir, "..", "templates", "print_letter.html")
