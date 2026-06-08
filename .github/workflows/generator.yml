@@ -211,4 +211,5 @@ jobs:
           fi
 
           git commit -m "Generate villa page for ${{ github.event.client_payload.metadata.slug }}"
+          git pull --rebase origin main
           git push
