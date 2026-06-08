@@ -334,9 +334,11 @@ async function handleTallyWebhook(request, env, ctx) {
   // Si el cliente subió materiales (PDF, Word, fotos, capturas), el flujo
   // se pausa aquí. No se genera el book hasta que Vero revise y extraiga
   // la información manualmente. Estado: needs_manual_extraction.
+  const existingBookFile   = getAnswer(normalized.answers, 'existing_book_file');
+  const existingBookPhotos = getAnswer(normalized.answers, 'existing_book_photos');
   const hasMaterials =
-    hasUploadedMaterial(getAnswer(normalized.answers, 'existing_book_file')) ||
-    hasUploadedMaterial(getAnswer(normalized.answers, 'existing_book_photos'));
+    hasUploadedMaterial(existingBookFile) ||
+    hasUploadedMaterial(existingBookPhotos);
 
   if (hasMaterials) {
     // Guardar registro de intake para revisión manual
@@ -404,7 +406,7 @@ async function handleTallyWebhook(request, env, ctx) {
             env,
             to:      env.ALERT_EMAIL,
             subject: `[MyGuest] Revisión manual pendiente: ${propertyName}`,
-            html:    buildAlertEmail({ propertyName, clientName, customerEmail, slug, submissionId: normalized.submission_id, now })
+            html:    buildAlertEmail({ propertyName, clientName, customerEmail, slug, submissionId: normalized.submission_id, now, existingBookFile, existingBookPhotos })
           });
           console.log('alert email sent', result?.id || '');
         } catch (err) {
@@ -2076,8 +2078,10 @@ async function sendEmail({ env, to, subject, html }) {
   return response.json();
 }
 
-function buildAlertEmail({ propertyName, clientName, customerEmail, slug, submissionId, now }) {
+function buildAlertEmail({ propertyName, clientName, customerEmail, slug, submissionId, now, existingBookFile, existingBookPhotos }) {
   const reviewUrl = 'https://tally.so/r/yP1y9B?flow_type=manual_extraction_review';
+  const tallySubmissionsUrl = 'https://tally.so/forms/MedpvA/submissions';
+
   const rows = [
     ['Propiedad',     escapeHtml(propertyName)],
     ['Cliente',       escapeHtml(clientName || '—')],
@@ -2089,6 +2093,42 @@ function buildAlertEmail({ propertyName, clientName, customerEmail, slug, submis
     `<tr><td style="padding:6px 12px;color:#888;white-space:nowrap">${label}</td>` +
     `<td style="padding:6px 12px;color:#111;font-family:monospace">${value}</td></tr>`
   ).join('');
+
+  function fileListHtml(files, heading) {
+    const list = Array.isArray(files) ? files : [];
+    const items = list.filter(f => f && f.url && f.name);
+    if (!items.length) return '';
+    const lis = items.map(f => {
+      const name = escapeHtml(String(f.name));
+      const url  = escapeAttribute(String(f.url));
+      const mime = f.mimeType ? ` <span style="color:#888;font-size:12px">${escapeHtml(String(f.mimeType))}</span>` : '';
+      return `<li style="margin-bottom:6px">` +
+        `<a href="${url}" target="_blank" rel="noopener noreferrer" ` +
+        `style="color:#2D6A73;font-weight:600;word-break:break-all">${name}</a>${mime}` +
+        `</li>`;
+    }).join('');
+    return `<div style="margin-bottom:14px">` +
+      `<div style="font-size:11px;font-weight:700;letter-spacing:0.8px;color:#666;` +
+      `text-transform:uppercase;margin-bottom:6px">${escapeHtml(heading)}</div>` +
+      `<ul style="margin:0;padding-left:18px;font-size:14px;color:#111;line-height:1.6">${lis}</ul>` +
+      `</div>`;
+  }
+
+  const filesHtml = fileListHtml(existingBookFile,   'Guía existente (PDF / Word)') +
+                    fileListHtml(existingBookPhotos,  'Fotos / capturas del cliente');
+
+  const filesSectionHtml = filesHtml
+    ? `<div style="background:#f0f7f7;border-left:3px solid #2D6A73;border-radius:0 6px 6px 0;` +
+      `padding:16px 20px;margin:0 0 24px">` +
+      `<p style="font-size:11px;font-weight:700;letter-spacing:1px;color:#2D6A73;margin:0 0 12px">` +
+      `ARCHIVOS DEL CLIENTE — DESCARGA ANTES DE CONTINUAR</p>` +
+      filesHtml +
+      `<p style="font-size:12px;color:#888;margin:10px 0 0">` +
+      `También disponibles en <a href="${escapeAttribute(tallySubmissionsUrl)}" ` +
+      `target="_blank" rel="noopener noreferrer" style="color:#2D6A73">Tally → Submissions</a> ` +
+      `bajo submission <span style="font-family:monospace">${escapeHtml(submissionId)}</span>.</p>` +
+      `</div>`
+    : '';
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -2104,19 +2144,17 @@ function buildAlertEmail({ propertyName, clientName, customerEmail, slug, submis
           Revisión manual pendiente
         </h1>
         <p style="color:#444;line-height:1.6;margin:0 0 24px">
-          Un cliente subió archivos adjuntos (welcome book, fotos o capturas).
-          Revisa los archivos en Tally y extrae la información necesaria antes de generar la guía.
+          Un cliente subió archivos adjuntos. Descarga los archivos, extrae la información
+          y completa el formulario de revisión antes de generar la guía.
         </p>
+        ${filesSectionHtml}
         <table style="width:100%;border-collapse:collapse;background:#f9f9f9;border-radius:8px;margin:0 0 24px">${rows}</table>
-        <p style="text-align:center;margin:0 0 16px">
+        <p style="text-align:center;margin:0">
           <a href="${escapeAttribute(reviewUrl)}"
              style="background:#2D6A73;color:#fff;padding:14px 28px;border-radius:8px;
                     text-decoration:none;font-size:15px;font-weight:600;display:inline-block">
             Abrir formulario de revisión →
           </a>
-        </p>
-        <p style="font-size:12px;color:#aaa;text-align:center;margin:0">
-          Los archivos del cliente están en Tally bajo submission ${escapeHtml(submissionId)}.
         </p>
       </td></tr>
     </table>
