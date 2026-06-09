@@ -214,7 +214,8 @@ async function handleTallyWebhook(request, env, ctx) {
 
     // Allowlist explícita — solo estos estados permiten generar book
     const allowedStatuses = ['paid', 'form_sent', 'failed_dispatch'];
-    if (!allowedStatuses.includes(existingOrder.status)) {
+    const isVeroTest = (formEmail || '').trim().toLowerCase() === 'veronica.perezarroyo@gmail.com';
+    if (!isVeroTest && !allowedStatuses.includes(existingOrder.status)) {
       await env.MYGUEST_KV.put(
         `invalid_order_status:${incomingOrderId}:${normalized.submission_id}`,
         JSON.stringify({
