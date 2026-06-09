@@ -635,12 +635,11 @@ def build_contact(content, villa_name, ui):
 
     contact_rows = contact_row(ui["email"], email)
     contact_rows += contact_row(ui["instagram"], instagram_display)
+    contact_rows += '<div id="private-phone-contact-block"></div>'
 
     emergency_rows = f'<div class="emergency-text">{h(emergency)}</div>' if emergency else ""
 
-    contact_block = ""
-    if contact_rows:
-        contact_block = f"""
+    contact_block = f"""
 <div class="thanks-section">
   <div class="thanks-section-title">{h(ui['contact'])}</div>
   <div class="contact-rows">{contact_rows}</div>

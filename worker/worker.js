@@ -636,14 +636,18 @@ function injectPrivateDetailsIntoPrintHtml({ html, secrets }) {
   if (s.house_access_private) rows.push(`<div class="contact-row"><span class="contact-label">Access</span><span class="contact-val">${escapeHtml(String(s.house_access_private))}</span></div>`);
   if (s.host_phone)           rows.push(`<div class="contact-row"><span class="contact-label">Host Phone</span><span class="contact-val">${escapeHtml(String(s.host_phone))}</span></div>`);
 
-  if (rows.length === 0) return output;
+  if (rows.length > 0) {
+    const privateBlock = `<div class="contact-rows" style="margin-top:20px;padding-top:16px;border-top:1px solid #e0d8ce">${rows.join('')}</div>`;
+    output = output.replace(
+      '<div id="private-house-print-block"></div>',
+      privateBlock
+    );
+  }
 
-  const privateBlock = `<div class="contact-rows" style="margin-top:20px;padding-top:16px;border-top:1px solid #e0d8ce">${rows.join('')}</div>`;
-
-  output = output.replace(
-    '<div id="private-house-print-block"></div>',
-    privateBlock
-  );
+  const phoneRow = s.host_phone
+    ? `<div class="contact-row"><span class="contact-label">Phone</span><span class="contact-val">${escapeHtml(String(s.host_phone))}</span></div>`
+    : '';
+  output = output.split('<div id="private-phone-contact-block"></div>').join(phoneRow);
 
   return output;
 }
