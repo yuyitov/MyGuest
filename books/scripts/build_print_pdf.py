@@ -525,16 +525,24 @@ def build_rules(content, ui):
   {f'<div class="rule-desc">{h(desc)}</div>' if desc else ""}
 </td>"""
 
-    # Build rows of 3
-    grid_rows = ""
-    for r in range(0, len(rule_lines), 3):
-        chunk = rule_lines[r:r + 3]
-        cells = "".join(rule_cell(r + i + 1, chunk[i]) for i in range(len(chunk)))
-        # pad to 3 cells
-        while len(chunk) < 3:
-            cells += '<td class="rule-card rule-empty"></td>'
-            chunk.append("")
-        grid_rows += f"<tr>{cells}</tr>"
+    # Paragraph mode: rules came as one continuous block (no meaningful line breaks)
+    if len(rule_lines) <= 1:
+        rules_html = (
+            f'<div style="padding:0 var(--pad) 0.3cm">'
+            f'<div class="page-text">{h(rules_text)}</div>'
+            f'</div>'
+        )
+    else:
+        # Grid mode: numbered 3-column cards
+        grid_rows = ""
+        for r in range(0, len(rule_lines), 3):
+            chunk = rule_lines[r:r + 3]
+            cells = "".join(rule_cell(r + i + 1, chunk[i]) for i in range(len(chunk)))
+            while len(chunk) < 3:
+                cells += '<td class="rule-card rule-empty"></td>'
+                chunk.append("")
+            grid_rows += f"<tr>{cells}</tr>"
+        rules_html = f'<table class="rules-grid">{grid_rows}</table>'
 
     before_lines = split_lines(before, 8)
     before_html = ""
@@ -555,7 +563,7 @@ def build_rules(content, ui):
 
     body = f"""
 {top}
-<table class="rules-grid">{grid_rows}</table>
+{rules_html}
 {before_html}"""
     return page(body, "rules-pg")
 
