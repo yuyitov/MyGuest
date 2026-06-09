@@ -1,0 +1,2107 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="referrer" content="no-referrer">
+    <title>MyGuest — Casa Mar Serena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+    --primary: #285260;
+    --accent: #AB9072;
+    --bg: #F1EBE3;
+    --text: #285260;
+
+    --mg-title: var(--primary);
+    --mg-body: var(--text);
+    --mg-soft: color-mix(in srgb, var(--bg) 88%, var(--accent) 12%);
+    --mg-card: color-mix(in srgb, #ffffff 86%, var(--bg) 14%);
+    --mg-line: color-mix(in srgb, var(--primary) 26%, transparent);
+    --mg-line-soft: color-mix(in srgb, var(--accent) 48%, transparent);
+
+    --mg-button: var(--primary);
+    --mg-button-text: #ffffff;
+    --mg-icon: var(--primary);
+    --mg-pill-bg: color-mix(in srgb, var(--accent) 28%, #ffffff 72%);
+    --mg-pill-text: color-mix(in srgb, var(--primary) 72%, var(--text) 28%);
+    --mg-muted: color-mix(in srgb, var(--text) 58%, transparent);
+    --mg-card-border: color-mix(in srgb, var(--primary) 18%, transparent);
+    --mg-card-shadow-color: color-mix(in srgb, var(--text) 12%, transparent);
+
+    --mg-shadow: 0 18px 42px var(--mg-card-shadow-color);
+    --mg-shadow-soft: 0 10px 24px color-mix(in srgb, var(--text) 8%, transparent);
+    --mg-phone-max: 430px;
+    --mg-screen-height: calc(100dvh - 92px);
+}
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            background: var(--bg);
+            color: var(--mg-body);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                linear-gradient(160deg,
+                    color-mix(in srgb, var(--primary) 18%, var(--bg)) 0%,
+                    color-mix(in srgb, var(--primary) 6%, var(--bg)) 35%,
+                    var(--bg) 65%,
+                    color-mix(in srgb, var(--accent) 10%, var(--bg)) 100%
+                ) fixed;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .app-shell {
+            width: min(100%, var(--mg-phone-max));
+            max-width: var(--mg-phone-max);
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 18px 18px 36px;
+            background: transparent;
+        }
+
+        .language-bar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: nowrap;
+            margin-bottom: 20px;
+        }
+
+        .language-bar .language-chip,
+        .language-bar button,
+        .language-bar a {
+            appearance: none;
+            border: 1px solid rgba(58, 42, 28, 0.10);
+            background: #ffffff;
+            color: var(--mg-body);
+            border-radius: 999px;
+            padding: 14px 22px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            line-height: 1;
+            box-shadow: 0 2px 7px rgba(0,0,0,0.04);
+        }
+
+        .language-bar .active {
+            background: var(--mg-title);
+            color: #ffffff;
+            border-color: var(--mg-title);
+        }
+
+        .screen {
+            width: 100%;
+            min-height: var(--mg-screen-height);
+            margin-bottom: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            scroll-margin-top: 12px;
+        }
+
+       .sheet {
+            min-height: var(--mg-screen-height);
+            background: var(--mg-card);
+            border: 1px solid rgba(0,0,0,0.04);
+            border-radius: 36px;
+            padding: 22px 16px 20px;
+            box-shadow: var(--mg-shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .screen-inner {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .leaf {
+            text-align: center;
+            color: #d8c0a0;
+            margin-bottom: 10px;
+        }
+
+        .leaf svg {
+            width: 28px;
+            height: 28px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .screen-title {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(24px, 7vw, 34px);
+            line-height: 1.02;
+            letter-spacing: 0.10em;
+            text-transform: uppercase;
+            color: var(--mg-title);
+            margin-bottom: 20px;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .screen-copy,
+        .field-copy,
+        .info-text,
+        .list-copy,
+        .rule-copy,
+        .contact-text,
+        .recommendation-listing-copy {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(16px, 4.2vw, 19px);
+            line-height: 1.62;
+            color: var(--mg-body) !important;
+            overflow-wrap: anywhere;
+            word-break: normal;
+        }
+
+        .panel {
+            background: var(--mg-soft);
+            border: 1px solid var(--mg-line-soft);
+            border-radius: 28px;
+            padding: 18px;
+            box-shadow: var(--mg-shadow-soft);
+            margin-bottom: 16px;
+            overflow-wrap: anywhere;
+        }
+
+        .info-row-item {
+            display: grid;
+            grid-template-columns: 56px 1fr;
+            gap: 14px;
+            align-items: start;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(212, 186, 154, 0.32);
+        }
+
+        .info-row-item:first-child {
+            padding-top: 0;
+        }
+
+        .info-row-item:last-child {
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .info-row-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 999px;
+            background: #fffaf4;
+            border: 1px solid rgba(212, 186, 154, 0.45);
+            color: #a07a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .info-row-icon svg {
+            width: 23px;
+            height: 23px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .info-row-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 25px;
+            line-height: 1;
+            color: #6e5230;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .menu-back-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: 14px;
+        }
+
+        .menu-back-btn,
+        .pill-button {
+            min-width: 220px;
+            min-height: 52px;
+            padding: 15px 24px;
+            border-radius: 999px;
+            background: #8b6f47;
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(139, 111, 71, 0.20);
+        }
+
+        .pill-button {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            padding: 14px 18px;
+            flex-wrap: wrap;
+            white-space: normal;
+            text-align: center;
+            line-height: 1.25;
+            overflow-wrap: anywhere;
+        }
+        
+        .pill-button span {
+            display: block;
+            max-width: 100%;
+            overflow-wrap: anywhere;
+        }
+        .menu-back-btn svg,
+        .pill-button svg {
+            width: 21px;
+            height: 21px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+       /* Pantalla 1 — Cover */
+.cover-screen {
+    align-items: center;
+    justify-content: flex-start;
+    min-height: var(--mg-screen-height);
+    padding: clamp(18px, 4dvh, 34px) 6px 16px;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+
+.cover-screen > div:last-child {
+    width: 100%;
+    max-width: 330px;
+    margin: 10px auto 0;
+    padding: 0 8px;
+    text-align: center;
+}
+
+.cover-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(34px, 10vw, 46px);
+    line-height: 0.96;
+    letter-spacing: 0.085em;
+    color: var(--mg-title);
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 0 0 10px;
+}
+
+.cover-image-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 0 0 2px;
+}
+
+.cover-image-arch {
+    width: min(62vw, 238px);
+    aspect-ratio: 0.72 / 1;
+    max-height: 31dvh;
+    border-radius: 160px 160px 0 0;
+    overflow: hidden;
+    border: 2px solid rgba(138, 112, 74, 0.22);
+    background: linear-gradient(180deg, rgba(255,255,255,0.45), rgba(216,206,186,0.45));
+    box-shadow: 0 10px 24px rgba(58, 42, 28, 0.08);
+}
+
+.cover-image-arch img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.cover-script {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(52px, 15vw, 70px);
+    line-height: 0.78;
+    color: var(--mg-title);
+    text-align: center;
+    margin: 0 0 14px;
+    font-weight: 400;
+}
+
+.cover-to {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(14px, 4.4vw, 19px);
+    letter-spacing: 0.20em;
+    color: var(--mg-body) !important;
+    text-align: center;
+    margin: 0 0 11px;
+    text-transform: uppercase;
+}
+
+.cover-villa-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(19px, 5.8vw, 26px);
+    line-height: 1.15;
+    letter-spacing: 0.14em;
+    color: var(--mg-body) !important;
+    text-align: center;
+    text-transform: uppercase;
+    max-width: 100%;
+    margin: 0;
+    font-weight: 600;
+}
+
+        /* Pantalla 2 — Welcome */
+        .welcome-card {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            border-radius: 0;
+            min-height: var(--mg-screen-height);
+            padding: 12px 8px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .welcome-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(38px, 11.5vw, 54px);
+            line-height: 0.95;
+            letter-spacing: 0.10em;
+            color: var(--mg-title);
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: 500;
+            margin: 0 auto 20px;
+            max-width: 92%;
+        }
+
+        .welcome-image {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 0 auto 22px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(217,206,186,0.35));
+            min-height: 0;
+        }
+
+        .welcome-image img {
+            display: block;
+            width: 100%;
+            height: clamp(200px, 32dvh, 280px);
+            min-height: 0;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .welcome-message {
+            max-width: 100%;
+            margin: 0 auto 22px;
+            text-align: left;
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(16px, 4.2vw, 19px);
+            line-height: 1.62;
+            letter-spacing: 0.01em;
+            color: var(--mg-body) !important;
+            font-weight: 400;
+        }
+
+        .welcome-about {
+            border-top: 1px solid var(--mg-line);
+            padding-top: 18px;
+            margin-top: 2px;
+        }
+
+        .welcome-about-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(18px, 5vw, 24px);
+            line-height: 1;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: var(--mg-title);
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .welcome-about-copy {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(16px, 4.2vw, 19px);
+            line-height: 1.62;
+            color: var(--mg-body) !important;
+            font-weight: 400;
+        }
+
+        /* Next Page Button */
+        .next-page-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            align-self: center;
+            margin-top: auto;
+            padding: 13px 30px;
+            background: var(--mg-button);
+            color: var(--mg-button-text) !important;
+            border-radius: 999px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(13px, 3.5vw, 15px);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            text-transform: uppercase;
+            box-shadow: 0 8px 24px color-mix(in srgb, var(--primary) 28%, transparent);
+            transition: transform 200ms ease, box-shadow 200ms ease;
+        }
+        .next-page-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px color-mix(in srgb, var(--primary) 36%, transparent); }
+        .next-page-btn:active { transform: scale(0.97); }
+
+        /* Pantalla 3 — Menu final 12 */
+        .menu-screen-approved {
+            min-height: var(--mg-screen-height);
+            background:
+                radial-gradient(circle at 85% 6%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 34%),
+                linear-gradient(180deg,
+                    color-mix(in srgb, var(--mg-card) 88%, var(--primary) 12%) 0%,
+                    color-mix(in srgb, var(--mg-card) 96%, transparent) 100%
+                );
+            border: 1px solid var(--mg-card-border);
+            border-radius: 34px;
+            box-shadow: var(--mg-shadow);
+            padding: 18px 16px 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .menu-screen-approved .menu-script-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(54px, 16vw, 76px);
+            line-height: 0.9;
+            color: var(--mg-title);
+            text-align: center;
+            margin: 0 0 8px;
+            font-weight: 400;
+        }
+
+        .menu-screen-approved .menu-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(18px, 5vw, 25px);
+            line-height: 1.12;
+            letter-spacing: 0.08em;
+            color: var(--mg-title);
+            text-align: center;
+            text-transform: none;
+            margin: 10px auto 22px;
+            max-width: 92%;
+        }
+
+        .menu-grid-approved {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            column-gap: 10px;
+            row-gap: 12px;
+            align-items: stretch;
+        }
+
+        .menu-screen-approved .menu-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-width: 0;
+            text-decoration: none;
+            color: var(--mg-body);
+            -webkit-tap-highlight-color: transparent;
+            background: rgba(255, 253, 250, 0.92);
+            border: 1.5px solid rgba(138, 112, 74, 0.28);
+            border-radius: 14px;
+            padding: 14px 4px 10px;
+            box-shadow: 0 4px 14px rgba(58, 42, 28, 0.09), 0 1px 3px rgba(58, 42, 28, 0.05);
+            transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+        }
+
+        .menu-screen-approved .menu-link:active {
+            transform: scale(0.96);
+            background: rgba(242, 232, 218, 0.95);
+            box-shadow: 0 2px 6px rgba(58, 42, 28, 0.09);
+        }
+
+    .menu-screen-approved .menu-tile {
+    width: auto;
+    aspect-ratio: auto;
+    border-radius: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 6px;
+}
+
+.menu-screen-approved .menu-link:active .menu-tile {
+    transform: none;
+    background: none;
+    box-shadow: none;
+}
+
+.menu-screen-approved .menu-icon {
+    width: clamp(38px, 10vw, 48px);
+    height: clamp(38px, 10vw, 48px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #8A704A;
+}
+
+.menu-screen-approved .menu-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.menu-screen-approved .menu-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(15px, 4.1vw, 19px);
+    line-height: 1.05;
+    color: var(--mg-body);
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0;
+    max-width: 100%;
+    min-height: 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+       
+
+        /* Cards recomendación */
+        .recommendation-listing-panel {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            margin-bottom: 16px;
+        }
+
+        .recommendation-listing-card {
+            background: #fffaf4;
+            border: 1px solid rgba(138, 112, 74, 0.18);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 12px 28px rgba(58, 42, 28, 0.07);
+            margin-bottom: 18px;
+        }
+
+        .recommendation-listing-image {
+            position: relative;
+            width: 100%;
+            height: 168px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #efe2cf 0%, #d8c0a0 100%);
+            border-bottom: 1px solid rgba(138, 112, 74, 0.14);
+        }
+
+        .recommendation-listing-image img,
+        .recommendation-listing-image iframe {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border: 0;
+            object-fit: cover;
+        }
+
+        .image-disclaimer {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            max-width: calc(100% - 20px);
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            color: rgba(58, 42, 28, 0.72);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+        .recommendation-listing-body {
+            padding: 14px 14px 16px;
+        }
+
+        .recommendation-listing-topline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-listing-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 25px;
+            line-height: 1.05;
+            color: var(--mg-body);
+            font-weight: 600;
+        }
+
+        .recommendation-rating {
+            color: #B08B5A;
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+        }
+
+        .recommendation-meta {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            line-height: 1.35;
+            letter-spacing: 0.10em;
+            text-transform: uppercase;
+            color: rgba(58, 42, 28, 0.58);
+            margin-bottom: 10px;
+        }
+
+        .recommendation-listing-copy {
+            font-size: 14px;
+            line-height: 1.58;
+            margin-bottom: 14px;
+            white-space: pre-line;
+        }
+
+        .recommendation-action-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .recommendation-action-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 9px 13px;
+            border-radius: 999px;
+            background: #D9E9E5;
+            color: #31524D;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid rgba(49, 82, 77, 0.12);
+        }
+
+        .recommendation-action-pill svg {
+            width: 14px;
+            height: 14px;
+            margin-right: 6px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Carte iframe */
+        .info-map-iframe {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            border: 1px solid rgba(212, 186, 154, 0.45);
+            line-height: 0;
+        }
+
+        .info-map-iframe iframe {
+            width: 100%;
+            height: 200px;
+            display: block;
+            border: 0;
+        }
+
+        .map-btn-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .map-open-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--mg-button);
+            color: var(--mg-button-text) !important;
+            padding: 12px 22px;
+            border-radius: 999px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            box-shadow: 0 8px 20px color-mix(in srgb, var(--primary) 25%, transparent);
+            text-decoration: none;
+        }
+
+        .map-open-btn svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .time-card {
+            background: #fbf7f2;
+            border: 1px solid rgba(212, 186, 154, 0.65);
+            border-radius: 24px;
+            min-height: 168px;
+            padding: 18px 10px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--mg-shadow-soft);
+        }
+
+        .time-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(42px, 14vw, 64px);
+            line-height: 0.9;
+            color: #6e5230;
+            font-weight: 500;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .time-label {
+            font-size: 12px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #6e5230;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .private-card {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 6px;
+            background: #fffaf4;
+            border: 1px solid rgba(212, 186, 154, 0.45);
+            border-radius: 22px;
+            padding: 15px 16px;
+            margin-top: 12px;
+            text-align: left;
+        }
+
+        .private-card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            line-height: 1;
+            color: #6e5230;
+            font-weight: 600;
+        }
+
+        .private-card-text {
+            font-size: 16px;
+            line-height: 1.55;
+            color: var(--mg-body);
+            overflow-wrap: anywhere;
+        }
+
+        .wifi-center {
+            text-align: center;
+            padding: 6px 10px 2px;
+        }
+
+        .wifi-center-icon {
+            width: 126px;
+            height: 126px;
+            border-radius: 999px;
+            background: #f6efe8;
+            border: 1px solid rgba(212, 186, 154, 0.50);
+            color: #8b6f47;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .wifi-center-icon svg {
+            width: 64px;
+            height: 64px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .footer-note {
+            margin-top: 14px;
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: center;
+            color: rgba(58,42,28,0.56);
+        }
+
+        .review-text-link {
+            display: inline;
+            color: var(--mg-title);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            font-size: clamp(16px, 4.2vw, 19px);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+       .is-hidden {
+    display: none !important;
+}
+
+/* Theme overrides — makes selected Style visibly change the book */
+.language-bar .active {
+    background: var(--mg-button);
+    border-color: var(--mg-button);
+    color: var(--mg-button-text);
+}
+
+.leaf {
+    color: var(--accent);
+}
+
+.info-row-icon,
+.wifi-center-icon {
+    background: var(--mg-card);
+    border-color: var(--mg-line-soft);
+    color: var(--mg-icon);
+}
+
+.info-row-title,
+.time-value,
+.time-label,
+.private-card-title {
+    color: var(--mg-title);
+}
+
+.menu-back-btn,
+.pill-button {
+    background: var(--mg-button);
+    color: var(--mg-button-text);
+    box-shadow: 0 10px 20px color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+.cover-image-arch {
+    border-color: var(--mg-line);
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, #ffffff 54%, var(--bg) 46%),
+        color-mix(in srgb, var(--accent) 26%, var(--bg) 74%)
+    );
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.welcome-image {
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, #ffffff 50%, var(--bg) 50%),
+        color-mix(in srgb, var(--accent) 20%, var(--bg) 80%)
+    );
+}
+
+.menu-screen-approved {
+    background:
+        radial-gradient(circle at 85% 6%, color-mix(in srgb, var(--accent) 36%, transparent), transparent 34%),
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, #ffffff 78%, var(--bg) 22%),
+            color-mix(in srgb, var(--bg) 90%, var(--accent) 10%)
+        );
+    border-color: var(--mg-card-border);
+}
+
+.menu-screen-approved .menu-link {
+    background: color-mix(in srgb, var(--mg-card) 82%, #ffffff 18%);
+    border-color: var(--mg-line);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--text) 8%, transparent), 0 1px 3px color-mix(in srgb, var(--text) 4%, transparent);
+}
+
+.menu-screen-approved .menu-tile {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.menu-screen-approved .menu-link:active {
+    background: color-mix(in srgb, var(--accent) 16%, var(--mg-card) 84%);
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+.menu-screen-approved .menu-icon {
+    color: var(--mg-icon);
+}
+
+.recommendation-listing-card,
+.private-card,
+.time-card {
+    background: var(--mg-card);
+    border-color: var(--mg-card-border);
+    box-shadow: 0 12px 28px color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.recommendation-listing-image {
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--accent) 22%, var(--bg) 78%) 0%,
+        color-mix(in srgb, var(--primary) 18%, var(--bg) 82%) 100%
+    );
+    border-bottom-color: var(--mg-card-border);
+}
+
+.recommendation-rating {
+    color: var(--mg-title);
+}
+
+.recommendation-meta,
+.footer-note {
+    color: var(--mg-muted);
+}
+
+.recommendation-action-pill {
+    background: var(--mg-pill-bg);
+    color: var(--mg-pill-text);
+    border-color: color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+.info-map-box {
+    background:
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--accent) 22%, var(--bg) 78%),
+            color-mix(in srgb, #ffffff 64%, var(--bg) 36%)
+        ),
+        repeating-linear-gradient(45deg, color-mix(in srgb, var(--primary) 10%, transparent) 0 1px, transparent 1px 18px),
+        repeating-linear-gradient(-45deg, color-mix(in srgb, var(--primary) 8%, transparent) 0 1px, transparent 1px 22px);
+    border-color: var(--mg-line-soft);
+}
+
+.info-map-box a::before {
+    border-color: var(--mg-line);
+    background: color-mix(in srgb, #ffffff 72%, var(--bg) 28%);
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+.info-map-box a::after {
+    color: var(--mg-title);
+}
+
+@media (max-height: 740px) {
+
+            .app-shell {
+                padding-top: 14px;
+                padding-bottom: 28px;
+            }
+
+            .language-bar {
+                margin-bottom: 14px;
+            }
+
+            .language-bar .language-chip,
+            .language-bar button,
+            .language-bar a {
+                padding: 11px 18px;
+                font-size: 12px;
+            }
+
+            .cover-title {
+                font-size: clamp(34px, 10vw, 48px);
+            }
+
+            .cover-image-arch {
+                width: min(66vw, 238px);
+                max-height: 31dvh;
+            }
+
+            .cover-script {
+                font-size: clamp(42px, 13vw, 58px);
+            }
+
+            .welcome-title {
+                font-size: clamp(34px, 10vw, 48px);
+                margin-bottom: 14px;
+            }
+
+            .welcome-image {
+                margin-bottom: 16px;
+            }
+
+            .welcome-image img {
+                height: clamp(180px, 29dvh, 250px);
+            }
+
+            .welcome-message,
+            .welcome-about-copy {
+                font-size: clamp(15px, 4vw, 18px);
+                line-height: 1.55;
+            }
+
+            .menu-screen-approved .menu-script-title {
+                font-size: clamp(46px, 14vw, 64px);
+            }
+
+            .menu-screen-approved .menu-subtitle {
+                margin-bottom: 16px;
+            }
+
+            .menu-grid-approved {
+                row-gap: 10px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .app-shell {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .screen-title {
+                font-size: clamp(22px, 6.4vw, 30px);
+                letter-spacing: 0.07em;
+            }
+
+            .language-bar {
+                gap: 8px;
+            }
+
+            .language-bar .language-chip,
+            .language-bar button,
+            .language-bar a {
+                padding: 11px 14px;
+                font-size: 12px;
+            }
+
+            .menu-screen-approved {
+                padding: 16px 12px 20px;
+            }
+
+            .menu-grid-approved {
+                column-gap: 8px;
+                row-gap: 10px;
+            }
+
+            .menu-screen-approved .menu-tile {
+                border-radius: 18px;
+                margin-bottom: 5px;
+            }
+
+            .menu-screen-approved .menu-label {
+                font-size: clamp(15px, 4.2vw, 18px);
+                min-height: 30px;
+            }
+
+            .recommendation-listing-image {
+                height: 146px;
+            }
+
+            .recommendation-listing-name {
+                font-size: 22px;
+            }
+
+            .recommendation-action-pill {
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+        }
+
+        @media print {
+            .language-bar,
+            .menu-back-wrap,
+            #menu-sheet {
+                display: none !important;
+            }
+        }
+    
+/* MyGuest Bloque 12 approved screens */
+:root {
+  --myguest-deep-text:#3A2A1C;
+  --myguest-muted-text:#5B4635;
+  --myguest-icon:#7A624C;
+  --myguest-tile:#F4EEE6;
+  --myguest-border:#DDCFC0;
+  --myguest-screen-h:calc(100svh - 92px);
+}
+body,.welcome-message,.menu-label,.paragraph,.info-value,.info-row,.card,.section-title,.arrival-time,.arrival-detail-text,.list-item-text,.rule-text,.arrival-approved-text { color:var(--myguest-deep-text)!important; }
+.screen:not(.cover-screen) { min-height:var(--myguest-screen-h)!important; }
+.welcome-card .arrival-grid,.welcome-card .welcome-divider,.welcome-card .welcome-actions,.welcome-card .welcome-signoff,.welcome-card .welcome-eyebrow { display:none!important; }
+.welcome-card { padding-top:clamp(20px,5vw,28px)!important;padding-bottom:clamp(20px,5vw,28px)!important; }
+.welcome-image { display:block!important;min-height:190px!important;max-height:260px!important;background:linear-gradient(180deg,#F7F0E8,#E7D8C7)!important;border-radius:8px!important; }
+.welcome-image img { display:block!important;width:100%!important;height:clamp(190px,36svh,260px)!important;object-fit:cover!important;border-radius:8px!important; }
+.menu-screen-approved { min-height:var(--myguest-screen-h)!important;background:radial-gradient(circle at 85% 6%, rgba(216,206,186,.36), transparent 34%),linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,250,244,.92))!important;border:1px solid rgba(138,112,74,.14)!important;border-radius:34px!important;box-shadow:0 18px 42px rgba(58,42,28,.08)!important;padding:8px 16px 22px!important; }
+.menu-screen-approved .menu-kicker { font-family:'Cormorant Garamond',serif!important;font-size:clamp(14px,3.6vw,18px)!important;line-height:1!important;letter-spacing:.34em!important;text-transform:uppercase!important;color:var(--primary)!important;text-align:center!important;margin-bottom:0!important;opacity:.9!important; }
+.menu-screen-approved .menu-script-title { font-family:'Great Vibes',cursive!important;font-size:clamp(54px,16vw,76px)!important;line-height:.9!important;color:var(--primary)!important;text-align:center!important;margin:-6px 0 4px!important;font-weight:400!important; }
+.menu-screen-approved .menu-subtitle { font-family:'Cormorant Garamond',serif!important;font-size:clamp(18px,5vw,25px)!important;line-height:1.12!important;letter-spacing:.08em!important;color:var(--primary)!important;text-align:center!important;text-transform:none!important;margin:0 auto 18px!important;max-width:92%!important; }
+.menu-grid-approved { display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;column-gap:10px!important;row-gap:12px!important;align-items:stretch!important; }
+.menu-screen-approved .menu-link { display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;min-width:0!important;text-decoration:none!important;color:var(--text)!important;-webkit-tap-highlight-color:transparent!important; }
+.menu-screen-approved .menu-tile { background:none!important;border:none!important;box-shadow:none!important;width:auto!important;aspect-ratio:auto!important;display:flex!important;align-items:center!important;justify-content:center!important;margin-bottom:6px!important; }
+.menu-screen-approved .menu-icon { width:clamp(31px,9vw,42px)!important;height:clamp(31px,9vw,42px)!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;color:var(--primary)!important; }
+.menu-screen-approved .menu-icon svg,.arrival-approved-icon svg,.arrival-approved-back svg,.arrival-approved-map svg { width:100%!important;height:100%!important;stroke:currentColor!important;fill:none!important;stroke-width:1.75!important;stroke-linecap:round!important;stroke-linejoin:round!important; }
+.menu-screen-approved .menu-label { font-family:'Cormorant Garamond',serif!important;font-size:clamp(14px,3.7vw,17px)!important;line-height:1.05!important;color:var(--myguest-deep-text)!important;font-weight:500!important;text-align:center!important;min-height:32px!important;display:flex!important;align-items:flex-start!important;justify-content:center!important; }
+.menu-screen-approved .menu-item-wide-left { grid-column:1 / 2!important;transform:translateX(56%)!important; }
+.menu-screen-approved .menu-item-wide-right { grid-column:3 / 4!important;transform:translateX(-56%)!important; }
+.arrival-screen-approved { position:relative!important;min-height:var(--myguest-screen-h)!important;background:radial-gradient(circle at 88% 6%,rgba(216,206,186,.32),transparent 35%),linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,250,244,.94))!important;border:1px solid rgba(138,112,74,.14)!important;border-radius:34px!important;box-shadow:0 18px 42px rgba(58,42,28,.08)!important;padding:18px 16px 22px!important; }
+.arrival-approved-back { display:inline-flex!important;align-items:center!important;gap:7px!important;padding:11px 16px!important;border-radius:999px!important;background:rgba(244,238,230,.95)!important;border:1px solid rgba(138,112,74,.14)!important;box-shadow:0 9px 22px rgba(58,42,28,.06)!important;color:var(--myguest-deep-text)!important;text-decoration:none!important;font-family:'Montserrat',sans-serif!important;font-size:15px!important;font-weight:500!important; }
+.arrival-approved-back svg { width:20px!important;height:20px!important; }
+.arrival-approved-ornament { width:42px!important;height:42px!important;margin:4px auto 4px!important;color:var(--primary)!important;opacity:.86!important; }
+.arrival-approved-title { font-family:'Cormorant Garamond',serif!important;font-size:clamp(58px,17vw,82px)!important;line-height:.86!important;color:var(--myguest-deep-text)!important;text-align:center!important;font-weight:500!important;margin:0 0 10px!important;letter-spacing:0!important;text-transform:none!important; }
+.arrival-approved-subtitle { font-family:'Montserrat',sans-serif!important;font-size:clamp(15px,4.2vw,18px)!important;line-height:1.35!important;text-align:center!important;color:var(--myguest-deep-text)!important;margin:0 auto 22px!important;max-width:92%!important; }
+.arrival-approved-time-grid { display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;margin-bottom:14px!important; }
+.arrival-approved-time-card { background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(252,247,240,.92))!important;border:1px solid rgba(138,112,74,.18)!important;border-radius:24px!important;box-shadow:0 10px 24px rgba(58,42,28,.07)!important;min-height:164px!important;padding:18px 10px 16px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important; }
+.arrival-approved-time-card .arrival-approved-icon { width:64px!important;height:64px!important;border-radius:999px!important;background:#F4EEE6!important;color:var(--myguest-deep-text)!important;display:flex!important;align-items:center!important;justify-content:center!important;margin-bottom:14px!important;padding:16px!important; }
+.arrival-approved-label { font-family:'Montserrat',sans-serif!important;font-size:13px!important;font-weight:600!important;line-height:1!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:var(--myguest-deep-text)!important;margin-bottom:14px!important; }
+.arrival-approved-time { font-family:'Cormorant Garamond',serif!important;font-size:clamp(42px,12vw,60px)!important;line-height:.9!important;color:var(--myguest-deep-text)!important;font-weight:500!important; }
+.arrival-approved-info-card { display:grid!important;grid-template-columns:78px 1fr!important;gap:15px!important;align-items:center!important;background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(252,247,240,.92))!important;border:1px solid rgba(138,112,74,.18)!important;border-radius:24px!important;box-shadow:0 10px 24px rgba(58,42,28,.07)!important;padding:16px!important;margin-bottom:14px!important; }
+.arrival-approved-info-card .arrival-approved-icon { width:62px!important;height:62px!important;border-radius:999px!important;background:#F4EEE6!important;color:var(--myguest-deep-text)!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:15px!important; }
+.arrival-approved-heading { font-family:'Montserrat',sans-serif!important;font-size:clamp(18px,5vw,23px)!important;line-height:1.12!important;font-weight:600!important;color:var(--myguest-deep-text)!important;margin-bottom:8px!important; }
+.arrival-approved-text { font-family:'Montserrat',sans-serif!important;font-size:clamp(14px,3.9vw,16px)!important;line-height:1.5!important;font-weight:400!important;color:var(--myguest-deep-text)!important; }
+.arrival-approved-map { width:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:15px!important;min-height:68px!important;padding:18px 20px!important;border-radius:22px!important;background:rgba(255,250,244,.70)!important;border:1.5px solid var(--primary)!important;color:var(--primary)!important;text-decoration:none!important;font-family:'Montserrat',sans-serif!important;font-size:clamp(18px,5vw,24px)!important;font-weight:500!important;box-shadow:0 10px 24px rgba(58,42,28,.06)!important; }
+.arrival-approved-map svg { width:30px!important;height:30px!important; }
+@media (max-width:380px) {
+  .menu-screen-approved,.arrival-screen-approved { padding:16px 12px 20px!important; }
+  .menu-grid-approved { column-gap:8px!important;row-gap:10px!important; }
+  .menu-screen-approved .menu-tile { border-radius:18px!important;margin-bottom:5px!important; }
+  .menu-screen-approved .menu-label { font-size:clamp(12px,3.5vw,15px)!important;min-height:30px!important; }
+  .menu-screen-approved .menu-script-title { font-size:clamp(48px,15vw,66px)!important; }
+  .arrival-approved-time-grid { gap:9px!important; }
+  .arrival-approved-time-card { min-height:145px!important;border-radius:21px!important; }
+  .arrival-approved-info-card { grid-template-columns:64px 1fr!important;gap:12px!important;padding:14px!important; }
+  .arrival-approved-info-card .arrival-approved-icon { width:54px!important;height:54px!important; }
+}
+
+</style>
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "f6bdf0e4f2aa49f0bd8935a3fecb850f"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+
+<body>
+    <div class="app-shell">
+        <div class="language-bar" aria-label="Language selector">
+            <a class="language-chip" href="en.html">English</a>
+<a class="language-chip" href="es.html">Español</a>
+<a class="language-chip active" href="fr.html">Français</a>
+        </div>
+
+        <!-- 1. Cover -->
+        <section class="screen cover-screen" id="cover-screen">
+
+            <div class="cover-botanical right" aria-hidden="true" style="display:none"><svg viewBox="0 0 327.86 534.5" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-161.26 -243.35)"><path style="fill:currentColor" d="m174.63 243.44c-2.2074 0.23238-3.8422 1.0627-10.262 0.32068-1.7224 0.90277-3.8138-0.90821-2.8861 0.80169 3.8199 4.1876 11.534 3.2088 17.317 4.9705 5.5757 1.6986 11.18 3.5108 16.675 5.4515 5.9035 2.0848 11.541 4.7464 17.477 6.7342 4.255 1.4246 8.6801 2.4308 12.987 3.6878 5.8338 1.7026 11.682 3.4595 17.477 5.2912 4.8399 1.5296 9.6414 2.9689 14.43 4.6498 5.0072 1.7575 9.7725 4.2912 14.912 5.6119 0.10242 0.0263 0.21812-0.0256 0.32068 0 0.0612 0.0153 0.0991 0.1453 0.16034 0.16034 0.32212 0.16105 4.2764 2.0899 6.0929 3.5274 1.4926 1.1812 2.588 2.7421 3.8481 4.1688 2.0308 2.3007 4.0082 4.5436 5.7722 7.0549 3.7753 5.3746 6.9051 11.19 10.262 16.836 2.7096 4.5573 5.4515 9.1493 8.0169 13.789 1.9097 3.4536 3.901 6.9533 5.4515 10.582 0.98769 2.3112 2.0254 4.5702 2.4051 7.0549 0.66855 4.3945 0.11032 8.8846-0.32067 13.308-0.44023 4.4846-1.5146 8.8616-2.2448 13.308-0.70856 4.3146-1.5421 8.6488-2.0844 12.987-0.60031 4.801-1.688 9.6092-1.2827 14.43 0.18471 2.1931 1.3571 4.2264 1.6034 6.4136 0.39097 3.4848-0.0795 7.084-0.32068 10.582-0.38225 5.5848-1.0418 11.124-1.7637 16.675-1.078 8.2943-2.7573 16.399-3.8481 24.692-0.78758 5.9885-1.6419 12.085-1.9241 18.118-0.28733 6.1263 0.16034 12.306 0.16034 18.439-0.005 5.0692-0.75449 10.038-0.16034 15.072 0.7491 6.3456 4.3882 12.215 4.6498 18.599 0.1411 3.423-1.1621 6.7045-1.6034 10.101-0.68497 5.2358-1.1929 10.609-1.6034 15.874-0.3253 4.1876-0.95434 8.318-0.64136 12.506 0.22525 2.9986-0.95433 11.921-0.64135 14.912 0.24884 2.3649-4.873 12.536-4.9705 14.912-1.981 43.227 13.169 7.1877-10.262 41.207-4.4269 7.0996-19.888 32.003-24.532 38.962-4.8753 7.3062-9.9592 14.634-14.27 22.287-2.802 4.9743-5.3538 10.117-7.5359 15.393-3.3894 8.1923-3.8143 17.587-8.6583 25.013-2.4197 3.7091-6.834 5.8336-9.7807 9.1393-6.4962 7.288-11.089 15.921-17.156 23.57-4.4125 5.5623-5.1308 7.2152-5.1308 7.2152s2.1526-0.88414 8.498-4.4895c3.4228-1.9445 7.2124-2.9604 10.903-4.3292 3.8317-1.421 7.7932-2.548 11.544-4.1688 3.743-1.6169 7.527-3.1666 10.903-5.4515 1.5064-1.0197 2.7676-2.5281 4.1688-3.6878 1.8214-1.5069 3.9218-2.6776 5.6118-4.3291 2.3392-2.2842 4.1401-4.9144 6.0929-7.5359 2.4197-3.2479 4.6365-6.7391 6.8946-10.101 1.8132-2.6998 3.6721-5.4549 5.4515-8.1773 2.1216-3.2473 3.8997-6.6969 6.2532-9.7807 1.5962-2.0919 3.6108-3.7472 5.2912-5.7722 1.452-1.7504 2.6149-3.6543 4.0085-5.4515 1.5249-1.9658 3.2055-3.9068 4.6498-5.9325 1.0046-1.4093 1.9513-2.8726 2.8861-4.3292 0.96768-1.5082 2.0821-2.888 2.8861-4.4895 0.91072-1.8145 1.0875-4.0034 2.0844-5.7722 0.66444-1.1802 1.802-2.088 2.5654-3.2068 1.04-1.5232 1.754-3.0822 2.7258-4.6498 0.97589-1.5753 1.7406-3.335 3.0464-4.6498 0.78707-0.7923 1.9138-1.3744 2.8861-1.9241 1.5336-0.86691 3.256-1.4146 4.8102-2.2448 1.3653-0.7297 2.609-1.4776 3.8481-2.4051 1.8307-1.3695 3.4495-3.1011 5.1308-4.6498 2.7876-2.5667 5.8256-4.8599 8.3376-7.6963 2.313-2.6106 4.1586-5.596 6.0929-8.498 1.7301-2.5956 3.5924-5.2186 4.9705-8.0169 0.60596-1.2312 0.70216-2.6926 1.443-3.8481 1.4941-2.3322 3.9087-3.8834 5.7722-5.9325 1.293-1.4209 2.2948-3.0064 3.6878-4.3291 1.2227-1.1614 2.8309-1.8396 4.0085-3.0464 1.8168-1.8612 3.345-4.1637 4.6498-6.4136 0.98307-1.6958 1.7576-3.4409 2.4051-5.2912 0.53258-1.5222 0.35583-3.231 1.1224-4.6498 0.39457-0.73063 1.2917-1.2428 1.7637-1.9241 2.4797-3.5592 4.0818-7.6208 5.9325-11.544 1.1057-2.3448 2.147-4.7836 3.0464-7.2152 0.66393-1.7964 1.2866-3.5968 1.7637-5.4515 0.57362-2.2285 0.76706-4.4916 1.2827-6.7342 0.57465-2.4998 1.3058-4.8863 1.9241-7.3756 0.8076-3.2518 1.6221-6.5231 2.4051-9.7807 0.84505-3.5162 1.7948-7.0491 2.5654-10.582 0.67727-3.1025 0.91817-6.2388 1.7637-9.2996 0.54849-1.9839 1.5764-3.9378 2.0844-5.9325 0.98461-3.8684 1.4018-7.9077 1.9241-11.865 0.31452-2.3706 0.75038-4.664 0.80169-7.0549 0.0446-2.6346-0.57465-5.2225-0.64135-7.8566-0.0821-3.0034 0.0834-5.9756 0.16034-8.979 0.10261-4.2558 0.0705-8.5894 0.48101-12.827 0.22366-2.3381 0.63407-4.5883 1.1224-6.8946 0.16717 1.4402 0.33541 2.8864 0.48102 4.3292 0.44638 4.4315 0.41457 8.8878 0.96203 13.308 0.57055 4.6048 1.4097 9.0968 2.4051 13.629 0.58287 2.6536 1.7817 5.1563 2.0844 7.8566 0.19497 1.8046-0.32966 3.6437-0.16034 5.4515 0.31914 3.3855 1.8291 6.566 2.2447 9.941 0.32837 2.6711 0.16034 5.4857 0.16034 8.1773-0.0205 3.444-0.56696 6.8264-0.32068 10.262 0.22473 3.1713 0.88148 6.3638 1.6034 9.46 1.0795 4.6292 3.0054 8.9823 4.0085 13.629 1.1873 5.5018 2.1844 11.051 2.4051 16.675 0.11083 2.8201-0.55285 5.6767-0.48102 8.498 0.11032 4.2211 0.81401 8.4913 1.443 12.667 0.52027 3.4593 1.8625 6.764 1.9241 10.262 0.0616 3.4775-1.0954 6.821-1.6034 10.262-0.55516 3.7559-1.4956 7.5889-1.6034 11.384-0.11647 4.0833 1.2404 8.1026 1.1224 12.186-0.097 3.3528-1.077 6.6283-1.6034 9.941-0.29862 1.8797-0.65803 3.7141-0.8017 5.6118-0.36377 4.7425 0.48871 9.5251 0.16034 14.27-0.20062 2.9049-1.0929 5.7528-1.2827 8.6583-0.2001 3.1228-0.38199 6.2174 0.16034 9.2996 1.0421 5.9248 3.4392 11.611 5.7722 17.156 2.3664 5.6234 4.6547 11.49 8.3376 16.355 4.4105 5.8264 4.884 14.157 16.034 14.751 7.5023-3.6608-0.46434-2.5222-0.96203-3.6878-1.5726-3.6754-5.1498-6.3769-6.0929-10.262-0.64597-2.6498 0.0141-5.4911 0.48102-8.1773 0.39764-2.2824 1.1929-4.5359 1.9241-6.7342 1.0523-3.1658 2.2914-6.2009 3.5274-9.2996 1.5013-3.7624 2.7899-7.6249 4.6498-11.224 1.1283-2.1833 2.6973-4.0814 3.8481-6.2532 1.704-3.2172 3.2942-6.5618 4.6498-9.941 2.7773-6.9251 4.6024-14.238 7.3756-21.165 1.0462-2.6131 2.6778-5.013 3.5275-7.6963 0.70241-2.2173 0.84658-4.6106 1.2827-6.8946 0.31246-1.627 0.52591-3.211 0.96203-4.8102 0.88558-3.2666 2.3384-6.396 3.3671-9.6203 2.1462-6.7274 4.0262-13.521 5.7722-20.363 0.63366-2.486 1.0216-5.0371 1.6034-7.5359 1.0005-4.2943 2.412-8.49 3.2068-12.827 0.4038-2.2025 0.60159-4.3436 0.80169-6.5739 0.15393-1.7477 0.0231-3.5618 0.32068-5.2912 0.43099-2.5076 1.4626-4.9084 2.0844-7.3756 0.92971-3.6893 1.5216-7.3626 2.4051-11.063 0.42124-1.7642 1.1044-3.509 1.443-5.2912 0.77425-4.0838 0.67471-8.3945 1.2827-12.506 0.63777-4.3106 1.8253-8.5085 2.4051-12.827 0.43406-3.2372 0.64263-6.5182 0.80169-9.7807 0.14366-3.0629 0.304-6.0761 0.16034-9.1393-0.16932-3.6138-0.98897-7.1275-1.1224-10.743-0.12314-3.2533 0.37198-6.5255 0.32067-9.7807-0.0308-2.9764-0.27065-6.0099-0.48101-8.979-0.29964-4.23-0.57132-8.462-1.1224-12.667-0.49872-3.81-1.2681-7.6294-2.0844-11.384-0.70805-3.2556-1.6632-6.3724-2.4051-9.6203-0.58184-2.5485-1.1108-5.129-1.6034-7.6963-1.3679-7.1297-2.0854-14.325-4.0085-21.325-1.4998-5.4596-3.7106-10.761-5.7722-16.034-1.803-4.611-3.6357-9.1627-5.7722-13.629-2.0123-4.2056-4.1255-8.3789-6.5739-12.346-1.9241-3.117-4.1601-6.0909-6.4136-8.979-2.3463-3.0076-4.8012-5.9993-7.5359-8.6583-2.7578-2.6808-5.736-5.0754-8.8186-7.3756-3.0877-2.3045-6.2919-4.4724-9.6203-6.4136-4.9194-2.8692-10.086-5.2566-15.232-7.6963-3.8471-1.8236-8.2922-2.5852-11.705-5.1308-2.4536-1.8305-3.8474-4.8134-5.9325-7.0549-4.0087-4.3091-8.4084-8.2823-12.506-12.506-2.1438-2.2095-3.7237-4.9933-6.0929-6.8946 1.0717 0.30605 2.1415 0.63443 3.2068 0.96203 2.6809 0.82442 5.2496 1.6907 7.8566 2.7258 0.83274 0.33094 1.7132 0.84495 2.5654 1.1224 1.2894 0.42022 2.5346 0.46347 3.8481 0.80169 1.255 0.32325 2.7137 0.49421 3.8481 1.1224 1.3299 0.73683 2.1875 2.0873 3.3671 3.0464 1.0298 0.83705 2.2842 1.4512 3.2068 2.4051 0.63058 0.65239 1.2914 1.3929 1.6034 2.2447 0.40534 1.1101-0.1257 2.4334 0.32068 3.5275 0.21036 0.50898 0.41252 1.2693 0.96203 1.2827 0.84505 0.0205 1.3389-1.1931 1.7637-1.9241 0.59364-1.0226 1.0957-2.1848 1.1224-3.3671 0.0513-1.1214-0.50436-2.1824-0.96203-3.2068-0.87173-1.9561-2.0795-3.8736-3.5275-5.4515-1.236-1.3469-2.794-2.3752-4.3291-3.3671-1.3633-0.88081-2.7899-1.7319-4.3292-2.2447-1.7014-0.5667-3.5067-0.78194-5.2912-0.96203-1.6521-0.16675-3.3286 0.09-4.9705-0.16034-3.374-0.51401-6.5267-1.534-9.7807-2.5654-2.4484-0.7764-5.1139-1.5075-7.3756-2.7258-1.1139-0.60005-1.8597-1.8055-3.0464-2.2447-1.4356-0.5312-2.9815-0.0605-4.4895-0.32068-2.2848-0.39559-4.4951-1.3199-6.7342-1.9241-7.3982-1.9972-14.848-3.9335-22.287-5.7722-6.9451-1.7165-13.838-3.3613-20.844-4.8102-6.4084-1.3254-12.949-2.4282-19.401-3.5274-2.7824-0.47409-5.5875-0.8097-8.3376-1.443-8.2258-1.894-16.14-4.7438-24.211-7.2152-7.6819-2.3524-15.227-4.9278-22.928-7.2152-3.7055-1.1006-7.5326-2.0576-11.224-3.2068-3.7671-1.1728-7.4998-2.3838-11.224-3.6878-6.7312-2.3566-13.3-5.0528-20.042-7.3756-5.1832-1.7853-10.29-4.3363-15.713-5.1308-1.0607-0.15541-1.8296-0.0775-2.5654 0zm116.25 40.245c0.69785 0.0981 1.3898 0.20585 2.0844 0.32067 6.2124 1.0267 12.42 2.1569 18.599 3.3671 5.6788 1.1122 11.36 2.2121 16.996 3.5274 5.5054 1.2852 10.941 2.5387 16.355 4.1688 3.7096 1.1169 7.3661 2.6914 11.063 3.8481 0.41996 0.1314 0.86157 0.19322 1.2827 0.32068 10.177 6.7307 11.861 6.8218 17.317 11.224 3.0308 2.4452 5.6952 5.4778 8.3376 8.3376 2.2899 2.4774 4.5816 4.974 6.5739 7.6963 2.3073 3.1528 4.5675 6.3438 6.0929 9.941 0.80503 1.9004 1.4546 3.8739 1.6034 5.9325 0.23551 3.198-0.49512 6.4477-0.96203 9.6203-0.56593 3.8491-1.4613 7.7336-2.2447 11.544-0.90149 4.3882-1.941 8.7686-2.8861 13.148-0.93227 4.3192-2.029 8.4637-2.7258 12.827-0.6747 4.2244-1.2314 8.5496-1.2827 12.827-0.0354 3.1387 0.40021 6.3302 0.64136 9.46 0.0163 0.21262-0.0156 0.42868 0 0.64135-2.0828-5.7712-4.5369-11.4-7.0549-16.996-1.3776-3.0626-2.9256-6.1671-4.4895-9.1393-1.2642-2.4044-2.5257-4.7784-4.0085-7.0549-2.1452-3.2929-4.5706-6.4149-7.0549-9.46-2.5233-3.0927-5.1329-6.2195-8.0169-8.979-2.6054-2.4932-5.4012-4.6407-8.3376-6.7342-2.9548-2.1066-6.2037-3.8804-9.2996-5.7722-2.4176-1.4772-4.6555-3.1148-7.2152-4.3291-2.2899-1.0861-5.0387-1.4272-7.2152-2.7258-1.2186-0.72704-2.1816-1.7453-3.2068-2.7258-1.8235-1.7433-5.1308-5.4515-5.1308-5.4515l-4.8102-7.6963s-7.0613-12.471-10.743-18.599c-4.0677-6.7724-11.036-12.078-12.506-20.042 0.0294-1.2203 2.375-1.9803 2.2447-3.0464z"/></g></svg></div>
+
+            <div class="cover-botanical left" aria-hidden="true" style="display:none"><svg viewBox="0 0 327.86 534.5" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-161.26 -243.35)"><path style="fill:currentColor" d="m174.63 243.44c-2.2074 0.23238-3.8422 1.0627-10.262 0.32068-1.7224 0.90277-3.8138-0.90821-2.8861 0.80169 3.8199 4.1876 11.534 3.2088 17.317 4.9705 5.5757 1.6986 11.18 3.5108 16.675 5.4515 5.9035 2.0848 11.541 4.7464 17.477 6.7342 4.255 1.4246 8.6801 2.4308 12.987 3.6878 5.8338 1.7026 11.682 3.4595 17.477 5.2912 4.8399 1.5296 9.6414 2.9689 14.43 4.6498 5.0072 1.7575 9.7725 4.2912 14.912 5.6119 0.10242 0.0263 0.21812-0.0256 0.32068 0 0.0612 0.0153 0.0991 0.1453 0.16034 0.16034 0.32212 0.16105 4.2764 2.0899 6.0929 3.5274 1.4926 1.1812 2.588 2.7421 3.8481 4.1688 2.0308 2.3007 4.0082 4.5436 5.7722 7.0549 3.7753 5.3746 6.9051 11.19 10.262 16.836 2.7096 4.5573 5.4515 9.1493 8.0169 13.789 1.9097 3.4536 3.901 6.9533 5.4515 10.582 0.98769 2.3112 2.0254 4.5702 2.4051 7.0549 0.66855 4.3945 0.11032 8.8846-0.32067 13.308-0.44023 4.4846-1.5146 8.8616-2.2448 13.308-0.70856 4.3146-1.5421 8.6488-2.0844 12.987-0.60031 4.801-1.688 9.6092-1.2827 14.43 0.18471 2.1931 1.3571 4.2264 1.6034 6.4136 0.39097 3.4848-0.0795 7.084-0.32068 10.582-0.38225 5.5848-1.0418 11.124-1.7637 16.675-1.078 8.2943-2.7573 16.399-3.8481 24.692-0.78758 5.9885-1.6419 12.085-1.9241 18.118-0.28733 6.1263 0.16034 12.306 0.16034 18.439-0.005 5.0692-0.75449 10.038-0.16034 15.072 0.7491 6.3456 4.3882 12.215 4.6498 18.599 0.1411 3.423-1.1621 6.7045-1.6034 10.101-0.68497 5.2358-1.1929 10.609-1.6034 15.874-0.3253 4.1876-0.95434 8.318-0.64136 12.506 0.22525 2.9986-0.95433 11.921-0.64135 14.912 0.24884 2.3649-4.873 12.536-4.9705 14.912-1.981 43.227 13.169 7.1877-10.262 41.207-4.4269 7.0996-19.888 32.003-24.532 38.962-4.8753 7.3062-9.9592 14.634-14.27 22.287-2.802 4.9743-5.3538 10.117-7.5359 15.393-3.3894 8.1923-3.8143 17.587-8.6583 25.013-2.4197 3.7091-6.834 5.8336-9.7807 9.1393-6.4962 7.288-11.089 15.921-17.156 23.57-4.4125 5.5623-5.1308 7.2152-5.1308 7.2152s2.1526-0.88414 8.498-4.4895c3.4228-1.9445 7.2124-2.9604 10.903-4.3292 3.8317-1.421 7.7932-2.548 11.544-4.1688 3.743-1.6169 7.527-3.1666 10.903-5.4515 1.5064-1.0197 2.7676-2.5281 4.1688-3.6878 1.8214-1.5069 3.9218-2.6776 5.6118-4.3291 2.3392-2.2842 4.1401-4.9144 6.0929-7.5359 2.4197-3.2479 4.6365-6.7391 6.8946-10.101 1.8132-2.6998 3.6721-5.4549 5.4515-8.1773 2.1216-3.2473 3.8997-6.6969 6.2532-9.7807 1.5962-2.0919 3.6108-3.7472 5.2912-5.7722 1.452-1.7504 2.6149-3.6543 4.0085-5.4515 1.5249-1.9658 3.2055-3.9068 4.6498-5.9325 1.0046-1.4093 1.9513-2.8726 2.8861-4.3292 0.96768-1.5082 2.0821-2.888 2.8861-4.4895 0.91072-1.8145 1.0875-4.0034 2.0844-5.7722 0.66444-1.1802 1.802-2.088 2.5654-3.2068 1.04-1.5232 1.754-3.0822 2.7258-4.6498 0.97589-1.5753 1.7406-3.335 3.0464-4.6498 0.78707-0.7923 1.9138-1.3744 2.8861-1.9241 1.5336-0.86691 3.256-1.4146 4.8102-2.2448 1.3653-0.7297 2.609-1.4776 3.8481-2.4051 1.8307-1.3695 3.4495-3.1011 5.1308-4.6498 2.7876-2.5667 5.8256-4.8599 8.3376-7.6963 2.313-2.6106 4.1586-5.596 6.0929-8.498 1.7301-2.5956 3.5924-5.2186 4.9705-8.0169 0.60596-1.2312 0.70216-2.6926 1.443-3.8481 1.4941-2.3322 3.9087-3.8834 5.7722-5.9325 1.293-1.4209 2.2948-3.0064 3.6878-4.3291 1.2227-1.1614 2.8309-1.8396 4.0085-3.0464 1.8168-1.8612 3.345-4.1637 4.6498-6.4136 0.98307-1.6958 1.7576-3.4409 2.4051-5.2912 0.53258-1.5222 0.35583-3.231 1.1224-4.6498 0.39457-0.73063 1.2917-1.2428 1.7637-1.9241 2.4797-3.5592 4.0818-7.6208 5.9325-11.544 1.1057-2.3448 2.147-4.7836 3.0464-7.2152 0.66393-1.7964 1.2866-3.5968 1.7637-5.4515 0.57362-2.2285 0.76706-4.4916 1.2827-6.7342 0.57465-2.4998 1.3058-4.8863 1.9241-7.3756 0.8076-3.2518 1.6221-6.5231 2.4051-9.7807 0.84505-3.5162 1.7948-7.0491 2.5654-10.582 0.67727-3.1025 0.91817-6.2388 1.7637-9.2996 0.54849-1.9839 1.5764-3.9378 2.0844-5.9325 0.98461-3.8684 1.4018-7.9077 1.9241-11.865 0.31452-2.3706 0.75038-4.664 0.80169-7.0549 0.0446-2.6346-0.57465-5.2225-0.64135-7.8566-0.0821-3.0034 0.0834-5.9756 0.16034-8.979 0.10261-4.2558 0.0705-8.5894 0.48101-12.827 0.22366-2.3381 0.63407-4.5883 1.1224-6.8946 0.16717 1.4402 0.33541 2.8864 0.48102 4.3292 0.44638 4.4315 0.41457 8.8878 0.96203 13.308 0.57055 4.6048 1.4097 9.0968 2.4051 13.629 0.58287 2.6536 1.7817 5.1563 2.0844 7.8566 0.19497 1.8046-0.32966 3.6437-0.16034 5.4515 0.31914 3.3855 1.8291 6.566 2.2447 9.941 0.32837 2.6711 0.16034 5.4857 0.16034 8.1773-0.0205 3.444-0.56696 6.8264-0.32068 10.262 0.22473 3.1713 0.88148 6.3638 1.6034 9.46 1.0795 4.6292 3.0054 8.9823 4.0085 13.629 1.1873 5.5018 2.1844 11.051 2.4051 16.675 0.11083 2.8201-0.55285 5.6767-0.48102 8.498 0.11032 4.2211 0.81401 8.4913 1.443 12.667 0.52027 3.4593 1.8625 6.764 1.9241 10.262 0.0616 3.4775-1.0954 6.821-1.6034 10.262-0.55516 3.7559-1.4956 7.5889-1.6034 11.384-0.11647 4.0833 1.2404 8.1026 1.1224 12.186-0.097 3.3528-1.077 6.6283-1.6034 9.941-0.29862 1.8797-0.65803 3.7141-0.8017 5.6118-0.36377 4.7425 0.48871 9.5251 0.16034 14.27-0.20062 2.9049-1.0929 5.7528-1.2827 8.6583-0.2001 3.1228-0.38199 6.2174 0.16034 9.2996 1.0421 5.9248 3.4392 11.611 5.7722 17.156 2.3664 5.6234 4.6547 11.49 8.3376 16.355 4.4105 5.8264 4.884 14.157 16.034 14.751 7.5023-3.6608-0.46434-2.5222-0.96203-3.6878-1.5726-3.6754-5.1498-6.3769-6.0929-10.262-0.64597-2.6498 0.0141-5.4911 0.48102-8.1773 0.39764-2.2824 1.1929-4.5359 1.9241-6.7342 1.0523-3.1658 2.2914-6.2009 3.5274-9.2996 1.5013-3.7624 2.7899-7.6249 4.6498-11.224 1.1283-2.1833 2.6973-4.0814 3.8481-6.2532 1.704-3.2172 3.2942-6.5618 4.6498-9.941 2.7773-6.9251 4.6024-14.238 7.3756-21.165 1.0462-2.6131 2.6778-5.013 3.5275-7.6963 0.70241-2.2173 0.84658-4.6106 1.2827-6.8946 0.31246-1.627 0.52591-3.211 0.96203-4.8102 0.88558-3.2666 2.3384-6.396 3.3671-9.6203 2.1462-6.7274 4.0262-13.521 5.7722-20.363 0.63366-2.486 1.0216-5.0371 1.6034-7.5359 1.0005-4.2943 2.412-8.49 3.2068-12.827 0.4038-2.2025 0.60159-4.3436 0.80169-6.5739 0.15393-1.7477 0.0231-3.5618 0.32068-5.2912 0.43099-2.5076 1.4626-4.9084 2.0844-7.3756 0.92971-3.6893 1.5216-7.3626 2.4051-11.063 0.42124-1.7642 1.1044-3.509 1.443-5.2912 0.77425-4.0838 0.67471-8.3945 1.2827-12.506 0.63777-4.3106 1.8253-8.5085 2.4051-12.827 0.43406-3.2372 0.64263-6.5182 0.80169-9.7807 0.14366-3.0629 0.304-6.0761 0.16034-9.1393-0.16932-3.6138-0.98897-7.1275-1.1224-10.743-0.12314-3.2533 0.37198-6.5255 0.32067-9.7807-0.0308-2.9764-0.27065-6.0099-0.48101-8.979-0.29964-4.23-0.57132-8.462-1.1224-12.667-0.49872-3.81-1.2681-7.6294-2.0844-11.384-0.70805-3.2556-1.6632-6.3724-2.4051-9.6203-0.58184-2.5485-1.1108-5.129-1.6034-7.6963-1.3679-7.1297-2.0854-14.325-4.0085-21.325-1.4998-5.4596-3.7106-10.761-5.7722-16.034-1.803-4.611-3.6357-9.1627-5.7722-13.629-2.0123-4.2056-4.1255-8.3789-6.5739-12.346-1.9241-3.117-4.1601-6.0909-6.4136-8.979-2.3463-3.0076-4.8012-5.9993-7.5359-8.6583-2.7578-2.6808-5.736-5.0754-8.8186-7.3756-3.0877-2.3045-6.2919-4.4724-9.6203-6.4136-4.9194-2.8692-10.086-5.2566-15.232-7.6963-3.8471-1.8236-8.2922-2.5852-11.705-5.1308-2.4536-1.8305-3.8474-4.8134-5.9325-7.0549-4.0087-4.3091-8.4084-8.2823-12.506-12.506-2.1438-2.2095-3.7237-4.9933-6.0929-6.8946 1.0717 0.30605 2.1415 0.63443 3.2068 0.96203 2.6809 0.82442 5.2496 1.6907 7.8566 2.7258 0.83274 0.33094 1.7132 0.84495 2.5654 1.1224 1.2894 0.42022 2.5346 0.46347 3.8481 0.80169 1.255 0.32325 2.7137 0.49421 3.8481 1.1224 1.3299 0.73683 2.1875 2.0873 3.3671 3.0464 1.0298 0.83705 2.2842 1.4512 3.2068 2.4051 0.63058 0.65239 1.2914 1.3929 1.6034 2.2447 0.40534 1.1101-0.1257 2.4334 0.32068 3.5275 0.21036 0.50898 0.41252 1.2693 0.96203 1.2827 0.84505 0.0205 1.3389-1.1931 1.7637-1.9241 0.59364-1.0226 1.0957-2.1848 1.1224-3.3671 0.0513-1.1214-0.50436-2.1824-0.96203-3.2068-0.87173-1.9561-2.0795-3.8736-3.5275-5.4515-1.236-1.3469-2.794-2.3752-4.3291-3.3671-1.3633-0.88081-2.7899-1.7319-4.3292-2.2447-1.7014-0.5667-3.5067-0.78194-5.2912-0.96203-1.6521-0.16675-3.3286 0.09-4.9705-0.16034-3.374-0.51401-6.5267-1.534-9.7807-2.5654-2.4484-0.7764-5.1139-1.5075-7.3756-2.7258-1.1139-0.60005-1.8597-1.8055-3.0464-2.2447-1.4356-0.5312-2.9815-0.0605-4.4895-0.32068-2.2848-0.39559-4.4951-1.3199-6.7342-1.9241-7.3982-1.9972-14.848-3.9335-22.287-5.7722-6.9451-1.7165-13.838-3.3613-20.844-4.8102-6.4084-1.3254-12.949-2.4282-19.401-3.5274-2.7824-0.47409-5.5875-0.8097-8.3376-1.443-8.2258-1.894-16.14-4.7438-24.211-7.2152-7.6819-2.3524-15.227-4.9278-22.928-7.2152-3.7055-1.1006-7.5326-2.0576-11.224-3.2068-3.7671-1.1728-7.4998-2.3838-11.224-3.6878-6.7312-2.3566-13.3-5.0528-20.042-7.3756-5.1832-1.7853-10.29-4.3363-15.713-5.1308-1.0607-0.15541-1.8296-0.0775-2.5654 0zm116.25 40.245c0.69785 0.0981 1.3898 0.20585 2.0844 0.32067 6.2124 1.0267 12.42 2.1569 18.599 3.3671 5.6788 1.1122 11.36 2.2121 16.996 3.5274 5.5054 1.2852 10.941 2.5387 16.355 4.1688 3.7096 1.1169 7.3661 2.6914 11.063 3.8481 0.41996 0.1314 0.86157 0.19322 1.2827 0.32068 10.177 6.7307 11.861 6.8218 17.317 11.224 3.0308 2.4452 5.6952 5.4778 8.3376 8.3376 2.2899 2.4774 4.5816 4.974 6.5739 7.6963 2.3073 3.1528 4.5675 6.3438 6.0929 9.941 0.80503 1.9004 1.4546 3.8739 1.6034 5.9325 0.23551 3.198-0.49512 6.4477-0.96203 9.6203-0.56593 3.8491-1.4613 7.7336-2.2447 11.544-0.90149 4.3882-1.941 8.7686-2.8861 13.148-0.93227 4.3192-2.029 8.4637-2.7258 12.827-0.6747 4.2244-1.2314 8.5496-1.2827 12.827-0.0354 3.1387 0.40021 6.3302 0.64136 9.46 0.0163 0.21262-0.0156 0.42868 0 0.64135-2.0828-5.7712-4.5369-11.4-7.0549-16.996-1.3776-3.0626-2.9256-6.1671-4.4895-9.1393-1.2642-2.4044-2.5257-4.7784-4.0085-7.0549-2.1452-3.2929-4.5706-6.4149-7.0549-9.46-2.5233-3.0927-5.1329-6.2195-8.0169-8.979-2.6054-2.4932-5.4012-4.6407-8.3376-6.7342-2.9548-2.1066-6.2037-3.8804-9.2996-5.7722-2.4176-1.4772-4.6555-3.1148-7.2152-4.3291-2.2899-1.0861-5.0387-1.4272-7.2152-2.7258-1.2186-0.72704-2.1816-1.7453-3.2068-2.7258-1.8235-1.7433-5.1308-5.4515-5.1308-5.4515l-4.8102-7.6963s-7.0613-12.471-10.743-18.599c-4.0677-6.7724-11.036-12.078-12.506-20.042 0.0294-1.2203 2.375-1.9803 2.2447-3.0464z"/></g></svg></div>
+
+            <h1 class="cover-title">BIENVENUE</h1>
+
+            <div class="cover-image-wrap">
+                
+            <div class="cover-image-arch">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Casa Mar Serena">
+            </div>
+        
+            </div>
+
+            <div>
+                <div class="cover-script">Votre Guide</div>
+                <div class="cover-to">À</div>
+                <div class="cover-villa-name">Casa Mar Serena</div>
+            </div>
+            <a class="next-page-btn" href="#welcome-screen">Continue →</a>
+        </section>
+
+        <!-- 2. Welcome -->
+        <section class="screen welcome-card" id="welcome-screen" data-hide-if-empty>
+            <h2 class="welcome-title">Bienvenue</h2>
+
+            <div class="welcome-image"><img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80" alt="Welcome" loading="eager"></div>
+
+            <div class="welcome-message" data-field-block data-dynamic>
+                Bienvenue à Casa Mar Serena. Nous sommes ravis de vous accueillir à Puerto Vallarta. Ce guide contient tout ce dont vous avez besoin pour une arrivée en douceur, un séjour confortable et quelques coups de cœur locaux pour vous aider à profiter du quartier comme un local.
+            </div>
+
+            <div data-field-block>
+                
+        <div class="welcome-about">
+            <div class="welcome-about-title">À PROPOS DE NOUS</div>
+            <p class="welcome-about-copy">Bonjour, je suis Mariana. J’aime partager cette maison avec des voyageurs qui recherchent un séjour calme et confortable, près de la plage, des restaurants et des meilleurs endroits de la Zona Romántica. Mon objectif est que vous vous sentiez détendu, bien informé et pris en charge dès votre arrivée.</p>
+        </div>
+    
+            </div>
+            <a class="next-page-btn" href="#menu-sheet">Continue →</a>
+        </section>
+
+        <!-- 3. Menu final 12 -->
+        <section id="menu-sheet" class="screen menu-screen-approved">
+            <h2 class="menu-script-title">Votre Guide</h2>
+            <p class="menu-subtitle">Tout ce dont vous avez besoin, à portée de main</p> 
+
+            <div class="menu-grid-approved">
+                <a class="menu-link" href="#getting-there-screen">
+                    <span class="menu-tile">
+                        <span class="menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+                        </span>
+                    </span>
+                    <span class="menu-label">Comment s’y rendre</span>
+                </a>
+
+                <a class="menu-link" href="#checkin-screen">
+                    <span class="menu-tile">
+                        <span class="menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+                        </span>
+                    </span>
+                    <span class="menu-label">Arrivée/Départ</span>
+                </a>
+
+                <a class="menu-link" href="#access-parking-screen">
+                    <span class="menu-tile">
+                        <span class="menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+                        </span>
+                    </span>
+                    <span class="menu-label">Accès et Stationnement</span>
+                </a>
+
+                <a class="menu-link" href="#wifi-screen">
+                    <span class="menu-tile">
+                        <span class="menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg>
+                        </span>
+                    </span>
+                    <span class="menu-label">WiFi</span>
+                </a>
+
+                <a class="menu-link" href="#the-house-screen">
+                    <span class="menu-tile">
+                        <span class="menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                        </span>
+                    </span>
+                    <span class="menu-label">La Maison</span>
+                </a>
+
+                <a class="menu-link" href="#house-rules-screen">
+                    <span class="menu-tile">
+                        <span class="menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></svg>
+                        </span>
+                    </span>
+                    <span class="menu-label">Règles de la Maison</span>
+                </a>
+
+                <a class="menu-link" href="#things-to-know-screen">
+                    <span class="menu-tile">
+                        <span class="menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                        </span>
+                    </span>
+                    <span class="menu-label">À savoir</span>
+                </a>
+
+                <a class="menu-link" href="#places-to-eat-screen">
+                    <span class="menu-tile">
+                        <span class="menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+                        </span>
+                    </span>
+                    <span class="menu-label">Restaurants</span>
+                </a>
+
+                <a class="menu-link" href="#places-to-drink-screen">
+                    <span class="menu-tile">
+                        <span class="menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M8 22h8"/><path d="M7 10h10"/><path d="M12 15v7"/><path d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"/></svg>
+                        </span>
+                    </span>
+                    <span class="menu-label">Bars et Boissons</span>
+                </a>
+
+                <a class="menu-link" href="#things-to-do-screen">
+                    <span class="menu-tile">
+                        <span class="menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg>
+                        </span>
+                    </span>
+                    <span class="menu-label">À faire</span>
+                </a>
+
+                <a class="menu-link" href="#contact-screen">
+                    <span class="menu-tile">
+                        <span class="menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>
+                        </span>
+                    </span>
+                    <span class="menu-label">Contact</span>
+                </a>
+
+                <a class="menu-link" href="#emergency-screen">
+                    <span class="menu-tile">
+                        <span class="menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M7 18v-6a5 5 0 1 1 10 0v6"/><path d="M5 21a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z"/><path d="M21 12h1"/><path d="M18.5 4.5 18 5"/><path d="M2 12h1"/><path d="M12 2v1"/><path d="m4.929 4.929.707.707"/><path d="M12 12v6"/></svg>
+                        </span>
+                    </span>
+                    <span class="menu-label">Urgence</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 4. Comment s’y rendre -->
+        <section id="getting-there-screen" class="screen sheet" data-hide-if-empty>
+            <div class="screen-inner">
+                <h2 class="screen-title">Comment s’y rendre</h2>
+
+                
+            <div class="info-map-iframe">
+                <iframe
+                    src="https://maps.google.com/maps?q=Zona+Romantica+Puerto+Vallarta+Jalisco&amp;output=embed"
+                    width="100%"
+                    height="200"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Property location map"
+                ></iframe>
+            </div>
+        
+            <div class="map-btn-wrap">
+                <a href="https://maps.google.com/?q=Zona+Romantica+Puerto+Vallarta+Jalisco" target="_blank" rel="noopener noreferrer">
+                    <span class="map-open-btn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.5-8-11a8 8 0 0 1 16 0c0 5.5-8 11-8 11Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        Ouvrir Google Maps
+                    </span>
+                </a>
+            </div>
+        
+
+                <div class="panel">
+
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 21s-8-5.5-8-11a8 8 0 0 1 16 0c0 5.5-8 11-8 11Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Adresse</div>
+                            <div class="info-text" data-dynamic>Calle Vista Mar 128, Zona Romántica, Puerto Vallarta, Jalisco, 48380, Mexico</div>
+                        </div>
+                    </div>
+
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 5v14"></path><path d="M7 9l5-4 5 4"></path><path d="M5 19h14"></path></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Itinéraire</div>
+                            <div class="info-text" data-dynamic></div>
+                        </div>
+                    </div>
+
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M5 11l2-5h10l2 5"></path><rect x="3" y="11" width="18" height="8" rx="2"></rect><path d="M3 15h18"></path><circle cx="7" cy="19" r="2"></circle><circle cx="17" cy="19" r="2"></circle></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Transport</div>
+                            <div class="info-text" data-dynamic>Uber et les taxis sont faciles à trouver dans cette zone. La plupart des restaurants, bars, la plage et les supérettes sont accessibles à pied depuis l&#x27;appartement. Si vous avez besoin d&#x27;un taxi, le plus proche stand de taxis se trouve généralement près de Olas Altas et Basilio Badillo.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg><span>Retour au Menu</span></a>
+            </div>
+        </section>
+
+        <!-- 5. Arrivée et Départ -->
+        <section id="checkin-screen" class="screen sheet" data-hide-if-empty>
+            <div class="screen-inner">
+               <h2 class="screen-title">Arrivée et Départ</h2> 
+
+                <div class="time-grid">
+                    <div class="time-card" data-field-block>
+                        <div class="time-value" data-dynamic>3:00 PM</div>
+                        <div class="time-label">Arrivée</div>
+                    </div>
+                    <div class="time-card" data-field-block>
+                        <div class="time-value" data-dynamic>11:00 AM</div>
+                        <div class="time-label">Départ</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg><span>Retour au Menu</span></a>
+            </div>
+        </section>
+
+        <!-- 6. Accès et Stationnement -->
+        <section id="access-parking-screen" class="screen sheet" data-hide-if-empty>
+            <div class="screen-inner">
+                <h2 class="screen-title">Accès et Stationnement</h2>
+
+                <div class="panel">
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="5"></circle><path d="M13 13l8 8"></path><path d="M17 17v3h3"></path></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Accès</div>
+                            <div class="info-text" data-dynamic></div>
+                            <div id="private-access-content"></div>
+                        </div>
+                    </div>
+
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"></rect><path d="M9 7h5a3 3 0 0 1 0 6H9V7z"></path><path d="M9 13v4"></path></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Stationnement</div>
+                            <div class="info-text" data-dynamic>Un espace de parking attribué est disponible dans le garage souterrain. Utilisez la place de parking n° 12. Veuillez ne pas vous garer sur les places visiteurs pendant la nuit.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg><span>Retour au Menu</span></a>
+            </div>
+        </section>
+
+        <!-- 7. WiFi -->
+        <section id="wifi-screen" class="screen sheet">
+            <div class="screen-inner">
+                <h2 class="screen-title">WiFi</h2>
+
+                <div class="panel wifi-center">
+                    <div class="wifi-center-icon" aria-hidden="true">
+                        <svg viewBox="0 0 64 64"><path d="M14 30a26 26 0 0 1 36 0"></path><path d="M22 38a15 15 0 0 1 20 0"></path><path d="M29 46a5 5 0 0 1 6 0"></path><circle cx="32" cy="52" r="2.5"></circle></svg>
+                    </div>
+
+                    <div id="private-wifi-content"></div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg><span>Retour au Menu</span></a>
+            </div>
+        </section>
+
+        <!-- 8. La Maison -->
+        <section id="the-house-screen" class="screen sheet" data-hide-if-empty>
+            <div class="screen-inner">
+                <h2 class="screen-title">La Maison</h2>
+
+                <div class="panel">
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M2 9v6h20V9"></path><rect x="4" y="9" width="6" height="4" rx="1"></rect><rect x="14" y="9" width="6" height="4" rx="1"></rect><path d="M2 15v3M22 15v3"></path></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Équipements</div>
+                            <div class="info-text" data-dynamic>Wi-Fi haut débit, climatisation dans les chambres et le salon, cuisine complète, cafetière, carafe d&#x27;eau filtrée, télévision intelligente, lave-linge et sèche-linge, serviettes de plage, sèche-cheveux, fer à repasser, balcon, ascenseur, accès à la piscine, et une place de parking attribuée.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg><span>Retour au Menu</span></a>
+            </div>
+        </section>
+
+        <!-- 9. Règles de la Maison -->
+        <section id="house-rules-screen" class="screen sheet" data-hide-if-empty>
+            <div class="screen-inner">
+                <h2 class="screen-title">Règles de la Maison</h2>
+
+                <div class="panel">
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 9l2 2 4-4"></path><path d="M9 14l2 2 4-4"></path></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Règles</div>
+                            <div class="info-text" data-dynamic>Il est interdit de fumer dans l&#x27;appartement. Pas de fêtes ni d&#x27;événements. Les heures de silence vont de 22h00 à 8h00. Veuillez respecter les voisins, garder la musique à un volume raisonnable et ne pas accueillir d&#x27;invités nocturnes non enregistrés.</div>
+                        </div>
+                    </div>
+
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><ellipse cx="9" cy="7" rx="1.5" ry="2"></ellipse><ellipse cx="15" cy="7" rx="1.5" ry="2"></ellipse><ellipse cx="6" cy="11" rx="1.5" ry="2"></ellipse><ellipse cx="18" cy="11" rx="1.5" ry="2"></ellipse><path d="M12 21c-4 0-6-2-6-4s2-4 6-4 6 2 6 4-2 4-6 4Z"></path></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Animaux</div>
+                            <div class="info-text" data-dynamic>Oui</div>
+                            <div class="info-text" data-dynamic>Les animaux de compagnie ne sont pas autorisés dans cette propriété.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg><span>Retour au Menu</span></a>
+            </div>
+        </section>
+
+        <!-- 10. À savoir -->
+        <section id="things-to-know-screen" class="screen sheet" data-hide-if-empty>
+            <div class="screen-inner">
+                <h2 class="screen-title">À savoir</h2>
+
+                <div class="panel">
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M9 21h6M10 17h4"></path><path d="M12 2a6 6 0 0 1 4 10.5c-.8.8-1.5 2-1.5 3.5h-5c0-1.5-.7-2.7-1.5-3.5A6 6 0 0 1 12 2Z"></path></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Bon à Savoir</div>
+                            <div class="info-text" data-dynamic>Il est déconseillé de boire l&#x27;eau du robinet. Veuillez utiliser de l&#x27;eau en bouteille ou filtrée. La salle des poubelles est située à côté de l&#x27;ascenseur, au même étage. Les serviettes de piscine se trouvent à l&#x27;intérieur du placard de buanderie. Le bâtiment peut exiger un comportement silencieux dans les espaces communs.</div>
+                        </div>
+                    </div>
+                <div class="info-row-item" data-field-block>
+                    <div class="info-row-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 9l2 2 4-4"></path><path d="M9 13l2 2 4-4"></path><path d="M9 17h5"></path></svg>
+                    </div>
+                    <div>
+                        <div class="info-row-title">Avant Votre Départ</div>
+                        <div class="info-text" data-dynamic>Éteignez tous les climatiseurs, fermez toutes les fenêtres et les portes du balcon, sortez les poubelles, lavez la vaisselle utilisée, laissez les serviettes utilisées dans la salle de bains et rendez les clés ou la carte d&#x27;accès comme indiqué.</div>
+                    </div>
+                </div>
+
+
+                    
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg><span>Retour au Menu</span></a>
+            </div>
+        </section>
+
+        <!-- 11. Restaurants -->
+        <section id="places-to-eat-screen" class="screen sheet" data-hide-if-empty>
+            <div class="screen-inner">
+                <h2 class="screen-title">Restaurants</h2>
+                <div class="recommendation-listing-panel" data-field-block>
+            <article class="recommendation-listing-card">
+                <div class="recommendation-listing-image">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="La Palapa">
+                    
+                <span class="image-disclaimer">Image représentative</span>
+            
+                </div>
+                <div class="recommendation-listing-body">
+                    <div class="recommendation-listing-topline">
+                        <h3 class="recommendation-listing-name">La Palapa</h3>
+                        <span class="recommendation-rating">★★★★★</span>
+                    </div>
+                    <div class="recommendation-meta">Restaurants · Recommandations à proximité</div>
+                    
+                    <div class="recommendation-action-row" aria-label="Recommendation actions">
+                        
+        <a class="recommendation-action-pill" href="https://maps.google.com/?q=La+Palapa+Puerto+Vallarta" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10Z"></path><circle cx="12" cy="11" r="2.5"></circle></svg>
+            Google Maps
+        </a>
+    
+                    </div>
+                </div>
+            </article>
+        
+
+            <article class="recommendation-listing-card">
+                <div class="recommendation-listing-image">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Café de Olla">
+                    
+                <span class="image-disclaimer">Image représentative</span>
+            
+                </div>
+                <div class="recommendation-listing-body">
+                    <div class="recommendation-listing-topline">
+                        <h3 class="recommendation-listing-name">Café de Olla</h3>
+                        <span class="recommendation-rating">★★★★★</span>
+                    </div>
+                    <div class="recommendation-meta">Restaurants · Recommandations à proximité</div>
+                    
+                    <div class="recommendation-action-row" aria-label="Recommendation actions">
+                        
+        <a class="recommendation-action-pill" href="https://www.google.com/maps/search/?api=1&amp;query=Caf%C3%A9+de+Olla+Calle+Vista+Mar+128%2C+Zona+Rom%C3%A1ntica%2C+Puerto+Vallarta%2C+Jalisco%2C+48380%2C+Mexico" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10Z"></path><circle cx="12" cy="11" r="2.5"></circle></svg>
+            Google Maps
+        </a>
+    
+                    </div>
+                </div>
+            </article>
+        
+
+            <article class="recommendation-listing-card">
+                <div class="recommendation-listing-image">
+                    <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Tuna Azul">
+                    
+                <span class="image-disclaimer">Image représentative</span>
+            
+                </div>
+                <div class="recommendation-listing-body">
+                    <div class="recommendation-listing-topline">
+                        <h3 class="recommendation-listing-name">Tuna Azul</h3>
+                        <span class="recommendation-rating">★★★★★</span>
+                    </div>
+                    <div class="recommendation-meta">Restaurants · Recommandations à proximité</div>
+                    
+                    <div class="recommendation-action-row" aria-label="Recommendation actions">
+                        
+        <a class="recommendation-action-pill" href="https://www.google.com/maps/search/?api=1&amp;query=Tuna+Azul+Calle+Vista+Mar+128%2C+Zona+Rom%C3%A1ntica%2C+Puerto+Vallarta%2C+Jalisco%2C+48380%2C+Mexico" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10Z"></path><circle cx="12" cy="11" r="2.5"></circle></svg>
+            Google Maps
+        </a>
+    
+                    </div>
+                </div>
+            </article>
+        </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg><span>Retour au Menu</span></a>
+            </div>
+        </section>
+
+        <!-- 12. Bars et Boissons -->
+        <section id="places-to-drink-screen" class="screen sheet" data-hide-if-empty>
+            <div class="screen-inner">
+                <h2 class="screen-title">Bars et Boissons</h2>
+                <div class="recommendation-listing-panel" data-field-block>
+            <article class="recommendation-listing-card">
+                <div class="recommendation-listing-image">
+                    <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="El Colibrí">
+                    
+                <span class="image-disclaimer">Image représentative</span>
+            
+                </div>
+                <div class="recommendation-listing-body">
+                    <div class="recommendation-listing-topline">
+                        <h3 class="recommendation-listing-name">El Colibrí</h3>
+                        <span class="recommendation-rating">★★★★★</span>
+                    </div>
+                    <div class="recommendation-meta">Bars · Cocktails · Adresses locales</div>
+                    
+                    <div class="recommendation-action-row" aria-label="Recommendation actions">
+                        
+        <a class="recommendation-action-pill" href="https://www.google.com/maps/search/?api=1&amp;query=El+Colibr%C3%AD+Calle+Vista+Mar+128%2C+Zona+Rom%C3%A1ntica%2C+Puerto+Vallarta%2C+Jalisco%2C+48380%2C+Mexico" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10Z"></path><circle cx="12" cy="11" r="2.5"></circle></svg>
+            Google Maps
+        </a>
+    
+                    </div>
+                </div>
+            </article>
+        
+
+            <article class="recommendation-listing-card">
+                <div class="recommendation-listing-image">
+                    <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Margarita Grill">
+                    
+                <span class="image-disclaimer">Image représentative</span>
+            
+                </div>
+                <div class="recommendation-listing-body">
+                    <div class="recommendation-listing-topline">
+                        <h3 class="recommendation-listing-name">Margarita Grill</h3>
+                        <span class="recommendation-rating">★★★★★</span>
+                    </div>
+                    <div class="recommendation-meta">Bars · Cocktails · Adresses locales</div>
+                    
+                    <div class="recommendation-action-row" aria-label="Recommendation actions">
+                        
+        <a class="recommendation-action-pill" href="https://www.google.com/maps/search/?api=1&amp;query=Margarita+Grill+Calle+Vista+Mar+128%2C+Zona+Rom%C3%A1ntica%2C+Puerto+Vallarta%2C+Jalisco%2C+48380%2C+Mexico" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10Z"></path><circle cx="12" cy="11" r="2.5"></circle></svg>
+            Google Maps
+        </a>
+    
+                    </div>
+                </div>
+            </article>
+        
+
+            <article class="recommendation-listing-card">
+                <div class="recommendation-listing-image">
+                    <img src="https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Mantamar Beach Club">
+                    
+                <span class="image-disclaimer">Image représentative</span>
+            
+                </div>
+                <div class="recommendation-listing-body">
+                    <div class="recommendation-listing-topline">
+                        <h3 class="recommendation-listing-name">Mantamar Beach Club</h3>
+                        <span class="recommendation-rating">★★★★★</span>
+                    </div>
+                    <div class="recommendation-meta">Bars · Cocktails · Adresses locales</div>
+                    
+                    <div class="recommendation-action-row" aria-label="Recommendation actions">
+                        
+        <a class="recommendation-action-pill" href="https://www.google.com/maps/search/?api=1&amp;query=Mantamar+Beach+Club+Calle+Vista+Mar+128%2C+Zona+Rom%C3%A1ntica%2C+Puerto+Vallarta%2C+Jalisco%2C+48380%2C+Mexico" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10Z"></path><circle cx="12" cy="11" r="2.5"></circle></svg>
+            Google Maps
+        </a>
+    
+                    </div>
+                </div>
+            </article>
+        </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg><span>Retour au Menu</span></a>
+            </div>
+        </section>
+
+        <!-- 13. À faire -->
+        <section id="things-to-do-screen" class="screen sheet" data-hide-if-empty>
+            <div class="screen-inner">
+                <h2 class="screen-title">À faire</h2>
+                <div class="recommendation-listing-panel" data-field-block>
+            <article class="recommendation-listing-card">
+                <div class="recommendation-listing-image">
+                    <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Malecón Puerto Vallarta">
+                    
+                <span class="image-disclaimer">Image représentative</span>
+            
+                </div>
+                <div class="recommendation-listing-body">
+                    <div class="recommendation-listing-topline">
+                        <h3 class="recommendation-listing-name">Malecón Puerto Vallarta</h3>
+                        <span class="recommendation-rating">★★★★★</span>
+                    </div>
+                    <div class="recommendation-meta">Activités · Tours · Expériences locales</div>
+                    
+                    <div class="recommendation-action-row" aria-label="Recommendation actions">
+                        
+        <a class="recommendation-action-pill" href="https://www.google.com/maps/search/?api=1&amp;query=Malec%C3%B3n+Puerto+Vallarta+Calle+Vista+Mar+128%2C+Zona+Rom%C3%A1ntica%2C+Puerto+Vallarta%2C+Jalisco%2C+48380%2C+Mexico" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10Z"></path><circle cx="12" cy="11" r="2.5"></circle></svg>
+            Ouvrir le lien
+        </a>
+    
+                    </div>
+                </div>
+            </article>
+        
+
+            <article class="recommendation-listing-card">
+                <div class="recommendation-listing-image">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Los Muertos Pier">
+                    
+                <span class="image-disclaimer">Image représentative</span>
+            
+                </div>
+                <div class="recommendation-listing-body">
+                    <div class="recommendation-listing-topline">
+                        <h3 class="recommendation-listing-name">Los Muertos Pier</h3>
+                        <span class="recommendation-rating">★★★★★</span>
+                    </div>
+                    <div class="recommendation-meta">Activités · Tours · Expériences locales</div>
+                    
+                    <div class="recommendation-action-row" aria-label="Recommendation actions">
+                        
+        <a class="recommendation-action-pill" href="https://www.google.com/maps/search/?api=1&amp;query=Los+Muertos+Pier+Calle+Vista+Mar+128%2C+Zona+Rom%C3%A1ntica%2C+Puerto+Vallarta%2C+Jalisco%2C+48380%2C+Mexico" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10Z"></path><circle cx="12" cy="11" r="2.5"></circle></svg>
+            Ouvrir le lien
+        </a>
+    
+                    </div>
+                </div>
+            </article>
+        
+
+            <article class="recommendation-listing-card">
+                <div class="recommendation-listing-image">
+                    <img src="https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Unveil México">
+                    
+                <span class="image-disclaimer">Image représentative</span>
+            
+                </div>
+                <div class="recommendation-listing-body">
+                    <div class="recommendation-listing-topline">
+                        <h3 class="recommendation-listing-name">Unveil México</h3>
+                        <span class="recommendation-rating">★★★★★</span>
+                    </div>
+                    <div class="recommendation-meta">Activités · Tours · Expériences locales</div>
+                    
+                    <div class="recommendation-action-row" aria-label="Recommendation actions">
+                        
+        <a class="recommendation-action-pill" href="https://www.unveilmexico.com" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10Z"></path><circle cx="12" cy="11" r="2.5"></circle></svg>
+            Ouvrir le lien
+        </a>
+    
+                    </div>
+                </div>
+            </article>
+        </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg><span>Retour au Menu</span></a>
+            </div>
+        </section>
+
+        <!-- 14. Contact -->
+        <section id="contact-screen" class="screen sheet" data-hide-if-empty>
+            <div class="screen-inner">
+                <h2 class="screen-title">Contact</h2>
+
+                <div class="panel">
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M4 7l8 6 8-6"></path></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Email</div>
+                            <div class="info-text" data-dynamic></div>
+                        </div>
+                    </div>
+
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Instagram</div>
+                            <div class="info-text" data-dynamic>
+        <a href="https://instagram.com/casamarserena" target="_blank" rel="noopener noreferrer">
+            @casamarserena
+        </a>
+    </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M14 9l6-6"></path><path d="M15 3h5v5"></path><path d="M10 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-5"></path></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Avis</div>
+                            <a class="review-text-link" href="https://www.airbnb.com/" target="_blank" rel="noopener noreferrer" data-link-block>Laisser un Avis</a>
+                        </div>
+                    </div>
+
+                    <div id="private-contact-content"></div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg><span>Retour au Menu</span></a>
+            </div>
+        </section>
+
+        <!-- 15. Urgence -->
+        <section id="emergency-screen" class="screen sheet" data-hide-if-empty>
+            <div class="screen-inner">
+                <h2 class="screen-title">Urgence</h2>
+
+                <div class="panel">
+                    <div class="info-row-item" data-field-block>
+                        <div class="info-row-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7 2 2 0 0 1 2-2.2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.8 2.1Z"></path></svg>
+                        </div>
+                        <div>
+                            <div class="info-row-title">Contacts d’Urgence</div>
+                            <div class="info-text" data-dynamic>Urgence : 911. Hôpital le plus proche : Hospital Joya Puerto Vallarta. Pour les problèmes liés à l&#x27;immeuble, contactez d&#x27;abord l&#x27;hôte, sauf en cas d&#x27;urgence.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-back-wrap">
+                <a href="#menu-sheet" class="menu-back-btn"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg><span>Retour au Menu</span></a>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+    (function () {
+        function isPlaceholderText(text) {
+            const clean = String(text || "").trim();
+            return !clean ||
+                clean === "-" ||
+                clean.toLowerCase() === "n/a" ||
+                clean.toLowerCase() === "na" ||
+                clean.toLowerCase() === "none" ||
+                clean.toLowerCase() === "null" ||
+                clean.includes("{{") ||
+                clean.includes("}}");
+        }
+
+        function cleanupDynamicContent() {
+            document.querySelectorAll("[data-dynamic]").forEach(function (el) {
+                if (isPlaceholderText(el.textContent)) {
+                    const block = el.closest("[data-field-block]");
+                    if (block) {
+                        block.classList.add("is-hidden");
+                    } else {
+                        el.classList.add("is-hidden");
+                    }
+                }
+            });
+
+            document.querySelectorAll("[data-link-block]").forEach(function (el) {
+                const href = el.getAttribute("href") || "";
+                if (isPlaceholderText(href)) {
+                    const block = el.closest("[data-field-block]");
+                    if (block) {
+                        block.classList.add("is-hidden");
+                    } else {
+                        el.classList.add("is-hidden");
+                    }
+                }
+            });
+
+            document.querySelectorAll(".recommendation-listing-panel").forEach(function (panel) {
+                if (isPlaceholderText(panel.textContent) && panel.children.length === 0) {
+                    const block = panel.closest("[data-field-block]");
+                    if (block) block.classList.add("is-hidden");
+                }
+            });
+
+            document.querySelectorAll("[data-hide-if-empty]").forEach(function (screen) {
+                const visibleBlocks = Array.from(screen.querySelectorAll("[data-field-block]"))
+                    .filter(function (block) {
+                        return !block.classList.contains("is-hidden");
+                    });
+
+                const hasPrivateTarget =
+                    !!screen.querySelector("#private-wifi-content") ||
+                    !!screen.querySelector("#private-access-content") ||
+                    !!screen.querySelector("#private-contact-content");
+
+                if (visibleBlocks.length === 0 && !hasPrivateTarget) {
+                    screen.classList.add("is-hidden");
+                    const id = screen.getAttribute("id");
+                    if (id) {
+                        document.querySelectorAll('a[href="#' + id + '"]').forEach(function (link) {
+                            link.classList.add("is-hidden");
+                        });
+                    }
+                }
+            });
+        }
+
+        function addPrivateCard(container, label, value) {
+            if (!container || !value) return;
+
+            const item = document.createElement("div");
+            item.className = "private-card";
+            item.innerHTML = `
+                <div class="private-card-title"></div>
+                <div class="private-card-text"></div>
+            `;
+
+            item.querySelector(".private-card-title").textContent = label;
+            item.querySelector(".private-card-text").textContent = value;
+
+            container.appendChild(item);
+        }
+
+        function loadPrivateDetails() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get("token");
+
+            const pathParts = window.location.pathname.split("/").filter(Boolean);
+            const villaIndex = pathParts.indexOf("villas");
+            const slug = villaIndex >= 0 ? pathParts[villaIndex + 1] : "";
+
+            if (!token || !slug) return;
+
+            const workerBase = "https://myguest-worker.veronica-perezarroyo.workers.dev";
+            const url = `${workerBase}/guest/${encodeURIComponent(slug)}?token=${encodeURIComponent(token)}`;
+
+            fetch(url, { headers: { accept: "application/json" }, cache: "no-store" })
+                .then(function (res) {
+                    if (!res.ok) throw new Error("Request failed");
+                    return res.json();
+                })
+                .then(function (data) {
+                    const d = data && data.private_details ? data.private_details : {};
+
+                    const wifiContainer = document.getElementById("private-wifi-content");
+                    const accessContainer = document.getElementById("private-access-content");
+                    const contactContainer = document.getElementById("private-contact-content");
+
+                    addPrivateCard(wifiContainer, "Réseau WiFi", d.wifi_ssid);
+                    addPrivateCard(wifiContainer, "Mot de passe WiFi", d.wifi_password);
+                    
+                    addPrivateCard(accessContainer, "Informations d’accès privées", d.house_access_private);
+                    
+                    addPrivateCard(contactContainer, "Téléphone de l’hôte", d.host_phone);
+                                        
+                })
+                .catch(function () {
+                    // Private details stay hidden if token is invalid or Worker is unavailable.
+                });
+        }
+
+        cleanupDynamicContent();
+        loadPrivateDetails();
+    })();
+    </script>
+</body>
+</html>
