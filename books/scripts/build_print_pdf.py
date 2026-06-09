@@ -596,10 +596,8 @@ def build_recommendations(content, ui, enriched=None):
 
             info = enriched.get(p["name"], {})
 
-            # Address: Google Places → form field → Maps URL query string
+            # Address: Google Places → form field only (no maps URL extraction)
             address = info.get("address") or p.get("location") or ""
-            if not address and p.get("link") and _is_maps_url(p["link"]):
-                address = _maps_address(p["link"]) or ""
 
             # Phone: Google Places → form field
             phone = info.get("phone") or p.get("phone") or ""
