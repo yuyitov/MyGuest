@@ -11,6 +11,18 @@ except Exception:
     def _lookup_place(name, location_hint, api_key):  # type: ignore[misc]
         return {}
 
+# Optional translation — imported lazily so missing OPENAI_API_KEY never breaks the build
+try:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from generate_villa import translate_public_content, flatten_content
+    _TRANSLATION_AVAILABLE = True
+except Exception:
+    _TRANSLATION_AVAILABLE = False
+    def translate_public_content(content_flat, target_language):  # type: ignore[misc]
+        return content_flat
+    def flatten_content(content):  # type: ignore[misc]
+        return content
+
 SUPPORTED_LANGUAGES = ["English", "Español", "Français"]
 EMPTY_TEXT_VALUES = {"", "-", "n/a", "na", "none", "null", "undefined"}
 
@@ -156,6 +168,18 @@ ENV_ALIASES = {
     "cozy": "Cozy", "cosy": "Cozy", "homey": "Cozy",
     "countryside": "Cozy", "country": "Cozy",
 }
+
+
+def _rewrap_translated(base_content, translated_flat):
+    """Put flat translated values back into the nested content structure."""
+    import copy
+    result = copy.deepcopy(base_content)
+    for section_data in result.values():
+        if isinstance(section_data, dict):
+            for field in list(section_data.keys()):
+                if field in translated_flat:
+                    section_data[field] = translated_flat[field]
+    return result
 
 IMAGES = {
     "welcome":  "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80",
@@ -487,7 +511,7 @@ def build_house(content, ui):
   <div class="page-bold">{h(ui['know_title'])}</div>
 </div>
 <div class="know-table">{rows_html}</div>
-<div id="private-house-print-block"></div>"""
+<div id="private-house-print-block-{ui['html_lang']}"></div>"""
 
     body = f"""
 <table class="split-layout house-layout"><tr>
@@ -724,16 +748,17 @@ def render_print_html(payload):
             if name and name not in enriched:
                 enriched[name] = _lookup_place(name, address or "", places_api_key)
 
-    def _pages_for_lang(lang):
+    def _pages_for_lang(lang, translated_content=None):
         ui = PRINT_UI[lang]
+        c = translated_content if translated_content is not None else content
         pages = [
             build_cover(villa_name, address, ui, cover_img, style),
-            build_welcome(content, ui),
-            build_arrival(content, ui),
-            build_house(content, ui),
-            build_rules(content, ui),
-            build_recommendations(content, ui, enriched=enriched),
-            build_contact(content, villa_name, ui),
+            build_welcome(c, ui),
+            build_arrival(c, ui),
+            build_house(c, ui),
+            build_rules(c, ui),
+            build_recommendations(c, ui, enriched=enriched),
+            build_contact(c, villa_name, ui),
         ]
         return "".join(p for p in pages if p)
 
@@ -751,7 +776,13 @@ def render_print_html(payload):
     for i, lang in enumerate(SUPPORTED_LANGUAGES):
         if i > 0:
             sections.append(_lang_divider(lang))
-        sections.append(_pages_for_lang(lang))
+        if _TRANSLATION_AVAILABLE and lang != "English":
+            flat = flatten_content(content)
+            translated_flat = translate_public_content(flat, lang)
+            translated_content = _rewrap_translated(content, translated_flat)
+            sections.append(_pages_for_lang(lang, translated_content))
+        else:
+            sections.append(_pages_for_lang(lang))
     pages_html = "".join(sections)
 
     ui = PRINT_UI[primary_language]

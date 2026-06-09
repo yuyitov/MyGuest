@@ -114,6 +114,7 @@ jobs:
         env:
           PUBLIC_PAYLOAD_JSON: ${{ toJson(github.event.client_payload) }}
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           python books/scripts/build_print_pdf.py "$PUBLIC_PAYLOAD_JSON"
 

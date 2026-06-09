@@ -571,7 +571,8 @@ async function handleGuestPrivateAccess(request, env) {
     html: publicHtml,
     slug,
     token,
-    secrets: record.secrets || {}
+    secrets: record.secrets || {},
+    lang
   });
 
   return new Response(privateHtml, {
@@ -641,20 +642,20 @@ function injectPrivateDetailsIntoPrintHtml({ html, secrets }) {
   let output = String(html || '');
   const s = secrets || {};
 
-  const rows = [];
-  if (s.wifi_ssid)            rows.push(`<div class="contact-row"><span class="contact-label">WiFi Network</span><span class="contact-val">${escapeHtml(String(s.wifi_ssid))}</span></div>`);
-  if (s.wifi_password)        rows.push(`<div class="contact-row"><span class="contact-label">WiFi Password</span><span class="contact-val">${escapeHtml(String(s.wifi_password))}</span></div>`);
-  if (s.door_code)            rows.push(`<div class="contact-row"><span class="contact-label">Door Code</span><span class="contact-val">${escapeHtml(String(s.door_code))}</span></div>`);
-  if (s.building_code)        rows.push(`<div class="contact-row"><span class="contact-label">Building Code</span><span class="contact-val">${escapeHtml(String(s.building_code))}</span></div>`);
-  if (s.house_access_private) rows.push(`<div class="contact-row"><span class="contact-label">Access</span><span class="contact-val">${escapeHtml(String(s.house_access_private))}</span></div>`);
-  if (s.host_phone)           rows.push(`<div class="contact-row"><span class="contact-label">Host Phone</span><span class="contact-val">${escapeHtml(String(s.host_phone))}</span></div>`);
+  for (const lang of ['en', 'es', 'fr']) {
+    const lbl = PRIVATE_BOOK_LABELS[lang];
+    const rows = [];
+    if (s.wifi_ssid)            rows.push(`<div class="contact-row"><span class="contact-label">${lbl.wifiNetwork}</span><span class="contact-val">${escapeHtml(String(s.wifi_ssid))}</span></div>`);
+    if (s.wifi_password)        rows.push(`<div class="contact-row"><span class="contact-label">${lbl.wifiPassword}</span><span class="contact-val">${escapeHtml(String(s.wifi_password))}</span></div>`);
+    if (s.door_code)            rows.push(`<div class="contact-row"><span class="contact-label">${lbl.doorCode}</span><span class="contact-val">${escapeHtml(String(s.door_code))}</span></div>`);
+    if (s.building_code)        rows.push(`<div class="contact-row"><span class="contact-label">${lbl.buildingCode}</span><span class="contact-val">${escapeHtml(String(s.building_code))}</span></div>`);
+    if (s.house_access_private) rows.push(`<div class="contact-row"><span class="contact-label">${lbl.access}</span><span class="contact-val">${escapeHtml(String(s.house_access_private))}</span></div>`);
+    if (s.host_phone)           rows.push(`<div class="contact-row"><span class="contact-label">${lbl.hostPhone}</span><span class="contact-val">${escapeHtml(String(s.host_phone))}</span></div>`);
 
-  if (rows.length > 0) {
-    const privateBlock = `<div class="contact-rows" style="margin-top:20px;padding-top:16px;border-top:1px solid #e0d8ce">${rows.join('')}</div>`;
-    output = output.replace(
-      '<div id="private-house-print-block"></div>',
-      privateBlock
-    );
+    if (rows.length > 0) {
+      const privateBlock = `<div class="contact-rows" style="margin-top:20px;padding-top:16px;border-top:1px solid #e0d8ce">${rows.join('')}</div>`;
+      output = output.split(`<div id="private-house-print-block-${lang}"></div>`).join(privateBlock);
+    }
   }
 
   const phoneRow = s.host_phone
@@ -1153,6 +1154,36 @@ function jsonResponse(data, status = 200) {
   });
 }
 
+const PRIVATE_BOOK_LABELS = {
+  en: {
+    wifiNetwork:   'WiFi Network',
+    wifiPassword:  'WiFi Password',
+    privateAccess: 'Private Access Details',
+    hostPhone:     'Host Phone',
+    doorCode:      'Door Code',
+    buildingCode:  'Building Code',
+    access:        'Access',
+  },
+  es: {
+    wifiNetwork:   'Red WiFi',
+    wifiPassword:  'Contraseña WiFi',
+    privateAccess: 'Detalles de acceso privado',
+    hostPhone:     'Teléfono del anfitrión',
+    doorCode:      'Código de puerta',
+    buildingCode:  'Código de edificio',
+    access:        'Acceso',
+  },
+  fr: {
+    wifiNetwork:   'Réseau WiFi',
+    wifiPassword:  'Mot de passe WiFi',
+    privateAccess: "Détails d'accès privé",
+    hostPhone:     "Téléphone de l'hôte",
+    doorCode:      'Code de porte',
+    buildingCode:  "Code d'immeuble",
+    access:        'Accès',
+  },
+};
+
 function normalizePrivateBookLang(value) {
   const lang = String(value || '').trim().toLowerCase();
   return ['en', 'es', 'fr'].includes(lang) ? lang : '';
@@ -1169,10 +1200,10 @@ function buildPublicBookUrl(env, slug, lang) {
   return `${safeBase}/villas/${encodeURIComponent(slug)}/${fileName}`;
 }
 
-function injectPrivateDetailsIntoBookHtml({ html, slug, token, secrets }) {
+function injectPrivateDetailsIntoBookHtml({ html, slug, token, secrets, lang }) {
   let output = String(html || '');
 
-  const privateBlocks = buildPrivateBookBlocks(secrets);
+  const privateBlocks = buildPrivateBookBlocks(secrets, lang);
 
   output = replacePrivateTarget(output, 'private-wifi-content', privateBlocks.wifi);
   output = replacePrivateTarget(output, 'private-access-content', privateBlocks.access);
@@ -1192,7 +1223,8 @@ function injectPrivateDetailsIntoBookHtml({ html, slug, token, secrets }) {
   return output;
 }
 
-function buildPrivateBookBlocks(secrets) {
+function buildPrivateBookBlocks(secrets, lang) {
+  const lbl = PRIVATE_BOOK_LABELS[lang] || PRIVATE_BOOK_LABELS.en;
   const wifiSsid = cleanValue(secrets.wifi_ssid);
   const wifiPassword = cleanValue(secrets.wifi_password);
 
@@ -1204,16 +1236,16 @@ function buildPrivateBookBlocks(secrets) {
   const hostPhone = cleanValue(secrets.host_phone);
 
   const wifi = [
-    buildBookPrivateCard('WiFi Network', wifiSsid),
-    buildBookPrivateCard('WiFi Password', wifiPassword)
+    buildBookPrivateCard(lbl.wifiNetwork, wifiSsid),
+    buildBookPrivateCard(lbl.wifiPassword, wifiPassword)
   ].join('');
 
   const access = [
-    buildBookPrivateCard('Private Access Details', privateAccessDetails, true)
+    buildBookPrivateCard(lbl.privateAccess, privateAccessDetails, true)
   ].join('');
 
   const contact = [
-    buildBookPrivateCard('Host Phone', hostPhone)
+    buildBookPrivateCard(lbl.hostPhone, hostPhone)
   ].join('');
 
   return {
