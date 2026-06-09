@@ -3,6 +3,14 @@ import json
 import os
 from html import escape
 
+# Optional Google Places lookup — imported lazily so missing file never breaks the build
+try:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from _places_lookup import lookup_place as _lookup_place
+except Exception:
+    def _lookup_place(name, location_hint, api_key):  # type: ignore[misc]
+        return {}
+
 SUPPORTED_LANGUAGES = ["English", "Español", "Français"]
 EMPTY_TEXT_VALUES = {"", "-", "n/a", "na", "none", "null", "undefined"}
 
@@ -552,7 +560,7 @@ def build_rules(content, ui):
     return page(body, "rules-pg")
 
 
-def build_recommendations(content, ui):
+def build_recommendations(content, ui, enriched=None):
     restaurants = get_restaurants(content)
     bars = get_bars(content)
     activities = get_activities(content)
@@ -561,8 +569,10 @@ def build_recommendations(content, ui):
     if not restaurants and not bars and not activities and not directory:
         return ""
 
+    enriched = enriched or {}
+
     def _maps_address(url):
-        """Extract location from a Google Maps URL for print."""
+        """Fallback: extract query string from a Google Maps URL."""
         try:
             from urllib.parse import urlparse, parse_qs, unquote_plus
             parsed = urlparse(url)
@@ -573,6 +583,9 @@ def build_recommendations(content, ui):
             pass
         return None
 
+    def _is_maps_url(url):
+        return "maps.google" in url or "goo.gl/maps" in url or "maps.app.goo.gl" in url
+
     def rec_section(script, title, places, img_src):
         if not places:
             return ""
@@ -580,19 +593,33 @@ def build_recommendations(content, ui):
         for p in places[:5]:
             name_html = h(p["name"])
             desc_html = f'<div class="rec-detail">{h(p["desc"])}</div>' if p.get("desc") else ""
-            addr_html = ""
-            website_html = ""
-            maps_html = ""
-            if p.get("location"):
-                addr_html = f'<div class="rec-address">{h(p["location"])}</div>'
-            if p.get("link") and p["link"].startswith(("http://", "https://")):
-                if not addr_html:
-                    addr = _maps_address(p["link"])
-                    if addr:
-                        addr_html = f'<div class="rec-address">{h(addr)}</div>'
-                maps_html = f'<div class="rec-maps"><a href="{h(p["link"])}">{h(ui.get("maps", "Open map"))}</a></div>'
-            phone_html = f'<div class="rec-phone">{h(p["phone"])}</div>' if p.get("phone") else ""
-            items += f'<div class="rec-item"><div class="rec-name">{name_html}</div>{addr_html}{phone_html}{maps_html}{desc_html}</div>'
+
+            info = enriched.get(p["name"], {})
+
+            # Address: Google Places → form field → Maps URL query string
+            address = info.get("address") or p.get("location") or ""
+            if not address and p.get("link") and _is_maps_url(p["link"]):
+                address = _maps_address(p["link"]) or ""
+
+            # Phone: Google Places → form field
+            phone = info.get("phone") or p.get("phone") or ""
+
+            # Website: Google Places → activity link (if not a maps URL)
+            website = info.get("website") or ""
+            if not website and p.get("link") and not _is_maps_url(p["link"]):
+                if p["link"].startswith(("http://", "https://")):
+                    website = p["link"]
+
+            addr_html    = f'<div class="rec-address">{h(address)}</div>' if address else ""
+            phone_html   = f'<div class="rec-phone">{h(phone)}</div>' if phone else ""
+            website_html = f'<div class="rec-website">{h(website)}</div>' if website else ""
+
+            items += (
+                f'<div class="rec-item">'
+                f'<div class="rec-name">{name_html}</div>'
+                f'{addr_html}{phone_html}{website_html}{desc_html}'
+                f'</div>'
+            )
         return f"""
 <div class="rec-block">
   <div class="rec-heading">
@@ -681,6 +708,16 @@ def render_print_html(payload):
     env = resolve_env(property_data.get("property_environment"))
     cover_img = COVER_IMAGES_BY_ENV.get(env, COVER_IMAGES_BY_ENV["Beach"])
 
+    # Enrich places once (before language loop) to avoid 3× API calls
+    places_api_key = os.environ.get("GOOGLE_PLACES_API_KEY", "")
+    enriched: dict = {}
+    if places_api_key:
+        all_places = get_restaurants(content) + get_bars(content) + get_activities(content)
+        for p in all_places:
+            name = p.get("name", "")
+            if name and name not in enriched:
+                enriched[name] = _lookup_place(name, address or "", places_api_key)
+
     def _pages_for_lang(lang):
         ui = PRINT_UI[lang]
         pages = [
@@ -689,7 +726,7 @@ def render_print_html(payload):
             build_arrival(content, ui),
             build_house(content, ui),
             build_rules(content, ui),
-            build_recommendations(content, ui),
+            build_recommendations(content, ui, enriched=enriched),
             build_contact(content, villa_name, ui),
         ]
         return "".join(p for p in pages if p)
