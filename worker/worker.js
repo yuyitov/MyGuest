@@ -66,6 +66,12 @@ export default {
         return await handlePrintAccess(request, env);
       }
 
+      if (request.method === 'GET' && pathname.startsWith('/correct/')) {
+        const allowed = await checkRateLimit(env, `rl:correct:${ip}:${hourSlot}`, 20, 3600);
+        if (!allowed) return correctionErrorHtml('Too many requests. Please try again later.', 429);
+        return await handleCorrectionAccess(request, env);
+      }
+
       if (request.method === 'POST' && (pathname === '/' || pathname === '/tally-webhook')) {
         const allowed = await checkRateLimit(env, `rl:tally:${ip}:${minuteSlot}`, 10, 120);
         if (!allowed) return jsonResponse({ ok: false, error: 'Too many requests' }, 429);
@@ -165,6 +171,12 @@ async function handleTallyWebhook(request, env, ctx) {
   const flowType = cleanValue(getAnswer(normalized.answers, 'flow_type')) || '';
   if (flowType === 'manual_extraction_review') {
     return await handleManualExtractionReview(request, normalized, env);
+  }
+
+  // Formulario de correcciones — detectar antes del guard de order_id/pago
+  const formType = cleanValue(getAnswer(normalized.answers, 'form_type')) || '';
+  if (formType === 'corrections') {
+    return await handleCorrectionsSubmission(normalized, env);
   }
 
   if (!normalized.submission_id) {
@@ -1950,6 +1962,24 @@ async function handleNotify(request, env) {
   // Derive print URL from guestAccessUrl: same token, /print/ instead of /guest/
   const printUrl = guestAccessUrl ? guestAccessUrl.replace('/guest/', '/print/') : '';
 
+  // Correction token — idempotent: reuse existing record for this slug
+  const correctionKey = `correction:${slug}`;
+  let correctionRecord = await env.MYGUEST_KV.get(correctionKey, { type: 'json' }).catch(() => null);
+  if (!correctionRecord) {
+    const correctionToken = createSecureToken();
+    correctionRecord = {
+      slug,
+      customer_email: customerEmail,
+      token: correctionToken,
+      used: false,
+      created_at: new Date().toISOString(),
+      used_at: null
+    };
+    await env.MYGUEST_KV.put(correctionKey, JSON.stringify(correctionRecord))
+      .catch(err => console.error('correction record save failed (non-fatal):', safeError(err)));
+  }
+  const correctionUrl = `${new URL(request.url).origin}/correct/${encodeURIComponent(slug)}?token=${correctionRecord.token}`;
+
   if (!customerEmail) {
     console.error(`notify: no customer_email for slug=${slug}`);
     await env.MYGUEST_KV.put(deliveryKey, JSON.stringify({
@@ -1967,7 +1997,7 @@ async function handleNotify(request, env) {
       env,
       to: customerEmail,
       subject: 'Your MyGuest welcome book is ready',
-      html: buildDeliveryEmail({ guestAccessUrl, printUrl })
+      html: buildDeliveryEmail({ guestAccessUrl, printUrl, correctionUrl })
     });
   } catch (err) {
     console.error('delivery email failed:', safeError(err));
@@ -1984,6 +2014,7 @@ async function handleNotify(request, env) {
   await env.MYGUEST_KV.put(deliveryKey, JSON.stringify({
     ...delivery,
     print_url: printUrl,
+    correction_token: correctionRecord?.token || null,
     status: 'delivered',
     notified_at: new Date().toISOString()
   })).catch(() => {});
@@ -2214,7 +2245,7 @@ function buildFormEmail({ formUrl }) {
 </body></html>`;
 }
 
-function buildDeliveryEmail({ guestAccessUrl, printUrl }) {
+function buildDeliveryEmail({ guestAccessUrl, printUrl, correctionUrl }) {
   const btn = (href, label, description) =>
     href
       ? `<div style="margin:0 0 16px 0;padding:20px;background:#f9f9f9;border-radius:8px">
@@ -2246,6 +2277,9 @@ function buildDeliveryEmail({ guestAccessUrl, printUrl }) {
         ${btn(printUrl,
           'Open printable guide →',
           'Print-ready version with all details including WiFi and access codes. Open in browser and use Print / Save as PDF.')}
+        ${btn(correctionUrl,
+          'Request corrections →',
+          'One free correction round is included with your guide. Use this link once to let us know what to change.')}
         <div style="background:#faf7f4;border:1px solid #ddd5cc;border-radius:8px;padding:14px 16px;margin:24px 0 0">
           <p style="color:#776150;font-size:13px;margin:0;line-height:1.6">
             Both links contain your complete stay information. Keep them private and share only with your guests.
@@ -2256,6 +2290,221 @@ function buildDeliveryEmail({ guestAccessUrl, printUrl }) {
   </td></tr>
 </table>
 </body></html>`;
+}
+
+// ─── Flujo de correcciones one-time ──────────────────────────────────────────
+
+async function handleCorrectionAccess(request, env) {
+  if (!env.MYGUEST_KV) {
+    return correctionErrorHtml('Service unavailable. Please try again later.', 500);
+  }
+
+  const url = new URL(request.url);
+  const token = url.searchParams.get('token') || '';
+  const match = url.pathname.match(/^\/correct\/([^/]+)$/);
+  const slug = match ? decodeURIComponent(match[1]) : null;
+
+  if (!slug || !token) {
+    return correctionErrorHtml('This link is not valid.', 400);
+  }
+
+  const record = await env.MYGUEST_KV.get(`correction:${slug}`, { type: 'json' }).catch(() => null);
+
+  if (!record || !timingSafeEqual(token, record.token)) {
+    return correctionErrorHtml('This link is not valid.', 404);
+  }
+
+  if (record.used) {
+    return correctionErrorHtml(
+      "You&#39;ve already used your included correction request. For any additional changes, please contact us by email.",
+      200
+    );
+  }
+
+  const tallyUrl =
+    'https://tally.so/r/Ek6EM2' +
+    '?slug=' + encodeURIComponent(slug) +
+    '&correction_token=' + encodeURIComponent(record.token) +
+    '&customer_email=' + encodeURIComponent(record.customer_email || '') +
+    '&form_type=corrections';
+
+  return correctionPageHtml(tallyUrl);
+}
+
+async function handleCorrectionsSubmission(normalized, env) {
+  const now = new Date().toISOString();
+  const slug           = cleanValue(getAnswer(normalized.answers, 'slug'))             || '';
+  const correctionToken = cleanValue(getAnswer(normalized.answers, 'correction_token')) || '';
+
+  if (!slug || !correctionToken) {
+    return jsonResponse({ ok: false, error: 'Missing slug or correction_token' }, 400);
+  }
+
+  const correctionKey = `correction:${slug}`;
+  const record = await env.MYGUEST_KV.get(correctionKey, { type: 'json' }).catch(() => null);
+
+  if (!record || !timingSafeEqual(correctionToken, record.token)) {
+    return jsonResponse({ ok: false, error: 'Invalid correction token', slug }, 403);
+  }
+
+  if (record.used) {
+    return jsonResponse({ ok: true, idempotent: true, slug });
+  }
+
+  await env.MYGUEST_KV.put(correctionKey, JSON.stringify({
+    ...record,
+    used: true,
+    used_at: now
+  })).catch(err => console.error('correction mark used failed (non-fatal):', safeError(err)));
+
+  if (env.ALERT_EMAIL && env.RESEND_API_KEY) {
+    const corrections = {
+      'Welcome message':  cleanValue(getAnswer(normalized.answers, 'welcome_message'))  || '',
+      'Property details': cleanValue(getAnswer(normalized.answers, 'property_details')) || '',
+      'House rules':      cleanValue(getAnswer(normalized.answers, 'house_rules'))      || '',
+      'Recommendations':  cleanValue(getAnswer(normalized.answers, 'recommendations'))  || '',
+      'Anything else':    cleanValue(getAnswer(normalized.answers, 'anything_else'))    || '',
+    };
+    await sendEmail({
+      env,
+      to: env.ALERT_EMAIL,
+      subject: `[MyGuest] Corrections requested: ${slug}`,
+      html: buildCorrectionsAlertEmail({ slug, corrections, customerEmail: record.customer_email, now })
+    }).catch(err => console.error('corrections alert email failed (non-fatal):', safeError(err)));
+  }
+
+  return jsonResponse({ ok: true, slug });
+}
+
+function buildCorrectionsAlertEmail({ slug, corrections, customerEmail, now }) {
+  const rows = Object.entries(corrections)
+    .filter(([, v]) => v)
+    .map(([label, value]) =>
+      `<tr>
+        <td style="padding:8px 12px;font-weight:600;color:#444;vertical-align:top;width:140px;border-top:1px solid #eee">${escapeHtml(label)}</td>
+        <td style="padding:8px 12px;color:#222;white-space:pre-wrap;border-top:1px solid #eee">${escapeHtml(value)}</td>
+      </tr>`
+    ).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f5f5f5;font-family:sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:40px 0">
+  <tr><td align="center">
+    <table width="560" cellpadding="0" cellspacing="0"
+           style="background:#fff;border-radius:12px;padding:40px;max-width:560px">
+      <tr><td>
+        <h1 style="font-size:20px;font-weight:700;color:#111;margin:0 0 8px">Corrections requested</h1>
+        <p style="color:#666;font-size:14px;margin:0 0 24px;line-height:1.6">
+          <strong>Guide:</strong> ${escapeHtml(slug)}<br>
+          <strong>Customer:</strong> ${escapeHtml(customerEmail || '—')}<br>
+          <strong>At:</strong> ${escapeHtml(now)}
+        </p>
+        ${rows
+          ? `<table width="100%" cellpadding="0" cellspacing="0"
+                    style="border:1px solid #eee;border-radius:8px;border-collapse:collapse">
+               ${rows}
+             </table>`
+          : '<p style="color:#999;font-size:14px">No correction fields were filled in.</p>'
+        }
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+}
+
+function correctionErrorHtml(message, status = 400) {
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Correction Request</title>
+  <style>
+    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:20px;
+           font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;
+           background:#f7f3ee; color:#2d2722; }
+    .box { width:100%; max-width:420px; padding:28px; border-radius:26px;
+           background:#fff; border:1px solid #eadfd3;
+           box-shadow:0 16px 40px rgba(92,70,48,0.12); text-align:center; }
+    .icon { width:54px; height:54px; display:grid; place-items:center;
+            margin:0 auto 16px; border-radius:18px; background:#f0e2d3; font-size:26px; }
+    h1 { margin:0 0 10px; font-size:20px; letter-spacing:-0.03em; }
+    p { margin:0; color:#766b61; line-height:1.6; font-size:15px; }
+  </style>
+</head>
+<body>
+  <main class="box">
+    <div class="icon">✉️</div>
+    <h1>Correction Request</h1>
+    <p>${message}</p>
+  </main>
+</body>
+</html>`;
+  return new Response(html, {
+    status,
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'cache-control': 'no-store, no-cache, must-revalidate, private',
+      'pragma': 'no-cache',
+      'x-robots-tag': 'noindex, nofollow, noarchive',
+      'x-content-type-options': 'nosniff',
+      'referrer-policy': 'no-referrer'
+    }
+  });
+}
+
+function correctionPageHtml(tallyUrl) {
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Request Corrections</title>
+  <style>
+    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:20px;
+           font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;
+           background:#f7f3ee; color:#2d2722; }
+    .box { width:100%; max-width:440px; padding:32px; border-radius:26px;
+           background:#fff; border:1px solid #eadfd3;
+           box-shadow:0 16px 40px rgba(92,70,48,0.12); text-align:center; }
+    .icon { width:54px; height:54px; display:grid; place-items:center;
+            margin:0 auto 16px; border-radius:18px; background:#e8f0f1; font-size:26px; }
+    h1 { margin:0 0 10px; font-size:22px; letter-spacing:-0.03em; }
+    p { margin:0 0 24px; color:#766b61; line-height:1.6; font-size:15px; }
+    .btn { display:inline-block; background:#2D6A73; color:#fff; font-size:16px;
+           font-weight:700; text-decoration:none; padding:14px 28px;
+           border-radius:12px; letter-spacing:-0.01em; }
+    .note { margin-top:20px !important; margin-bottom:0 !important;
+            font-size:12px; color:#aaa; line-height:1.5; }
+  </style>
+</head>
+<body>
+  <main class="box">
+    <div class="icon">✏️</div>
+    <h1>Request corrections</h1>
+    <p>Use the form below to describe what you&#39;d like to change in your guide.<br>
+       This link can only be used once.</p>
+    <a class="btn" href="${escapeAttribute(tallyUrl)}">Open corrections form →</a>
+    <p class="note">One free correction round is included with your guide.</p>
+  </main>
+</body>
+</html>`;
+  return new Response(html, {
+    status: 200,
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'cache-control': 'no-store, no-cache, must-revalidate, private',
+      'pragma': 'no-cache',
+      'x-robots-tag': 'noindex, nofollow, noarchive',
+      'x-content-type-options': 'nosniff',
+      'referrer-policy': 'no-referrer'
+    }
+  });
 }
 
 // ─── Flujo de revisión manual ─────────────────────────────────────────────────
