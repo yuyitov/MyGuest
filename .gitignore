@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Wrangler / Cloudflare local state
+worker/.wrangler/
+worker/wrangler.toml
+
+# Local temporary assets
+books/scripts/_svg_temp/
+
+# Local archives
+*.zip
