@@ -830,7 +830,17 @@ function buildPrivatePayload({ normalized, slug, privateRecordKey, guestToken, o
         cleanValue(getAnswer(answers, 'private_access_details')) ||
         cleanValue(getAnswer(answers, 'private_access_notes')),
 
-      private_notes: cleanValue(getAnswer(answers, 'private_notes'))
+      private_notes: cleanValue(getAnswer(answers, 'private_notes')),
+
+      // Idioma en que fue capturado el formulario. Se usa para anotar el bloque
+      // de access cuando el huésped abre la guía en un idioma diferente.
+      // No es un dato sensible — es solo el código de idioma ('en', 'es', 'fr').
+      _source_lang: (() => {
+        const pl = cleanValue(getAnswer(answers, 'primary_language'));
+        if (pl === 'Español') return 'es';
+        if (pl === 'Français') return 'fr';
+        return 'en';
+      })()
     },
     guest_access: {
       guest_access_enabled: true,
@@ -1154,6 +1164,21 @@ function jsonResponse(data, status = 200) {
   });
 }
 
+// Human-readable language names for the "provided in X" annotation.
+// Keyed by [displayLang][sourceLang].
+const LANG_NAMES = {
+  en: { en: 'English',  es: 'Spanish',   fr: 'French'   },
+  es: { en: 'inglés',   es: 'español',   fr: 'francés'  },
+  fr: { en: 'anglais',  es: 'espagnol',  fr: 'français' },
+};
+
+// Phrase prepended to the language name when there is a mismatch.
+const ACCESS_PROVIDED_IN = {
+  en: 'provided in',
+  es: 'proporcionado en',
+  fr: 'fourni en',
+};
+
 const PRIVATE_BOOK_LABELS = {
   en: {
     wifiNetwork:   'WiFi Network',
@@ -1203,7 +1228,8 @@ function buildPublicBookUrl(env, slug, lang) {
 function injectPrivateDetailsIntoBookHtml({ html, slug, token, secrets, lang }) {
   let output = String(html || '');
 
-  const privateBlocks = buildPrivateBookBlocks(secrets, lang);
+  const sourceLang = secrets._source_lang || '';
+  const privateBlocks = buildPrivateBookBlocks(secrets, lang, sourceLang);
 
   output = replacePrivateTarget(output, 'private-wifi-content', privateBlocks.wifi);
   output = replacePrivateTarget(output, 'private-access-content', privateBlocks.access);
@@ -1223,7 +1249,7 @@ function injectPrivateDetailsIntoBookHtml({ html, slug, token, secrets, lang }) 
   return output;
 }
 
-function buildPrivateBookBlocks(secrets, lang) {
+function buildPrivateBookBlocks(secrets, lang, sourceLang) {
   const lbl = PRIVATE_BOOK_LABELS[lang] || PRIVATE_BOOK_LABELS.en;
   const wifiSsid = cleanValue(secrets.wifi_ssid);
   const wifiPassword = cleanValue(secrets.wifi_password);
@@ -1240,8 +1266,15 @@ function buildPrivateBookBlocks(secrets, lang) {
     buildBookPrivateCard(lbl.wifiPassword, wifiPassword)
   ].join('');
 
+  // If the form was filled in a different language than the one being viewed,
+  // annotate the label so the guest knows the content is in the original language.
+  const langMismatch = sourceLang && sourceLang !== lang;
+  const accessLabel = langMismatch
+    ? `${lbl.privateAccess} — ${ACCESS_PROVIDED_IN[lang] || 'provided in'} ${(LANG_NAMES[lang] || LANG_NAMES.en)[sourceLang] || sourceLang.toUpperCase()}`
+    : lbl.privateAccess;
+
   const access = [
-    buildBookPrivateCard(lbl.privateAccess, privateAccessDetails, true)
+    buildBookPrivateCard(accessLabel, privateAccessDetails, true)
   ].join('');
 
   const contact = [
