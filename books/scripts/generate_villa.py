@@ -11,6 +11,16 @@ import urllib.error
 
 SUPPORTED_LANGUAGES = ["English", "Español", "Français"]
 
+LANGUAGE_ALIASES = {
+    "english": "English",
+    "español": "Español",
+    "espanol": "Español",
+    "spanish": "Español",
+    "français": "Français",
+    "francais": "Français",
+    "french": "Français",
+}
+
 LANGUAGE_FILE_MAP = {
     "English": "en.html",
     "Español": "es.html",
@@ -677,10 +687,10 @@ def translate_public_content_with_openai(fields_to_translate, target_language):
     return translated_all
 
 
-def translate_public_content(content_flat, target_language):
+def translate_public_content(content_flat, target_language, source_language="English"):
     translated_content = dict(content_flat)
 
-    if target_language == "English":
+    if target_language == source_language:
         return translated_content
 
     fields_to_translate = {}
@@ -717,7 +727,10 @@ def translate_public_content(content_flat, target_language):
 
 def resolve_language(primary_language):
     clean = safe_text(primary_language)
-    return clean if clean in SUPPORTED_LANGUAGES else "English"
+    if clean in SUPPORTED_LANGUAGES:
+        return clean
+    normalized = LANGUAGE_ALIASES.get(clean.lower())
+    return normalized if normalized else "English"
 
 def normalize_environment(property_environment):
     clean = safe_text(property_environment)
@@ -1453,8 +1466,9 @@ def render_html_for_language(payload, active_language, output_filename):
     metadata = payload.get("metadata", {}) or {}
     property_data = payload.get("property", {}) or {}
     content = payload.get("content", {}) or {}
+    primary_language = resolve_language(property_data.get("primary_language"))
     content_flat = flatten_content(content)
-    content_flat = translate_public_content(content_flat, active_language)
+    content_flat = translate_public_content(content_flat, active_language, source_language=primary_language)
 
     demo_mode = bool(content_flat.get("demo_mode"))
     validate_house_access_public(

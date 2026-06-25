@@ -26,9 +26,21 @@ except Exception:
 SUPPORTED_LANGUAGES = ["English", "Español", "Français"]
 EMPTY_TEXT_VALUES = {"", "-", "n/a", "na", "none", "null", "undefined"}
 
+LANGUAGE_ALIASES = {
+    "english": "English",
+    "español": "Español",
+    "espanol": "Español",
+    "spanish": "Español",
+    "français": "Français",
+    "francais": "Français",
+    "french": "Français",
+}
+
 PRINT_UI = {
     "English": {
         "html_lang": "en",
+        "yes": "Yes",
+        "no": "No",
         "eyebrow": "WELCOME",
         "guide_to": "Your Guide to",
         "arrival_script": "Arrival &",
@@ -65,6 +77,8 @@ PRINT_UI = {
     },
     "Español": {
         "html_lang": "es",
+        "yes": "Sí",
+        "no": "No",
         "eyebrow": "BIENVENIDO",
         "guide_to": "Tu Guía para",
         "arrival_script": "Llegada &",
@@ -101,6 +115,8 @@ PRINT_UI = {
     },
     "Français": {
         "html_lang": "fr",
+        "yes": "Oui",
+        "no": "Non",
         "eyebrow": "BIENVENUE",
         "guide_to": "Votre Guide pour",
         "arrival_script": "Arrivée &",
@@ -241,7 +257,10 @@ def safe_bool(value):
 
 def resolve_language(lang):
     clean = safe_text(lang)
-    return clean if clean in SUPPORTED_LANGUAGES else "English"
+    if clean in SUPPORTED_LANGUAGES:
+        return clean
+    normalized = LANGUAGE_ALIASES.get(clean.lower())
+    return normalized if normalized else "English"
 
 
 def resolve_env(raw):
@@ -481,7 +500,7 @@ def build_house(content, ui):
 
     pet_html = ""
     if pet is not None:
-        pet_val = ("Yes" if pet is True else "No")
+        pet_val = ui.get("yes", "Yes") if pet is True else ui.get("no", "No")
         pet_html = f'<div class="info-block"><div class="info-block-label">{h(ui["pets"])}</div><div class="info-block-text">{pet_val}</div></div>'
     if pet_rules:
         pet_html += f'<div class="info-block-text" style="margin-top:4px">{ht(pet_rules)}</div>'
@@ -776,9 +795,9 @@ def render_print_html(payload):
     for i, lang in enumerate(SUPPORTED_LANGUAGES):
         if i > 0:
             sections.append(_lang_divider(lang))
-        if _TRANSLATION_AVAILABLE and lang != "English":
+        if _TRANSLATION_AVAILABLE and lang != primary_language:
             flat = flatten_content(content)
-            translated_flat = translate_public_content(flat, lang)
+            translated_flat = translate_public_content(flat, lang, source_language=primary_language)
             translated_content = _rewrap_translated(content, translated_flat)
             sections.append(_pages_for_lang(lang, translated_content))
         else:
