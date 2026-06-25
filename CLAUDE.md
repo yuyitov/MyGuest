@@ -502,28 +502,70 @@ python books/scripts/generate_villa.py <property-slug>
 
 ---
 
+## Arquitectura multilingüe (implementada en commit `06ea48d`, 2026-06-09)
+
+### Mobile guide (`worker/worker.js`)
+- `PRIVATE_BOOK_LABELS` — dict con etiquetas privadas en EN/ES/FR: WiFi Network, WiFi Password, Private Access Details, Host Phone, Door Code, Building Code, Access.
+- `buildPrivateBookBlocks(secrets, lang)` — usa el dict según el idioma de la URL (`?lang=es`).
+- `injectPrivateDetailsIntoBookHtml({ html, slug, token, secrets, lang })` — pasa `lang` desde `handleGuestPrivateAccess` (que ya tenía `const lang = normalizePrivateBookLang(...)`).
+- `injectPrivateDetailsIntoPrintHtml` — itera `['en', 'es', 'fr']`, inyecta con labels traducidos en cada placeholder `private-house-print-block-{lang}`. Usa `split().join()` (no `replace`) para reemplazar todos los idiomas.
+
+### Printable (`books/scripts/build_print_pdf.py`)
+- Importa `translate_public_content` y `flatten_content` de `generate_villa.py` con lazy import (si falla, usa stubs que devuelven el contenido sin cambios).
+- `_rewrap_translated(base_content, translated_flat)` — pone valores flat traducidos de regreso en la estructura nested que usan los `build_*()` functions.
+- `build_house(content, ui)` — genera `<div id="private-house-print-block-{ui['html_lang']}"></div>` (IDs únicos por idioma: `-en`, `-es`, `-fr`).
+- Loop de idiomas: para Español y Français llama `translate_public_content` → `_rewrap_translated` → pasa contenido traducido a `_pages_for_lang(lang, translated_content)`.
+
+### Workflow (`generator.yml`)
+- Step "Build Print PDF" ahora incluye `OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}`.
+
+### Comportamiento verificado (prueba `maison-mar-serena-gbaea4l`, 2026-06-09)
+- Generate Villa Page: traduce 10 campos en 4 batches para ES y FR.
+- Build Print PDF: mismo proceso de traducción para ES y FR del printable.
+- QA: "QA OK: no private/sensitive terms found in public text outputs."
+- Nota: `wifi_password` y `house_access_private` aparecen como identificadores JS en el template (`d.wifi_password`) — no son valores reales. El QA del workflow los distingue correctamente.
+
+---
+
+## Notas técnicas críticas (aprendidas en sesión)
+
+- **`wrangler kv key list/get` requiere `--remote`** — sin ese flag lee almacenamiento local vacío.
+- **`gh run rerun` usa el `headSha` del run original**, no HEAD actual de main. Para `repository_dispatch`, `actions/checkout@v4` sin `ref:` hace checkout del `headSha` guardado en el evento — no del código más reciente. Si se necesita re-generar una villa con código nuevo, la única opción segura es un nuevo `repository_dispatch` o que el cliente vuelva a enviar el formulario.
+- **`handleNotify` tiene idempotencia** — si `delivery.status === 'delivered'` devuelve `{ ok: true, idempotent: true }` sin re-enviar email. Safe para re-runs del pages.yml.
+
+---
+
 ## Pendientes al retomar
+
+### Limpieza de pruebas (pendiente aprobación de Vero)
+- **KV**: `subm-gbAEA4l`, `delivery:maison-mar-serena-gbaea4l`, `priv-maison-mar-serena-gbaea4l`, `correction:maison-mar-serena-gbaea4l`, `subm-Dq18Xql`, `delivery:casa-mar-serena-dq18xql`, `priv-casa-mar-serena-dq18xql`, `correction:casa-mar-serena-dq18xql`
+- **GitHub Pages**: `public/villas/maison-mar-serena-gbaea4l/`, `public/villas/casa-mar-serena-dq18xql/`
 
 ### Seguridad / Infraestructura
 1. **Rotar `NOTIFY_SECRET`** — reemplazar con un secreto seguro (mínimo 32 caracteres aleatorios). Actualizar en: GitHub Actions Secrets → `NOTIFY_SECRET`, y Cloudflare Worker → Variables → `NOTIFY_SECRET`. No poner el nuevo valor en el repo ni en logs.
 2. **Llenar KV namespace ID** en `worker/wrangler.toml` (tiene placeholder `REPLACE_WITH_YOUR_KV_NAMESPACE_ID`).
 3. **Verificar Resend API key** — confirmar que pertenece a la cuenta correcta y que `hello@myguestguide.com` está verificado.
 4. **Configurar webhook en Tally**: Tally → Integrations → Webhooks → `https://myguest-worker.veronica-perezarroyo.workers.dev/tally-webhook`.
-5. **Limpiar KV de prueba**: registros SMOKETEST01-05, SMOKETEST10, FLOWATEST01.
+5. **Limpiar KV de prueba**: registros SMOKETEST01-05, SMOKETEST10, FLOWATEST01, y todos los registros de `hmac-test-no-entregar-zezdgrg` (prueba HMAC/QA — evidencia temporal).
+5b. **Limpiar carpeta de prueba**: `public/villas/hmac-test-no-entregar-zezdgrg/` — generada en prueba HMAC, eliminar antes de primera venta real.
 6. **Limpiar páginas de prueba**: `public/villas/smoke-test-flujo-a-no-entregar-lowatest01/` y slugs villa-maralto-0260606a01/b01/c01 si ya no se necesitan.
-7. **Node.js 20 deprecation** en GitHub Actions — actualizar antes de septiembre 2026.
-8. **Desplegar worker.js via Wrangler** una vez que la autenticación esté configurada (actualmente se despliega manualmente desde el dashboard de Cloudflare).
+7. **Node.js 20 deprecation** en GitHub Actions — forzado Node 24 desde el 16 junio 2026, eliminado el 16 septiembre 2026. Actualizar `actions/checkout@v4`, `actions/setup-python@v5`, `actions/configure-pages@v5`, `actions/deploy-pages@v4`, `actions/upload-artifact@v4` a versiones que soporten Node 24.
+8. **Desplegar worker.js via Wrangler** — autenticación configurada y funcional (`npx wrangler deploy` desde `worker/`). ✅ Resuelto.
 9. **Pinear SHAs en GitHub Actions** — las actions de terceros (checkout, setup-python, etc.) deben anclarse a SHA completo en lugar de tag. Pendiente para post-MVP.
 
+### Corrections flow (pendiente verificación visual)
+- El link `/correct/<slug>?token=` existe y redirige a Tally `Ek6EM2` con pre-fill de `slug`, `correction_token`, `customer_email`, `form_type=corrections`.
+- **Pendiente verificar**: que el formulario Ek6EM2 abre prellenado correctamente desde el link (prueba real con navegador), que al enviar marca el token como `used: true`, y que un segundo uso muestra error.
+
 ### Diseño (diferido)
-9. Diseño visual de la guía móvil (`master.html`)
-10. Diseño visual de la guía imprimible (`print_letter.html`)
+- Diseño visual de la guía móvil (`master.html`)
+- Diseño visual de la guía imprimible (`print_letter.html`)
 
 ### Pinterest / Marketing
-11. **Crear 8 prompts de ChatGPT** para generación semanal de imágenes publicitarias de Pinterest
-12. **Workflow semanal**: prompts → AI images → descargar → subir a Pinterest
-13. **NO renderizar los 32 pins finales** hasta aprobación visual de los 8 QA samples
-14. Si se continúa con HTML templates: revisar templates 02-08 con el usuario uno por uno
+- **Crear 8 prompts de ChatGPT** para generación semanal de imágenes publicitarias de Pinterest
+- **Workflow semanal**: prompts → AI images → descargar → subir a Pinterest
+- **NO renderizar los 32 pins finales** hasta aprobación visual de los 8 QA samples
+- Si se continúa con HTML templates: revisar templates 02-08 con el usuario uno por uno
 
 Ver detalle completo en `docs/mvp-delivery-flow.md`.
 
