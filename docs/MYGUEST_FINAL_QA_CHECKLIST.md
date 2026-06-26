@@ -446,6 +446,112 @@ Revisar al final:
 
 ---
 
+## Resultado Bloque D — Seguridad final
+
+Estado: ✅ Limpio. Sin hallazgos críticos ni altos.
+
+### GitHub Pages público
+
+* No se encontraron datos privados reales en:
+
+  * `public/villas/*/en.html`
+  * `public/villas/*/es.html`
+  * `public/villas/*/fr.html`
+  * `public/villas/*/index.html`
+  * `public/villas/*/print.html`
+  * `public/villas/*/print.pdf`
+* No se encontraron valores privados dummy usados en pruebas:
+
+  * `TEST_PASSWORD_123`
+  * `TEST_CODE_1234`
+  * `TEST_WIFI_MY_GUEST`
+  * `+52 322 000 0000`
+* No se encontraron tokens reales de guest/corrections en páginas públicas.
+* Solo aparecen referencias técnicas JS como:
+
+  * `d.wifi_password`
+  * `d.house_access_private`
+  * `d.host_phone`
+  * template literal `token=${...}`
+* Esas referencias son aceptables porque no contienen valores reales.
+
+### Printable / PDF público
+
+* `print.html` público contiene placeholders vacíos para inyección por Worker.
+* `print.pdf` público fue generado solo con payload público.
+* No hay WiFi/password/códigos/teléfono/private access en PDF público.
+* Los privados del printable solo deben aparecer vía:
+  `/print/{slug}?token=...`
+
+### Demos oficiales
+
+Mantener estas demos:
+
+* `ocean-drive-retreat`
+* `the-soho-loft`
+* `casa-selva-tulum`
+* `le-marais-flat`
+
+Nota: Las credenciales que aparecen en demos oficiales son ficticias y aceptadas como `demo_mode`.
+
+### Secrets en repo
+
+No se encontraron valores reales de:
+
+* `whsec_`
+* `sk_live_`
+* `sk_test_`
+* `rk_live_`
+* `rk_test_`
+* Resend API keys
+* `NOTIFY_SECRET`
+* `TALLY_SIGNING_SECRET`
+* `GITHUB_TOKEN`
+* guest tokens
+* correction tokens
+
+Solo hay referencias a nombres de variables `env.*`, lo cual es correcto.
+
+### Gap funcional no bloqueante
+
+Se detectó que algunas villas de prueba antiguas tienen formatos de placeholder `print.html` distintos:
+
+* `private-house-print-block-en/es/fr` — formato actual, Worker inyecta correctamente
+* `private-house-print-block` (sin sufijo) — formato antiguo, Worker NO inyecta
+* `private-phone-contact-block` — formato diferente en `casa-stripe-test-c-yxvm7r0`, Worker NO inyecta
+
+Impacto:
+
+* No es riesgo de seguridad — los placeholders están vacíos en GitHub Pages.
+* Puede causar que villas antiguas no muestren privados en printable con token.
+* Se resuelve limpiando esas villas en Bloque F o agregando compatibilidad posterior.
+
+### Villas de prueba pendientes de limpieza en Bloque F
+
+| Slug | Tipo |
+|---|---|
+| `casa-stripe-test-c-yxvm7r0` | Prueba Stripe end-to-end |
+| `maison-mar-serena-test-a-0vvvveq` | Prueba multilingüe |
+| `casa-mar-serena-qorqzox` | Prueba |
+| `casa-mar-serena-dq18xql` | Prueba |
+| `casa-mar-serena-m1olz20` | Prueba |
+| `casa-mar-serena-jemxyk9` | Prueba |
+| `maison-mar-serena-gbaea4l` | Prueba multilingüe |
+| `hmac-test-no-entregar-zezdgrg` | Test HMAC — explícitamente marcado |
+| `casa-sin-adjuntos-final-no-entregar-nqv9plw` | Test adjuntos |
+| `casa-cortesia-sin-adjuntos-1wkbjko` | Prueba cortesía |
+| `test-sin-adjuntos-arj9ekd` | Prueba |
+
+### Conclusión
+
+* Bloque D queda limpio en seguridad.
+* No hay datos privados ni tokens válidos expuestos en GitHub Pages.
+* No hay secrets de infraestructura en el repo.
+* La limpieza de villas de prueba pasa a Bloque F.
+* El gap de placeholders print antiguos es funcional, no de seguridad.
+
+---
+
 ### Bloque F — Limpieza + documentación final
 
 Revisar al final:
