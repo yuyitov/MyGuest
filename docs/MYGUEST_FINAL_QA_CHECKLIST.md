@@ -236,6 +236,72 @@ Revisar al final:
 
 ---
 
+## Resultado prueba Stripe test mode — 2026-06-26
+
+Estado: ✅ Exitosa end-to-end.
+
+### Flujo validado
+
+* Stripe test Payment Link cobró con tarjeta de prueba.
+* Evento procesado: `checkout.session.completed`.
+* `payment_intent.succeeded` fue removido del webhook test porque llegaba sin email.
+* Worker creó `order:{paymentIntentId}` con:
+
+  * status `paid`;
+  * customer\_email correcto;
+  * email correcto;
+  * amount `10000`;
+  * currency `mxn`.
+* Worker envió email post-pago con link a Tally:
+
+  * `order_id`;
+  * `customer_email`.
+* Tally abrió con hidden fields correctos.
+* Tally webhook pasó guards:
+
+  * no `missing_order_id`;
+  * no `invalid_order_id`;
+  * no `order_email_mismatch`;
+  * no `invalid_order_status`.
+* GitHub Actions generó la guía (run `28218298459` — success).
+* GitHub Pages publicó la villa (run `28218310922` — commit `6e763bd`).
+* `/notify` fue llamado.
+* Worker envió email final con Open digital guide, Open printable guide, Request corrections.
+* Correction token fue creado.
+* Order terminó en status `delivered`.
+
+### Datos de prueba documentados
+
+| Campo | Valor |
+|---|---|
+| PaymentIntentId | `pi_3TmRf9G4Nw60erBP0ODPa4Ww` |
+| Slug | `casa-stripe-test-c-yxvm7r0` |
+| Generator run | `28218298459` |
+| Pages deploy run | `28218310922` |
+| Commit generado por Actions | `6e763bd` |
+
+### Lección aprendida — webhook events
+
+Para Payment Links de Stripe Checkout, suscribir el webhook **solo a `checkout.session.completed`**. El evento `payment_intent.succeeded` no incluye el email del comprador y, al llegar primero, sella la idempotencia antes de que el evento con email pueda procesarse.
+
+---
+
+## Pendiente antes de producción live
+
+* Crear/confirmar webhook Stripe LIVE.
+* Dejar webhook live solo con:
+
+  * `checkout.session.completed`
+* Configurar `STRIPE_WEBHOOK_SECRET` en Cloudflare con el signing secret del endpoint **live** antes de ventas reales.
+* Crear producto/precio live.
+* Crear Payment Link live.
+* Confirmar que el checkout live captura email del comprador.
+* Hacer prueba real con pago real solo cuando se apruebe.
+* No usar el secret de TEST en producción live.
+* No usar Payment Link TEST para clientes reales.
+
+---
+
 ### Bloque E — Tally + emails
 
 Revisar al final:
