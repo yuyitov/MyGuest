@@ -585,6 +585,67 @@ Revisar al final:
 
 ---
 
+## Resultado Bloque F — Limpieza final
+
+Estado: ✅ F-02 y F-03 completados. Pendiente activar Stripe LIVE antes de venta real.
+
+### F-02 — Limpieza pública
+
+* Commit: `12a74fb`
+* GitHub Pages run: `28269927211`
+* Resultado:
+
+  * 11 carpetas de prueba eliminadas de `public/villas/`;
+  * 66 archivos eliminados;
+  * GitHub Pages deploy terminó `success`;
+  * las carpetas ya no están publicadas en `myguestguide.com/villas/`.
+* Demos oficiales mantenidas:
+
+  * `ocean-drive-retreat`
+  * `the-soho-loft`
+  * `casa-selva-tulum`
+  * `le-marais-flat`
+
+### F-03 — Limpieza KV
+
+* Manifest esperado: 30 keys.
+* Existentes antes de borrar: 29.
+* Saltadas por `NOT FOUND`: 1 (`processed:pi_3TmRf9G4Nw60erBP0ODPa4Ww` — ya no existía).
+* Borradas: 29.
+* Verificación post-borrado: 29/29 `GONE`.
+* `Still exists`: 0.
+* No se borró nada fuera del manifest.
+* Demos no tocados.
+* Worker, Cloudflare secrets, Stripe, Tally y archivos no tocados.
+
+### Estado final de limpieza
+
+* GitHub Pages público queda sin villas de prueba.
+* KV queda sin registros de pruebas documentadas.
+* Demos oficiales permanecen.
+* Repo queda sin modificaciones tracked después de commits.
+* Persisten untracked locales conocidos, diferidos para revisión separada:
+
+  * `books/scripts/_regen_print_only.py`
+  * `package-lock.json`
+  * `public/landing/Identidad Visual/Logos/...`
+  * `public/landing/Identidad Visual/Mascota/`
+  * `worker/C...Tempprint_test.html`
+
+### Pendiente antes de producción real
+
+⚠️ **No vender hasta completar esta fase:**
+
+* `STRIPE_WEBHOOK_SECRET` sigue en TEST — no válido para ventas reales.
+* Falta configurar Stripe LIVE:
+
+  * crear webhook LIVE solo con `checkout.session.completed`;
+  * actualizar `STRIPE_WEBHOOK_SECRET` en Cloudflare con el signing secret LIVE;
+  * crear producto/precio/payment link LIVE;
+  * hacer prueba controlada con venta real aprobada.
+
+---
+
 ## Pruebas finales pendientes
 
 Dejar anotadas estas pruebas para el cierre final:
