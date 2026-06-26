@@ -245,6 +245,31 @@ async function handleTallyWebhook(request, env, ctx) {
   }
   // ─────────────────────────────────────────────────────────────────────────
 
+  // ─── Guard: bloquear submissions sin order_id salvo email de prueba ───────
+  if (!incomingOrderId) {
+    const noOrderEmail = (cleanValue(getAnswer(normalized.answers, 'customer_email')) || '').toLowerCase().trim();
+    const isVeroTest   = noOrderEmail === 'veronica.perezarroyo@gmail.com';
+
+    if (!isVeroTest) {
+      await env.MYGUEST_KV.put(
+        `missing_order:${normalized.submission_id}`,
+        JSON.stringify({
+          submission_id: normalized.submission_id,
+          form_email:    noOrderEmail || '(empty)',
+          attempted_at:  now
+        }),
+        { expirationTtl: 2592000 }
+      ).catch(() => {});
+
+      return jsonResponse({
+        ok:            false,
+        status:        'missing_order_id',
+        submission_id: normalized.submission_id
+      }, 403);
+    }
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
   const indexKey = `subm-${normalized.submission_id}`;
 
   let index = await env.MYGUEST_KV.get(indexKey, { type: 'json' });
