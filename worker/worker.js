@@ -641,6 +641,7 @@ async function handlePrintAccess(request, env) {
 function injectPrivateDetailsIntoPrintHtml({ html, secrets }) {
   let output = String(html || '');
   const s = secrets || {};
+  const sourceLang = s._source_lang || 'en';
 
   for (const lang of ['en', 'es', 'fr']) {
     const lbl = PRIVATE_BOOK_LABELS[lang];
@@ -649,7 +650,13 @@ function injectPrivateDetailsIntoPrintHtml({ html, secrets }) {
     if (s.wifi_password)        rows.push(`<div class="contact-row"><span class="contact-label">${lbl.wifiPassword}</span><span class="contact-val">${escapeHtml(String(s.wifi_password))}</span></div>`);
     if (s.door_code)            rows.push(`<div class="contact-row"><span class="contact-label">${lbl.doorCode}</span><span class="contact-val">${escapeHtml(String(s.door_code))}</span></div>`);
     if (s.building_code)        rows.push(`<div class="contact-row"><span class="contact-label">${lbl.buildingCode}</span><span class="contact-val">${escapeHtml(String(s.building_code))}</span></div>`);
-    if (s.house_access_private) rows.push(`<div class="contact-row"><span class="contact-label">${lbl.access}</span><span class="contact-val">${escapeHtml(String(s.house_access_private))}</span></div>`);
+    if (s.house_access_private) {
+      const langMismatch = sourceLang && sourceLang !== lang;
+      const accessLabel = langMismatch
+        ? `${lbl.access} — ${ACCESS_PROVIDED_IN[lang] || 'provided in'} ${(LANG_NAMES[lang] || LANG_NAMES.en)[sourceLang] || sourceLang}`
+        : lbl.access;
+      rows.push(`<div class="contact-row"><span class="contact-label">${escapeHtml(accessLabel)}</span><span class="contact-val">${escapeHtml(String(s.house_access_private))}</span></div>`);
+    }
     if (s.host_phone)           rows.push(`<div class="contact-row"><span class="contact-label">${lbl.hostPhone}</span><span class="contact-val">${escapeHtml(String(s.host_phone))}</span></div>`);
 
     if (rows.length > 0) {
