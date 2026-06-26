@@ -2332,7 +2332,10 @@ function buildFormEmail({ formUrl }) {
           please fill out the short form below. It takes about 5 minutes.
         </p>
         ${btn}
-        <p style="color:#999;font-size:13px;margin:32px 0 0">
+        <p style="color:#999;font-size:13px;margin:16px 0 0;text-align:center">
+          This link is personal and tied to your purchase. Please do not forward it.
+        </p>
+        <p style="color:#999;font-size:13px;margin:24px 0 0">
           If you have any questions, just reply to this email.
         </p>
       </td></tr>
@@ -2366,17 +2369,17 @@ function buildDeliveryEmail({ guestAccessUrl, printUrl, correctionUrl }) {
         </h1>
         <p style="color:#666;line-height:1.6;margin:0 0 28px;font-size:15px">
           Your personalized MyGuest guide has been generated with everything your guests need.
-          Share the link below directly with them.
+          Use the links below to access your guide and share the guest link with your guests.
         </p>
         ${btn(guestAccessUrl,
           'Open digital guide →',
           'Full guide with WiFi, access codes, and all stay details. Send this link to your guests.')}
         ${btn(printUrl,
           'Open printable guide →',
-          'Print-ready version with all details including WiFi and access codes. Open in browser and use Print / Save as PDF.')}
+          'Host print-ready version with all details, including WiFi and access codes. Open it to print or save as PDF before sharing.')}
         ${btn(correctionUrl,
           'Request corrections →',
-          'One free correction round is included with your guide. Use this link once to let us know what to change.')}
+          'One free correction round is included. Use this link once to request changes. We review correction requests manually and will apply approved changes as soon as possible.')}
         <div style="background:#faf7f4;border:1px solid #ddd5cc;border-radius:8px;padding:14px 16px;margin:24px 0 0">
           <p style="color:#776150;font-size:13px;margin:0;line-height:1.6">
             Both links contain your complete stay information. Keep them private and share only with your guests.
@@ -2466,14 +2469,14 @@ async function handleCorrectionsSubmission(normalized, env) {
       env,
       to: env.ALERT_EMAIL,
       subject: `[MyGuest] Corrections requested: ${slug}`,
-      html: buildCorrectionsAlertEmail({ slug, corrections, customerEmail: record.customer_email, now })
+      html: buildCorrectionsAlertEmail({ slug, corrections, customerEmail: record.customer_email, now, publicBookBaseUrl: env.PUBLIC_BOOK_BASE_URL || 'https://myguestguide.com' })
     }).catch(err => console.error('corrections alert email failed (non-fatal):', safeError(err)));
   }
 
   return jsonResponse({ ok: true, slug });
 }
 
-function buildCorrectionsAlertEmail({ slug, corrections, customerEmail, now }) {
+function buildCorrectionsAlertEmail({ slug, corrections, customerEmail, now, publicBookBaseUrl = 'https://myguestguide.com' }) {
   const rows = Object.entries(corrections)
     .filter(([, v]) => v)
     .map(([label, value]) =>
@@ -2496,7 +2499,9 @@ function buildCorrectionsAlertEmail({ slug, corrections, customerEmail, now }) {
         <p style="color:#666;font-size:14px;margin:0 0 24px;line-height:1.6">
           <strong>Guide:</strong> ${escapeHtml(slug)}<br>
           <strong>Customer:</strong> ${escapeHtml(customerEmail || '—')}<br>
-          <strong>At:</strong> ${escapeHtml(now)}
+          <strong>At:</strong> ${escapeHtml(now)}<br>
+          <strong>View guide:</strong> <a href="${escapeAttribute(publicBookBaseUrl)}/villas/${encodeURIComponent(slug)}/en.html"
+            style="color:#2D6A73">${escapeHtml(publicBookBaseUrl)}/villas/${escapeHtml(slug)}/en.html</a>
         </p>
         ${rows
           ? `<table width="100%" cellpadding="0" cellspacing="0"
