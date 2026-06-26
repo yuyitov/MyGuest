@@ -325,6 +325,95 @@ Revisar al final:
 
 ---
 
+## Resultado Bloque E — Tally + emails
+
+Estado: ✅ Cerrado técnicamente, pendiente QA final.
+
+### Tally `MedpvA`
+
+* Hidden fields revisados y limpiados manualmente:
+
+  * `order_id`
+  * `customer_email`
+  * `form_type`
+* Se eliminaron duplicados de hidden fields.
+* Se corrigió etiqueta visible `6.additional_notes` a `Additional notes`.
+* Webhook esperado:
+  `https://myguest-worker.veronica-perezarroyo.workers.dev/tally-webhook`
+* Signing secret actualizado con el nuevo `TALLY_SIGNING_SECRET`.
+
+### Tally `Ek6EM2`
+
+* Hidden fields confirmados:
+
+  * `slug`
+  * `correction_token`
+  * `customer_email`
+  * `form_type`
+* Texto introductorio actualizado para aclarar:
+
+  * una ronda gratuita incluida;
+  * correcciones adicionales pueden tener costo;
+  * revisión manual;
+  * no prometer regeneración instantánea.
+* Webhook esperado:
+  `https://myguest-worker.veronica-perezarroyo.workers.dev/tally-webhook`
+* Signing secret actualizado con el mismo `TALLY_SIGNING_SECRET`.
+
+### `TALLY_SIGNING_SECRET`
+
+* Rotado manualmente.
+* Mismo valor configurado en:
+
+  * `MedpvA`;
+  * `Ek6EM2`;
+  * Cloudflare Worker secret `TALLY_SIGNING_SECRET`.
+* Nueva versión Worker por rotación:
+  `256cddd1-bf81-4c26-9cbf-4e856593ae74`
+
+### Emails
+
+* Commit de copy: `51ec093`
+* Worker deploy: `18558930-85ec-4060-bec1-71bb93badd48`
+* Cambios aplicados:
+
+  * email post-pago ahora aclara que el link es personal y ligado a la compra;
+  * email final aclara que el digital guide es para compartir con huéspedes;
+  * printable guide se aclara como versión para host, para imprimir o guardar PDF;
+  * correcciones se aclaran como revisión manual sin prometer regeneración instantánea;
+  * email interno de correcciones incluye link público a la guía:
+    `https://myguestguide.com/villas/{slug}/en.html`
+* No se cambiaron:
+
+  * tokens;
+  * rutas;
+  * guards;
+  * Stripe;
+  * Tally logic;
+  * KV;
+  * GitHub Actions;
+  * PDF/printable.
+
+### `TALLY_FORM_URL`
+
+* Se restauró como var local en `worker/wrangler.toml`:
+  `TALLY_FORM_URL = "https://tally.so/r/MedpvA"`
+* `worker/wrangler.toml` está ignorado por `.gitignore`, no se commitea.
+* Deploy con `TALLY_FORM_URL` activo:
+  `5e1f0893-5aa2-40b0-97ed-fbe92858d858`
+* **Nota operativa:** si se despliega desde otra máquina, esta variable debe existir
+  en el `wrangler.toml` local o en Cloudflare Dashboard antes del deploy, de lo
+  contrario el deploy la eliminaría del Worker.
+
+### Pendiente QA final Bloque E
+
+* Confirmar que `MedpvA` sigue enviando Tally webhook correctamente después de la rotación del signing secret.
+* Confirmar que `Ek6EM2` envía correcciones correctamente.
+* Confirmar visualmente los nuevos textos de emails en una corrida de QA final.
+* Confirmar que `STRIPE_WEBHOOK_SECRET` se cambie de TEST a LIVE antes de venta real.
+
+---
+
 ### Bloque D — Seguridad final
 
 Revisar al final:
