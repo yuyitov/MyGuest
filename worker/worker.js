@@ -1261,7 +1261,10 @@ function injectPrivateDetailsIntoBookHtml({ html, slug, token, secrets, lang }) 
   let output = String(html || '');
 
   const sourceLang = secrets._source_lang || '';
-  const privateBlocks = buildPrivateBookBlocks(secrets, lang, sourceLang);
+  // Treat missing lang param as 'en' (default) so that when the guest link
+  // has no ?lang=, the mismatch check doesn't flag en-source as a foreign language.
+  const effectiveLang = lang || 'en';
+  const privateBlocks = buildPrivateBookBlocks(secrets, effectiveLang, sourceLang);
 
   output = replacePrivateTarget(output, 'private-wifi-content', privateBlocks.wifi);
   output = replacePrivateTarget(output, 'private-access-content', privateBlocks.access);
