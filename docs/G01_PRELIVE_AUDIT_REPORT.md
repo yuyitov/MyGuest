@@ -9,6 +9,9 @@ El producto está técnicamente funcional. Stripe LIVE no debe activarse todaví
 
 | Commit | Descripción |
 |---|---|
+| `8e25c2d` | Remove G-02C test villa pages (limpieza post-prueba) |
+| `52a2691` | Fix private access language annotation in default guest view |
+| `419debe` | Add terms privacy refunds and support links |
 | `bcd0941` | Add F-04 cleanup docs and operations runbook |
 | `12a74fb` | Remove test villa pages from public |
 | `67b3d2d` | Document Bloque D security audit results in QA checklist |
@@ -39,13 +42,13 @@ Cubre las capas de protección técnica y operativa: secrets, Cloudflare KV, tok
 |---|---|---|---|---|
 | **Stripe webhook** | ⚠️ TEST | `STRIPE_WEBHOOK_SECRET` en TEST — no válido para cobros reales | **Bloqueador** | Crear webhook LIVE en Stripe; actualizar secret en Cloudflare en G-06 |
 | **Payment Link en landing** | ⚠️ TEST | `buy.stripe.com/00wcN5fvo5hQfcuaL8ffy00` es Payment Link TEST | **Bloqueador** | Crear producto + Payment Link LIVE; actualizar `index.html` en G-06 |
-| **Términos / Reembolsos** | ❌ Ausente | Landing no tiene T&C ni política de reembolso | **Bloqueador** | Stripe puede suspender cuentas sin T&C visibles; agregar en G-02 |
+| **Términos / Reembolsos** | ✅ Publicado | `terms.html`, `privacy.html`, `refunds.html` live — commit `419debe` | — | Resuelto en G-02B |
 | **`NOTIFY_SECRET`** | ⚠️ Sin rotar | CLAUDE.md indica rotación pendiente desde sesión anterior | **Bloqueador** | Rotar antes de LIVE (mínimo 32 bytes aleatorios) en G-04 |
 | **`isVeroTest` bypass** | ⚠️ Hardcodeado | Email `veronica.perezarroyo@gmail.com` omite validación de `order_id` y status en producción; visible en código fuente público del repo | **Bloqueador** | Decidir: eliminar o convertir en env flag en G-04 |
-| **Prueba end-to-end TEST** | ❌ Pendiente | No se completó una prueba completa Stripe TEST → Tally → Worker → Pages → email desde cero | **Bloqueador** | Correr en G-02 antes de activar LIVE |
+| **Prueba end-to-end TEST** | ✅ Completada | G-02C cerrada 2026-06-27 — ver `docs/G02C_CLEAN_TEST_REPORT.md` | — | — |
 | **Tally MedpvA** | ✅ Activo | — | — | Verificar que webhook apunta a URL Worker correcta antes de LIVE |
 | **Tally Ek6EM2 (correcciones)** | ✅ Activo | Pre-fill pendiente verificar en navegador real | Media | Prueba visual antes de LIVE en G-02 |
-| **Worker** | ✅ Desplegado (`5e1f0893`) | Ver `NOTIFY_SECRET` arriba | — | — |
+| **Worker** | ✅ Desplegado (`5b7b680f`) | Ver `NOTIFY_SECRET` arriba | — | Fix `lang annotation` deploy 2026-06-27 |
 | **GitHub Actions** | ✅ Funcional | Node.js 20 deprecation (deadline sept. 2026) | Post-LIVE | Actualizar actions a versiones con Node 24 |
 | **GitHub Pages** | ✅ Limpio | Solo 4 demos oficiales publicadas | — | — |
 | **Email post-pago** | ✅ Funcional | — | — | — |
@@ -261,10 +264,10 @@ Los bloqueadores principales están claros:
 
 1. Stripe en TEST — no recibe cobros reales.
 2. Payment Link TEST activo en la landing.
-3. T&C y política de reembolso ausentes — riesgo de suspensión de cuenta Stripe.
+3. ~~T&C y política de reembolso ausentes~~ → ✅ Resuelto en G-02B (`419debe`): `terms.html`, `privacy.html`, `refunds.html` publicados y enlazados desde la landing.
 4. `NOTIFY_SECRET` sin rotar.
 5. `isVeroTest` hardcodeado en código fuente público.
-6. Prueba end-to-end TEST limpia no completada.
+6. ~~Prueba end-to-end TEST limpia no completada~~ → ✅ Resuelta en G-02C (2026-06-27).
 
 Marketing debe manejarse como capa completamente separada del producto. No activar anuncios pagados antes de resolver el Payment Link LIVE, los T&C y el tracking mínimo.
 

@@ -14,6 +14,9 @@
   * private access en mobile y printable muestra anotación de idioma.
 * Prueba A validó lo principal del Bloque A.
 * Prueba B se pospone para QA final.
+* **G-02B cerrado**: landing + términos + privacidad + reembolsos publicados.
+* **G-02C cerrado**: prueba end-to-end TEST sin adjuntos completada, fix Worker desplegado, villa limpiada.
+  Ver detalle en `docs/G02C_CLEAN_TEST_REPORT.md`.
 
 ---
 
@@ -643,6 +646,50 @@ Estado: ✅ F-02 y F-03 completados. Pendiente activar Stripe LIVE antes de vent
   * actualizar `STRIPE_WEBHOOK_SECRET` en Cloudflare con el signing secret LIVE;
   * crear producto/precio/payment link LIVE;
   * hacer prueba controlada con venta real aprobada.
+
+---
+
+---
+
+## Resultado G-02C — Prueba end-to-end TEST limpia
+
+**Fecha:** 2026-06-27
+**Estado:** ✅ Cerrada y limpia. Ver reporte completo en `docs/G02C_CLEAN_TEST_REPORT.md`.
+
+### Resumen ejecutivo
+
+| Paso | Resultado |
+|---|---|
+| Pago Stripe TEST | ✅ Procesado |
+| Email post-pago | ✅ Recibido con link Tally + hidden fields |
+| Tally MedpvA enviado | ✅ Sin adjuntos, datos ficticios |
+| GitHub Actions generator `28276098824` | ✅ success (2m17s) |
+| GitHub Pages deploy `28276151599` | ✅ success (24s) |
+| 6 archivos generados (en/es/fr/index/print.html/print.pdf) | ✅ HTTP 200 |
+| Email final | ✅ Recibido con 3 links |
+| Guest link con token → privados visibles | ✅ |
+| Print link con token → privados inyectados | ✅ |
+| Correction link → Ek6EM2 con pre-fill 4 campos | ✅ |
+| Guest link sin token → no expone privados | ✅ |
+| Auditoría pública anti-fuga | ✅ Limpia |
+
+### Bug corregido en esta prueba
+
+Bug `provided in English` en vista EN sin `?lang=`:
+
+* Commit: `52a2691 Fix private access language annotation in default guest view`
+* Worker deploy: `5b7b680f-035f-4ee0-9e8e-2ad6229827b5`
+* Fix: `effectiveLang = lang || 'en'` en `injectPrivateDetailsIntoBookHtml`
+
+### Limpieza
+
+* Commit: `8e25c2d Remove G-02C test villa pages`
+* Pages run: `28306308278` — ✅ success
+* KV: 4 keys deleted, 5/5 GONE
+
+### Pendiente derivado
+
+* G-02D: prueba con uploads/fotos — diferida para antes de primera venta con adjuntos.
 
 ---
 
