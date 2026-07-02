@@ -535,20 +535,34 @@ python books/scripts/generate_villa.py <property-slug>
 
 ---
 
+## Estado actual (actualizado 2026-07-02)
+
+**MyGuest está LIVE con GO para venta pública.**
+
+- **G-06 (compra controlada LIVE)**: cerrado con PASS completo, refund hecho y limpieza G06 completada.
+- **MyGuest 07**: landing multi-moneda cerrada (commit `483b8b2` — from $29 USD / MXN 499 / CAD 41.99).
+- **MyGuest 08 (limpieza KV)**: cerrado el 2026-07-02 — 127 KV keys de pruebas confirmadas borradas en bulk (SMOKETEST*, FLOWATEST, hmac, mar-serena, g02c/g02d, FULLTEST/villa-maralto, adjuntos, paid-flow QA, pruebas manuales abril-mayo).
+- **`public/villas/` limpio**: solo contiene los 4 demos oficiales (`ocean-drive-retreat`, `the-soho-loft`, `casa-selva-tulum`, `le-marais-flat`), verificados en 200.
+- **KV restante (27 keys)**:
+  - **Grupo B (8 keys con TTL)**: `processed:pi_*`, `rl:*`, `invalid_order:courtesy_*` — dejar expirar, no tocar.
+  - **Grupo C (19 keys no identificadas)**: 2 `order:pi_*`, `priv-ocean-drive-retreat-miami-beach-7xnzlba` + `subm-7XNzLBA`, y 15 `subm-*` sin identificar — pendiente opcional (MyGuest 08b), **no bloqueante**, no tocar sin aprobación de Vero.
+
+---
+
 ## Pendientes al retomar
 
-### Limpieza de pruebas (pendiente aprobación de Vero)
-- **KV**: `subm-gbAEA4l`, `delivery:maison-mar-serena-gbaea4l`, `priv-maison-mar-serena-gbaea4l`, `correction:maison-mar-serena-gbaea4l`, `subm-Dq18Xql`, `delivery:casa-mar-serena-dq18xql`, `priv-casa-mar-serena-dq18xql`, `correction:casa-mar-serena-dq18xql`
-- **GitHub Pages**: `public/villas/maison-mar-serena-gbaea4l/`, `public/villas/casa-mar-serena-dq18xql/`
+### Limpieza de pruebas — ✅ CERRADA (MyGuest 08, 2026-07-02)
+- **KV**: las keys de prueba documentadas aquí (mar-serena, SMOKETEST, hmac, villa-maralto, etc.) fueron borradas — 127 keys en total. Solo queda el grupo C (19 keys no identificadas, opcional MyGuest 08b, no bloqueante) y el grupo B (8 keys con TTL que expiran solas). Ver "Estado actual".
+- **GitHub Pages**: `public/villas/` quedó limpio — solo los 4 demos oficiales.
 
 ### Seguridad / Infraestructura
 1. **Rotar `NOTIFY_SECRET`** — reemplazar con un secreto seguro (mínimo 32 caracteres aleatorios). Actualizar en: GitHub Actions Secrets → `NOTIFY_SECRET`, y Cloudflare Worker → Variables → `NOTIFY_SECRET`. No poner el nuevo valor en el repo ni en logs.
 2. **Llenar KV namespace ID** en `worker/wrangler.toml` (tiene placeholder `REPLACE_WITH_YOUR_KV_NAMESPACE_ID`).
 3. **Verificar Resend API key** — confirmar que pertenece a la cuenta correcta y que `hello@myguestguide.com` está verificado.
 4. **Configurar webhook en Tally**: Tally → Integrations → Webhooks → `https://myguest-worker.veronica-perezarroyo.workers.dev/tally-webhook`.
-5. **Limpiar KV de prueba**: registros SMOKETEST01-05, SMOKETEST10, FLOWATEST01, y todos los registros de `hmac-test-no-entregar-zezdgrg` (prueba HMAC/QA — evidencia temporal).
-5b. **Limpiar carpeta de prueba**: `public/villas/hmac-test-no-entregar-zezdgrg/` — generada en prueba HMAC, eliminar antes de primera venta real.
-6. **Limpiar páginas de prueba**: `public/villas/smoke-test-flujo-a-no-entregar-lowatest01/` y slugs villa-maralto-0260606a01/b01/c01 si ya no se necesitan.
+5. **Limpiar KV de prueba** — ✅ Resuelto (MyGuest 08, 2026-07-02): SMOKETEST01-05, SMOKETEST10, FLOWATEST01 y registros hmac borrados.
+5b. **Limpiar carpeta de prueba** `public/villas/hmac-test-no-entregar-zezdgrg/` — ✅ Resuelto: ya no existe en `public/villas/`.
+6. **Limpiar páginas de prueba** (`smoke-test-flujo-a-...`, villa-maralto-0260606a01/b01/c01) — ✅ Resuelto: carpetas eliminadas y KV borrado en MyGuest 08; URLs verificadas en 404.
 7. **Node.js 20 deprecation** en GitHub Actions — forzado Node 24 desde el 16 junio 2026, eliminado el 16 septiembre 2026. Actualizar `actions/checkout@v4`, `actions/setup-python@v5`, `actions/configure-pages@v5`, `actions/deploy-pages@v4`, `actions/upload-artifact@v4` a versiones que soporten Node 24.
 8. **Desplegar worker.js via Wrangler** — autenticación configurada y funcional (`npx wrangler deploy` desde `worker/`). ✅ Resuelto.
 9. **Pinear SHAs en GitHub Actions** — las actions de terceros (checkout, setup-python, etc.) deben anclarse a SHA completo en lugar de tag. Pendiente para post-MVP.

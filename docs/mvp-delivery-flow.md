@@ -185,8 +185,8 @@ Future: An internal Tally form (`MyGuest — Manual Extraction Review`) will all
 - [ ] **Configure Tally webhook**: Tally → Integrations → Webhooks → `https://myguest-worker.veronica-perezarroyo.workers.dev/tally-webhook`.
 
 ### Cleanup
-- [ ] Clean up test KV records: SMOKETEST01–05, SMOKETEST10, FLOWATEST01.
-- [ ] Clean up test pages: `public/villas/smoke-test-flujo-a-no-entregar-lowatest01/` and other test villa slugs (villa-maralto-0260606a01, -b01, -c01) if no longer needed.
+- [x] Clean up test KV records: SMOKETEST01–05, SMOKETEST10, FLOWATEST01. — ✅ Done (MyGuest 08, 2026-07-02: 127 confirmed test keys bulk-deleted; 8 TTL keys left to expire, 19 unidentified keys deferred as optional non-blocking MyGuest 08b).
+- [x] Clean up test pages: `public/villas/smoke-test-flujo-a-no-entregar-lowatest01/` and other test villa slugs (villa-maralto-0260606a01, -b01, -c01) if no longer needed. — ✅ Done: `public/villas/` now contains only the 4 official demos; old test URLs verified 404.
 - [ ] Node.js 20 deprecation in GitHub Actions — upgrade before September 2026.
 - [ ] Deploy worker.js properly via Wrangler once authentication is set up (currently deployed manually via Cloudflare dashboard).
 
