@@ -2633,10 +2633,11 @@ async function handleManualExtractionReview(request, normalized, env) {
   const privateKey  = `priv-${slug}`;
   const deliveryKey = `delivery:${slug}`;
 
-  const [index, intakeRecord, privateRecord] = await Promise.all([
-    env.MYGUEST_KV.get(indexKey,   { type: 'json' }).catch(() => null),
-    env.MYGUEST_KV.get(intakeKey,  { type: 'json' }).catch(() => null),
-    env.MYGUEST_KV.get(privateKey, { type: 'json' }).catch(() => null),
+  const [index, intakeRecord, privateRecord, deliveryRecord] = await Promise.all([
+    env.MYGUEST_KV.get(indexKey,    { type: 'json' }).catch(() => null),
+    env.MYGUEST_KV.get(intakeKey,   { type: 'json' }).catch(() => null),
+    env.MYGUEST_KV.get(privateKey,  { type: 'json' }).catch(() => null),
+    env.MYGUEST_KV.get(deliveryKey, { type: 'json' }).catch(() => null),
   ]);
 
   if (!index) {
@@ -2645,12 +2646,67 @@ async function handleManualExtractionReview(request, normalized, env) {
   if (!privateRecord) {
     return jsonResponse({ ok: false, error: 'Private record not found', slug }, 404);
   }
-  if (index.status !== 'needs_manual_extraction') {
+  const ALLOWED_REVIEW_STATUSES = new Set(['needs_manual_extraction', 'manual_extraction_incomplete']);
+  if (!ALLOWED_REVIEW_STATUSES.has(index.status)) {
     return jsonResponse({
       ok: false,
-      error: 'Submission is not awaiting manual extraction',
+      error: 'Submission is not awaiting manual extraction or re-review',
       current_status: index.status
     }, 409);
+  }
+
+  // Check if Vero confirmed the extraction is complete before doing anything irreversible.
+  // isManualExtractionApproved tries multiple candidate keys in priority order and requires
+  // an unambiguous affirmative answer. Conservative default: missing or ambiguous → block.
+  const extractionComplete = isManualExtractionApproved(normalized.answers);
+
+  if (!extractionComplete) {
+    index.status = 'manual_extraction_incomplete';
+    index.last_updated_at = now;
+    await env.MYGUEST_KV.put(indexKey, JSON.stringify(index)).catch(() => {});
+
+    if (intakeRecord) {
+      await env.MYGUEST_KV.put(intakeKey, JSON.stringify({
+        ...intakeRecord,
+        status: 'manual_extraction_incomplete',
+        review_submission_id: reviewSubmissionId,
+        manual_review_at: now
+      })).catch(() => {});
+    }
+
+    if (deliveryRecord) {
+      await env.MYGUEST_KV.put(deliveryKey, JSON.stringify({
+        ...deliveryRecord,
+        status: 'manual_extraction_incomplete',
+        manual_review_at: now
+      })).catch(() => {});
+    }
+
+    const orderId = deliveryRecord?.order_id;
+    if (orderId) {
+      try {
+        const orderRecord = await env.MYGUEST_KV.get(`order:${orderId}`, { type: 'json' }).catch(() => null);
+        if (orderRecord) {
+          await env.MYGUEST_KV.put(`order:${orderId}`, JSON.stringify({
+            ...orderRecord,
+            status: 'manual_extraction_incomplete',
+            last_updated_at: now
+          }));
+        }
+      } catch (err) {
+        console.error('review: order status update failed (non-fatal):', safeError(err));
+      }
+    }
+
+    console.log('manual extraction incomplete:', JSON.stringify({ slug, original_submission_id: originalSubmissionId }));
+
+    return jsonResponse({
+      ok: true,
+      status: 'manual_extraction_incomplete',
+      slug,
+      original_submission_id: originalSubmissionId,
+      message: 'Extraction marked as incomplete. Book generation was not triggered. Submit again with "Si — lista para generar" when ready.'
+    });
   }
 
   // Merge: original client answers + Vero's manually extracted answers
@@ -2743,7 +2799,7 @@ async function handleManualExtractionReview(request, normalized, env) {
 
   // Update delivery record status
   try {
-    const delivery = await env.MYGUEST_KV.get(deliveryKey, { type: 'json' }).catch(() => null);
+    const delivery = deliveryRecord;
     if (delivery) {
       await env.MYGUEST_KV.put(deliveryKey, JSON.stringify({
         ...delivery,
@@ -2768,12 +2824,58 @@ async function handleManualExtractionReview(request, normalized, env) {
   });
 }
 
+function isManualExtractionApproved(answers) {
+  // Candidate keys for the extraction-complete confirmation field, in priority order.
+  // Covers: generic aliases, all normalized variants of the yP1y9B label, and
+  // alternative labels that could appear if the form is ever modified.
+  const CONFIRMATION_KEYS = [
+    'review_confirmed',
+    'la_extraccion_esta_completa_y_lista_para_generar_la_guia',
+    'la_extraccion_esta_completa_y_lista_para_generar',
+    'extraccion_completa',
+    'extraction_complete',
+    'confirmacion_extraccion',
+  ];
+
+  let raw = '';
+  for (const key of CONFIRMATION_KEYS) {
+    const val = getAnswer(answers, key);
+    if (val === null || val === undefined) continue;
+    // MULTIPLE_CHOICE with allowMultiple=false still arrives as a single string after
+    // extractTallyFieldValue resolves option IDs to text. Guard against an array just in case.
+    raw = Array.isArray(val) ? val.filter(Boolean).join(' ').trim() : String(val).trim();
+    if (raw) break;
+  }
+
+  if (!raw) return false;
+
+  const norm = raw
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .trim();
+
+  // Unambiguous affirmative signals
+  if (norm.startsWith('si') || norm.startsWith('yes')) return true;
+  if (norm.includes('lista para generar') || norm.includes('ready to generate')) return true;
+
+  return false;
+}
+
 function mergeAnswersForReview(original, review) {
   // Campos propios del formulario interno — no son datos de la propiedad
   const REVIEW_META_KEYS = new Set([
     'flow_type', 'original_submission_id', 'slug',
     'review_confirmed', 'extraction_notes', 'reviewer_name',
-    'submission_id', 'submissionId', 'responseId'
+    'submission_id', 'submissionId', 'responseId',
+    // Normalized keys from yP1y9B fields that are internal to the review form.
+    // Must stay in sync with CONFIRMATION_KEYS in isManualExtractionApproved.
+    'la_extraccion_esta_completa_y_lista_para_generar_la_guia',
+    'la_extraccion_esta_completa_y_lista_para_generar',
+    'extraccion_completa',
+    'extraction_complete',
+    'confirmacion_extraccion',
+    'notas_internas_de_la_extraccion',
   ]);
 
   const merged    = { ...original };
