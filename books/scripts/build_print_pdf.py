@@ -823,6 +823,17 @@ def render_print_html(payload):
     return slug, html
 
 
+# Solo los demos oficiales publican print.pdf en public/. Las villas de clientes
+# obtienen su printable completo via /print/<slug>?token= (Worker), nunca como
+# archivo público.
+OFFICIAL_DEMO_SLUGS = {
+    "ocean-drive-retreat",
+    "the-soho-loft",
+    "casa-selva-tulum",
+    "le-marais-flat",
+}
+
+
 def try_generate_pdf(html_path, pdf_path):
     try:
         from weasyprint import HTML  # type: ignore
@@ -855,6 +866,10 @@ def main():
     with open(html_path, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"Generated {html_path}")
+
+    if slug not in OFFICIAL_DEMO_SLUGS:
+        print(f"print.pdf skipped (non-demo villa): {slug}")
+        return
 
     ok, error = try_generate_pdf(html_path, pdf_path)
     if ok:

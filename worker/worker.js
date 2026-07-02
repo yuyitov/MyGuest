@@ -145,13 +145,15 @@ async function handleTallyWebhook(request, env, ctx) {
     return jsonResponse({ ok: false, error: 'Could not read request body' }, 400);
   }
 
-  // HMAC signature validation — rejects requests not from Tally
-  if (env.TALLY_SIGNING_SECRET) {
-    const sigHeader = request.headers.get('tally-signature') || '';
-    const valid = await verifyTallySignature(rawBody, sigHeader, env.TALLY_SIGNING_SECRET);
-    if (!valid) {
-      return jsonResponse({ ok: false, error: 'Invalid webhook signature' }, 401);
-    }
+  // HMAC signature validation — rejects requests not from Tally.
+  // Fail-closed: without the secret configured, no webhook is accepted.
+  if (!env.TALLY_SIGNING_SECRET) {
+    return jsonResponse({ ok: false, error: 'Webhook signature validation not configured' }, 500);
+  }
+  const sigHeader = request.headers.get('tally-signature') || '';
+  const valid = await verifyTallySignature(rawBody, sigHeader, env.TALLY_SIGNING_SECRET);
+  if (!valid) {
+    return jsonResponse({ ok: false, error: 'Invalid webhook signature' }, 401);
   }
 
   let rawPayload;
