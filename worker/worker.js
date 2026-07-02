@@ -224,49 +224,65 @@ async function handleTallyWebhook(request, env, ctx) {
       return jsonResponse({ ok: false, status: 'order_email_mismatch', order_id: incomingOrderId }, 403);
     }
 
-    // Allowlist explícita — solo estos estados permiten generar book
-    const allowedStatuses = ['paid', 'form_sent', 'failed_dispatch'];
-    const isVeroTest = (formEmail || '').trim().toLowerCase() === 'veronica.perezarroyo@gmail.com';
-    if (!isVeroTest && !allowedStatuses.includes(existingOrder.status)) {
-      await env.MYGUEST_KV.put(
-        `invalid_order_status:${incomingOrderId}:${normalized.submission_id}`,
-        JSON.stringify({
-          order_id: incomingOrderId,
-          submission_id: normalized.submission_id,
-          blocked_by_status: existingOrder.status,
-          attempted_at: now
-        }),
-        { expirationTtl: 2592000 }
-      ).catch(() => {});
-      return jsonResponse({ ok: false, status: 'invalid_order_status', order_id: incomingOrderId }, 409);
+    // Courtesy order vs paid order — rutas de validación distintas
+    const isCourtesy = existingOrder.type === 'courtesy_order';
+
+    if (isCourtesy) {
+      const courtesyExpired = existingOrder.expires_at && new Date(existingOrder.expires_at) < new Date(now);
+      const courtesyRevoked = ['revoked', 'cancelled'].includes(existingOrder.status);
+      const booksUsed       = Number(existingOrder.books_used || 0);
+      const booksAuthorized = Number(existingOrder.books_authorized || 0);
+
+      let courtesyError = null;
+      if (courtesyRevoked)                     courtesyError = 'courtesy_order_revoked';
+      else if (courtesyExpired)                courtesyError = 'courtesy_order_expired';
+      else if (existingOrder.status !== 'active') courtesyError = 'courtesy_order_not_active';
+      else if (booksUsed >= booksAuthorized)   courtesyError = 'courtesy_order_exhausted';
+
+      if (courtesyError) {
+        await env.MYGUEST_KV.put(
+          `invalid_order_status:${incomingOrderId}:${normalized.submission_id}`,
+          JSON.stringify({ order_id: incomingOrderId, submission_id: normalized.submission_id, blocked_by: courtesyError, attempted_at: now }),
+          { expirationTtl: 2592000 }
+        ).catch(() => {});
+        return jsonResponse({ ok: false, status: courtesyError, order_id: incomingOrderId }, 409);
+      }
+    } else {
+      // Paid order — allowlist explícita de estados válidos para generar book
+      const allowedStatuses = ['paid', 'form_sent', 'failed_dispatch'];
+      if (!allowedStatuses.includes(existingOrder.status)) {
+        await env.MYGUEST_KV.put(
+          `invalid_order_status:${incomingOrderId}:${normalized.submission_id}`,
+          JSON.stringify({ order_id: incomingOrderId, submission_id: normalized.submission_id, blocked_by_status: existingOrder.status, attempted_at: now }),
+          { expirationTtl: 2592000 }
+        ).catch(() => {});
+        return jsonResponse({ ok: false, status: 'invalid_order_status', order_id: incomingOrderId }, 409);
+      }
     }
 
     reservedOrderRecord = existingOrder;
   }
   // ─────────────────────────────────────────────────────────────────────────
 
-  // ─── Guard: bloquear submissions sin order_id salvo email de prueba ───────
+  // ─── Guard: bloquear submissions sin order_id ────────────────────────────
   if (!incomingOrderId) {
     const noOrderEmail = (cleanValue(getAnswer(normalized.answers, 'customer_email')) || '').toLowerCase().trim();
-    const isVeroTest   = noOrderEmail === 'veronica.perezarroyo@gmail.com';
 
-    if (!isVeroTest) {
-      await env.MYGUEST_KV.put(
-        `missing_order:${normalized.submission_id}`,
-        JSON.stringify({
-          submission_id: normalized.submission_id,
-          form_email:    noOrderEmail || '(empty)',
-          attempted_at:  now
-        }),
-        { expirationTtl: 2592000 }
-      ).catch(() => {});
+    await env.MYGUEST_KV.put(
+      `missing_order:${normalized.submission_id}`,
+      JSON.stringify({
+        submission_id: normalized.submission_id,
+        form_email:    noOrderEmail || '(empty)',
+        attempted_at:  now
+      }),
+      { expirationTtl: 2592000 }
+    ).catch(() => {});
 
-      return jsonResponse({
-        ok:            false,
-        status:        'missing_order_id',
-        submission_id: normalized.submission_id
-      }, 403);
-    }
+    return jsonResponse({
+      ok:            false,
+      status:        'missing_order_id',
+      submission_id: normalized.submission_id
+    }, 403);
   }
   // ─────────────────────────────────────────────────────────────────────────
 
@@ -404,13 +420,22 @@ async function handleTallyWebhook(request, env, ctx) {
     // Marcar order como pendiente de extracción manual
     if (incomingOrderId && reservedOrderRecord) {
       try {
-        await env.MYGUEST_KV.put(`order:${incomingOrderId}`, JSON.stringify({
+        const updatedOrderUpload = {
           ...reservedOrderRecord,
           status: 'needs_manual_extraction',
           submission_id: normalized.submission_id,
           slug,
           submitted_at: now
-        }));
+        };
+        if (reservedOrderRecord.type === 'courtesy_order') {
+          updatedOrderUpload.books_used = Number(reservedOrderRecord.books_used || 0) + 1;
+          updatedOrderUpload.used_at    = now;
+          updatedOrderUpload.audit_log  = [
+            ...(reservedOrderRecord.audit_log || []),
+            { event: 'submission_accepted_needs_manual_extraction', submission_id: normalized.submission_id, slug, at: now }
+          ];
+        }
+        await env.MYGUEST_KV.put(`order:${incomingOrderId}`, JSON.stringify(updatedOrderUpload));
       } catch (err) {
         console.error('order manual extraction status update failed (non-fatal):', safeError(err));
       }
@@ -470,13 +495,22 @@ async function handleTallyWebhook(request, env, ctx) {
   // Reservar order ANTES del dispatch para evitar doble generación (anti-race)
   if (incomingOrderId && reservedOrderRecord) {
     try {
-      await env.MYGUEST_KV.put(`order:${incomingOrderId}`, JSON.stringify({
+      const updatedOrderDispatch = {
         ...reservedOrderRecord,
         status: 'submitted',
         submission_id: normalized.submission_id,
         slug,
         submitted_at: now
-      }));
+      };
+      if (reservedOrderRecord.type === 'courtesy_order') {
+        updatedOrderDispatch.books_used = Number(reservedOrderRecord.books_used || 0) + 1;
+        updatedOrderDispatch.used_at    = now;
+        updatedOrderDispatch.audit_log  = [
+          ...(reservedOrderRecord.audit_log || []),
+          { event: 'submission_accepted', submission_id: normalized.submission_id, slug, at: now }
+        ];
+      }
+      await env.MYGUEST_KV.put(`order:${incomingOrderId}`, JSON.stringify(updatedOrderDispatch));
     } catch (err) {
       console.error('order reservation failed:', safeError(err));
       throw new Error('Failed to reserve order — aborting dispatch');
