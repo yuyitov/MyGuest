@@ -1974,6 +1974,20 @@ async function handleStripeWebhook(request, env) {
 
   const session = event?.data?.object || {};
 
+  // Filtro por producto: la cuenta de Stripe es compartida con otros productos
+  // (HMU Link), así que este webhook recibe TODAS las ventas de la cuenta.
+  // Solo checkout.session.completed trae payment_link; payment_intent.succeeded
+  // no se puede atribuir a un producto, así que se ignora con el filtro activo.
+  const expectedPaymentLink = (env.STRIPE_PAYMENT_LINK_ID || '').trim();
+  if (expectedPaymentLink) {
+    if (type !== 'checkout.session.completed') {
+      return jsonResponse({ ok: true, ignored: true, reason: 'unattributable_event_type' });
+    }
+    if ((session.payment_link || '') !== expectedPaymentLink) {
+      return jsonResponse({ ok: true, ignored: true, reason: 'other_product' });
+    }
+  }
+
   const paymentIntentId =
     type === 'checkout.session.completed'
       ? (session.payment_intent || session.id || '')
