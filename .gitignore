@@ -7,6 +7,10 @@ __pycache__/
 node_modules/
 npm-debug.log*
 
+# Env
+.env
+.env.*
+
 # Wrangler / Cloudflare local state
 worker/.wrangler/
 worker/wrangler.toml
