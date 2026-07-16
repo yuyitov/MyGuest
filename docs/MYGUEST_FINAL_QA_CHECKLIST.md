@@ -630,10 +630,16 @@ Estado: ✅ F-02 y F-03 completados. Pendiente activar Stripe LIVE antes de vent
 * Persisten untracked locales conocidos, diferidos para revisión separada:
 
   * `books/scripts/_regen_print_only.py`
-  * `package-lock.json`
-  * `public/landing/Identidad Visual/Logos/...`
-  * `public/landing/Identidad Visual/Mascota/`
-  * `worker/C...Tempprint_test.html`
+
+* Resueltos el 2026-07-16 (antes en esta misma lista):
+
+  * `package-lock.json` — commiteado en `10a3f80` junto con el parche de `ws`/`js-yaml`.
+  * `public/landing/Identidad Visual/Logos/...` y `.../Mascota/` — commiteados
+    (`f15acb5`) y movidos a `marketing/Identidad Visual/` (`3541e14`): eran assets
+    de marca sirviéndose públicos desde `public/`. Ningún archivo de `public/` los
+    referencia; la landing usa `landing/logo_principal-Photoroom.png` y
+    `landing/mascota-photoroom.png`, que no se movieron.
+  * `worker/C...Tempprint_test.html` — ya no existe en el árbol.
 
 ### Pendiente antes de producción real
 
