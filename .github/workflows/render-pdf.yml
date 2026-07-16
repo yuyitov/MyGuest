@@ -46,7 +46,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
       - name: Validate demo-only guard
         run: |
@@ -132,7 +132,7 @@ jobs:
           SLUG: ${{ github.event.inputs.slug }}
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: "3.11"
 
@@ -169,7 +169,7 @@ jobs:
           SLUG: ${{ github.event.inputs.slug }}
 
       - name: Upload PDF as artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: demo-print-pdf-${{ github.event.inputs.slug }}
           path: print.pdf
