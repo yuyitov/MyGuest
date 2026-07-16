@@ -201,6 +201,20 @@ jobs:
           print("QA OK: no private/sensitive terms found in public text outputs.")
           PY
 
+      - name: Verify no obvious secrets committed (value-shaped, not variable names)
+        run: |
+          # Matches secret-shaped VALUES (Stripe/SendGrid/Cloudflare/GitHub/
+          # Resend/OpenAI key prefixes, PEM headers), not mere mentions of
+          # words like "api_key" or "bearer" that legitimately appear in
+          # code/comments/docstrings. Lesson from HMU Link: a name-based guard
+          # produced a false positive that silently blocked deploy for ~1h.
+          if grep -rnE "sk_live_[A-Za-z0-9]+|sk_test_[A-Za-z0-9]+|rk_live_[A-Za-z0-9]+|sk-proj-[A-Za-z0-9_-]{10,}|sk-[A-Za-z0-9]{20,}|SG\.[A-Za-z0-9_-]{16,}|whsec_[A-Za-z0-9]{8,}|cfut_[A-Za-z0-9]{8,}|ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|re_[A-Za-z0-9]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----" \
+               books/ data/ public/ worker/ ; then
+            echo "Posible secreto detectado."
+            exit 1
+          fi
+          echo "OK: sin secrets obvios."
+
       - name: Commit and Push
         run: |
           git config --global user.name "MyGuest Bot"
