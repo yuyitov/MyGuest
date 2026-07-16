@@ -1942,7 +1942,7 @@ function corsHeaders() {
 // Env vars nuevas requeridas:
 //   STRIPE_WEBHOOK_SECRET  — secreto del webhook en Stripe dashboard
 //   RESEND_API_KEY         — API key de Resend
-//   FROM_EMAIL             — remitente (ej: "MyGuest <hello@myguest.app>")
+//   FROM_EMAIL             — remitente, obligatorio (ej: "MyGuest <hello@myguestguide.com>")
 //   TALLY_FORM_URL         — URL base del formulario Tally (obligatorio)
 //   NOTIFY_SECRET          — secreto requerido para el endpoint /notify
 // ═══════════════════════════════════════════════════════════════════════════
@@ -2242,9 +2242,13 @@ function timingSafeEqual(a, b) {
 
 async function sendEmail({ env, to, subject, html }) {
   const apiKey = (env.RESEND_API_KEY || '').trim();
-  const from   = (env.FROM_EMAIL    || '').trim() || 'MyGuest <hello@myguest.app>';
+  const from   = (env.FROM_EMAIL    || '').trim();
 
   if (!apiKey) throw new Error('RESEND_API_KEY not configured');
+  // Sin fallback a proposito: un remitente por defecto apunta a un dominio no
+  // verificado en Resend, que rechaza el envio con un 403 dificil de leer.
+  // Mejor fallar aqui, con el nombre de la variable que falta.
+  if (!from)   throw new Error('FROM_EMAIL not configured');
   if (!to)     throw new Error('sendEmail: missing recipient');
 
   const response = await fetch('https://api.resend.com/emails', {
