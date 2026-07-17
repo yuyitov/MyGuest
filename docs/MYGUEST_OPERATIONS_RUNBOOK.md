@@ -19,11 +19,11 @@ Tally → Cloudflare Worker → GitHub Actions → GitHub Pages
 ## Estructura de precios (estrategia 2026-07-17)
 
 - **Precio de lista (ancla)**: $129 USD / $1,999 MXN — se muestra tachado en la landing junto al precio promocional vigente.
+- **Promo vigente (2026-07-17)**: **$49 USD / $899 MXN / $69 CAD** (multi-moneda al pagar).
 - **Escalera de lanzamiento** (la ejecuta Vero editando los payment links en Stripe; las URLs `buy.stripe.com` se CONSERVAN):
-  1. Early: **$29 USD** (vigente hoy; MXN 499 / CAD 41.99 al pagar)
-  2. Sube a **$49 USD** al llegar a ~10 ventas
-  3. Sube a **$79 USD** al llegar a ~25 ventas
-  4. Precio de lista: $129 USD / $1,999 MXN
+  1. Actual: **$49 USD** (vigente hoy; $899 MXN / $69 CAD al pagar)
+  2. Sube a **$79 USD** al llegar a ~25 ventas
+  3. Precio de lista: $129 USD / $1,999 MXN
 - Al subir cada escalón: Vero cambia el precio en Stripe y se actualiza el número promocional en la landing (el tachado $129/$1,999 se mantiene).
 - **Correcciones**: 1 ronda de correcciones gratis incluida; cada ronda adicional cuesta **$6 USD / $59 MXN**. Los payment links de cobro por corrección adicional los crea Vero en Stripe (no existen aún — no inventar URLs).
 - El pricing NO vive en el Worker — solo en Stripe y en la landing.
