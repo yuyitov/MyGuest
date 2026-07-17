@@ -568,9 +568,10 @@ python books/scripts/generate_villa.py <property-slug>
 8. **Desplegar worker.js via Wrangler** — autenticación configurada y funcional (`npx wrangler deploy` desde `worker/`). ✅ Resuelto.
 9. **Pinear SHAs en GitHub Actions** — las actions de terceros (checkout, setup-python, etc.) deben anclarse a SHA completo en lugar de tag. Pendiente para post-MVP.
 
-### Corrections flow (pendiente verificación visual)
-- El link `/correct/<slug>?token=` existe y redirige a Tally `Ek6EM2` con pre-fill de `slug`, `correction_token`, `customer_email`, `form_type=corrections`.
-- **Pendiente verificar**: que el formulario Ek6EM2 abre prellenado correctamente desde el link (prueba real con navegador), que al enviar marca el token como `used: true`, y que un segundo uso muestra error.
+### Corrections flow — ✅ VERIFICADO E2E (2026-07-17, P11)
+- El link `/correct/<slug>?token=` redirige a Tally `Ek6EM2` con pre-fill de `slug`, `correction_token`, `customer_email`, `form_type=corrections`. El form Ek6EM2 tiene los 4 hidden fields configurados (confirmado en su esquema).
+- Prueba controlada (key `correction:p11-corrections-test` creada y borrada con aprobación de Vero): token inválido → 404; envío real firmado por Tally → worker marcó `used:true` (`used_at` registrado) → **confirma también la pata Tally→worker de A4** (TALLY_SIGNING_SECRET sincronizado); segundo acceso → página "already used" (sin redirigir a Tally). Alert email a `ALERT_EMAIL` es non-fatal (`.catch`).
+- Nota operativa: el submit de Tally (React) NO se dispara por automatización de navegador (ni click sintético ni `requestSubmit`); requiere un clic humano real. Para futuras pruebas E2E del form, que Vero haga el clic de envío.
 
 ### Diseño — ✅ DECISIÓN TOMADA (2026-07-17, P5)
 Vero revisó una guía real (Ocean Drive Retreat, móvil ES/EN + PDF) y decidió: **el producto es suficiente para vender**. El diseño móvil y el imprimible YA cumplen sus dos requisitos:
