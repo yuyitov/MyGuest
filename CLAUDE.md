@@ -557,7 +557,7 @@ python books/scripts/generate_villa.py <property-slug>
 - **GitHub Pages**: `public/villas/` quedó limpio — solo los 4 demos oficiales.
 
 ### Seguridad / Infraestructura
-1. **Rotar `NOTIFY_SECRET`** — reemplazar con un secreto seguro (mínimo 32 caracteres aleatorios). Actualizar en: GitHub Actions Secrets → `NOTIFY_SECRET`, y Cloudflare Worker → Variables → `NOTIFY_SECRET`. No poner el nuevo valor en el repo ni en logs.
+1. ~~**Rotar `NOTIFY_SECRET`**~~ — ✅ **Resuelto 2026-07-17** (P5). Rotado a un valor aleatorio de 48 chars con el MISMO valor en Cloudflare Worker (`wrangler secret put`) y GitHub Actions (`gh secret set`). Verificado por HTTP: bearer incorrecto → 401, bearer nuevo + slug inexistente → 404 `delivery record not found` (auth OK, sin efectos secundarios). Valor nunca impreso ni commiteado.
 2. ~~**Llenar KV namespace ID** en `worker/wrangler.toml`~~ — ✅ hecho: ya trae el ID real (`4353e51b...`). Ojo: ese archivo está en `.gitignore`, así que solo existe en la máquina de Vero; quien clone el repo tiene que crearlo.
 3. **Verificar Resend API key** — confirmar que pertenece a la cuenta correcta y que `hello@myguestguide.com` está verificado.
 4. **Configurar webhook en Tally**: Tally → Integrations → Webhooks → `https://myguest-worker.veronica-perezarroyo.workers.dev/tally-webhook`.
@@ -572,9 +572,13 @@ python books/scripts/generate_villa.py <property-slug>
 - El link `/correct/<slug>?token=` existe y redirige a Tally `Ek6EM2` con pre-fill de `slug`, `correction_token`, `customer_email`, `form_type=corrections`.
 - **Pendiente verificar**: que el formulario Ek6EM2 abre prellenado correctamente desde el link (prueba real con navegador), que al enviar marca el token como `used: true`, y que un segundo uso muestra error.
 
-### Diseño (diferido)
-- Diseño visual de la guía móvil (`master.html`)
-- Diseño visual de la guía imprimible (`print_letter.html`)
+### Diseño — ✅ DECISIÓN TOMADA (2026-07-17, P5)
+Vero revisó una guía real (Ocean Drive Retreat, móvil ES/EN + PDF) y decidió: **el producto es suficiente para vender**. El diseño móvil y el imprimible YA cumplen sus dos requisitos:
+- Imprimible SIN links de Google Maps en Restaurants/Bars/Things to Do → renderiza dirección + teléfono (`build_print_pdf.py` `build_recommendations`, `_is_maps_url()` filtra los maps URLs). ✅
+- PDF trilingüe EN+ES+FR en un solo archivo con páginas divisorias (`SUPPORTED_LANGUAGES`, loop en `render_print_html`). ✅
+- `master.html` (móvil) aprobado como está.
+
+**Único remanente = marketing, no producto:** los 4 PDF demo en `public/villas/*/print.pdf` son de 2026-05-10 (anteriores a esas features) → muestran inglés-only con links de Maps. Regenerarlos es una **tarea de marketing** (refrescar muestra de venta), registrada en el Centro; NO bloquea el 100% del producto.
 
 ### Pinterest / Marketing
 - **Crear 8 prompts de ChatGPT** para generación semanal de imágenes publicitarias de Pinterest
