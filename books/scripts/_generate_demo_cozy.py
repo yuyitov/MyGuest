@@ -413,12 +413,12 @@ PRE_TRANSLATIONS = {
 
 
 def make_patched_translate(original_fn):
-    def patched(content_flat, target_language):
+    def patched(content_flat, target_language, source_language="English"):
         if target_language in PRE_TRANSLATIONS:
             result = dict(content_flat)
             result.update(PRE_TRANSLATIONS[target_language])
             return result
-        return original_fn(content_flat, target_language)
+        return original_fn(content_flat, target_language, source_language=source_language)
     return patched
 
 
