@@ -1978,12 +1978,13 @@ async function handleStripeWebhook(request, env) {
   // (HMU Link), así que este webhook recibe TODAS las ventas de la cuenta.
   // Solo checkout.session.completed trae payment_link; payment_intent.succeeded
   // no se puede atribuir a un producto, así que se ignora con el filtro activo.
-  const expectedPaymentLink = (env.STRIPE_PAYMENT_LINK_ID || '').trim();
-  if (expectedPaymentLink) {
+  const expectedPaymentLinks = (env.STRIPE_PAYMENT_LINK_ID || '')
+    .split(',').map((s) => s.trim()).filter(Boolean);
+  if (expectedPaymentLinks.length) {
     if (type !== 'checkout.session.completed') {
       return jsonResponse({ ok: true, ignored: true, reason: 'unattributable_event_type' });
     }
-    if ((session.payment_link || '') !== expectedPaymentLink) {
+    if (!expectedPaymentLinks.includes(session.payment_link || '')) {
       return jsonResponse({ ok: true, ignored: true, reason: 'other_product' });
     }
   }
