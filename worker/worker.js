@@ -1980,13 +1980,21 @@ async function handleStripeWebhook(request, env) {
   // no se puede atribuir a un producto, así que se ignora con el filtro activo.
   const expectedPaymentLinks = (env.STRIPE_PAYMENT_LINK_ID || '')
     .split(',').map((s) => s.trim()).filter(Boolean);
-  if (expectedPaymentLinks.length) {
-    if (type !== 'checkout.session.completed') {
-      return jsonResponse({ ok: true, ignored: true, reason: 'unattributable_event_type' });
-    }
-    if (!expectedPaymentLinks.includes(session.payment_link || '')) {
-      return jsonResponse({ ok: true, ignored: true, reason: 'other_product' });
-    }
+  // FAIL CLOSED: sin allowlist configurado (o mal escrito) NO se procesa ningún
+  // pago — procesar una venta ajena mandaría el formulario al cliente equivocado.
+  // Se loguea el payment_link observado para poder capturarlo en la config.
+  // (Mismo criterio que engine/worker/stripe-filter.mjs de link-factory.)
+  if (!expectedPaymentLinks.length) {
+    console.log(
+      `[stripe-filter] filter_not_configured — event ignored; observed payment_link: ${session.payment_link || '(none)'}`
+    );
+    return jsonResponse({ ok: true, ignored: true, reason: 'filter_not_configured' });
+  }
+  if (type !== 'checkout.session.completed') {
+    return jsonResponse({ ok: true, ignored: true, reason: 'unattributable_event_type' });
+  }
+  if (!expectedPaymentLinks.includes(session.payment_link || '')) {
+    return jsonResponse({ ok: true, ignored: true, reason: 'other_product' });
   }
 
   const paymentIntentId =
@@ -2242,8 +2250,9 @@ function timingSafeEqual(a, b) {
 }
 
 async function sendEmail({ env, to, subject, html }) {
-  const apiKey = (env.RESEND_API_KEY || '').trim();
-  const from   = (env.FROM_EMAIL    || '').trim();
+  const apiKey  = (env.RESEND_API_KEY || '').trim();
+  const from    = (env.FROM_EMAIL     || '').trim();
+  const replyTo = (env.REPLY_TO_EMAIL || '').trim();
 
   if (!apiKey) throw new Error('RESEND_API_KEY not configured');
   // Sin fallback a proposito: un remitente por defecto apunta a un dominio no
@@ -2258,7 +2267,13 @@ async function sendEmail({ env, to, subject, html }) {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ from, to, subject, html })
+    body: JSON.stringify({
+      from,
+      to,
+      subject,
+      html,
+      ...(replyTo ? { reply_to: replyTo } : {})
+    })
   });
 
   if (!response.ok) {
