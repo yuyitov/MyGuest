@@ -4,8 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MyGuest — Privacy &amp; Data</title>
-  <meta name="description" content="MyGuest Privacy Policy — how we collect, use and protect your data." />
+  <meta name="description" content="" />
   <meta name="referrer" content="no-referrer" />
+  <link rel="alternate" hreflang="en" href="privacy.html">
+  <link rel="alternate" hreflang="es" href="es/privacy.html">
+  <link rel="alternate" hreflang="fr" href="fr/privacy.html">
+  <link rel="alternate" hreflang="x-default" href="privacy.html">
   <style>
     :root {
       --ink: #202020;
@@ -99,20 +103,29 @@
       border-top: 1px solid var(--line);
     }
     footer a { color: var(--warm-gray); text-decoration: none; margin: 0 8px; }
+  
+    .lang-switch { font-size: 13px; color: var(--warm-gray); letter-spacing: .02em; }
+    .lang-switch .lang-current { color: var(--ink); }
+    .lang-switch .lang-link { color: var(--warm-gray); text-decoration: none; }
+    .lang-switch .lang-link:hover { color: var(--teal); }
+    .header-right { display: inline-flex; align-items: center; gap: 14px; }
   </style>
 </head>
 <body>
 
 <header>
   <a class="home" href="index.html">MyGuest</a>
-  <a class="back" href="index.html">← Back</a>
+  <span class="header-right">
+    <span class="lang-switch"><strong class="lang-current">EN</strong> · <a class="lang-link" href="es/privacy.html">ES</a> · <a class="lang-link" href="fr/privacy.html">FR</a></span>
+    <a class="back" href="index.html">← Back</a>
+  </span>
 </header>
 
 <main>
   <h1>Privacy &amp; Data</h1>
-  <p class="meta">Last updated: June 2026</p>
+  <p class="meta">Last updated: July 2026</p>
 
-  <div class="highlight-box">
+  <div class="notice">
     <strong>Short version:</strong> We collect the information you provide to create your guest guide. Private details (WiFi, access codes, host phone) are stored in a secure system separate from the public website and are never published publicly. We do not sell your data.
   </div>
 
@@ -136,36 +149,12 @@
   <p>All information collected is used solely to create, deliver and maintain your welcome book guide. We do not use your data for advertising, profiling or any purpose beyond guide production and support.</p>
 
   <h2>Public vs. private data separation</h2>
-  <div class="highlight-box">
-    This separation is a core part of how MyGuest protects your guests' experience without exposing sensitive information.
-  </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Data type</th>
-        <th>Where it lives</th>
-        <th>Who can access it</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Property name, rules, amenities, recommendations</td>
-        <td>Public guide (myguestguide.com)</td>
-        <td>Anyone with the guide link</td>
-      </tr>
-      <tr>
-        <td>WiFi credentials, access codes, host phone, private access details</td>
-        <td>Secure encrypted system (Cloudflare) — never on the public website</td>
-        <td>Only via private token-protected link shared with the host</td>
-      </tr>
-      <tr>
-        <td>Host email, payment info</td>
-        <td>Cloudflare secure system / Stripe</td>
-        <td>MyGuest only — never shared publicly</td>
-      </tr>
-    </tbody>
-  </table>
+  <p>This separation is a core part of how MyGuest protects your guests' experience without exposing sensitive information.</p>
+  <ul>
+    <li><strong>Property name, rules, amenities, recommendations</strong> — public guide (myguestguide.com), reachable by anyone with the guide link.</li>
+    <li><strong>WiFi credentials, access codes, host phone, private access details</strong> — secure encrypted system (Cloudflare), never on the public website, reachable only through the private token-protected link shared with the host.</li>
+    <li><strong>Host email, payment info</strong> — Cloudflare secure system / Stripe. MyGuest only, never shared publicly.</li>
+  </ul>
 
   <h2>Third-party processors</h2>
   <p>MyGuest uses the following services to operate. Each is bound by its own privacy policy:</p>

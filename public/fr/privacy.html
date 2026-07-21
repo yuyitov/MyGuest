@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyGuest — Confidentialité et données</title>
+  <meta name="description" content="Confidentialité et données de MyGuest — ce que nous collectons, où c’est stocké et comment demander la suppression." />
+  <meta name="referrer" content="no-referrer" />
+  <link rel="alternate" hreflang="en" href="../privacy.html">
+  <link rel="alternate" hreflang="es" href="../es/privacy.html">
+  <link rel="alternate" hreflang="fr" href="privacy.html">
+  <link rel="alternate" hreflang="x-default" href="../privacy.html">
+  <style>
+    :root {
+      --ink: #202020;
+      --muted: #6a6a6a;
+      --cream: #F7F3EE;
+      --sand: #EFE7DD;
+      --teal: #2D6A73;
+      --warm-gray: #7A746E;
+      --line: rgba(32, 32, 32, 0.1);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+      background: linear-gradient(180deg, #F7F3EE 0%, #EFE7DD 60%, #F7F3EE 100%);
+      color: var(--ink);
+      line-height: 1.7;
+    }
+    a { color: var(--teal); }
+    header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(247,243,238,0.95);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header a.home { font-weight: 700; font-size: 16px; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    header a.back { font-size: 14px; color: var(--warm-gray); text-decoration: none; }
+    main {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+    h1 {
+      font-size: clamp(26px, 5vw, 36px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 0 0 8px;
+      color: var(--ink);
+    }
+    .meta { font-size: 14px; color: var(--warm-gray); margin: 0 0 40px; }
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 36px 0 10px;
+      color: var(--teal);
+      letter-spacing: -0.01em;
+    }
+    p { margin: 0 0 16px; }
+    ul { margin: 0 0 16px; padding-left: 20px; }
+    li { margin-bottom: 6px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin: 0 0 24px;
+    }
+    th {
+      text-align: left;
+      padding: 10px 12px;
+      background: rgba(45,106,115,0.08);
+      font-weight: 600;
+      color: var(--teal);
+      border-bottom: 2px solid rgba(45,106,115,0.15);
+    }
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    .highlight-box {
+      background: rgba(45,106,115,0.06);
+      border-left: 3px solid var(--teal);
+      border-radius: 6px;
+      padding: 14px 16px;
+      font-size: 14px;
+      margin: 0 0 24px;
+    }
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 13px;
+      color: var(--warm-gray);
+      border-top: 1px solid var(--line);
+    }
+    footer a { color: var(--warm-gray); text-decoration: none; margin: 0 8px; }
+  
+    .lang-switch { font-size: 13px; color: var(--warm-gray); letter-spacing: .02em; }
+    .lang-switch .lang-current { color: var(--ink); }
+    .lang-switch .lang-link { color: var(--warm-gray); text-decoration: none; }
+    .lang-switch .lang-link:hover { color: var(--teal); }
+    .header-right { display: inline-flex; align-items: center; gap: 14px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="home" href="../index.html">MyGuest</a>
+  <span class="header-right">
+    <span class="lang-switch"><a class="lang-link" href="../privacy.html">EN</a> · <a class="lang-link" href="../es/privacy.html">ES</a> · <strong class="lang-current">FR</strong></span>
+    <a class="back" href="../index.html">← Retour</a>
+  </span>
+</header>
+
+<main>
+  <h1>Confidentialité et données</h1>
+  <p class="meta">Dernière mise à jour : juillet 2026</p>
+
+  <div class="notice">
+    <strong>En bref :</strong> nous collectons les informations que vous fournissez pour créer votre livret. Les données privées (WiFi, codes d’accès, téléphone de l’hôte) sont conservées dans un système sécurisé, séparé du site public, et ne sont jamais publiées. Nous ne vendons pas vos données.
+  </div>
+
+  <h2>Ce que nous collectons</h2>
+  <p>Lorsque vous utilisez MyGuest, nous collectons les informations suivantes :</p>
+  <ul>
+    <li>nom et description du logement ;</li>
+    <li>nom de l’hôte et e-mail de contact ;</li>
+    <li>localisation et adresse du logement ;</li>
+    <li>horaires et instructions d’arrivée et de départ ;</li>
+    <li>règlement intérieur et équipements ;</li>
+    <li>recommandations locales ;</li>
+    <li>identifiants WiFi (nom du réseau et mot de passe) ;</li>
+    <li>codes d’accès (porte, immeuble, boîte à clés) ;</li>
+    <li>numéro de téléphone privé de l’hôte ;</li>
+    <li>les fichiers ou documents que vous téléversez (PDF, images, documents) ;</li>
+    <li>les informations de paiement traitées par Stripe (nous ne conservons aucune donnée bancaire).</li>
+  </ul>
+
+  <h2>Comment nous utilisons vos données</h2>
+  <p>Toutes les informations collectées servent uniquement à créer, livrer et maintenir votre livret d’accueil. Nous ne les utilisons ni pour de la publicité, ni pour du profilage, ni pour aucune autre finalité que la production du livret et l’assistance.</p>
+
+  <h2>Séparation entre données publiques et privées</h2>
+  <p>Cette séparation est au cœur de la façon dont MyGuest protège l’expérience de vos voyageurs sans exposer d’informations sensibles.</p>
+  <ul>
+    <li><strong>Nom du logement, règlement, équipements, recommandations</strong> — livret public (myguestguide.com), accessible à toute personne disposant du lien.</li>
+    <li><strong>Identifiants WiFi, codes d’accès, téléphone de l’hôte, détails d’accès privés</strong> — système chiffré sécurisé (Cloudflare), jamais sur le site public ; accessibles uniquement via le lien privé protégé par jeton partagé avec l’hôte.</li>
+    <li><strong>E-mail de l’hôte, informations de paiement</strong> — système sécurisé Cloudflare / Stripe. MyGuest uniquement, jamais partagés publiquement.</li>
+  </ul>
+
+  <h2>Sous-traitants</h2>
+  <p>MyGuest s’appuie sur les services suivants. Chacun est soumis à sa propre politique de confidentialité :</p>
+  <ul>
+    <li><strong>Stripe</strong> — traitement des paiements</li>
+    <li><strong>Tally</strong> — collecte du formulaire d’informations</li>
+    <li><strong>Resend</strong> — envoi des e-mails transactionnels</li>
+    <li><strong>Cloudflare</strong> — hébergement, traitement sécurisé et stockage des données privées</li>
+    <li><strong>GitHub Pages</strong> — hébergement du livret public</li>
+  </ul>
+  <p>Nous ne vendons vos données à aucun tiers.</p>
+
+  <h2>Conservation des données</h2>
+  <p>Nous conservons les données de votre livret (publiques et privées) jusqu’à <strong>12 mois après la livraison</strong>. Passé ce délai, elles peuvent être supprimées lors du nettoyage de routine. Vous pouvez demander une suppression anticipée à tout moment.</p>
+
+  <h2>Demandes de suppression</h2>
+  <p>Pour demander la suppression de vos données — ou pour y accéder, les rectifier ou vous opposer à leur utilisation — écrivez à <a href="mailto:hello@myguestguide.com">hello@myguestguide.com</a> en indiquant le nom de votre logement et l’adresse e-mail utilisée lors du paiement. Les demandes sont traitées sous <strong>30 jours</strong>.</p>
+
+  <h2>Contact</h2>
+  <p>Une question sur vos données ? Écrivez-nous à <a href="mailto:hello@myguestguide.com">hello@myguestguide.com</a>. Nous répondons sous 1 à 2 jours ouvrés, du lundi au vendredi.</p>
+</main>
+
+<footer>
+  <div>my guest · Livrets d’accueil trilingues pour locations de vacances</div>
+  <div style="margin-top:10px;">
+    <a href="terms.html">Conditions</a>
+    <a href="privacy.html">Confidentialité</a>
+    <a href="refunds.html">Remboursements</a>
+    <a href="mailto:hello@myguestguide.com">hello@myguestguide.com</a>
+  </div>
+</footer>
+
+</body>
+</html>

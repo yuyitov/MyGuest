@@ -405,11 +405,11 @@
     <img src="landing/mascota-photoroom.png" alt="" aria-hidden="true" style="width:100px;margin-bottom:8px;mix-blend-mode:multiply;" />
     <div data-i18n="footer_text">my guest · Trilingual welcome books for vacation rentals</div>
     <div style="margin-top:14px;font-size:13px;color:#7A746E;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;">
-      <a href="terms.html" style="color:#7A746E;text-decoration:none;" data-i18n="footer_terms">Terms</a>
+      <a href="terms.html" data-legal="terms.html" style="color:#7A746E;text-decoration:none;" data-i18n="footer_terms">Terms</a>
       <span aria-hidden="true">·</span>
-      <a href="privacy.html" style="color:#7A746E;text-decoration:none;" data-i18n="footer_privacy">Privacy</a>
+      <a href="privacy.html" data-legal="privacy.html" style="color:#7A746E;text-decoration:none;" data-i18n="footer_privacy">Privacy</a>
       <span aria-hidden="true">·</span>
-      <a href="refunds.html" style="color:#7A746E;text-decoration:none;" data-i18n="footer_refunds">Refund Policy</a>
+      <a href="refunds.html" data-legal="refunds.html" style="color:#7A746E;text-decoration:none;" data-i18n="footer_refunds">Refund Policy</a>
       <span aria-hidden="true">·</span>
       <a href="mailto:hello@myguestguide.com" style="color:#7A746E;text-decoration:none;">hello@myguestguide.com</a>
     </div>
@@ -646,6 +646,13 @@
       });
       document.querySelectorAll('.lang-btn').forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      // Los 3 legales existen en los 3 idiomas (EN en la raiz, ES y FR en /es/
+      // y /fr/): el pie apunta al del idioma elegido. Antes mandaban siempre a
+      // la version en ingles aunque el visitante estuviera leyendo en frances.
+      document.querySelectorAll('[data-legal]').forEach((el) => {
+        const file = el.dataset.legal;
+        el.href = lang === 'en' ? file : lang + '/' + file;
       });
       try { localStorage.setItem('mg-lang', lang); } catch(e) {}
     }
