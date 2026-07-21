@@ -32,6 +32,37 @@ const REQUIRED_KEYS = [
   'primary_language'
 ];
 
+// Modificaciones gratis incluidas en la compra (estándar de la casa desde el
+// 2026-07-20: 2). Se configura con FREE_CHANGES en wrangler.toml y es la MISMA
+// fuente que imprimen los Términos (EN/ES/FR) y el correo de entrega — si
+// divergen, MyGuest promete algo que no entrega. El cobro de cambios extra
+// sigue siendo manual (por correo), como hasta ahora.
+const DEFAULT_FREE_CHANGES = 2;
+
+function freeChanges(env) {
+  const raw = Number.parseInt(String((env && env.FREE_CHANGES) ?? '').trim(), 10);
+  if (!Number.isInteger(raw) || raw < 0) return DEFAULT_FREE_CHANGES;
+  return Math.min(raw, 10);
+}
+
+/**
+ * Cupo de correcciones de un registro `correction:{slug}`.
+ *
+ * Compatible con los registros VIEJOS, que solo tenían `used: true|false` y
+ * valían por una: sin contador, `used: true` cuenta como 1 usada y el total
+ * que se les reconoce es el de hoy — quien pidió su corrección antes del
+ * cambio conserva la segunda, que es lo que Vero decidió regalar.
+ * `free_total` se congela en el registro al crearse: si mañana el número
+ * cambia, quien ya compró conserva lo que se le prometió.
+ */
+function correctionQuota(record, env) {
+  const total = Number.isInteger(record?.free_total) ? record.free_total : freeChanges(env);
+  const used = Number.isInteger(record?.free_used)
+    ? record.free_used
+    : (record?.used ? 1 : 0);
+  return { total, used, remaining: Math.max(0, total - used) };
+}
+
 const VALID_STYLES = ['Minimalist', 'Coastal', 'Classic', 'Sunset'];
 const VALID_LANGUAGES = ['English', 'Español', 'Français'];
 const VALID_PROPERTY_ENVIRONMENTS = ['Beach', 'City', 'Cozy'];
@@ -2130,7 +2161,11 @@ async function handleNotify(request, env) {
       slug,
       customer_email: customerEmail,
       token: correctionToken,
+      // `used` se conserva por compatibilidad con los registros viejos y con
+      // cualquier lector externo: pasa a true solo cuando se AGOTA el cupo.
       used: false,
+      free_total: freeChanges(env),
+      free_used: 0,
       created_at: new Date().toISOString(),
       used_at: null
     };
@@ -2156,7 +2191,14 @@ async function handleNotify(request, env) {
       env,
       to: customerEmail,
       subject: 'Your MyGuest welcome book is ready',
-      html: buildDeliveryEmail({ guestAccessUrl, printUrl, correctionUrl })
+      html: buildDeliveryEmail({
+        guestAccessUrl,
+        printUrl,
+        correctionUrl,
+        // El total que el registro le congeló a este cliente (los registros
+        // viejos no lo tienen: cae a FREE_CHANGES, que es el de hoy).
+        freeTotal: correctionQuota(correctionRecord, env).total
+      })
     });
   } catch (err) {
     console.error('delivery email failed:', safeError(err));
@@ -2418,7 +2460,7 @@ function buildFormEmail({ formUrl }) {
 </body></html>`;
 }
 
-function buildDeliveryEmail({ guestAccessUrl, printUrl, correctionUrl }) {
+function buildDeliveryEmail({ guestAccessUrl, printUrl, correctionUrl, freeTotal = DEFAULT_FREE_CHANGES }) {
   const btn = (href, label, description) =>
     href
       ? `<div style="margin:0 0 16px 0;padding:20px;background:#f9f9f9;border-radius:8px">
@@ -2452,7 +2494,7 @@ function buildDeliveryEmail({ guestAccessUrl, printUrl, correctionUrl }) {
           'Host print-ready version with all details, including WiFi and access codes. Open it to print or save as PDF before sharing.')}
         ${btn(correctionUrl,
           'Request corrections →',
-          'One free correction round is included. Use this link once to request changes. We review correction requests manually and will apply approved changes as soon as possible.')}
+          `${freeTotal === 1 ? 'One free correction round is' : `${freeTotal} free correction rounds are`} included. Use this link to request changes — it stays valid until you have used them all. We review correction requests manually and will apply approved changes as soon as possible.`)}
         <div style="background:#faf7f4;border:1px solid #ddd5cc;border-radius:8px;padding:14px 16px;margin:24px 0 0">
           <p style="color:#776150;font-size:13px;margin:0;line-height:1.6">
             Both links contain your complete stay information. Keep them private and share only with your guests.
@@ -2487,9 +2529,12 @@ async function handleCorrectionAccess(request, env) {
     return correctionErrorHtml('This link is not valid.', 404);
   }
 
-  if (record.used) {
+  // El enlace NO se quema con el primer uso: sigue siendo válido mientras al
+  // cliente le queden correcciones incluidas (2 desde el 2026-07-20).
+  const quota = correctionQuota(record, env);
+  if (quota.remaining <= 0) {
     return correctionErrorHtml(
-      "You&#39;ve already used your included correction request. For any additional changes, please contact us by email.",
+      "You&#39;ve already used the correction requests included with your purchase. For any additional changes, please contact us by email.",
       200
     );
   }
@@ -2520,14 +2565,29 @@ async function handleCorrectionsSubmission(normalized, env) {
     return jsonResponse({ ok: false, error: 'Invalid correction token', slug }, 403);
   }
 
-  if (record.used) {
+  // Reenvío del MISMO envío (Tally reintenta): no puede consumir otra de las
+  // incluidas. Antes esto lo cubría `used: true`, que ahora ya no se pone en
+  // la primera corrección.
+  const submissionId = normalized.submission_id || '';
+  if (submissionId && record.last_submission_id === submissionId) {
     return jsonResponse({ ok: true, idempotent: true, slug });
   }
 
+  const quota = correctionQuota(record, env);
+  if (quota.remaining <= 0) {
+    return jsonResponse({ ok: true, idempotent: true, slug });
+  }
+
+  const usedAfter = quota.used + 1;
   await env.MYGUEST_KV.put(correctionKey, JSON.stringify({
     ...record,
-    used: true,
-    used_at: now
+    free_total: quota.total,
+    free_used: usedAfter,
+    // `used` solo se marca al AGOTAR el cupo: mientras queden, el mismo enlace
+    // /correct/<slug>?token=... sigue abriendo el formulario.
+    used: usedAfter >= quota.total,
+    used_at: now,
+    last_submission_id: submissionId || record.last_submission_id || null
   })).catch(err => console.error('correction mark used failed (non-fatal):', safeError(err)));
 
   if (env.ALERT_EMAIL && env.RESEND_API_KEY) {
@@ -2541,15 +2601,15 @@ async function handleCorrectionsSubmission(normalized, env) {
     await sendEmail({
       env,
       to: env.ALERT_EMAIL,
-      subject: `[MyGuest] Corrections requested: ${slug}`,
-      html: buildCorrectionsAlertEmail({ slug, corrections, customerEmail: record.customer_email, now, publicBookBaseUrl: env.PUBLIC_BOOK_BASE_URL || 'https://myguestguide.com' })
+      subject: `[MyGuest] Corrections requested (${usedAfter}/${quota.total}): ${slug}`,
+      html: buildCorrectionsAlertEmail({ slug, corrections, customerEmail: record.customer_email, now, publicBookBaseUrl: env.PUBLIC_BOOK_BASE_URL || 'https://myguestguide.com', usedAfter, freeTotal: quota.total })
     }).catch(err => console.error('corrections alert email failed (non-fatal):', safeError(err)));
   }
 
   return jsonResponse({ ok: true, slug });
 }
 
-function buildCorrectionsAlertEmail({ slug, corrections, customerEmail, now, publicBookBaseUrl = 'https://myguestguide.com' }) {
+function buildCorrectionsAlertEmail({ slug, corrections, customerEmail, now, publicBookBaseUrl = 'https://myguestguide.com', usedAfter, freeTotal }) {
   const rows = Object.entries(corrections)
     .filter(([, v]) => v)
     .map(([label, value]) =>
@@ -2573,6 +2633,7 @@ function buildCorrectionsAlertEmail({ slug, corrections, customerEmail, now, pub
           <strong>Guide:</strong> ${escapeHtml(slug)}<br>
           <strong>Customer:</strong> ${escapeHtml(customerEmail || '—')}<br>
           <strong>At:</strong> ${escapeHtml(now)}<br>
+          <strong>Included corrections used:</strong> ${escapeHtml(String(usedAfter ?? '?'))} of ${escapeHtml(String(freeTotal ?? '?'))}<br>
           <strong>View guide:</strong> <a href="${escapeAttribute(publicBookBaseUrl)}/villas/${encodeURIComponent(slug)}/en.html"
             style="color:#2D6A73">${escapeHtml(publicBookBaseUrl)}/villas/${escapeHtml(slug)}/en.html</a>
         </p>
