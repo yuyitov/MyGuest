@@ -122,6 +122,10 @@ export default {
 
       // Alerta de "pagó pero la generación falló": la llama el step if:failure()
       // del workflow de generación. Autenticado con el mismo NOTIFY_SECRET de /notify.
+      if (request.method === 'POST' && pathname === '/email-events') {
+        return await handleEmailEvents(request, env);
+      }
+
       if (request.method === 'POST' && pathname === '/alert-generation-failed') {
         const allowed = await checkRateLimit(env, `rl:genfail:${ip}:${minuteSlot}`, 20, 120);
         if (!allowed) return jsonResponse({ ok: false, error: 'Too many requests' }, 429);
@@ -2295,6 +2299,101 @@ async function handleNotify(request, env) {
   }
 
   return jsonResponse({ ok: true, slug, emailSent: true });
+}
+
+/**
+ * Webhook de eventos de Resend: avisa cuando un correo de ENTREGA rebota.
+ *
+ * Ultimo fallo silencioso del embudo, y el peor: el huesped/host PAGO, la guia
+ * se genero y el correo con su link NO llego (buzon lleno, direccion mal
+ * escrita, filtro de spam). Sin esto nadie se entera hasta que el cliente
+ * reclama -- o nunca.
+ *
+ * Resend firma con Svix: HMAC-SHA256 sobre `{svix-id}.{svix-timestamp}.{body}`,
+ * con el secreto en base64 tras el prefijo `whsec_`. Endpoint PUBLICO, asi que
+ * sin secreto configurado responde 503 en vez de aceptar eventos sin verificar.
+ */
+const EMAIL_FAILURE_EVENTS = new Set(['email.bounced', 'email.complained']);
+
+async function verifySvixSignature(rawBody, headers, secret) {
+  try {
+    const id = headers.get('svix-id');
+    const ts = headers.get('svix-timestamp');
+    const sigHeader = headers.get('svix-signature');
+    if (!id || !ts || !sigHeader) return false;
+    // Ventana anti-replay de 300s, igual que Stripe.
+    const t = Number(ts);
+    if (!Number.isFinite(t) || Math.abs(Date.now() / 1000 - t) > 300) return false;
+
+    const raw = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+    const keyBytes = Uint8Array.from(atob(raw), (c) => c.charCodeAt(0));
+    const key = await crypto.subtle.importKey(
+      'raw', keyBytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+    );
+    const firmado = new TextEncoder().encode(`${id}.${ts}.${rawBody}`);
+    const esperado = new Uint8Array(await crypto.subtle.sign('HMAC', key, firmado));
+
+    // El header trae una o varias firmas: "v1,<b64> v1,<b64>". Cualquiera vale
+    // (Svix rota secretos), y se compara en tiempo constante.
+    for (const parte of sigHeader.split(' ')) {
+      const idx = parte.indexOf(',');
+      if (idx === -1) continue;
+      if (parte.slice(0, idx) !== 'v1') continue;
+      let recibido;
+      try {
+        recibido = Uint8Array.from(atob(parte.slice(idx + 1)), (c) => c.charCodeAt(0));
+      } catch { continue; }
+      if (recibido.length !== esperado.length) continue;
+      let diff = 0;
+      for (let i = 0; i < esperado.length; i++) diff |= esperado[i] ^ recibido[i];
+      if (diff === 0) return true;
+    }
+    return false;
+  } catch (err) {
+    console.error('verifySvixSignature failed:', safeError(err));
+    return false;
+  }
+}
+
+async function handleEmailEvents(request, env) {
+  const secret = env.RESEND_WEBHOOK_SECRET;
+  if (!secret) {
+    return new Response('email events webhook not configured', { status: 503 });
+  }
+  const rawBody = await request.text();
+  if (!(await verifySvixSignature(rawBody, request.headers, secret))) {
+    return new Response('invalid signature', { status: 401 });
+  }
+  let ev;
+  try {
+    ev = JSON.parse(rawBody);
+  } catch {
+    return new Response('invalid json', { status: 400 });
+  }
+  const tipo = String(ev?.type || '').toLowerCase();
+  if (!EMAIL_FAILURE_EVENTS.has(tipo)) {
+    return new Response(JSON.stringify({ ok: true, alerted: 0 }), {
+      status: 200, headers: { 'Content-Type': 'application/json' },
+    });
+  }
+  const dest = Array.isArray(ev?.data?.to) ? ev.data.to.join(', ') : String(ev?.data?.to || 'desconocido');
+  const motivo = String(ev?.data?.bounce?.message || ev?.data?.reason || 'sin motivo reportado');
+  await alertOnce(
+    env,
+    `email_fail:${tipo}:${dest}`,
+    86400,
+    `Un correo de entrega no llego (${tipo})`,
+    [
+      `Destinatario: ${dest}`,
+      `Evento: ${tipo}`,
+      `Motivo: ${motivo}`,
+      '',
+      'El cliente pago y su correo NO llego. Revisa la direccion y reenvia a mano.',
+    ]
+  );
+  return new Response(JSON.stringify({ ok: true, alerted: 1 }), {
+    status: 200, headers: { 'Content-Type': 'application/json' },
+  });
 }
 
 async function validateStripeSignature(rawBody, signatureHeader, secret) {
