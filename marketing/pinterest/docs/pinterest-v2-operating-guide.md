@@ -236,7 +236,7 @@ After a GitHub Actions run:
 - "Mobile guest guide + printable PDF."
 - "English, Spanish and French versions."
 - "Private guest link for sensitive stay details."
-- "Early Access Launch Price: $29."
+- "Early Access Launch Price: $49."
 
 ---
 
