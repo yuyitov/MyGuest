@@ -119,6 +119,14 @@ export default {
         if (!allowed) return jsonResponse({ ok: false, error: 'Too many requests' }, 429);
         return await handleNotify(request, env);
       }
+
+      // Alerta de "pagó pero la generación falló": la llama el step if:failure()
+      // del workflow de generación. Autenticado con el mismo NOTIFY_SECRET de /notify.
+      if (request.method === 'POST' && pathname === '/alert-generation-failed') {
+        const allowed = await checkRateLimit(env, `rl:genfail:${ip}:${minuteSlot}`, 20, 120);
+        if (!allowed) return jsonResponse({ ok: false, error: 'Too many requests' }, 429);
+        return await handleGenerationFailedAlert(request, env);
+      }
       // ─────────────────────────────────────────────────────────────────────
 
       return jsonResponse({ ok: false, error: 'Not found' }, 404);
@@ -582,6 +590,24 @@ async function handleTallyWebhook(request, env, ctx) {
         })).catch(() => {});
       }
     }
+
+    // FALLO SILENCIOSO #3: pagó + llenó el formulario, pero el dispatch a
+    // GitHub Actions falló. Aquí se hace `throw` a propósito (para que Stripe
+    // reintente), así que el dedup por-order es CRÍTICO: aunque Stripe reintente
+    // varias veces, solo sale UNA alerta al día por esta orden.
+    await alertOnce(env, `failed_dispatch:${incomingOrderId || slug}`, 86400,
+      `⚠️ MyGuest: falló el dispatch de generación — ${slug}`, [
+        'El cliente pagó y llenó el formulario, pero el dispatch a GitHub Actions',
+        'falló: su guía NO se está generando.',
+        '',
+        `order_id: ${incomingOrderId || '(sin order)'}`,
+        `submission_id: ${normalized.submission_id}`,
+        `slug: ${slug}`,
+        `error: ${safeError(error)}`,
+        '',
+        'La orden quedó en failed_dispatch. Stripe reintenta el webhook ~3 días;',
+        'si sigue fallando, revisar el GITHUB_TOKEN del worker o re-disparar a mano.'
+      ]);
 
     throw error;
   }
@@ -2019,12 +2045,48 @@ async function handleStripeWebhook(request, env) {
     console.log(
       `[stripe-filter] filter_not_configured — event ignored; observed payment_link: ${session.payment_link || '(none)'}`
     );
+    // FALLO SILENCIOSO #1 (el más probable): allowlist vacío → se IGNORAN todos
+    // los pagos. Alerta GLOBAL (una por hora), no por pi: durante el apagón la
+    // cuenta compartida fanea eventos de todos los productos.
+    await alertOnce(env, 'filter_not_configured', 3600,
+      '🔴 MyGuest está IGNORANDO todos los pagos (filtro sin configurar)', [
+        'STRIPE_PAYMENT_LINK_ID está vacío/sin configurar en el worker de MyGuest.',
+        'El worker responde 200 {ignored} a TODOS los pagos entrantes: el',
+        'cliente paga y NUNCA recibe el formulario de intake.',
+        '',
+        `payment_link observado en este evento: ${session.payment_link || '(ninguno)'}`,
+        `tipo de evento: ${type}`,
+        '',
+        'Acción: configurar STRIPE_PAYMENT_LINK_ID (vars del worker) con el/los',
+        'plink de MyGuest y redesplegar.'
+      ]);
     return jsonResponse({ ok: true, ignored: true, reason: 'filter_not_configured' });
   }
   if (type !== 'checkout.session.completed') {
     return jsonResponse({ ok: true, ignored: true, reason: 'unattributable_event_type' });
   }
   if (!expectedPaymentLinks.includes(session.payment_link || '')) {
+    // FALLO SILENCIOSO #2: un link de MyGuest desfasado (reprecio) cae aquí.
+    // PERO la cuenta Stripe es COMPARTIDA: cada venta de un producto hermano
+    // también llega como other_product. Solo se alerta de links DESCONOCIDOS
+    // (ni de MyGuest ni en KNOWN_OTHER_PAYMENT_LINKS). Dedup por link, 1/día.
+    const plink = session.payment_link || '';
+    if (plink && !knownOtherPaymentLinks(env).includes(plink)) {
+      await alertOnce(env, `other_product:${plink}`, 86400,
+        '⚠️ MyGuest: pago con payment_link NO reconocido (¿link desfasado?)', [
+          'Llegó un pago cuyo payment_link NO coincide con el de MyGuest y fue IGNORADO.',
+          '',
+          `payment_link observado: ${plink}`,
+          `email del comprador: ${sessionEmail(session) || '(sin email)'}`,
+          `monto: ${session.amount_total ?? session.amount ?? '?'} ${(session.currency || '').toUpperCase()}`,
+          '',
+          'Si este link es NUEVO de MyGuest (reprecio/nuevo checkout): tu',
+          'STRIPE_PAYMENT_LINK_ID está desfasado y estás perdiendo ventas EN',
+          'SILENCIO — agrégalo a STRIPE_PAYMENT_LINK_ID y redespliega.',
+          'Si es de OTRO producto de la cuenta compartida: agrégalo a',
+          'KNOWN_OTHER_PAYMENT_LINKS para silenciar este aviso.'
+        ]);
+    }
     return jsonResponse({ ok: true, ignored: true, reason: 'other_product' });
   }
 
@@ -2324,6 +2386,102 @@ async function sendEmail({ env, to, subject, html }) {
   }
 
   return response.json();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ALERTAS DE EMBUDO MUERTO (Bloque A.3 de la auditoría 2026-07-21)
+// ─────────────────────────────────────────────────────────────────────────────
+// El embudo fallaba en silencio: un payment link desfasado → 200 {ignored} y un
+// console.log; "el cliente era el monitor". alertOnce conecta a los puntos de
+// fallo silencioso con dedup en KV para que un reintento de Stripe (o el `throw`
+// de failed_dispatch) no dispare una tormenta de correos. MyGuest ya alertaba en
+// needs_manual_extraction — el equivalente a incomplete_intake ya es visible.
+
+// Destino: ALERT_EMAIL si está configurado; si no, REPLY_TO_EMAIL (buzón de Vero).
+function alertEmail(env) {
+  return (env.ALERT_EMAIL || env.REPLY_TO_EMAIL || '').trim();
+}
+
+// Payment links de OTROS productos de la cuenta Stripe compartida que ya sabemos
+// que no son de MyGuest: NO alertamos por ellos (evita el ruido de cada venta de
+// un producto hermano). Mismo formato coma-separado que STRIPE_PAYMENT_LINK_ID.
+function knownOtherPaymentLinks(env) {
+  return (env.KNOWN_OTHER_PAYMENT_LINKS || '')
+    .split(',')
+    .map((id) => id.trim())
+    .filter(Boolean);
+}
+
+function sessionEmail(session) {
+  return session?.customer_email || session?.customer_details?.email || session?.receipt_email || '';
+}
+
+// Manda UN correo de alerta (Resend), deduplicado por `dedupId` durante
+// `ttlSeconds`. Reserva la llave alerted:<dedupId> ANTES de enviar: si dos
+// reintentos de Stripe entran a la vez, solo el primero manda el correo. Nunca
+// lanza: una alerta que falla no puede tumbar el flujo del cliente.
+async function alertOnce(env, dedupId, ttlSeconds, subject, lines) {
+  try {
+    const to = alertEmail(env);
+    if (!to || !env.RESEND_API_KEY || !env.MYGUEST_KV) return;
+    const key = `alerted:${dedupId}`;
+    const already = await env.MYGUEST_KV.get(key).catch(() => null);
+    if (already) return;
+    await env.MYGUEST_KV.put(key, '1', { expirationTtl: ttlSeconds }).catch(() => {});
+    const text = lines.join('\n');
+    await sendEmail({
+      env,
+      to,
+      subject,
+      html: `<pre style="font-family: monospace; white-space: pre-wrap;">${escapeHtml(text)}</pre>`
+    });
+  } catch (err) {
+    console.error('alertOnce failed:', safeError(err));
+  }
+}
+
+// POST /alert-generation-failed — lo llama el step `if: failure()` del workflow
+// de generación cuando la generación falla DESPUÉS de que el cliente pagó y
+// llenó el formulario. Autenticado con NOTIFY_SECRET, el mismo de /notify.
+async function handleGenerationFailedAlert(request, env) {
+  const notifySecret = (env.NOTIFY_SECRET || '').trim();
+  if (!notifySecret) {
+    return jsonResponse({ ok: false, error: 'NOTIFY_SECRET not configured' }, 500);
+  }
+  const authHeader = request.headers.get('authorization') || '';
+  const provided = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+  if (!timingSafeEqual(provided, notifySecret)) {
+    return jsonResponse({ ok: false, error: 'Unauthorized' }, 401);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
+  const slug = (body?.slug || '').trim();
+  const submissionId = (body?.submission_id || '').trim();
+  const correctionId = (body?.correction_id || '').trim();
+  const runUrl = (body?.run_url || '').trim();
+  const reason = (body?.reason || '').trim() || 'La generación de la guía falló en GitHub Actions.';
+
+  const dedup = `genfail:${correctionId || submissionId || slug || runUrl || 'unknown'}`;
+  await alertOnce(env, dedup, 86400,
+    `⚠️ MyGuest: la generación FALLÓ — ${slug || submissionId || 'sin id'}`, [
+      'La generación de la guía falló DESPUÉS del pago + formulario.',
+      'El cliente pagó y llenó el intake, pero su guía no se generó.',
+      '',
+      `slug: ${slug || '(desconocido)'}`,
+      submissionId ? `submission_id: ${submissionId}` : '',
+      correctionId ? `correction_id: ${correctionId}` : '',
+      `motivo: ${reason}`,
+      runUrl ? `run de Actions: ${runUrl}` : '',
+      '',
+      'Acción: revisar el run de Actions y re-disparar la generación.'
+    ].filter(Boolean));
+
+  return jsonResponse({ ok: true });
 }
 
 function buildAlertEmail({ propertyName, clientName, customerEmail, slug, submissionId, now, existingBookFile, existingBookPhotos }) {
