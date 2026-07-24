@@ -9,8 +9,23 @@ jobs:
   inspect:
     runs-on: ubuntu-latest
     steps:
-      - name: Print dispatch payload
+      # Auditoria de ataque 2026-07-23 (#1 y #10). Antes este step hacia un
+      # `echo` con la expresion toJson(client_payload) interpolada en el propio
+      # comando, entre comillas simples: dos fallas a la vez.
+      #  1) Script injection: GitHub interpola la expresion ANTES de que corra
+      #     el shell, y el JSON no escapa `'` -> un payload con comilla simple
+      #     rompe el quoting y ejecuta comandos en el runner (repo publico).
+      #  2) Fuga: volcaba el payload COMPLETO a un log mundo-legible.
+      # Ahora el valor viaja por `env:` (nunca se interpola en el shell) y del
+      # payload solo se imprime su FORMA: llaves de primer nivel y tamano.
+      - name: Print dispatch payload shape
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_ACTION: ${{ github.event.action }}
+          PAYLOAD_JSON: ${{ toJson(github.event.client_payload) }}
         run: |
-          echo "event_name=${{ github.event_name }}"
-          echo "action=${{ github.event.action }}"
-          echo '${{ toJson(github.event.client_payload) }}'
+          echo "event_name=$EVENT_NAME"
+          echo "action=$EVENT_ACTION"
+          echo "payload_bytes=$(printf '%s' "$PAYLOAD_JSON" | wc -c)"
+          echo "payload_keys=$(printf '%s' "$PAYLOAD_JSON" \
+            | jq -r 'if type == "object" then (keys_unsorted | join(",")) else type end')"

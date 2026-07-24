@@ -28,11 +28,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install weasyprint
 
+      # Auditoria de ataque 2026-07-23 (#1): estos valores vienen de un intake
+      # externo. Interpolados directo en `run:` los sustituye GitHub antes del
+      # shell -> metacaracteres = ejecucion arbitraria en el runner. Por `env:`
+      # y entre comillas son datos, nunca codigo. Mismo patron que ya usan los
+      # steps de abajo y los repos hermanos.
       - name: Trace dispatch payload
+        env:
+          SUBMISSION_ID: ${{ github.event.client_payload.metadata.submission_id }}
+          SLUG: ${{ github.event.client_payload.metadata.slug }}
+          SOURCE: ${{ github.event.client_payload.metadata.source }}
         run: |
-          echo "submission_id=${{ github.event.client_payload.metadata.submission_id }}"
-          echo "slug=${{ github.event.client_payload.metadata.slug }}"
-          echo "source=${{ github.event.client_payload.metadata.source }}"
+          echo "submission_id=$SUBMISSION_ID"
+          echo "slug=$SLUG"
+          echo "source=$SOURCE"
           echo "payload_blocks=metadata,property,outputs,ingest_inputs,content"
 
       - name: Validate public payload shape
@@ -215,7 +224,13 @@ jobs:
           fi
           echo "OK: sin secrets obvios."
 
+      # Auditoria de ataque 2026-07-23 (#1): este era el sink de mayor impacto.
+      # El job tiene `contents: write` sobre un repo PUBLICO, asi que un slug
+      # con metacaracteres interpolado aqui era ejecucion arbitraria con permiso
+      # de push. Por `env:` + "$SLUG" el valor es un argumento, no codigo.
       - name: Commit and Push
+        env:
+          SLUG: ${{ github.event.client_payload.metadata.slug }}
         run: |
           git config --global user.name "MyGuest Bot"
           git config --global user.email "actions@github.com"
