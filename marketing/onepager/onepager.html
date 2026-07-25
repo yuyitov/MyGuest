@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>My Guest — Sales One-Pager</title>
+<!--
+  FUENTE del one-pager de ventas. La versión anterior se generó sin dejar el HTML
+  en el repo, así que no se pudo editar cuando el precio cambió de $29 a $49:
+  hubo que reconstruirla entera. Este archivo existe para que el próximo cambio
+  de precio sea de un minuto.
+
+  Render:  python marketing/onepager/render.py
+  Salida:  marketing/assets/MyGuest_Sales_OnePager.pdf   (Letter, 1 página)
+
+  EL PRECIO VIVE EN public/index.html Y EN STRIPE. Este PDF es una copia que se
+  desincroniza sola: al cambiar un precio hay que barrer TODOS los materiales
+  (este PDF, marketing/instagram/posts.json y los pines), no solo la landing.
+-->
+<style>
+  @page { size: 8.5in 11in; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ivory:#F7F3EE; --sand:#EFE7DD; --charcoal:#2B2B2B; --gray:#7A746E;
+    --taupe:#D8CEC2; --teal:#59C3C3; --deep:#2D6A73; --coral:#F29B7F;
+  }
+
+  body {
+    width: 816px; height: 1056px; background: var(--ivory);
+    font-family: "Segoe UI", -apple-system, system-ui, sans-serif;
+    color: var(--charcoal); -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column;
+  }
+
+  /* ---------- Encabezado ---------- */
+  .top { padding: 26px 52px 0; display: flex; align-items: center; justify-content: space-between; }
+  .brand img { height: 42px; }
+  .site { font-size: 13px; color: var(--deep); font-weight: 600; letter-spacing: .2px; }
+
+  /* ---------- Héroe ---------- */
+  .hero { padding: 18px 52px 0; display: grid; grid-template-columns: 1fr 236px; gap: 26px; align-items: start; }
+  .kicker {
+    display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.9px;
+    text-transform:uppercase; color:var(--deep); background:var(--sand);
+    padding:5px 11px; border-radius:999px;
+  }
+  h1 { font-size: 35px; line-height: 1.14; margin: 12px 0 0; letter-spacing: -.5px; }
+  h1 em { font-style: normal; color: var(--deep); }
+  .lead { font-size: 14.5px; line-height: 1.55; color: var(--gray); margin-top: 11px; max-width: 430px; }
+
+  /* Punto 2 de Vero: el celular debe PARECER un celular. Se usa el mockup con
+     marco negro y se le pone una sombra suave y un halo cálido detrás, para que
+     no quede aplanado contra el fondo. */
+  .phone-wrap { position: relative; display: flex; justify-content: center; padding-top: 4px; }
+  .phone-wrap::after {
+    content:""; position:absolute; left:50%; top:52%; transform:translate(-50%,-50%);
+    width: 230px; height: 230px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(89,195,195,.22) 0%, rgba(89,195,195,0) 70%);
+    z-index: 0;
+  }
+  .phone-wrap img {
+    position: relative; z-index: 1; width: 154px;
+    filter: drop-shadow(0 16px 26px rgba(43,43,43,.26));
+  }
+
+  /* ---------- Qué reciben ---------- */
+  .section { padding: 0 52px; margin-top: 20px; }
+  .sec-title { font-size: 17px; font-weight: 700; margin-bottom: 12px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+  /* Punto 4 de Vero: "Local restaurants & recommendations" se salía del recuadro.
+     min-width:0 permite encoger la celda del grid y el texto envuelve en vez de
+     desbordar; se quita cualquier nowrap. */
+  .item {
+    background:#fff; border:1px solid var(--taupe); border-radius:11px;
+    padding:11px 13px; display:flex; gap:9px; align-items:flex-start; min-width:0;
+  }
+  .item span { color: var(--deep); font-size: 14px; line-height: 1.25; flex-shrink: 0; }
+  .item p { font-size: 12.8px; line-height: 1.35; min-width: 0; overflow-wrap: break-word; }
+
+  /* ---------- Cómo funciona ---------- */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .step { position: relative; padding-left: 30px; }
+  .step .n {
+    position:absolute; left:0; top:1px; width:22px; height:22px; border-radius:50%;
+    background:var(--deep); color:#fff; font-size:11.5px; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .step h4 { font-size: 13px; margin-bottom: 3px; }
+  .step p { font-size: 12.3px; line-height: 1.4; color: var(--gray); }
+
+  /* ---------- Franja de cierre ---------- */
+  .closing { margin-top: auto; padding: 0 52px 28px; }
+  /* Punto 6 de Vero: más aire arriba de la fila del botón + precio. */
+  .cta-row {
+    margin-top: 30px; display: grid; grid-template-columns: 1fr 186px; gap: 20px; align-items: stretch;
+  }
+  .cta-card {
+    background: var(--deep); color:#fff; border-radius: 15px; padding: 20px 24px;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+  .cta-card h3 { font-size: 19px; margin-bottom: 5px; }
+  .cta-card p { font-size: 12.8px; opacity: .9; line-height: 1.4; }
+  .price-pill {
+    display:inline-flex; align-items:baseline; gap:8px; margin-top:12px;
+    background: rgba(255,255,255,.14); border-radius: 999px; padding: 7px 15px; width: fit-content;
+  }
+  .price-pill .was { font-size: 13px; text-decoration: line-through; opacity: .65; }
+  .price-pill .now { font-size: 21px; font-weight: 700; }
+  .price-pill .unit { font-size: 11.5px; opacity: .85; }
+
+  /* Punto 3 de Vero: el QR estaba descuadrado. Se centra en los dos ejes con
+     grid y se le fija un tamaño exacto, sin márgenes heredados. */
+  .qr-card {
+    background: var(--teal); border-radius: 15px; padding: 16px;
+    display: grid; place-items: center; gap: 9px; align-content: center;
+  }
+  .qr-card img { width: 104px; height: 104px; display: block; }
+  .qr-card p { font-size: 11px; color: var(--deep); font-weight: 700; text-align: center; line-height: 1.3; }
+
+  .foot { margin-top: 16px; display:flex; align-items:center; justify-content:space-between; }
+  .foot p { font-size: 11px; color: var(--gray); }
+  .foot img { height: 42px; opacity: .95; }
+</style>
+</head>
+<body>
+
+  <div class="top">
+    <div class="brand"><img src="logo.png" alt="My Guest"></div>
+    <div class="site">myguestguide.com</div>
+  </div>
+
+  <div class="hero">
+    <div>
+      <div class="kicker">One-time payment · No subscriptions</div>
+      <h1>Everything your guests need,<br><em>in one link.</em></h1>
+      <p class="lead">
+        A digital welcome guide for your short-term rental — WiFi, check-in,
+        house rules, local recommendations and emergency info. It opens on any
+        phone, with no app and no password. A printable version is included.
+      </p>
+    </div>
+    <div class="phone-wrap"><img src="phone.png" alt="Guest guide on a phone"></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">What your guests receive</div>
+    <div class="grid">
+      <div class="item"><span>✦</span><p>WiFi network and password, right where they look</p></div>
+      <div class="item"><span>✦</span><p>Check-in, check-out and access instructions</p></div>
+      <div class="item"><span>✦</span><p>House rules and amenities</p></div>
+      <div class="item"><span>✦</span><p>Local restaurants &amp; recommendations</p></div>
+      <div class="item"><span>✦</span><p>Contact and emergency information</p></div>
+      <div class="item"><span>✦</span><p>English, Spanish and French — all included</p></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">How it works</div>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h4>Fill out a short form</h4>
+        <!-- Punto 5 de Vero: antes decía "Send your PDF, Canva, photos or notes",
+             que no explicaba el mecanismo. El cliente llena un FORMULARIO y ahí
+             puede adjuntar lo que ya tenga. -->
+        <p>You answer a few questions about your place. If you already have a PDF or notes, you can attach them to the form.</p>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h4>We build your guide</h4>
+        <p>Your welcome book is created with your details, your style and your photos.</p>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h4>Share one link</h4>
+        <p>Send it to every guest, or print the QR and leave it in the property.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="closing">
+    <div class="cta-row">
+      <div class="cta-card">
+        <h3>Get your welcome book</h3>
+        <p>Yours forever. One payment, no monthly fees, and two rounds of changes included.</p>
+        <div class="price-pill">
+          <span class="was">$129</span>
+          <span class="now">$49</span>
+          <span class="unit">USD · one-time</span>
+        </div>
+      </div>
+      <div class="qr-card">
+        <img src="qr.png" alt="QR to myguestguide.com">
+        <p>Scan to see<br>a live example</p>
+      </div>
+    </div>
+    <div class="foot">
+      <p>myguestguide.com · hello@myguestguide.com</p>
+      <img src="mascot.png" alt="">
+    </div>
+  </div>
+
+</body>
+</html>
