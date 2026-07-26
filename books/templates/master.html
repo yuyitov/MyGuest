@@ -903,6 +903,20 @@
             font-family: 'Montserrat', sans-serif;
         }
 
+        .wallet-wrap {
+            margin-top: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .wallet-btn {
+            background: #1f1f1f;
+            box-shadow: 0 10px 20px rgba(31, 31, 31, 0.18);
+        }
+
         .footer-note {
             margin-top: 14px;
             font-size: 12px;
@@ -1659,6 +1673,28 @@
                     </button>
                     <div class="footer-note">Save this stay in your phone so you can find the host again.</div>
                 </div>
+
+                <!-- Wallet passes. Both providers are OFF by default: the generator
+                     leaves these href values empty and the block hides itself, so
+                     nothing here reaches a guest until the credentials exist.
+                     What travels in a pass is public only — property name, address
+                     and the tokenless guide link — because a pass gets shared, just
+                     like the contact card above.
+                     NOTE: comments in this template are English on purpose — the
+                     static translator rewrites literal text anywhere in the file. -->
+                <div class="wallet-wrap is-hidden" id="wallet-wrap">
+                    <a class="pill-button wallet-btn is-hidden" id="google-wallet-btn"
+                       href="{{GOOGLE_WALLET_URL}}" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"></path><rect x="3" y="8" width="18" height="12" rx="2.5"></rect><path d="M16 14h3"></path></svg>
+                        <span>Add to Google Wallet</span>
+                    </a>
+                    <a class="pill-button wallet-btn is-hidden" id="apple-wallet-btn"
+                       href="{{APPLE_WALLET_HREF}}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"></path><rect x="3" y="8" width="18" height="12" rx="2.5"></rect><path d="M16 14h3"></path></svg>
+                        <span>Add to Apple Wallet</span>
+                    </a>
+                    <div class="footer-note">Keep the place in your wallet — it opens this guide.</div>
+                </div>
             </div>
 
             <div class="menu-back-wrap">
@@ -1911,9 +1947,35 @@
             });
         }
 
+        /* ── Wallet passes ────────────────────────────────────────────────────
+           Each button is shown only if the generator actually wrote a link into
+           its href. With the provider flag off the placeholder is stripped to an
+           empty string, the button stays hidden, and the whole block disappears
+           when neither provider produced a pass. No pass, no dead button. */
+        function initWalletButtons() {
+            const wrap = document.getElementById("wallet-wrap");
+            if (!wrap) return;
+
+            let shown = 0;
+
+            ["google-wallet-btn", "apple-wallet-btn"].forEach(function (id) {
+                const link = document.getElementById(id);
+                if (!link) return;
+
+                const href = (link.getAttribute("href") || "").trim();
+                if (!href || href.indexOf("{{") >= 0) return;
+
+                link.classList.remove("is-hidden");
+                shown += 1;
+            });
+
+            if (shown) wrap.classList.remove("is-hidden");
+        }
+
         cleanupDynamicContent();
         loadPrivateDetails();
         initVcard();
+        initWalletButtons();
     })();
     </script>
 </body>

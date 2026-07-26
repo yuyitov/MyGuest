@@ -166,6 +166,7 @@ async function main() {
   // ── 3. El generador real produce la guia ────────────────────────────────
   const outRoot = mkdtempSync(join(tmpdir(), 'myguest-intake-'));
   let html;
+  let escribioPasePkpass;
   try {
     const python = process.env.PYTHON || 'python';
     const run = spawnSync(python, [GENERATOR, JSON.stringify(publicPayload)], {
@@ -185,6 +186,7 @@ async function main() {
     const esPath = join(outRoot, slug, 'es.html');
     assert.ok(existsSync(esPath), `el generador no escribio es.html:\n${run.stdout}`);
     html = readFileSync(esPath, 'utf8');
+    escribioPasePkpass = existsSync(join(outRoot, slug, 'pass.pkpass'));
   } finally {
     rmSync(outRoot, { recursive: true, force: true });
   }
@@ -301,6 +303,35 @@ async function main() {
 
   // El boton sobrevive al reemplazo del script que hace el worker al servir con token.
   assert.match(conToken, /initVcard\(\);/, 'initVcard() se perdio en la version servida con token');
+
+  // ── 8. Pases de wallet: APAGADOS, y apagado quiere decir invisible ───────
+  // El bloque vive en la plantilla para que prenderlos sea configuracion y no
+  // codigo, pero con los flags apagados no puede llegarle NADA al huesped: ni
+  // un link, ni un archivo, ni un boton visible.
+  assert.match(html, /id="wallet-wrap"/, 'el bloque de wallet se perdio de la plantilla');
+  assert.match(
+    html,
+    /class="wallet-wrap is-hidden"/,
+    'el bloque de wallet debe salir oculto cuando no hay pase',
+  );
+  assert.ok(
+    htmlContiene(html, 'id="google-wallet-btn"') && !html.includes('pay.google.com'),
+    'con el flag apagado la guia no puede traer un link de Google Wallet',
+  );
+  assert.ok(
+    !html.includes('pass.pkpass'),
+    'con el flag apagado la guia no puede apuntar a un pase de Apple',
+  );
+  assert.equal(
+    escribioPasePkpass,
+    false,
+    'con el flag apagado el generador no debe escribir pass.pkpass',
+  );
+  assert.match(
+    conToken,
+    /initWalletButtons\(\);/,
+    'initWalletButtons() se perdio en la version servida con token',
+  );
 
   console.log('OK: intake real de punta a punta — el intake llega completo a la guia');
 }

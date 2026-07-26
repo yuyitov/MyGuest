@@ -584,8 +584,31 @@ Cómo respeta la separación pública/privada:
 - El link de la guía **no** va en el `.vcf` a propósito: lleva el token y una
   tarjeta de contacto se comparte.
 
-Google Wallet y Apple Wallet quedan **fuera** de esta entrega (fichados en el
-plan como Fase 3 puntos 2 y 3).
+## Pases de wallet (Google y Apple) — FASE 3, puntos 2 y 3
+
+Escritos, conectados y probados; **los dos apagados**. Viven en
+`books/scripts/wallet_passes.py`, entran a la guía por
+`{{GOOGLE_WALLET_URL}}` / `{{APPLE_WALLET_HREF}}` y el bloque `#wallet-wrap` se
+oculta solo si no hay pase. Con los flags apagados no se firma nada, no se
+escribe nada y el HTML no menciona ni `pay.google.com` ni `pass.pkpass`.
+
+**Google Wallet no se prendió, y la razón está medida** (doc oficial, 2026-07-26):
+el pase se arma con un JWT firmado por una cuenta de servicio (no se puede
+firmar en el navegador), exige alta de Issuer, Business Profile con perfil de
+pagos para verificar identidad, y **revisión manual de Google sin plazo
+publicado**. Hasta que apruebe, el pase sale `[TEST ONLY]` y **solo lo pueden
+guardar las cuentas admin/developer y las de prueba**: un huésped real toca el
+botón y no pasa nada. Publicarlo hoy sería poner un botón muerto en la guía de
+un cliente que ya pagó. Apple cuesta $99 USD/año y funciona en cuanto hay
+certificado.
+
+Medición completa, receta para prender cada uno y la verificación del
+content-type del `.pkpass`: `docs/WALLET_PASSES_ENABLE_CHECKLIST.md`.
+
+Reglas que hereda del `.vcf`: un pase **se comparte**, así que lleva solo lo
+público —nombre, dirección y el link **sin token**— y nunca WiFi, códigos,
+teléfono ni `?token=`. Si una credencial está rota o vencida, **la generación no
+se cae**: avisa con `[wallet] AVISO:` y la guía sale sin botón.
 
 ⚠️ **Trampa de `master.html`**: `apply_static_template_translations()` reemplaza
 texto literal en TODO el archivo, comentarios incluidos. Por eso los comentarios

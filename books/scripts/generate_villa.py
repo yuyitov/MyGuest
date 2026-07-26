@@ -9,6 +9,9 @@ from urllib.parse import quote_plus, urlparse, parse_qs
 import urllib.request
 import urllib.error
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from wallet_passes import build_wallet_assets
+
 SUPPORTED_LANGUAGES = ["English", "Español", "Français"]
 
 LANGUAGE_ALIASES = {
@@ -123,6 +126,9 @@ STATIC_TEMPLATE_TRANSLATIONS = {
         "Emergency Contacts": "Contactos de Emergencia",
         "Save to Contacts": "Guardar en Contactos",
         "Save this stay in your phone so you can find the host again.": "Guarda esta estancia en tu teléfono para volver a encontrar al anfitrión.",
+        "Add to Google Wallet": "Añadir a Google Wallet",
+        "Add to Apple Wallet": "Añadir a Apple Wallet",
+        "Keep the place in your wallet — it opens this guide.": "Guarda el lugar en tu wallet: desde ahí se abre esta guía.",
         "WiFi details are protected and appear only with your secure guest access link.": "Los datos de WiFi están protegidos y solo aparecen con tu enlace seguro de huésped.",
         "Some stay details are protected and only appear with a valid guest access link.": "Algunos detalles de la estancia están protegidos y solo aparecen con un enlace válido de huésped.",
         "Recommendation actions": "Acciones de recomendación",
@@ -186,6 +192,9 @@ STATIC_TEMPLATE_TRANSLATIONS = {
         "Emergency Contacts": "Contacts d’Urgence",
         "Save to Contacts": "Enregistrer dans les Contacts",
         "Save this stay in your phone so you can find the host again.": "Enregistrez ce séjour dans votre téléphone pour retrouver votre hôte.",
+        "Add to Google Wallet": "Ajouter à Google Wallet",
+        "Add to Apple Wallet": "Ajouter à Apple Wallet",
+        "Keep the place in your wallet — it opens this guide.": "Gardez le lieu dans votre wallet : il ouvre ce guide.",
         "WiFi details are protected and appear only with your secure guest access link.": "Les informations WiFi sont protégées et apparaissent uniquement avec votre lien invité sécurisé.",
         "Some stay details are protected and only appear with a valid guest access link.": "Certains détails du séjour sont protégés et apparaissent uniquement avec un lien invité valide.",
         "Recommendation actions": "Actions de recommandation",
@@ -1534,6 +1543,14 @@ def render_html_for_language(payload, active_language, output_filename):
 
     html = apply_static_template_translations(html, active_language)
 
+    output_dir = os.path.join(villas_root(), slug)
+    wallet_assets = build_wallet_assets(
+        slug=slug,
+        property_name=villa_name,
+        property_address=property_address,
+        output_dir=output_dir,
+    )
+
     replacements = {
         "{{HTML_LANG}}": escape(ui["html_lang"]),
         "{{VILLA_NAME}}": escape(villa_name),
@@ -1593,6 +1610,13 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{VCARD_MAIL}}": escape(safe_text(content_flat.get("host_email"))),
         "{{VCARD_SOCIAL_URL}}": escape(normalize_instagram_url(content_flat.get("instagram_handle"))),
 
+        # Pases de wallet. Los dos proveedores están APAGADOS por default, así que
+        # normalmente estos dos valores salen vacíos y el bloque de botones se
+        # oculta solo. Lo que viaja en un pase es solo público (nombre, dirección
+        # y el link SIN token): un pase se comparte, igual que la vCard.
+        "{{GOOGLE_WALLET_URL}}": escape(wallet_assets["google_wallet_url"]),
+        "{{APPLE_WALLET_HREF}}": escape(wallet_assets["apple_pass_href"]),
+
         "{{PRIVATE_LABEL_WIFI_NETWORK}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("WiFi network", "WiFi network")),
         "{{PRIVATE_LABEL_WIFI_PASSWORD}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("WiFi password", "WiFi password")),
        
@@ -1608,7 +1632,6 @@ def render_html_for_language(payload, active_language, output_filename):
     html = inject_public_qa_overrides(html)
     html = inject_demo_private_data(html, content_flat, active_language)
 
-    output_dir = os.path.join(villas_root(), slug)
     os.makedirs(output_dir, exist_ok=True)
 
     output_path = os.path.join(output_dir, output_filename)

@@ -110,6 +110,23 @@ jobs:
           PUBLIC_PAYLOAD_JSON: ${{ toJson(github.event.client_payload) }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL_TRANSLATION: ${{ vars.OPENAI_MODEL_TRANSLATION }}
+          # Pases de wallet. Los dos flags estan APAGADOS: mientras las repo vars
+          # no existan, `_flag()` los lee vacios, no se firma nada y la guia sale
+          # sin botones. Prenderlos es poner las credenciales y la var en 'true',
+          # sin tocar codigo. Receta completa y lo que cuesta cada uno:
+          # docs/WALLET_PASSES_ENABLE_CHECKLIST.md
+          MYGUEST_PUBLIC_BASE_URL: ${{ vars.MYGUEST_PUBLIC_BASE_URL }}
+          MYGUEST_GOOGLE_WALLET_ENABLED: ${{ vars.MYGUEST_GOOGLE_WALLET_ENABLED }}
+          GOOGLE_WALLET_ISSUER_ID: ${{ vars.GOOGLE_WALLET_ISSUER_ID }}
+          GOOGLE_WALLET_CLASS_SUFFIX: ${{ vars.GOOGLE_WALLET_CLASS_SUFFIX }}
+          GOOGLE_WALLET_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_WALLET_SERVICE_ACCOUNT_JSON }}
+          MYGUEST_APPLE_WALLET_ENABLED: ${{ vars.MYGUEST_APPLE_WALLET_ENABLED }}
+          APPLE_WALLET_PASS_TYPE_ID: ${{ vars.APPLE_WALLET_PASS_TYPE_ID }}
+          APPLE_WALLET_TEAM_ID: ${{ vars.APPLE_WALLET_TEAM_ID }}
+          APPLE_WALLET_CERT_PEM: ${{ secrets.APPLE_WALLET_CERT_PEM }}
+          APPLE_WALLET_KEY_PEM: ${{ secrets.APPLE_WALLET_KEY_PEM }}
+          APPLE_WALLET_WWDR_PEM: ${{ secrets.APPLE_WALLET_WWDR_PEM }}
+          APPLE_WALLET_KEY_PASSWORD: ${{ secrets.APPLE_WALLET_KEY_PASSWORD }}
         run: |
           python books/scripts/generate_villa.py "$PUBLIC_PAYLOAD_JSON"
           
@@ -182,7 +199,12 @@ jobs:
               for filename in files:
                   path = os.path.join(root, filename)
 
-                  if filename.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".gif", ".ico", ".pdf")):
+                  # .pkpass es un ZIP firmado: leerlo como texto es ruido binario,
+                  # y un falso positivo aqui bloquea la entrega de un cliente que
+                  # ya pago (la leccion de HMU Link, abajo). Su contenido lo revisa
+                  # de verdad books/scripts/test_wallet_passes.py, que abre el zip
+                  # y afirma campo por campo que solo lleva datos publicos.
+                  if filename.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".gif", ".ico", ".pdf", ".pkpass")):
                       continue
 
                   try:
