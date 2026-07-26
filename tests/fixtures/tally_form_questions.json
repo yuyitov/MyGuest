@@ -1,0 +1,323 @@
+{
+  "_comment": "Inventario de preguntas del formulario Tally VIVO de My Guest. Solo ids, tipos y titulos: cero respuestas, cero datos de clientes. Snapshot tomado de la API de Tally (GET /forms/MedpvA/submissions -> questions[]).",
+  "form_id": "MedpvA",
+  "form_name": "MyGuest — Welcome Book Setup",
+  "snapshot_date": "2026-07-26",
+  "questions": [
+    {
+      "id": "kAXBor",
+      "type": "INPUT_TEXT",
+      "title": "property_name"
+    },
+    {
+      "id": "KoAKEg",
+      "type": "MULTIPLE_CHOICE",
+      "title": "Style"
+    },
+    {
+      "id": "MOkPdg",
+      "type": "MULTIPLE_CHOICE",
+      "title": "property_environment"
+    },
+    {
+      "id": "LGBLry",
+      "type": "MULTIPLE_CHOICE",
+      "title": "Primary language"
+    },
+    {
+      "id": "MOlp4l",
+      "type": "FILE_UPLOAD",
+      "title": "Existing book file"
+    },
+    {
+      "id": "JRbvPr",
+      "type": "FILE_UPLOAD",
+      "title": "Existing book photos"
+    },
+    {
+      "id": "yyr5Q8",
+      "type": "INPUT_TEXT",
+      "title": "Checkin time"
+    },
+    {
+      "id": "XGdPaP",
+      "type": "INPUT_TEXT",
+      "title": "Checkout time"
+    },
+    {
+      "id": "VlXOKj",
+      "type": "INPUT_LINK",
+      "title": "Google maps Link"
+    },
+    {
+      "id": "vBV5Zg",
+      "type": "INPUT_TEXT",
+      "title": "Property Address"
+    },
+    {
+      "id": "8kV4Bl",
+      "type": "TEXTAREA",
+      "title": "Public arrival instructions"
+    },
+    {
+      "id": "zz459k",
+      "type": "TEXTAREA",
+      "title": "Parking Info"
+    },
+    {
+      "id": "5koP7N",
+      "type": "TEXTAREA",
+      "title": "Welcome Message"
+    },
+    {
+      "id": "dAXeMr",
+      "type": "TEXTAREA",
+      "title": "About Hosts"
+    },
+    {
+      "id": "YOXl6N",
+      "type": "TEXTAREA",
+      "title": "Amenities List"
+    },
+    {
+      "id": "lAXkGo",
+      "type": "MULTIPLE_CHOICE",
+      "title": "Pet Friendly"
+    },
+    {
+      "id": "R41yAK",
+      "type": "TEXTAREA",
+      "title": "Pet Rules"
+    },
+    {
+      "id": "oBYLqb",
+      "type": "TEXTAREA",
+      "title": "House Rules"
+    },
+    {
+      "id": "G1aAZe",
+      "type": "TEXTAREA",
+      "title": "Things to know"
+    },
+    {
+      "id": "OPKM6a",
+      "type": "TEXTAREA",
+      "title": "Before you leave"
+    },
+    {
+      "id": "E1e72l",
+      "type": "TEXTAREA",
+      "title": "Transport Options"
+    },
+    {
+      "id": "1Kql9l",
+      "type": "INPUT_TEXT",
+      "title": "restaurant_1_name"
+    },
+    {
+      "id": "MOobEA",
+      "type": "INPUT_TEXT",
+      "title": "restaurant_1_maps_link"
+    },
+    {
+      "id": "JR56OR",
+      "type": "INPUT_TEXT",
+      "title": "restaurant_2_name"
+    },
+    {
+      "id": "gAK094",
+      "type": "INPUT_TEXT",
+      "title": "restaurant_2_maps_link"
+    },
+    {
+      "id": "yyV6Jx",
+      "type": "INPUT_TEXT",
+      "title": "restaurant_3_name"
+    },
+    {
+      "id": "XGZD4Y",
+      "type": "INPUT_TEXT",
+      "title": "restaurant_3_maps_link"
+    },
+    {
+      "id": "8k7KZP",
+      "type": "MULTIPLE_CHOICE",
+      "title": "Would you like to add another restaurant?"
+    },
+    {
+      "id": "0MNxej",
+      "type": "INPUT_TEXT",
+      "title": "restaurant_4_name"
+    },
+    {
+      "id": "zzPq70",
+      "type": "INPUT_TEXT",
+      "title": "restaurant_4_maps_link"
+    },
+    {
+      "id": "5kWzZE",
+      "type": "MULTIPLE_CHOICE",
+      "title": "Would you like to add one more restaurant?"
+    },
+    {
+      "id": "dAB69K",
+      "type": "INPUT_TEXT",
+      "title": "restaurant_5_name"
+    },
+    {
+      "id": "YONQ4J",
+      "type": "INPUT_TEXT",
+      "title": "restaurant_5_maps_link"
+    },
+    {
+      "id": "D1gN7Z",
+      "type": "INPUT_TEXT",
+      "title": "bar_1_name"
+    },
+    {
+      "id": "lAJy6v",
+      "type": "INPUT_TEXT",
+      "title": "bar_1_maps_link"
+    },
+    {
+      "id": "R4E0Dj",
+      "type": "INPUT_TEXT",
+      "title": "bar_2_name"
+    },
+    {
+      "id": "oBXy2x",
+      "type": "INPUT_TEXT",
+      "title": "bar_2_maps_link"
+    },
+    {
+      "id": "G18zRk",
+      "type": "INPUT_TEXT",
+      "title": "bar_3_name"
+    },
+    {
+      "id": "OPOz7g",
+      "type": "INPUT_TEXT",
+      "title": "bar_3_maps_link"
+    },
+    {
+      "id": "Vl20zy",
+      "type": "MULTIPLE_CHOICE",
+      "title": "add_bar_4"
+    },
+    {
+      "id": "PEV6ze",
+      "type": "INPUT_TEXT",
+      "title": "bar_4_name"
+    },
+    {
+      "id": "E1yXxr",
+      "type": "INPUT_TEXT",
+      "title": "bar_4_maps_link"
+    },
+    {
+      "id": "rKz6oR",
+      "type": "MULTIPLE_CHOICE",
+      "title": "add_bar_5"
+    },
+    {
+      "id": "4ke8KY",
+      "type": "INPUT_TEXT",
+      "title": "bar_5_name"
+    },
+    {
+      "id": "jM1yl4",
+      "type": "INPUT_TEXT",
+      "title": "bar_5_maps_link"
+    },
+    {
+      "id": "2kQeK9",
+      "type": "INPUT_TEXT",
+      "title": "activity_1_name"
+    },
+    {
+      "id": "xQOpJ5",
+      "type": "INPUT_TEXT",
+      "title": "activity_1_link"
+    },
+    {
+      "id": "R4E0D9",
+      "type": "INPUT_TEXT",
+      "title": "activity_2_name"
+    },
+    {
+      "id": "oBXy2P",
+      "type": "INPUT_TEXT",
+      "title": "activity_2_link"
+    },
+    {
+      "id": "G18zRZ",
+      "type": "INPUT_TEXT",
+      "title": "activity_3_name"
+    },
+    {
+      "id": "OPOz7R",
+      "type": "INPUT_TEXT",
+      "title": "activity_3_link"
+    },
+    {
+      "id": "Vl20zg",
+      "type": "INPUT_TEXT",
+      "title": "activity_4_name"
+    },
+    {
+      "id": "PEV6zV",
+      "type": "INPUT_TEXT",
+      "title": "activity_4_link"
+    },
+    {
+      "id": "E1yXx4",
+      "type": "INPUT_TEXT",
+      "title": "activity_5_name"
+    },
+    {
+      "id": "rKz6oN",
+      "type": "INPUT_TEXT",
+      "title": "activity_5_link"
+    },
+    {
+      "id": "R41yA4",
+      "type": "TEXTAREA",
+      "title": "emergency_contacts"
+    },
+    {
+      "id": "oBYLqO",
+      "type": "INPUT_LINK",
+      "title": "airbnb_review_link"
+    },
+    {
+      "id": "G1aAZL",
+      "type": "INPUT_TEXT",
+      "title": "instagram_handle"
+    },
+    {
+      "id": "0MzR99",
+      "type": "TEXTAREA",
+      "title": "Private access details"
+    },
+    {
+      "id": "OPKM6Y",
+      "type": "INPUT_TEXT",
+      "title": "wifi_ssid"
+    },
+    {
+      "id": "VlXOKM",
+      "type": "INPUT_TEXT",
+      "title": "wifi_password"
+    },
+    {
+      "id": "E1e72B",
+      "type": "INPUT_PHONE_NUMBER",
+      "title": "host_phone"
+    },
+    {
+      "id": "gAX6lP",
+      "type": "TEXTAREA",
+      "title": "Additional notes"
+    }
+  ]
+}

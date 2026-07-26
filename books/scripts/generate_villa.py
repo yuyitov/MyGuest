@@ -121,6 +121,8 @@ STATIC_TEMPLATE_TRANSLATIONS = {
         "Review": "Reseña",
         "Leave a Review": "Dejar una Reseña",
         "Emergency Contacts": "Contactos de Emergencia",
+        "Save to Contacts": "Guardar en Contactos",
+        "Save this stay in your phone so you can find the host again.": "Guarda esta estancia en tu teléfono para volver a encontrar al anfitrión.",
         "WiFi details are protected and appear only with your secure guest access link.": "Los datos de WiFi están protegidos y solo aparecen con tu enlace seguro de huésped.",
         "Some stay details are protected and only appear with a valid guest access link.": "Algunos detalles de la estancia están protegidos y solo aparecen con un enlace válido de huésped.",
         "Recommendation actions": "Acciones de recomendación",
@@ -182,6 +184,8 @@ STATIC_TEMPLATE_TRANSLATIONS = {
         "Review": "Avis",
         "Leave a Review": "Laisser un Avis",
         "Emergency Contacts": "Contacts d’Urgence",
+        "Save to Contacts": "Enregistrer dans les Contacts",
+        "Save this stay in your phone so you can find the host again.": "Enregistrez ce séjour dans votre téléphone pour retrouver votre hôte.",
         "WiFi details are protected and appear only with your secure guest access link.": "Les informations WiFi sont protégées et apparaissent uniquement avec votre lien invité sécurisé.",
         "Some stay details are protected and only appear with a valid guest access link.": "Certains détails du séjour sont protégés et apparaissent uniquement avec un lien invité valide.",
         "Recommendation actions": "Actions de recommandation",
@@ -1371,15 +1375,20 @@ def apply_static_template_translations(html, active_language):
 
     ordered_translations = sorted(translations.items(), key=lambda pair: len(pair[0]), reverse=True)
 
+    # UNA sola pasada, con la llave más larga ganando en cada posición. Encadenar
+    # `str.replace` una llave tras otra volvía a traducir texto ya traducido: con
+    # "Emergency Contacts" → "Contactos de Emergencia", el paso siguiente aplicaba
+    # "Contact" → "Contacto" DENTRO del resultado y la guía en español publicaba
+    # "Contactoos de Emergencia" (estaba así en las 4 demos y en cada guía real).
+    pattern = re.compile("|".join(re.escape(source) for source, _ in ordered_translations))
+    table = dict(ordered_translations)
+
     for part in parts:
         if part.startswith("{{") and part.endswith("}}"):
             translated_parts.append(part)
             continue
 
-        for source_text, translated_text in ordered_translations:
-            part = part.replace(source_text, translated_text)
-
-        translated_parts.append(part)
+        translated_parts.append(pattern.sub(lambda match: table[match.group(0)], part))
 
     return "".join(translated_parts)
 
@@ -1460,6 +1469,21 @@ def validate_house_access_public(value, demo_mode=False):
             "house_access_private instead. "
             "house_access_public must contain only general, non-secret orientation text."
         )
+
+
+def villas_root():
+    """Carpeta donde se escriben las guias generadas.
+
+    Por default `public/villas/`, que es lo que publica GitHub Pages.
+    `MYGUEST_VILLAS_ROOT` la redirige para que la prueba de intake de punta a
+    punta escriba en un directorio temporal y nunca ensucie `public/`.
+    """
+    override = os.getenv("MYGUEST_VILLAS_ROOT", "").strip()
+    if override:
+        return override
+
+    _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(_project_root, "..", "public", "villas")
 
 
 def render_html_for_language(payload, active_language, output_filename):
@@ -1562,6 +1586,13 @@ def render_html_for_language(payload, active_language, output_filename):
         "{{HOST_EMAIL}}": html_multiline(content_flat.get("host_email")),
         "{{INSTAGRAM_HANDLE}}": build_instagram_link_block(content_flat.get("instagram_handle")),
 
+        # Datos públicos del botón "Guardar en Contactos" (vCard). Van en data-*,
+        # así que se escapan como valor plano, no como HTML multilínea.
+        # El teléfono del anfitrión NO se emite aquí: es privado y lo aporta el
+        # Worker al servir la guía con token.
+        "{{VCARD_MAIL}}": escape(safe_text(content_flat.get("host_email"))),
+        "{{VCARD_SOCIAL_URL}}": escape(normalize_instagram_url(content_flat.get("instagram_handle"))),
+
         "{{PRIVATE_LABEL_WIFI_NETWORK}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("WiFi network", "WiFi network")),
         "{{PRIVATE_LABEL_WIFI_PASSWORD}}": escape(STATIC_TEMPLATE_TRANSLATIONS.get(active_language, {}).get("WiFi password", "WiFi password")),
        
@@ -1577,8 +1608,7 @@ def render_html_for_language(payload, active_language, output_filename):
     html = inject_public_qa_overrides(html)
     html = inject_demo_private_data(html, content_flat, active_language)
 
-    _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    output_dir = os.path.join(_project_root, "..", "public", "villas", slug)
+    output_dir = os.path.join(villas_root(), slug)
     os.makedirs(output_dir, exist_ok=True)
 
     output_path = os.path.join(output_dir, output_filename)
@@ -1604,8 +1634,7 @@ def generate():
 
     metadata = payload.get("metadata", {}) or {}
     slug = safe_text(metadata.get("slug")) or "demo"
-    _project_root2 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    output_dir = os.path.join(_project_root2, "..", "public", "villas", slug)
+    output_dir = os.path.join(villas_root(), slug)
 
     primary_path = os.path.join(output_dir, primary_filename)
     index_path = os.path.join(output_dir, "index.html")

@@ -1,0 +1,52 @@
+name: MyGuest Tests
+
+# La red que faltaba (PLAN CERO REGRESIONES, Fase 0): la prueba de intake real
+# corre en CADA push que toque el camino de intake, no solo en la máquina de Vero.
+# Regla del plan: ningún cambio en el camino de intake se da por bueno sin que
+# esta prueba pase.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "worker/**"
+      - "books/**"
+      - "tests/**"
+      - "package.json"
+      - ".github/workflows/tests.yml"
+  pull_request:
+    paths:
+      - "worker/**"
+      - "books/**"
+      - "tests/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Install test deps
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Show versions
+        run: |
+          node --version
+          python --version
+
+      # Sin OPENAI_API_KEY el generador no traduce; la suite corre offline y
+      # escribe en un directorio temporal, nunca en public/.
+      - name: Run suite
+        run: npm test

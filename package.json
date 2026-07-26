@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "test": "node tests/run_all.mjs",
     "preview": "npx serve -l 3100 marketing/instagram",
     "export": "node marketing/instagram/scripts/export-posts.js",
     "export:draft": "node marketing/instagram/scripts/export-posts.js --draft",

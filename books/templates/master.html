@@ -886,6 +886,23 @@
             stroke-linejoin: round;
         }
 
+        .vcard-wrap {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .vcard-wrap .footer-note {
+            margin-top: 10px;
+        }
+
+        .vcard-btn {
+            cursor: pointer;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+
         .footer-note {
             margin-top: 14px;
             font-size: 12px;
@@ -1622,6 +1639,26 @@
 
                     <div id="private-contact-content"></div>
                 </div>
+
+                <!-- Save-to-phone card (.vcf). Public data comes from the generator in
+                     data-* attributes. The host phone is NOT published here: it is read
+                     on click from the private card injected by the Worker (or by the
+                     token fetch), so without a valid link the file is written without a
+                     phone number instead of leaking one.
+                     NOTE: comments in this template are English on purpose — the static
+                     translator rewrites literal text anywhere in the file. -->
+                <div class="vcard-wrap"
+                     id="vcard-source"
+                     data-vcard-name="{{VILLA_NAME}}"
+                     data-vcard-adr="{{PROPERTY_ADDRESS}}"
+                     data-vcard-mail="{{VCARD_MAIL}}"
+                     data-vcard-social="{{VCARD_SOCIAL_URL}}">
+                    <button type="button" class="pill-button vcard-btn" id="vcard-btn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6"></path><path d="M16 11h6"></path></svg>
+                        <span>Save to Contacts</span>
+                    </button>
+                    <div class="footer-note">Save this stay in your phone so you can find the host again.</div>
+                </div>
             </div>
 
             <div class="menu-back-wrap">
@@ -1722,11 +1759,14 @@
             });
         }
 
-        function addPrivateCard(container, label, value) {
+        function addPrivateCard(container, label, value, fieldName) {
             if (!container || !value) return;
 
             const item = document.createElement("div");
             item.className = "private-card";
+            // Field tag so the save-to-phone button can find the number without
+            // matching on the label, which changes with the language.
+            if (fieldName) item.setAttribute("data-private-field", fieldName);
             item.innerHTML = `
                 <div class="private-card-title"></div>
                 <div class="private-card-text"></div>
@@ -1768,16 +1808,112 @@
                     
                     addPrivateCard(accessContainer, "{{PRIVATE_LABEL_ACCESS_NOTES}}", d.house_access_private);
                     
-                    addPrivateCard(contactContainer, "{{PRIVATE_LABEL_HOST_PHONE}}", d.host_phone);
-                                        
+                    addPrivateCard(contactContainer, "{{PRIVATE_LABEL_HOST_PHONE}}", d.host_phone, "host_phone");
+
                 })
                 .catch(function () {
                     // Private details stay hidden if token is invalid or Worker is unavailable.
                 });
         }
 
+        /* ── Save-to-phone card, vCard 3.0 ────────────────────────────────────
+           Builds the .vcf in the browser: no external service, no developer
+           account, no cost. Public values come from the data-* attributes of the
+           block. The host phone is read AT CLICK TIME from the private card
+           tagged data-private-field="host_phone", which exists only when the
+           guide was opened with a valid link: injected server-side by the Worker
+           at /guest/<slug>?token=, or by loadPrivateDetails() over the authorized
+           fetch. Without a valid link the file is written with no phone number;
+           the phone is never published in this HTML. */
+        function vcardEscape(value) {
+            return String(value || "")
+                .replace(/\\/g, "\\\\")
+                .replace(/;/g, "\\;")
+                .replace(/,/g, "\\,")
+                .replace(/\r?\n/g, "\\n");
+        }
+
+        function vcardHostTel() {
+            const card = document.querySelector('[data-private-field="host_phone"] .private-card-text');
+            return card ? card.textContent.trim() : "";
+        }
+
+        function vcardFileName(name) {
+            const base = String(name || "stay")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+            return (base || "stay") + ".vcf";
+        }
+
+        function vcardText(box) {
+            const name = (box.getAttribute("data-vcard-name") || "").trim();
+            const adr = (box.getAttribute("data-vcard-adr") || "").trim();
+            const mail = (box.getAttribute("data-vcard-mail") || "").trim();
+            const social = (box.getAttribute("data-vcard-social") || "").trim();
+            const tel = vcardHostTel();
+
+            const lines = [
+                "BEGIN:VCARD",
+                "VERSION:3.0",
+                "N:;" + vcardEscape(name) + ";;;",
+                "FN:" + vcardEscape(name),
+                "ORG:" + vcardEscape(name)
+            ];
+
+            if (tel) lines.push("TEL;TYPE=CELL,VOICE:" + vcardEscape(tel));
+            if (mail) lines.push("EMAIL;TYPE=INTERNET:" + vcardEscape(mail));
+            if (adr) lines.push("ADR;TYPE=WORK:;;" + vcardEscape(adr) + ";;;;");
+            // The guide link is deliberately left out: it carries the access token
+            // and a saved card gets forwarded. Stripped of the token it is dead.
+            if (social) lines.push("URL:" + vcardEscape(social));
+            lines.push("END:VCARD");
+
+            return lines.join("\r\n") + "\r\n";
+        }
+
+        function vcardDownload(text, fileName) {
+            const anchor = document.createElement("a");
+
+            if (!("download" in anchor)) {
+                window.location.href = "data:text/vcard;charset=utf-8," + encodeURIComponent(text);
+                return;
+            }
+
+            const blob = new Blob([text], { type: "text/vcard;charset=utf-8" });
+            const href = URL.createObjectURL(blob);
+
+            anchor.href = href;
+            anchor.download = fileName;
+            anchor.style.display = "none";
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+            window.setTimeout(function () { URL.revokeObjectURL(href); }, 5000);
+        }
+
+        function initVcard() {
+            const box = document.getElementById("vcard-source");
+            const button = document.getElementById("vcard-btn");
+            if (!box || !button) return;
+
+            const name = (box.getAttribute("data-vcard-name") || "").trim();
+            // With no property name the file has no identity: hide the button.
+            if (!name || name.indexOf("{{") >= 0) {
+                box.classList.add("is-hidden");
+                return;
+            }
+
+            button.addEventListener("click", function () {
+                vcardDownload(vcardText(box), vcardFileName(name));
+            });
+        }
+
         cleanupDynamicContent();
         loadPrivateDetails();
+        initVcard();
     })();
     </script>
 </body>

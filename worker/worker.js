@@ -1016,7 +1016,16 @@ function buildPublicPayload({ normalized, slug, privateRecordKey, origin, now })
       checkin: {
         checkin_time: cleanValue(getAnswer(answers, 'checkin_time')),
         checkout_time: cleanValue(getAnswer(answers, 'checkout_time')),
-        house_access_public: cleanValue(getAnswer(answers, 'house_access_public')),
+
+        // La pregunta del formulario vivo se titula "Public arrival instructions",
+        // que normaliza a `public_arrival_instructions` y NO a `house_access_public`:
+        // sin este alias la orientación pública de llegada que escribe el anfitrión
+        // se caía en silencio y la fila "Access" de la guía salía vacía.
+        // Lo cazó la prueba de intake real (tests/test_intake_end_to_end.mjs).
+        house_access_public:
+          cleanValue(getAnswer(answers, 'house_access_public')) ||
+          cleanValue(getAnswer(answers, 'public_arrival_instructions')),
+
         parking_info: cleanValue(getAnswer(answers, 'parking_info'))
       },
       about_house: {
@@ -1035,7 +1044,16 @@ function buildPublicPayload({ normalized, slug, privateRecordKey, origin, now })
       rules_info: {
         house_rules: cleanValue(getAnswer(answers, 'house_rules')),
         things_to_know: cleanValue(getAnswer(answers, 'things_to_know')),
-        before_you_leave: cleanValue(getAnswer(answers, 'before_you_leave'))
+        before_you_leave: cleanValue(getAnswer(answers, 'before_you_leave')),
+
+        // El generador arma la fila "Final Notes" desde `content.rules_info`
+        // (`CONTENT_FIELD_MAP`/`flatten_content` solo miran dentro de `content`),
+        // así que mandarlo únicamente en `ingest_inputs` lo tiraba: el anfitrión
+        // escribía sus notas finales y el huésped nunca las veía.
+        // Se conserva también en `ingest_inputs` porque el workflow de generación
+        // exige ese bloque en el payload.
+        // Lo cazó la prueba de intake real (tests/test_intake_end_to_end.mjs).
+        additional_notes: cleanValue(getAnswer(answers, 'additional_notes'))
       },
       recommendations: buildRecommendationsPayload(answers),
       contact_social: {
@@ -1409,8 +1427,10 @@ function buildPrivateBookBlocks(secrets, lang, sourceLang) {
     buildBookPrivateCard(accessLabel, privateAccessDetails, true)
   ].join('');
 
+  // `host_phone` se marca para que el botón "Guardar en Contactos" de la guía
+  // encuentre el teléfono sin depender de la etiqueta, que cambia con el idioma.
   const contact = [
-    buildBookPrivateCard(lbl.hostPhone, hostPhone)
+    buildBookPrivateCard(lbl.hostPhone, hostPhone, false, 'host_phone')
   ].join('');
 
   return {
@@ -1420,15 +1440,17 @@ function buildPrivateBookBlocks(secrets, lang, sourceLang) {
   };
 }
 
-function buildBookPrivateCard(label, value, multiline = false) {
+function buildBookPrivateCard(label, value, multiline = false, fieldName = '') {
   if (isEmpty(value)) return '';
 
   const content = multiline
     ? formatMultiline(value)
     : escapeHtml(value);
 
+  const fieldAttr = fieldName ? ` data-private-field="${escapeAttribute(fieldName)}"` : '';
+
   return `
-    <div class="private-card">
+    <div class="private-card"${fieldAttr}>
       <div class="private-card-title">${escapeHtml(label)}</div>
       <div class="private-card-text">${content}</div>
     </div>

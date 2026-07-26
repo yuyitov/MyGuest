@@ -535,6 +535,70 @@ python books/scripts/generate_villa.py <property-slug>
 
 ---
 
+## Prueba de intake real (FASE 0 del PLAN CERO REGRESIONES, 2026-07-26)
+
+`npm test` corre la suite. La pieza nueva es `tests/test_intake_end_to_end.mjs`:
+recorre **la cadena completa** con un payload con la forma real del webhook de
+Tally — extracción del worker → `generate_villa.py` → HTML → inyección privada
+del worker — y afirma que WiFi, check-in/out, accesos, recomendaciones y notas
+del anfitrión **llegan a la guía**, y que lo sensible **no** queda en el HTML
+público. `tests/test_form_field_coverage.mjs` compara el formulario **vivo**
+contra lo que el worker lee: es el candado contra el bug que rompió PawContact
+(un título de pregunta cambia, deja de casar, la respuesta se cae en silencio y
+los tests siguen verdes). Detalle y cómo re-tomar el snapshot del formulario:
+`tests/README.md`.
+
+**Regla:** ningún cambio en el camino de intake se da por bueno sin que esa
+prueba pase. Corre también en CI (`.github/workflows/tests.yml`).
+
+Dos campos que se caían y esa prueba cazó el primer día:
+
+- La pregunta viva se titula **"Public arrival instructions"** → normaliza a
+  `public_arrival_instructions`, y el worker leía solo `house_access_public`. La
+  fila **Access** de la guía salía vacía en todas las guías reales.
+- **`additional_notes`** viajaba solo en `ingest_inputs`, y `flatten_content()`
+  del generador únicamente mira dentro de `content` → la fila **Final Notes**
+  nunca se armaba.
+
+Ambos con alias/ubicación corregidos en `buildPublicPayload`.
+
+**`MYGUEST_VILLAS_ROOT`**: variable de entorno que redirige la salida de
+`generate_villa.py`. Existe para que la prueba escriba en un temporal y jamás
+ensucie `public/`. Sin ella, el default sigue siendo `public/villas/`.
+
+## Botón "Guardar en Contactos" (vCard) — FASE 3
+
+En la sección **Contact** de la guía. Arma un `.vcf` (vCard 3.0) en el navegador:
+sin servicio externo, sin cuenta de developer, $0. Guarda nombre y dirección de
+la propiedad, el Instagram como `URL` y **el teléfono del anfitrión**, que es lo
+que después muestra el caller-id.
+
+Cómo respeta la separación pública/privada:
+
+- Los datos públicos los emite el generador en `data-vcard-*` del bloque
+  `#vcard-source`.
+- El teléfono **no** se publica: se lee **al hacer clic** de la tarjeta privada
+  marcada `data-private-field="host_phone"`, que existe solo con link válido —
+  la inyecta el Worker al servir `/guest/<slug>?token=`, o `loadPrivateDetails()`
+  por el fetch autorizado. Sin token el `.vcf` sale sin teléfono.
+- El link de la guía **no** va en el `.vcf` a propósito: lleva el token y una
+  tarjeta de contacto se comparte.
+
+Google Wallet y Apple Wallet quedan **fuera** de esta entrega (fichados en el
+plan como Fase 3 puntos 2 y 3).
+
+⚠️ **Trampa de `master.html`**: `apply_static_template_translations()` reemplaza
+texto literal en TODO el archivo, comentarios incluidos. Por eso los comentarios
+de esa plantilla van **en inglés**. Un comentario en español con la palabra
+"Contactos" se publica mutilado. Ese mismo encadenamiento producía
+`Contactoos de Emergencia` en la guía en español (estaba en las 4 demos y en cada
+guía real); ahora la traducción se aplica en **una sola pasada**, con la llave más
+larga ganando.
+
+**Las 4 demos de `public/villas/` no tienen el botón ni el arreglo de
+"Contactoos"**: son HTML ya generado. Se corrigen al regenerarlas, que es la
+tarea de marketing ya registrada (refrescar la muestra de venta).
+
 ## Estado actual (actualizado 2026-07-16)
 
 **MyGuest está LIVE con GO para venta pública.**

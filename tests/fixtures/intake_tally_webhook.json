@@ -1,0 +1,336 @@
+{
+  "_readme": [
+    "Payload de intake de My Guest con la FORMA REAL del webhook de Tally.",
+    "PROCEDENCIA: la estructura (ids de pregunta, titulos, tipos y uuids de opcion) se",
+    "tomo de la submission REAL X5YjRRd del formulario vivo MedpvA -- la prueba LIVE",
+    "controlada G-06 del 2026-07-02, 34 respuestas -- consultando la API de Tally el",
+    "2026-07-26. No habia ninguna submission guardada en KV ni en data/: el KV solo",
+    "conserva 4 llaves con TTL y ninguna es un intake.",
+    "El sobre (data.fields[] con key/label/type/value/options y data.hiddenFields) es el",
+    "formato de webhook de Tally que consume worker.js; la API de submissions expone los",
+    "mismos datos con otra forma (responses[] con questionId/answer).",
+    "",
+    "DATOS: los textos genericos de hospitalidad (House Rules, Things to know, Before you",
+    "leave, Additional notes, Welcome Message, Amenities, horarios) se conservan tal cual",
+    "venian: no identifican a nadie.",
+    "TODO dato sensible o identificable es FICTICIO, por la regla dura del repo (nada",
+    "sensible en HTML publico ni en un fixture commiteado): wifi_ssid, wifi_password,",
+    "host_phone y Private access details son inventados -- los codigos son 0000 a",
+    "proposito -- y tambien lo son el nombre y direccion de la propiedad, el order_id, el",
+    "correo del cliente, el instagram, el link de resenas y los nombres de restaurantes,",
+    "bares y actividades.",
+    "",
+    "PREGUNTAS QUE EL ANFITRION REAL DEJO VACIAS (y por eso no aparecen aqui): Google",
+    "maps Link, About Hosts, Pet Rules, los maps_link de restaurantes y bares, los",
+    "activity_4/5, emergency_contacts y los adjuntos (Existing book file / photos)."
+  ],
+  "eventId": "00000000-0000-4000-8000-000000000000",
+  "eventType": "FORM_RESPONSE",
+  "createdAt": "2026-07-26T12:00:00.000Z",
+  "data": {
+    "responseId": "TEST0001",
+    "submissionId": "TEST0001",
+    "respondentId": "FIXTURE",
+    "formId": "MedpvA",
+    "formName": "MyGuest — Welcome Book Setup",
+    "createdAt": "2026-07-26T12:00:00.000Z",
+    "fields": [
+      {
+        "key": "question_kAXBor",
+        "label": "property_name",
+        "type": "INPUT_TEXT",
+        "value": "Villa Fixture Intake"
+      },
+      {
+        "key": "question_vBV5Zg",
+        "label": "Property Address",
+        "type": "INPUT_TEXT",
+        "value": "145 Calle Ficticia, Colonia Inventada, Ciudad Demo"
+      },
+      {
+        "key": "question_KoAKEg",
+        "label": "Style",
+        "type": "MULTIPLE_CHOICE",
+        "value": [
+          "3a4cb55d-2eb9-4b84-b90b-bfcee9e6bca2"
+        ],
+        "options": [
+          {
+            "id": "d9185d72-7af7-4f71-b581-750f89a34bc6",
+            "text": "Minimalist"
+          },
+          {
+            "id": "3fa0240e-2217-493b-ba42-2f1285d7e299",
+            "text": "Classic"
+          },
+          {
+            "id": "3c526877-9a46-41f7-93b7-c852e7fe168a",
+            "text": "Sunset"
+          },
+          {
+            "id": "3a4cb55d-2eb9-4b84-b90b-bfcee9e6bca2",
+            "text": "Coastal"
+          }
+        ]
+      },
+      {
+        "key": "question_LGBLry",
+        "label": "Primary language",
+        "type": "MULTIPLE_CHOICE",
+        "value": [
+          "1d8691c1-004f-4ed1-a301-d19d405264bb"
+        ],
+        "options": [
+          {
+            "id": "48794c2a-30cb-480a-b3cf-b988aad40fe9",
+            "text": "English"
+          },
+          {
+            "id": "1d8691c1-004f-4ed1-a301-d19d405264bb",
+            "text": "Español"
+          },
+          {
+            "id": "fbac762e-4796-4f9e-98cb-ec31a351467a",
+            "text": "Français"
+          }
+        ]
+      },
+      {
+        "key": "question_gAX6lP",
+        "label": "Additional notes",
+        "type": "TEXTAREA",
+        "value": "This property is being used for a controlled LIVE test of the MyGuest purchase and delivery flow. All information is dummy test data and should not be used for a real guest stay."
+      },
+      {
+        "key": "question_yyr5Q8",
+        "label": "Checkin time",
+        "type": "INPUT_TEXT",
+        "value": "11:00 AM"
+      },
+      {
+        "key": "question_XGdPaP",
+        "label": "Checkout time",
+        "type": "INPUT_TEXT",
+        "value": "10:00 AM"
+      },
+      {
+        "key": "question_8kV4Bl",
+        "label": "Public arrival instructions",
+        "type": "TEXTAREA",
+        "value": "Porton negro justo enfrente de la plaza ficticia; la entrada peatonal esta a la izquierda del porton."
+      },
+      {
+        "key": "question_0MzR99",
+        "label": "Private access details",
+        "type": "TEXTAREA",
+        "value": "Al llegar, la caja de llaves esta a la derecha de la puerta principal.\nCodigo de la caja de llaves: 0000 (ficticio).\nCodigo del porton peatonal: 0000# (ficticio).\nDentro encontraras dos llaves: la grande abre la puerta principal y la pequena el cuarto de lavado.\nSi la caja no abre, escribe al telefono del anfitrion que aparece en la seccion de Contacto."
+      },
+      {
+        "key": "question_zz459k",
+        "label": "Parking Info",
+        "type": "TEXTAREA",
+        "value": "Un lugar de estacionamiento disponible dentro del condominio ficticio."
+      },
+      {
+        "key": "question_5koP7N",
+        "label": "Welcome Message",
+        "type": "TEXTAREA",
+        "value": "Bienvenidos a tu hogar en la playa"
+      },
+      {
+        "key": "question_YOXl6N",
+        "label": "Amenities List",
+        "type": "TEXTAREA",
+        "value": "Alberca, gimnasio, Wifi, AC."
+      },
+      {
+        "key": "question_lAXkGo",
+        "label": "Pet Friendly",
+        "type": "MULTIPLE_CHOICE",
+        "value": [
+          "a83cdcc2-3a7d-458f-8890-313dbd8f7613"
+        ],
+        "options": [
+          {
+            "id": "c77c71fb-6390-430f-94ec-b582228258a7",
+            "text": "Yes"
+          },
+          {
+            "id": "a83cdcc2-3a7d-458f-8890-313dbd8f7613",
+            "text": "No"
+          }
+        ]
+      },
+      {
+        "key": "question_oBYLqb",
+        "label": "House Rules",
+        "type": "TEXTAREA",
+        "value": "House rules:\n- No smoking inside the property.\n- No parties or events.\n- Quiet hours are from 10:00 PM to 8:00 AM.\n- No extra guests without prior approval.\n- Please turn off the air conditioning when leaving.\n- Please lock all doors and windows when leaving.\n- Report any damage or issue as soon as possible."
+      },
+      {
+        "key": "question_G1aAZe",
+        "label": "Things to know",
+        "type": "TEXTAREA",
+        "value": "Air conditioning:\nUse the remote control in the living room. Please keep doors and windows closed while the AC is running.\n\nHot water:\nHot water is available in the shower. Let the water run for 30–60 seconds.\n\nKitchen:\nGuests may use the kitchen, coffee maker, refrigerator, microwave, dishes, and basic utensils.\n\nCoffee:\nA small starter amount of coffee is provided.\n\nTrash:\nPlease place trash in the bin under the kitchen sink. For longer stays, take trash to the building trash area near the main entrance.\n\nLaundry:\nThere is no in-unit laundry for this test property.\n\nTV / Streaming:\nThe TV is available for guest use. Please use your own streaming accounts and log out before checkout.\n\nPool / Common areas:\nNo pool for this test property.\n\nBeach towels:\nTwo beach towels are available in the closet.\n\nSafe / valuables:\nThere is no safe. Please keep valuables with you."
+      },
+      {
+        "key": "question_OPKM6a",
+        "label": "Before you leave",
+        "type": "TEXTAREA",
+        "value": "Checkout instructions:\n- Wash any used dishes.\n- Place used towels in the bathroom.\n- Take out the trash if needed.\n- Turn off lights and air conditioning.\n- Close windows.\n- Lock the door.\n- Send the host a quick message once you have checked out."
+      },
+      {
+        "key": "question_E1e72l",
+        "label": "Transport Options",
+        "type": "TEXTAREA",
+        "value": "Sitio de taxis enfrente de la casa y parada de autobus en la esquina. Uber y DiDi operan en la zona."
+      },
+      {
+        "key": "question_oBYLqO",
+        "label": "airbnb_review_link",
+        "type": "INPUT_LINK",
+        "value": "https://example.com/review/villa-fixture"
+      },
+      {
+        "key": "question_G1aAZL",
+        "label": "instagram_handle",
+        "type": "INPUT_TEXT",
+        "value": "@villa_fixture_demo"
+      },
+      {
+        "key": "question_OPKM6Y",
+        "label": "wifi_ssid",
+        "type": "INPUT_TEXT",
+        "value": "VillaFixture-WiFi"
+      },
+      {
+        "key": "question_VlXOKM",
+        "label": "wifi_password",
+        "type": "INPUT_TEXT",
+        "value": "Ficticia-4821-Demo"
+      },
+      {
+        "key": "question_E1e72B",
+        "label": "host_phone",
+        "type": "INPUT_PHONE_NUMBER",
+        "value": "+52 322 000 0000"
+      },
+      {
+        "key": "question_1Kql9l",
+        "label": "restaurant_1_name",
+        "type": "INPUT_TEXT",
+        "value": "La Palapa Ficticia"
+      },
+      {
+        "key": "question_JR56OR",
+        "label": "restaurant_2_name",
+        "type": "INPUT_TEXT",
+        "value": "Parrilla Inventada"
+      },
+      {
+        "key": "question_yyV6Jx",
+        "label": "restaurant_3_name",
+        "type": "INPUT_TEXT",
+        "value": "Trattoria Demo"
+      },
+      {
+        "key": "question_8k7KZP",
+        "label": "Would you like to add another restaurant?",
+        "type": "MULTIPLE_CHOICE",
+        "value": [
+          "6b0b0bfd-080b-4f89-9d89-47f772eb5d6c"
+        ],
+        "options": [
+          {
+            "id": "76545d49-e733-4fc7-aa0f-6958f7c5b808",
+            "text": "+ Add restaurant"
+          },
+          {
+            "id": "6b0b0bfd-080b-4f89-9d89-47f772eb5d6c",
+            "text": "No, continue"
+          }
+        ]
+      },
+      {
+        "key": "question_D1gN7Z",
+        "label": "bar_1_name",
+        "type": "INPUT_TEXT",
+        "value": "Bar Ficticio"
+      },
+      {
+        "key": "question_R4E0Dj",
+        "label": "bar_2_name",
+        "type": "INPUT_TEXT",
+        "value": "Cerveceria Inventada"
+      },
+      {
+        "key": "question_Vl20zy",
+        "label": "add_bar_4",
+        "type": "MULTIPLE_CHOICE",
+        "value": [
+          "cc4fd04d-3332-4eb7-8e9d-b9eeee897e59"
+        ],
+        "options": [
+          {
+            "id": "4b45fe3c-b125-4065-8b94-d5021d862631",
+            "text": "+ Add bar"
+          },
+          {
+            "id": "cc4fd04d-3332-4eb7-8e9d-b9eeee897e59",
+            "text": "No, continue"
+          }
+        ]
+      },
+      {
+        "key": "question_2kQeK9",
+        "label": "activity_1_name",
+        "type": "INPUT_TEXT",
+        "value": "Tours Ficticios"
+      },
+      {
+        "key": "question_xQOpJ5",
+        "label": "activity_1_link",
+        "type": "INPUT_TEXT",
+        "value": "https://example.com/tours-ficticios"
+      },
+      {
+        "key": "question_R4E0D9",
+        "label": "activity_2_name",
+        "type": "INPUT_TEXT",
+        "value": "Malecon Inventado"
+      },
+      {
+        "key": "question_G18zRZ",
+        "label": "activity_3_name",
+        "type": "INPUT_TEXT",
+        "value": "Mercado Artesanal Demo"
+      },
+      {
+        "key": "question_MOkPdg",
+        "label": "property_environment",
+        "type": "MULTIPLE_CHOICE",
+        "value": [
+          "fc091a5c-a452-40cc-8cb1-e24faaa5f376"
+        ],
+        "options": [
+          {
+            "id": "fc091a5c-a452-40cc-8cb1-e24faaa5f376",
+            "text": "Beach"
+          },
+          {
+            "id": "623efb38-001a-4b3b-80c5-c9906da380bb",
+            "text": "City"
+          },
+          {
+            "id": "af765974-e839-42f8-ba90-437933abfdc1",
+            "text": "Cozy"
+          }
+        ]
+      }
+    ],
+    "hiddenFields": {
+      "order_id": "pi_0000000000FIXTURE0000",
+      "customer_email": "anfitrion.ficticio@example.com"
+    }
+  }
+}
