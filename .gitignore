@@ -11,9 +11,10 @@ npm-debug.log*
 .env
 .env.*
 
-# Wrangler / Cloudflare local state
+# Wrangler / Cloudflare local state. La configuración desplegable
+# `worker/wrangler.toml` se versiona; los valores secretos viven solo en
+# Cloudflare (`wrangler secret put`) y nunca se escriben en ese archivo.
 worker/.wrangler/
-worker/wrangler.toml
 
 # Local temporary assets
 books/scripts/_svg_temp/

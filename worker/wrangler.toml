@@ -1,0 +1,44 @@
+name = "myguest-worker"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# ─── KV Namespace ────────────────────────────────────────────────────────────
+# Para obtener el id: Cloudflare Dashboard → Workers & Pages → KV → MYGUEST_PRIVATE → copy ID
+# O en terminal: npx wrangler kv namespace list
+[[kv_namespaces]]
+binding = "MYGUEST_KV"
+id      = "4353e51b46e1405fbb775f5ca0fc2bed"
+
+# ─── Secrets (NO van aquí — viven en Cloudflare dashboard o con wrangler secret put) ──
+# GITHUB_TOKEN, TALLY_SIGNING_SECRET, RESEND_API_KEY, STRIPE_SECRET_KEY,
+# STRIPE_WEBHOOK_SECRET, ALERT_EMAIL (nuevo — agregar con wrangler secret put ALERT_EMAIL)
+#
+# ─── Variables de entorno (no secretas — pueden ir en dashboard o aquí) ──────
+[vars]
+# ID del Payment Link de MyGuest (plink_...). Con esto configurado el worker
+# ignora ventas de otros productos de la misma cuenta Stripe (ej. HMU Link).
+STRIPE_PAYMENT_LINK_ID = "plink_1TUJUsG4Nw60erBPDOUoFGk2,plink_1TuOXjG4Nw60erBPwDgZIhEx,plink_1TuOu8G4Nw60erBP7Z9ognUk"
+# Cuenta Stripe COMPARTIDA: cada venta de un producto hermano (HMU, Dr Link,
+# ModaLink, PawContact) también llega a este worker como `other_product`. Lista
+# aquí (coma-separado) los plink de esos productos que ya conoces para NO recibir
+# una alerta por cada una. Solo se alerta de un `other_product` cuyo plink no
+# esté ni en STRIPE_PAYMENT_LINK_ID ni aquí — el síntoma de un link propio
+# desfasado. Empieza vacío. (ALERT_EMAIL es secret: wrangler secret put ALERT_EMAIL;
+# sin él, las alertas caen a REPLY_TO_EMAIL.)
+# Inventario cross-product completo, medido el 2026-07-28. Incluye todos los
+# IDs obligatorios de los otros cinco Workers y los dos respaldos manuales de
+# correcciones del Catalogo. `auditoria/config-externa` detecta cualquier drift.
+KNOWN_OTHER_PAYMENT_LINKS = "plink_1TtvhdG4Nw60erBP9P6jrZM6,plink_1TtvjfG4Nw60erBPAjvz95od,plink_1TuPyHG4Nw60erBPSTXvS2cF,plink_1TpW1pG4Nw60erBPpTk296oO,plink_1Tr7lEG4Nw60erBPZ51f4cOC,plink_1TuOQXG4Nw60erBPUus5heVm,plink_1TuOvXG4Nw60erBPQPwonRRP,plink_1TrBqKG4Nw60erBPqBWlwnCs,plink_1TrBqKG4Nw60erBPKa1ZXrKV,plink_1TrBqLG4Nw60erBPiRGaPNIv,plink_1TuOEyG4Nw60erBPX4UjGJxS,plink_1TuOP5G4Nw60erBPjC3zWs69,plink_1Tq0sdG4Nw60erBPIGIWEKxk,plink_1Tq0slG4Nw60erBPoJXiDTMT,plink_1Tq2CUG4Nw60erBPqHG9gtdL,plink_1TuORfG4Nw60erBPNdw1QzYj,plink_1TuOTgG4Nw60erBPWSjHE7ZZ,plink_1TxIjsG4Nw60erBPnXsLGjyr,plink_1TxIlyG4Nw60erBPYUjCe3IN,plink_1TxIncG4Nw60erBPIoDszOL8,plink_1TxIpVG4Nw60erBPzXgvTGxX,plink_1TxJ1uG4Nw60erBPYPesVk9F"
+GITHUB_REPO          = "yuyitov/MyGuest"
+FROM_EMAIL           = "MyGuest <hello@myguestguide.com>"
+REPLY_TO_EMAIL       = "veronica.perezarroyo@gmail.com"
+PUBLIC_BOOK_BASE_URL = "https://myguestguide.com"
+MYGUEST_WORKER_URL    = "https://myguest-worker.veronica-perezarroyo.workers.dev"
+TALLY_FORM_URL       = "https://tally.so/r/MedpvA"
+# Correcciones incluidas en la compra. Estandar de la casa desde el 2026-07-20
+# (decision de Vero): 2. Es la MISMA fuente que imprimen los Terminos (EN/ES/FR)
+# y el correo de entrega — si este numero y el texto legal divergen, MyGuest
+# promete algo que no entrega. Regla de oro: primero se despliega el worker con
+# el numero nuevo, DESPUES se actualiza el legal. Al agotarse, /buy-correction
+# crea el checkout extra de $6 USD / $59 MXN con STRIPE_SECRET_KEY.
+FREE_CHANGES         = "2"

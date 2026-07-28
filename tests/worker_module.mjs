@@ -29,6 +29,13 @@ const EXPOSED = [
   'injectPrivateDetailsIntoBookHtml',
   'injectPrivateDetailsIntoPrintHtml',
   'buildPrivateBookBlocks',
+  'correctionPageHtml',
+  'correctionQuota',
+  'consumeCorrectionQuota',
+  'handleBuyCorrection',
+  'handlePaidCorrectionPurchase',
+  'isPaidCorrectionSession',
+  'paidCorrectionPageHtml',
 ];
 
 export async function loadWorker() {

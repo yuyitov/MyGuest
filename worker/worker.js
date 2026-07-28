@@ -35,9 +35,15 @@ const REQUIRED_KEYS = [
 // Modificaciones gratis incluidas en la compra (estándar de la casa desde el
 // 2026-07-20: 2). Se configura con FREE_CHANGES en wrangler.toml y es la MISMA
 // fuente que imprimen los Términos (EN/ES/FR) y el correo de entrega — si
-// divergen, MyGuest promete algo que no entrega. El cobro de cambios extra
-// sigue siendo manual (por correo), como hasta ahora.
+// divergen, MyGuest promete algo que no entrega. Al agotarse, el checkout
+// propio cobra una corrección extra sin tratarla como venta nueva.
 const DEFAULT_FREE_CHANGES = 2;
+const CORRECTION_PRICE = Object.freeze({
+  usd: { unitAmount: 600, label: '$6 USD' },
+  mxn: { unitAmount: 5900, label: '$59 MXN' }
+});
+const MYGUEST_CORRECTION_METADATA = 'myguest_correction';
+const CORRECTION_SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function freeChanges(env) {
   const raw = Number.parseInt(String((env && env.FREE_CHANGES) ?? '').trim(), 10);
@@ -60,7 +66,39 @@ function correctionQuota(record, env) {
   const used = Number.isInteger(record?.free_used)
     ? record.free_used
     : (record?.used ? 1 : 0);
-  return { total, used, remaining: Math.max(0, total - used) };
+  const includedRemaining = Math.max(0, total - used);
+  const paidRemaining = Number.isInteger(record?.paid_remaining)
+    ? Math.max(0, record.paid_remaining)
+    : 0;
+  return {
+    total,
+    used,
+    includedRemaining,
+    paidRemaining,
+    remaining: includedRemaining + paidRemaining
+  };
+}
+
+function consumeCorrectionQuota(record, env) {
+  const quota = correctionQuota(record, env);
+  if (quota.remaining <= 0) return null;
+
+  const paid = quota.includedRemaining <= 0;
+  const nextUsed = paid ? quota.used : quota.used + 1;
+  const nextPaidRemaining = paid ? quota.paidRemaining - 1 : quota.paidRemaining;
+  const remainingAfter = Math.max(0, quota.total - nextUsed) + nextPaidRemaining;
+
+  return {
+    paid,
+    quota,
+    record: {
+      ...record,
+      free_total: quota.total,
+      free_used: nextUsed,
+      paid_remaining: nextPaidRemaining,
+      used: remainingAfter <= 0
+    }
+  };
 }
 
 const VALID_STYLES = ['Minimalist', 'Coastal', 'Classic', 'Sunset'];
@@ -101,6 +139,20 @@ export default {
         const allowed = await checkRateLimit(env, `rl:correct:${ip}:${hourSlot}`, 20, 3600);
         if (!allowed) return correctionErrorHtml('Too many requests. Please try again later.', 429);
         return await handleCorrectionAccess(request, env);
+      }
+
+      if (request.method === 'GET' && pathname === '/buy-correction') {
+        const allowed = await checkRateLimit(env, `rl:buycorr:${ip}:${minuteSlot}`, 10, 120);
+        if (!allowed) return correctionErrorHtml('Too many requests. Please try again later.', 429);
+        return await handleBuyCorrection(url, env);
+      }
+
+      if (request.method === 'GET' && pathname === '/correction-payment/success') {
+        return correctionPaymentResultHtml(true);
+      }
+
+      if (request.method === 'GET' && pathname === '/correction-payment/cancelled') {
+        return correctionPaymentResultHtml(false);
       }
 
       if (request.method === 'POST' && (pathname === '/' || pathname === '/tally-webhook')) {
@@ -2030,6 +2082,11 @@ function corsHeaders() {
 //   NOTIFY_SECRET          — secreto requerido para el endpoint /notify
 // ═══════════════════════════════════════════════════════════════════════════
 
+function isPaidCorrectionSession(type, session) {
+  return type === 'checkout.session.completed'
+    && session?.metadata?.[MYGUEST_CORRECTION_METADATA] === '1';
+}
+
 async function handleStripeWebhook(request, env) {
   if (!env.STRIPE_WEBHOOK_SECRET) {
     return jsonResponse({ ok: false, error: 'Stripe webhook not configured' }, 500);
@@ -2056,6 +2113,13 @@ async function handleStripeWebhook(request, env) {
   }
 
   const session = event?.data?.object || {};
+
+  // Las correcciones pagadas nacen en /buy-correction y no traen payment_link.
+  // La metadata propia se evalúa antes del allowlist de ventas, pero únicamente
+  // después de validar la firma del webhook de Stripe.
+  if (isPaidCorrectionSession(type, session)) {
+    return await handlePaidCorrectionPurchase(session, env);
+  }
 
   // Filtro por producto: la cuenta de Stripe es compartida con otros productos
   // (HMU Link), así que este webhook recibe TODAS las ventas de la cuenta.
@@ -2812,10 +2876,8 @@ async function handleCorrectionAccess(request, env) {
   // cliente le queden correcciones incluidas (2 desde el 2026-07-20).
   const quota = correctionQuota(record, env);
   if (quota.remaining <= 0) {
-    return correctionErrorHtml(
-      "You&#39;ve already used the correction requests included with your purchase. For any additional changes, please contact us by email.",
-      200
-    );
+    const buyUrl = `${url.origin}/buy-correction?slug=${encodeURIComponent(slug)}&token=${encodeURIComponent(record.token)}`;
+    return paidCorrectionPageHtml(buyUrl);
   }
 
   const tallyUrl =
@@ -2825,7 +2887,7 @@ async function handleCorrectionAccess(request, env) {
     '&customer_email=' + encodeURIComponent(record.customer_email || '') +
     '&form_type=corrections';
 
-  return correctionPageHtml(tallyUrl);
+  return correctionPageHtml(tallyUrl, quota);
 }
 
 async function handleCorrectionsSubmission(normalized, env) {
@@ -2852,19 +2914,15 @@ async function handleCorrectionsSubmission(normalized, env) {
     return jsonResponse({ ok: true, idempotent: true, slug });
   }
 
-  const quota = correctionQuota(record, env);
-  if (quota.remaining <= 0) {
+  const consumption = consumeCorrectionQuota(record, env);
+  if (!consumption) {
     return jsonResponse({ ok: true, idempotent: true, slug });
   }
 
-  const usedAfter = quota.used + 1;
+  const { quota, paid } = consumption;
+  const updatedRecord = consumption.record;
   await env.MYGUEST_KV.put(correctionKey, JSON.stringify({
-    ...record,
-    free_total: quota.total,
-    free_used: usedAfter,
-    // `used` solo se marca al AGOTAR el cupo: mientras queden, el mismo enlace
-    // /correct/<slug>?token=... sigue abriendo el formulario.
-    used: usedAfter >= quota.total,
+    ...updatedRecord,
     used_at: now,
     last_submission_id: submissionId || record.last_submission_id || null
   })).catch(err => console.error('correction mark used failed (non-fatal):', safeError(err)));
@@ -2880,15 +2938,26 @@ async function handleCorrectionsSubmission(normalized, env) {
     await sendEmail({
       env,
       to: env.ALERT_EMAIL,
-      subject: `[MyGuest] Corrections requested (${usedAfter}/${quota.total}): ${slug}`,
-      html: buildCorrectionsAlertEmail({ slug, corrections, customerEmail: record.customer_email, now, publicBookBaseUrl: env.PUBLIC_BOOK_BASE_URL || 'https://myguestguide.com', usedAfter, freeTotal: quota.total })
+      subject: paid
+        ? `[MyGuest] Paid correction requested: ${slug}`
+        : `[MyGuest] Corrections requested (${updatedRecord.free_used}/${quota.total}): ${slug}`,
+      html: buildCorrectionsAlertEmail({
+        slug,
+        corrections,
+        customerEmail: record.customer_email,
+        now,
+        publicBookBaseUrl: env.PUBLIC_BOOK_BASE_URL || 'https://myguestguide.com',
+        usedAfter: updatedRecord.free_used,
+        freeTotal: quota.total,
+        paid
+      })
     }).catch(err => console.error('corrections alert email failed (non-fatal):', safeError(err)));
   }
 
   return jsonResponse({ ok: true, slug });
 }
 
-function buildCorrectionsAlertEmail({ slug, corrections, customerEmail, now, publicBookBaseUrl = 'https://myguestguide.com', usedAfter, freeTotal }) {
+function buildCorrectionsAlertEmail({ slug, corrections, customerEmail, now, publicBookBaseUrl = 'https://myguestguide.com', usedAfter, freeTotal, paid = false }) {
   const rows = Object.entries(corrections)
     .filter(([, v]) => v)
     .map(([label, value]) =>
@@ -2912,6 +2981,7 @@ function buildCorrectionsAlertEmail({ slug, corrections, customerEmail, now, pub
           <strong>Guide:</strong> ${escapeHtml(slug)}<br>
           <strong>Customer:</strong> ${escapeHtml(customerEmail || '—')}<br>
           <strong>At:</strong> ${escapeHtml(now)}<br>
+          <strong>Correction type:</strong> ${paid ? 'Paid extra correction' : 'Included correction'}<br>
           <strong>Included corrections used:</strong> ${escapeHtml(String(usedAfter ?? '?'))} of ${escapeHtml(String(freeTotal ?? '?'))}<br>
           <strong>View guide:</strong> <a href="${escapeAttribute(publicBookBaseUrl)}/villas/${encodeURIComponent(slug)}/en.html"
             style="color:#2D6A73">${escapeHtml(publicBookBaseUrl)}/villas/${escapeHtml(slug)}/en.html</a>
@@ -2928,6 +2998,191 @@ function buildCorrectionsAlertEmail({ slug, corrections, customerEmail, now, pub
   </td></tr>
 </table>
 </body></html>`;
+}
+
+async function handleBuyCorrection(url, env) {
+  const slug = (url.searchParams.get('slug') || '').trim().toLowerCase();
+  const token = url.searchParams.get('token') || '';
+  const unavailableUrl = `${url.origin}/correction-payment/cancelled`;
+
+  if (!CORRECTION_SLUG_RE.test(slug) || !token || !env.MYGUEST_KV) {
+    return Response.redirect(unavailableUrl, 302);
+  }
+
+  const [delivery, correction] = await Promise.all([
+    env.MYGUEST_KV.get(`delivery:${slug}`, { type: 'json' }).catch(() => null),
+    env.MYGUEST_KV.get(`correction:${slug}`, { type: 'json' }).catch(() => null)
+  ]);
+  if (!delivery || !correction || !timingSafeEqual(token, correction.token || '')) {
+    return Response.redirect(unavailableUrl, 302);
+  }
+
+  const stripeKey = (env.STRIPE_SECRET_KEY || '').trim();
+  if (!stripeKey) {
+    return Response.redirect(unavailableUrl, 302);
+  }
+
+  const order = delivery.order_id
+    ? await env.MYGUEST_KV.get(`order:${delivery.order_id}`, { type: 'json' }).catch(() => null)
+    : null;
+  const currency = (order?.currency || '').toLowerCase() === 'mxn' ? 'mxn' : 'usd';
+  const price = CORRECTION_PRICE[currency];
+
+  const params = new URLSearchParams();
+  params.set('mode', 'payment');
+  params.set('line_items[0][quantity]', '1');
+  params.set('line_items[0][price_data][currency]', currency);
+  params.set('line_items[0][price_data][unit_amount]', String(price.unitAmount));
+  params.set('line_items[0][price_data][product_data][name]', 'MyGuest — Extra correction');
+  params.set(`metadata[${MYGUEST_CORRECTION_METADATA}]`, '1');
+  params.set('metadata[slug]', slug);
+  params.set('success_url', `${url.origin}/correction-payment/success`);
+  params.set('cancel_url', `${url.origin}/correction-payment/cancelled`);
+  if (delivery.customer_email || correction.customer_email) {
+    params.set('customer_email', delivery.customer_email || correction.customer_email);
+  }
+
+  let session;
+  try {
+    const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${stripeKey}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: params.toString()
+    });
+    if (!response.ok) {
+      console.error('MyGuest correction checkout failed:', response.status);
+      return Response.redirect(unavailableUrl, 302);
+    }
+    session = await response.json();
+  } catch (error) {
+    console.error('MyGuest correction checkout error:', safeError(error));
+    return Response.redirect(unavailableUrl, 302);
+  }
+
+  return session?.url
+    ? Response.redirect(session.url, 302)
+    : Response.redirect(unavailableUrl, 302);
+}
+
+async function handlePaidCorrectionPurchase(session, env) {
+  const paymentIntentId = session.payment_intent || session.id || '';
+  const slug = cleanValue(session.metadata?.slug || '').toLowerCase();
+  if (!paymentIntentId || !CORRECTION_SLUG_RE.test(slug)) {
+    return jsonResponse({ ok: false, error: 'Invalid paid correction metadata' }, 400);
+  }
+
+  const processedKey = `processed-correction:${paymentIntentId}`;
+  const processed = await env.MYGUEST_KV.get(processedKey).catch(() => null);
+  if (processed) {
+    return jsonResponse({ ok: true, idempotent: true, paymentIntentId, slug });
+  }
+
+  const [delivery, correction] = await Promise.all([
+    env.MYGUEST_KV.get(`delivery:${slug}`, { type: 'json' }).catch(() => null),
+    env.MYGUEST_KV.get(`correction:${slug}`, { type: 'json' }).catch(() => null)
+  ]);
+  const ownerEmail = delivery?.customer_email || correction?.customer_email || '';
+  if (!delivery || !correction || !ownerEmail) {
+    await alertOnce(env, `paid_correction_missing:${paymentIntentId}`, 86400,
+      '⚠️ MyGuest: corrección pagada sin entrega segura', [
+        `slug: ${slug}`,
+        `payment_intent: ${paymentIntentId}`,
+        `comprador Stripe: ${sessionEmail(session) || '(sin email)'}`,
+        'Acción: aplicar manualmente o reembolsar; no se emitió acceso.'
+      ]);
+    await env.MYGUEST_KV.put(processedKey, 'manual', { expirationTtl: 604800 }).catch(() => {});
+    return jsonResponse({ ok: true, manual: true, paymentIntentId, slug });
+  }
+
+  const creditedIds = Array.isArray(correction.paid_payment_ids)
+    ? correction.paid_payment_ids
+    : [];
+  const alreadyCredited = creditedIds.includes(paymentIntentId);
+  const updatedCorrection = alreadyCredited
+    ? correction
+    : {
+        ...correction,
+        paid_remaining: (Number.isInteger(correction.paid_remaining) ? correction.paid_remaining : 0) + 1,
+        paid_purchased: (Number.isInteger(correction.paid_purchased) ? correction.paid_purchased : 0) + 1,
+        paid_payment_ids: [...creditedIds, paymentIntentId].slice(-20),
+        used: false,
+        last_paid_at: new Date().toISOString()
+      };
+
+  if (!alreadyCredited) {
+    await env.MYGUEST_KV.put(`correction:${slug}`, JSON.stringify(updatedCorrection));
+  }
+
+  const correctionUrl = `${env.MYGUEST_WORKER_URL || 'https://myguest-worker.veronica-perezarroyo.workers.dev'}/correct/${encodeURIComponent(slug)}?token=${encodeURIComponent(updatedCorrection.token)}`;
+  if (!env.RESEND_API_KEY) {
+    return jsonResponse({ ok: false, error: 'RESEND_API_KEY not configured' }, 500);
+  }
+
+  try {
+    await sendEmail({
+      env,
+      to: ownerEmail,
+      subject: 'Your extra MyGuest correction is ready',
+      html: buildPaidCorrectionEmail(correctionUrl)
+    });
+  } catch (error) {
+    console.error('paid correction email failed:', safeError(error));
+    return jsonResponse({ ok: false, error: 'Failed to send paid correction email' }, 500);
+  }
+
+  await env.MYGUEST_KV.put(processedKey, '1', { expirationTtl: 604800 });
+  return jsonResponse({ ok: true, paymentIntentId, slug });
+}
+
+function buildPaidCorrectionEmail(correctionUrl) {
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"></head>
+<body style="font-family:Arial,sans-serif;color:#2d2722">
+  <h1 style="font-size:22px">Your extra correction is ready</h1>
+  <p>Your payment was received. Use the secure link below to request one additional correction.</p>
+  <p><a href="${escapeAttribute(correctionUrl)}" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#2D6A73;color:#fff;text-decoration:none;font-weight:700">Request my correction</a></p>
+  <p style="font-size:12px;color:#766b61">This access is sent only to the email from the original MyGuest order.</p>
+</body></html>`;
+}
+
+function paidCorrectionPageHtml(buyUrl) {
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Extra Correction</title>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;font-family:Inter,Arial,sans-serif;background:#f7f3ee;color:#2d2722">
+  <main style="width:100%;max-width:440px;padding:32px;border-radius:26px;background:#fff;border:1px solid #eadfd3;text-align:center">
+    <h1>Need one more correction?</h1>
+    <p>Your two included correction rounds have been used.</p>
+    <a href="${escapeAttribute(buyUrl)}" style="display:inline-block;background:#2D6A73;color:#fff;font-weight:700;text-decoration:none;padding:14px 24px;border-radius:12px">Buy one more — $6 USD / $59 MXN</a>
+    <p style="font-size:12px;color:#766b61">Stripe selects the price from the currency of your original order.</p>
+  </main>
+</body></html>`;
+  return new Response(html, {
+    status: 200,
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'cache-control': 'no-store, no-cache, must-revalidate, private',
+      'x-robots-tag': 'noindex, nofollow, noarchive',
+      'referrer-policy': 'no-referrer'
+    }
+  });
+}
+
+function correctionPaymentResultHtml(success) {
+  return correctionErrorHtml(
+    success
+      ? 'Payment received. Check the email from your original MyGuest order for your secure correction link.'
+      : 'The payment was not completed. Return to your secure correction link when you are ready.',
+    200
+  );
 }
 
 function correctionErrorHtml(message, status = 400) {
@@ -2972,7 +3227,19 @@ function correctionErrorHtml(message, status = 400) {
   });
 }
 
-function correctionPageHtml(tallyUrl) {
+function correctionPageHtml(tallyUrl, quotaOrTotal = DEFAULT_FREE_CHANGES) {
+  const quota = typeof quotaOrTotal === 'number'
+    ? {
+        total: quotaOrTotal,
+        includedRemaining: quotaOrTotal,
+        paidRemaining: 0
+      }
+    : quotaOrTotal;
+  const includedCopy = quota.paidRemaining > 0 && quota.includedRemaining <= 0
+    ? 'This correction round is already paid.'
+    : quota.total === 1
+    ? 'One free correction round is included with your guide.'
+    : `${quota.total} free correction rounds are included with your guide.`;
   const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -3003,9 +3270,9 @@ function correctionPageHtml(tallyUrl) {
     <div class="icon">✏️</div>
     <h1>Request corrections</h1>
     <p>Use the form below to describe what you&#39;d like to change in your guide.<br>
-       This link can only be used once.</p>
+       This link remains available while you have included correction rounds left.</p>
     <a class="btn" href="${escapeAttribute(tallyUrl)}">Open corrections form →</a>
-    <p class="note">One free correction round is included with your guide.</p>
+    <p class="note">${escapeHtml(includedCopy)}</p>
   </main>
 </body>
 </html>`;
