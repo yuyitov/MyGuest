@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="canonical" href="https://myguestguide.com/">
+  <link rel="icon" type="image/svg+xml" href="assets/brand/favicon.svg">
   <title>MyGuest — Airbnb Welcome Books in 3 Languages</title>
   <meta name="description" content="Create your Airbnb welcome book in 3 languages. Mobile guest guide + printable PDF. Send your existing materials and we set it up for you." />
 
@@ -370,7 +371,14 @@
       <div class="pricing-wrap">
         <div class="price-card">
           <div class="badge" style="background:rgba(255,255,255,0.12);color:white;border-color:rgba(255,255,255,0.18);" data-i18n="price_badge">Launch price</div>
-          <div class="price"><span style="font-size:26px;font-weight:700;opacity:.8;" data-i18n="price_from">From</span> <s style="font-size:32px;font-weight:800;opacity:.55;text-decoration-thickness:3px;">$129</s> $49 <span style="font-size:28px;font-weight:700;opacity:.8;">USD</span></div>
+          <!-- El precio grande viaja en el diccionario (price_main), no en el
+               markup. Estaba escrito a mano en USD, asi que la pagina en
+               espanol anunciaba "$49 USD" aunque su comprador natural paga en
+               pesos: es lo que Vero marco como fallo el 2026-07-31. Ojo, esto
+               es el precio ESTATICO de la pagina; la moneda que cobra Stripe la
+               elige el payment link multimoneda por ubicacion del comprador
+               (USD / MXN / CAD), y eso no cambia aqui. -->
+          <div class="price" data-i18n-html="price_main"><span style="font-size:26px;font-weight:700;opacity:.8;">From</span> <s style="font-size:32px;font-weight:800;opacity:.55;text-decoration-thickness:3px;">$129</s> $49 <span style="font-size:28px;font-weight:700;opacity:.8;">USD</span></div>
           <p data-i18n="price_copy">One trilingual mobile welcome book plus one printable PDF.</p>
           <p style="font-size:13px;color:rgba(255,255,255,.58);margin:10px 0 16px;" data-i18n-html="price_note">Early access launch price — regular price <s>$129 USD</s> / <s>$1,999 MXN</s>. This is a manual setup version, not an instant AI import. Local currency available at checkout: USD $49 / MXN $899 / CAD $69.</p>
           <a class="cta" style="background:white;color:#1A746E;box-shadow:none;" href="https://buy.stripe.com/8x200jbf839I3tM5qOffy0h" data-i18n="price_cta">Start now — from $49 USD</a>
@@ -454,7 +462,7 @@
         feature5: "✔ Upload PDF, Canva, photos or notes",
         feature6: "✔ Great for Airbnb and vacation rentals",
         price_badge: "Launch price",
-        price_from: "From",
+        price_main: '<span style="font-size:26px;font-weight:700;opacity:.8;">From</span> <s style="font-size:32px;font-weight:800;opacity:.55;text-decoration-thickness:3px;">$129</s> $49 <span style="font-size:28px;font-weight:700;opacity:.8;">USD</span>',
         price_copy: "One trilingual mobile welcome book plus one printable PDF.",
         price_note: "Early access launch price — regular price <s>$129 USD</s> / <s>$1,999 MXN</s>. This is a manual setup version, not an instant AI import. Local currency available at checkout: USD $49 / MXN $899 / CAD $69.",
         price_cta: "Start now — from $49 USD",
@@ -494,7 +502,7 @@
         badge: "✨ Para hosts de Airbnb, villas y rentas vacacionales",
         h1: 'Tu guía de bienvenida para Airbnb, <span class="highlight">lista para ti.</span>',
         hero_copy: "Empieza desde cero con nuestro formulario, o envíanos tu PDF, Canva, fotos o notas existentes.",
-        cta_main: "Obtener mi guía desde $49 USD →",
+        cta_main: "Obtener mi guía desde $899 MXN →",
         cta_demos: "Ver demos",
         proof: "Precio de lanzamiento · Guía móvil + PDF incluidos.",
         style_label: "Elige tu estilo",
@@ -508,7 +516,7 @@
         process_h2: "Listo en 4 pasos simples.",
         process_p: "Del pago a los huéspedes felices — nosotros nos encargamos de todo.",
         step1_h3: "Paga una vez, sin sorpresas.",
-        step1_p: "Un pago único desde $49 USD. Sin suscripción, sin costos ocultos, sin conocimientos de diseño.",
+        step1_p: "Un pago único desde $899 MXN. Sin suscripción, sin costos ocultos, sin conocimientos de diseño.",
         step2_h3: "Cuéntanos sobre tu propiedad.",
         step2_p: "Llena nuestro formulario o envía tu PDF, Canva, fotos o notas. Nosotros nos encargamos del resto.",
         step3_h3: "Tu guía llega por email.",
@@ -525,10 +533,10 @@
         feature5: "✔ Sube PDF, Canva, fotos o notas",
         feature6: "✔ Perfecto para Airbnb y rentas vacacionales",
         price_badge: "Precio de lanzamiento",
-        price_from: "Desde",
+        price_main: '<span style="font-size:26px;font-weight:700;opacity:.8;">Desde</span> <s style="font-size:32px;font-weight:800;opacity:.55;text-decoration-thickness:3px;">$1,999</s> $899 <span style="font-size:28px;font-weight:700;opacity:.8;">MXN</span>',
         price_copy: "Un welcome book móvil trilingüe y un PDF imprimible.",
         price_note: "Precio de acceso anticipado — precio de lista <s>$129 USD</s> / <s>$1,999 MXN</s>. Esta es una versión de configuración manual, no una importación AI instantánea. Moneda local disponible al pagar: USD $49 / MXN $899 / CAD $69.",
-        price_cta: "Comenzar — desde $49 USD",
+        price_cta: "Comenzar — desde $899 MXN",
         included_h2: "Incluye",
         included_1: "Guía móvil para huéspedes",
         included_2: "Versión PDF imprimible",
@@ -596,7 +604,7 @@
         feature5: "✔ Importez PDF, Canva, photos ou notes",
         feature6: "✔ Idéal pour Airbnb et locations saisonnières",
         price_badge: "Prix de lancement",
-        price_from: "Dès",
+        price_main: '<span style="font-size:26px;font-weight:700;opacity:.8;">Dès</span> <s style="font-size:32px;font-weight:800;opacity:.55;text-decoration-thickness:3px;">$129</s> $49 <span style="font-size:28px;font-weight:700;opacity:.8;">USD</span>',
         price_copy: "Un guide mobile trilingue de bienvenue plus un PDF imprimable.",
         price_note: "Prix d'accès anticipé — prix courant <s>$129 USD</s> / <s>$1,999 MXN</s>. Il s'agit d'une version de configuration manuelle, pas d'une importation IA instantanée. Devise locale disponible au paiement : USD $49 / MXN $899 / CAD $69.",
         price_cta: "Commencer — dès $49 USD",
