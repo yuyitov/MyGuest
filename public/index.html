@@ -172,6 +172,12 @@
 
     @media (max-width: 900px) {
       .hero, .pricing-wrap { grid-template-columns: 1fr; }
+      /* En una sola columna los anillos decorativos (motion-ring/energy-pulse,
+         620px de sistema) se asoman por los costados y estiran el ancho del
+         documento (658px medidos en un viewport de 375 — OJOS v1, O1). El clip
+         vive en el hero solo en movil/tablet: en escritorio el sangrado es
+         parte del diseno y no desborda. La animacion no se toca. */
+      .hero { overflow: hidden; }
       .mockup-wrap { min-height: 520px; }
       .phone { right: 50%; transform: translateX(50%) rotate(2deg); animation-name: fadeScaleMobile, floatPhoneMobile; }
       .demo-grid, .steps { grid-template-columns: repeat(2, 1fr); }
