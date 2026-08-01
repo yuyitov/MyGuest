@@ -15,6 +15,7 @@ const SUITE = [
   ['node', [join('tests', 'test_form_field_coverage.mjs')]],
   ['node', [join('tests', 'test_corrections_contract.mjs')]],
   ['node', [join('tests', 'test_landing_legal_contract.mjs')]],
+  ['node', [join('tests', 'test_demo_mark_publicado.mjs')]],
   [python, [join('books', 'scripts', 'test_parse_translation_json.py')]],
   [python, ['-m', 'pytest', '-q', join('books', 'scripts')]],
 ];

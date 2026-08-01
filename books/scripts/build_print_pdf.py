@@ -3,6 +3,12 @@ import json
 import os
 from html import escape
 
+# Marca legal de demo. No es opcional como los dos imports de abajo: no depende
+# de nada externo, y si faltara preferimos que la generacion se caiga a publicar
+# una guia demo sin aviso.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _demo_mark import inject_demo_mark
+
 # Optional Google Places lookup — imported lazily so missing file never breaks the build
 try:
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -811,6 +817,18 @@ def render_print_html(payload):
     with open(_template_path, "r", encoding="utf-8") as f:
         html = f.read()
 
+    # Va sobre la plantilla cruda, antes de meter el contenido: asi las anclas
+    # (</title>, <body>, </head>) son las de la plantilla y ningun texto del
+    # anfitrion puede confundirlas. El imprimible es trilingue en un solo
+    # archivo, asi que la cinta va en el idioma principal, que es el `lang` del
+    # documento.
+    html = inject_demo_mark(
+        html,
+        bool(content.get("demo_mode")),
+        primary_language,
+        head_gap="\n",
+    )
+
     html = html.replace("{{HTML_LANG}}", escape(ui["html_lang"]))
     html = html.replace("{{VILLA_NAME}}", escape(villa_name))
     html = html.replace("{{COLOR_PRIMARY}}", style["primary"])
@@ -855,9 +873,16 @@ def main():
 
     slug, html = render_print_html(payload)
 
-    _scripts_dir2 = os.path.dirname(os.path.abspath(__file__))
-    _project_root = os.path.join(_scripts_dir2, "..", "..")
-    output_dir = os.path.join(_project_root, "public", "villas", slug)
+    # Mismo contrato que `villas_root()` de generate_villa.py: por default
+    # `public/villas/`, y `MYGUEST_VILLAS_ROOT` lo redirige para que las pruebas
+    # regeneren en un temporal sin ensuciar `public/`. El imprimible se quedaba
+    # fuera de esa regla y era el unico que escribia en `public/` a la fuerza.
+    _villas_root = os.getenv("MYGUEST_VILLAS_ROOT", "").strip()
+    if not _villas_root:
+        _scripts_dir2 = os.path.dirname(os.path.abspath(__file__))
+        _villas_root = os.path.join(_scripts_dir2, "..", "..", "public", "villas")
+
+    output_dir = os.path.join(_villas_root, slug)
     os.makedirs(output_dir, exist_ok=True)
 
     html_path = os.path.join(output_dir, "print.html")

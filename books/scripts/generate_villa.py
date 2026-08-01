@@ -11,6 +11,7 @@ import urllib.error
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from wallet_passes import build_wallet_assets
+from _demo_mark import inject_demo_mark
 
 SUPPORTED_LANGUAGES = ["English", "Español", "Français"]
 
@@ -1631,6 +1632,9 @@ def render_html_for_language(payload, active_language, output_filename):
     html = strip_unreplaced_placeholders(html)
     html = inject_public_qa_overrides(html)
     html = inject_demo_private_data(html, content_flat, active_language)
+    # Marca legal de demo (noindex + cinta). Sale del mismo `demo_mode` que ya
+    # decide los datos privados ficticios de arriba: una guia real no la recibe.
+    html = inject_demo_mark(html, demo_mode, active_language)
 
     os.makedirs(output_dir, exist_ok=True)
 
