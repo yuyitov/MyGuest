@@ -887,6 +887,37 @@
             stroke-linejoin: round;
         }
 
+        .vcard-wrap {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .vcard-wrap .footer-note {
+            margin-top: 10px;
+        }
+
+        .vcard-btn {
+            cursor: pointer;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .wallet-wrap {
+            margin-top: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .wallet-btn {
+            background: #1f1f1f;
+            box-shadow: 0 10px 20px rgba(31, 31, 31, 0.18);
+        }
+
         .footer-note {
             margin-top: 14px;
             font-size: 12px;
@@ -1173,6 +1204,7 @@
         }
     </style>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "f6bdf0e4f2aa49f0bd8935a3fecb850f"}'></script><!-- End Cloudflare Web Analytics -->
+
 
 <style>
 /* Marca de demo (auditoria de consistencia, divergencia 18): estas 4 guias son
@@ -1920,6 +1952,48 @@
 
                     <div id="private-contact-content"></div>
                 </div>
+
+                <!-- Save-to-phone card (.vcf). Public data comes from the generator in
+                     data-* attributes. The host phone is NOT published here: it is read
+                     on click from the private card injected by the Worker (or by the
+                     token fetch), so without a valid link the file is written without a
+                     phone number instead of leaking one.
+                     NOTE: comments in this template are English on purpose — the static
+                     translator rewrites literal text anywhere in the file. -->
+                <div class="vcard-wrap"
+                     id="vcard-source"
+                     data-vcard-name="Ocean Drive Retreat"
+                     data-vcard-adr="800 Ocean Drive, Miami Beach, FL 33139"
+                     data-vcard-mail="hello@oceandriveretreat.com"
+                     data-vcard-social="https://instagram.com/oceandriveretreat">
+                    <button type="button" class="pill-button vcard-btn" id="vcard-btn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6"></path><path d="M16 11h6"></path></svg>
+                        <span>Enregistrer dans les Contacts</span>
+                    </button>
+                    <div class="footer-note">Enregistrez ce séjour dans votre téléphone pour retrouver votre hôte.</div>
+                </div>
+
+                <!-- Wallet passes. Both providers are OFF by default: the generator
+                     leaves these href values empty and the block hides itself, so
+                     nothing here reaches a guest until the credentials exist.
+                     What travels in a pass is public only — property name, address
+                     and the tokenless guide link — because a pass gets shared, just
+                     like the contact card above.
+                     NOTE: comments in this template are English on purpose — the
+                     static translator rewrites literal text anywhere in the file. -->
+                <div class="wallet-wrap is-hidden" id="wallet-wrap">
+                    <a class="pill-button wallet-btn is-hidden" id="google-wallet-btn"
+                       href="" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"></path><rect x="3" y="8" width="18" height="12" rx="2.5"></rect><path d="M16 14h3"></path></svg>
+                        <span>Ajouter à Google Wallet</span>
+                    </a>
+                    <a class="pill-button wallet-btn is-hidden" id="apple-wallet-btn"
+                       href="">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"></path><rect x="3" y="8" width="18" height="12" rx="2.5"></rect><path d="M16 14h3"></path></svg>
+                        <span>Ajouter à Apple Wallet</span>
+                    </a>
+                    <div class="footer-note">Gardez le lieu dans votre wallet : il ouvre ce guide.</div>
+                </div>
             </div>
 
             <div class="menu-back-wrap">
@@ -2020,11 +2094,14 @@
             });
         }
 
-        function addPrivateCard(container, label, value) {
+        function addPrivateCard(container, label, value, fieldName) {
             if (!container || !value) return;
 
             const item = document.createElement("div");
             item.className = "private-card";
+            // Field tag so the save-to-phone button can find the number without
+            // matching on the label, which changes with the language.
+            if (fieldName) item.setAttribute("data-private-field", fieldName);
             item.innerHTML = `
                 <div class="private-card-title"></div>
                 <div class="private-card-text"></div>
@@ -2066,12 +2143,132 @@
                     
                     addPrivateCard(accessContainer, "Informations d’accès privées", d.house_access_private);
                     
-                    addPrivateCard(contactContainer, "Téléphone de l’hôte", d.host_phone);
-                                        
+                    addPrivateCard(contactContainer, "Téléphone de l’hôte", d.host_phone, "host_phone");
+
                 })
                 .catch(function () {
                     // Private details stay hidden if token is invalid or Worker is unavailable.
                 });
+        }
+
+        /* ── Save-to-phone card, vCard 3.0 ────────────────────────────────────
+           Builds the .vcf in the browser: no external service, no developer
+           account, no cost. Public values come from the data-* attributes of the
+           block. The host phone is read AT CLICK TIME from the private card
+           tagged data-private-field="host_phone", which exists only when the
+           guide was opened with a valid link: injected server-side by the Worker
+           at /guest/<slug>?token=, or by loadPrivateDetails() over the authorized
+           fetch. Without a valid link the file is written with no phone number;
+           the phone is never published in this HTML. */
+        function vcardEscape(value) {
+            return String(value || "")
+                .replace(/\\/g, "\\\\")
+                .replace(/;/g, "\\;")
+                .replace(/,/g, "\\,")
+                .replace(/\r?\n/g, "\\n");
+        }
+
+        function vcardHostTel() {
+            const card = document.querySelector('[data-private-field="host_phone"] .private-card-text');
+            return card ? card.textContent.trim() : "";
+        }
+
+        function vcardFileName(name) {
+            const base = String(name || "stay")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+            return (base || "stay") + ".vcf";
+        }
+
+        function vcardText(box) {
+            const name = (box.getAttribute("data-vcard-name") || "").trim();
+            const adr = (box.getAttribute("data-vcard-adr") || "").trim();
+            const mail = (box.getAttribute("data-vcard-mail") || "").trim();
+            const social = (box.getAttribute("data-vcard-social") || "").trim();
+            const tel = vcardHostTel();
+
+            const lines = [
+                "BEGIN:VCARD",
+                "VERSION:3.0",
+                "N:;" + vcardEscape(name) + ";;;",
+                "FN:" + vcardEscape(name),
+                "ORG:" + vcardEscape(name)
+            ];
+
+            if (tel) lines.push("TEL;TYPE=CELL,VOICE:" + vcardEscape(tel));
+            if (mail) lines.push("EMAIL;TYPE=INTERNET:" + vcardEscape(mail));
+            if (adr) lines.push("ADR;TYPE=WORK:;;" + vcardEscape(adr) + ";;;;");
+            // The guide link is deliberately left out: it carries the access token
+            // and a saved card gets forwarded. Stripped of the token it is dead.
+            if (social) lines.push("URL:" + vcardEscape(social));
+            lines.push("END:VCARD");
+
+            return lines.join("\r\n") + "\r\n";
+        }
+
+        function vcardDownload(text, fileName) {
+            const anchor = document.createElement("a");
+
+            if (!("download" in anchor)) {
+                window.location.href = "data:text/vcard;charset=utf-8," + encodeURIComponent(text);
+                return;
+            }
+
+            const blob = new Blob([text], { type: "text/vcard;charset=utf-8" });
+            const href = URL.createObjectURL(blob);
+
+            anchor.href = href;
+            anchor.download = fileName;
+            anchor.style.display = "none";
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+            window.setTimeout(function () { URL.revokeObjectURL(href); }, 5000);
+        }
+
+        function initVcard() {
+            const box = document.getElementById("vcard-source");
+            const button = document.getElementById("vcard-btn");
+            if (!box || !button) return;
+
+            const name = (box.getAttribute("data-vcard-name") || "").trim();
+            // With no property name the file has no identity: hide the button.
+            if (!name || name.indexOf("{{") >= 0) {
+                box.classList.add("is-hidden");
+                return;
+            }
+
+            button.addEventListener("click", function () {
+                vcardDownload(vcardText(box), vcardFileName(name));
+            });
+        }
+
+        /* ── Wallet passes ────────────────────────────────────────────────────
+           Each button is shown only if the generator actually wrote a link into
+           its href. With the provider flag off the placeholder is stripped to an
+           empty string, the button stays hidden, and the whole block disappears
+           when neither provider produced a pass. No pass, no dead button. */
+        function initWalletButtons() {
+            const wrap = document.getElementById("wallet-wrap");
+            if (!wrap) return;
+
+            let shown = 0;
+
+            ["google-wallet-btn", "apple-wallet-btn"].forEach(function (id) {
+                const link = document.getElementById(id);
+                if (!link) return;
+
+                const href = (link.getAttribute("href") || "").trim();
+                if (!href || href.indexOf("{{") >= 0) return;
+
+                link.classList.remove("is-hidden");
+                shown += 1;
+            });
+
+            if (shown) wrap.classList.remove("is-hidden");
         }
 
         cleanupDynamicContent();
@@ -2084,6 +2281,8 @@
             addPrivateCard(aC, "Informations d\u2019acc\u00e8s priv\u00e9es", "Bo\u00eete \u00e0 cl\u00e9s \u00e0 l'entr\u00e9e principale \u2014 code : #4521. Clavier de la porte : 7842#. Veuillez laisser toutes les cl\u00e9s dans la bo\u00eete \u00e0 cl\u00e9s au d\u00e9part.");
             addPrivateCard(cC, "T\u00e9l\u00e9phone de l\u2019h\u00f4te", "+1 (305) 555-0142");
         })();
+        initVcard();
+        initWalletButtons();
     })();
     </script>
 </body>
