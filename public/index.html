@@ -433,6 +433,7 @@
   <script>
     const I18N = {
       en: {
+        doc_title: "MyGuest — Airbnb Welcome Books in 3 Languages",
         nav_pill: "Mobile guide + PDF · EN / ES / FR",
         badge: "✨ For Airbnb hosts, villas and vacation rentals",
         h1: 'Your Airbnb guest guide, <span class="highlight">done for you.</span>',
@@ -504,6 +505,7 @@
         footer_refunds: "Refund Policy"
       },
       es: {
+        doc_title: "MyGuest — Guías de bienvenida para Airbnb en 3 idiomas",
         nav_pill: "Guía móvil + PDF · EN / ES / FR",
         badge: "✨ Para hosts de Airbnb, villas y rentas vacacionales",
         h1: 'Tu guía de bienvenida para Airbnb, <span class="highlight">lista para ti.</span>',
@@ -575,6 +577,7 @@
         footer_refunds: "Política de Reembolso"
       },
       fr: {
+        doc_title: "MyGuest — Livrets d'accueil Airbnb en 3 langues",
         nav_pill: "Guide mobile + PDF · EN / ES / FR",
         badge: "✨ Pour les hôtes Airbnb, villas et locations saisonnières",
         h1: 'Votre guide de bienvenue Airbnb, <span class="highlight">prêt pour vous.</span>',
@@ -651,6 +654,7 @@
       if (!I18N[lang]) return;
       document.documentElement.lang = lang;
       const t = I18N[lang];
+      if (t.doc_title) document.title = t.doc_title;
       document.querySelectorAll('[data-i18n]').forEach((el) => {
         const key = el.dataset.i18n;
         if (t[key] !== undefined) el.textContent = t[key];
@@ -676,10 +680,22 @@
       btn.addEventListener('click', () => setLang(btn.dataset.lang));
     });
 
-    // Restore saved language preference
+    // Idioma inicial (lote v3, D3 sellada por Vero: la landing debe atender
+    // ES y FR — en Vallarta hay dueños que solo hablan francés).
+    // Prioridad: 1) ?lang= en la URL (links compartibles y /es/ /fr/, que
+    // redirigen aquí), 2) preferencia guardada, 3) idioma del NAVEGADOR en la
+    // primera visita (antes toda primera visita caía en inglés aunque el
+    // navegador estuviera en español), 4) inglés.
     try {
+      const urlLang = new URLSearchParams(location.search).get('lang');
       const saved = localStorage.getItem('mg-lang');
-      if (saved && saved !== 'en') setLang(saved);
+      const nav = ((navigator.language || '').slice(0, 2) === 'es') ? 'es'
+                : ((navigator.language || '').slice(0, 2) === 'fr') ? 'fr'
+                : 'en';
+      const start = (urlLang && I18N[urlLang]) ? urlLang
+                  : (saved && I18N[saved]) ? saved
+                  : nav;
+      if (start !== 'en') setLang(start);
     } catch(e) {}
 
     // Reveal on scroll
