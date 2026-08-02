@@ -25,3 +25,4 @@ books/scripts/_svg_temp/
 # Windows folder metadata
 desktop.ini
 Thumbs.db
+.claude/
