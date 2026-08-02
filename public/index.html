@@ -673,6 +673,16 @@
         const file = el.dataset.legal;
         el.href = lang === 'en' ? file : lang + '/' + file;
       });
+      // Los demos de las villas abren EN EL IDIOMA DE LA PÁGINA (lote v3,
+      // hallazgo de Vero en su barrido: desde la página en español el demo
+      // abría en inglés — la misma clase de defecto H1 de charly/45). Cada
+      // villa ya existe en en/es/fr como index.html/es.html/fr.html.
+      document.querySelectorAll('a[href*="villas/"]').forEach((el) => {
+        if (!el.dataset.villaBase) {
+          el.dataset.villaBase = el.getAttribute('href').replace(/(index|es|fr)\.html$/, '');
+        }
+        el.href = el.dataset.villaBase + (lang === 'en' ? 'index.html' : lang + '.html');
+      });
       try { localStorage.setItem('mg-lang', lang); } catch(e) {}
     }
 
